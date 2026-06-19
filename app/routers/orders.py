@@ -1,0 +1,126 @@
+import logging
+import uuid
+
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
+
+from app.database import get_db
+from app.models.guest import Guest
+from app.models.order import Order
+from app.models.user import User
+from app.models.venue import Venue
+from app.routers.deps import get_current_user_dep
+from app.schemas.order import OrderCreate, OrderOut, OrderStatusUpdate
+from app.services.order_service import create_order, update_order_status, get_order_with_items
+
+router = APIRouter(prefix="/api/orders", tags=["orders"])
+logger = logging.getLogger(__name__)
+
+
+@router.get("/live", response_model=list[OrderOut])
+async def live_orders(
+    venue_id: uuid.UUID | None = Query(None),
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    try:
+        stmt = (
+            select(Order)
+            .options(selectinload(Order.items), selectinload(Order.guest))
+            .join(Venue)
+            .where(Venue.network_id == current_user.network_id, Order.status.in_(["new", "confirmed", "preparing", "ready"]))
+            .order_by(Order.created_at.desc())
+        )
+        if venue_id:
+            stmt = stmt.where(Order.venue_id == venue_id)
+        result = await db.execute(stmt)
+        return result.scalars().all()
+    except Exception as e:
+        logger.error("Live orders error: %s", e)
+        raise HTTPException(status_code=500, detail="Ошибка загрузки заказов")
+
+
+@router.get("/", response_model=list[OrderOut])
+async def list_orders(
+    venue_id: uuid.UUID | None = Query(None),
+    status: str | None = Query(None),
+    limit: int = Query(50, le=200),
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    try:
+        stmt = (
+            select(Order)
+            .options(selectinload(Order.items))
+            .join(Venue)
+            .where(Venue.network_id == current_user.network_id)
+            .order_by(Order.created_at.desc())
+            .limit(limit)
+        )
+        if venue_id:
+            stmt = stmt.where(Order.venue_id == venue_id)
+        if status:
+            stmt = stmt.where(Order.status == status)
+        result = await db.execute(stmt)
+        return result.scalars().all()
+    except Exception as e:
+        logger.error("List orders error: %s", e)
+        raise HTTPException(status_code=500, detail="Ошибка загрузки заказов")
+
+
+@router.post("/", response_model=OrderOut)
+async def place_order(
+    data: OrderCreate,
+    telegram_id: int = Query(...),
+    db: AsyncSession = Depends(get_db),
+):
+    try:
+        guest_result = await db.execute(select(Guest).where(Guest.telegram_id == telegram_id))
+        guest = guest_result.scalar_one_or_none()
+        if not guest:
+            raise HTTPException(status_code=404, detail="Гость не найден")
+        order = await create_order(data, guest, db)
+        return order
+    except HTTPException:
+        raise
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logger.error("Place order error: %s", e)
+        raise HTTPException(status_code=500, detail="Ошибка создания заказа")
+
+
+@router.get("/{order_id}", response_model=OrderOut)
+async def get_order(
+    order_id: uuid.UUID,
+    db: AsyncSession = Depends(get_db),
+):
+    try:
+        order = await get_order_with_items(order_id, db)
+        if not order:
+            raise HTTPException(status_code=404, detail="Заказ не найден")
+        return order
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error("Get order error: %s", e)
+        raise HTTPException(status_code=500, detail="Ошибка загрузки заказа")
+
+
+@router.patch("/{order_id}/status", response_model=OrderOut)
+async def change_status(
+    order_id: uuid.UUID,
+    data: OrderStatusUpdate,
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    try:
+        order = await update_order_status(order_id, data.status, db)
+        return order
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logger.error("Update order status error: %s", e)
+        raise HTTPException(status_code=500, detail="Ошибка обновления статуса")

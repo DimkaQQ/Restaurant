@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block title %}Аналитика — RestOS{% endblock %}
+
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">Аналитика</h1>
+  <span class="muted">Последние 30 дней</span>
+</div>
+
+<div class="analytics-grid">
+  <div class="panel panel-wide">
+    <div class="panel-header">
+      <h2 class="panel-title">Выручка по дням</h2>
+    </div>
+    <canvas id="revenue-chart" height="80"></canvas>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header">
+      <h2 class="panel-title">Популярные позиции</h2>
+    </div>
+    <canvas id="items-chart" height="120"></canvas>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header">
+      <h2 class="panel-title">Выручка по заведениям</h2>
+    </div>
+    <canvas id="venues-chart" height="120"></canvas>
+  </div>
+</div>
+
+<div class="panel" style="margin-top:1.5rem">
+  <div class="panel-header">
+    <h2 class="panel-title">Самые лояльные гости</h2>
+  </div>
+  <table class="data-table">
+    <thead><tr><th>#</th><th>Гость</th><th>Визиты</th><th>Баллы</th></tr></thead>
+    <tbody>
+      {% for g in loyal_guests %}
+      <tr>
+        <td class="muted">{{ loop.index }}</td>
+        <td>{{ g.name or '—' }}</td>
+        <td>{{ g.total_visits }}</td>
+        <td><span class="points-badge">{{ g.total_points }}</span></td>
+      </tr>
+      {% else %}
+      <tr><td colspan="4" class="empty-state">Нет данных</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<script>
+const gold = '#C8A84B';
+const muted = '#6B6560';
+const chartDefaults = {
+  color: '#F7F5F0',
+  plugins: { legend: { labels: { color: '#F7F5F0' } } },
+  scales: {
+    x: { ticks: { color: muted }, grid: { color: 'rgba(200,168,75,0.1)' } },
+    y: { ticks: { color: muted }, grid: { color: 'rgba(200,168,75,0.1)' } },
+  },
+};
+
+const revenueData = {{ revenue_data | tojson }};
+new Chart(document.getElementById('revenue-chart'), {
+  type: 'line',
+  data: {
+    labels: revenueData.map(d => d.day),
+    datasets: [{
+      label: 'Выручка ₸',
+      data: revenueData.map(d => d.revenue),
+      borderColor: gold,
+      backgroundColor: 'rgba(200,168,75,0.1)',
+      fill: true,
+      tension: 0.4,
+    }],
+  },
+  options: {...chartDefaults},
+});
+
+const itemsData = {{ top_items | tojson }};
+new Chart(document.getElementById('items-chart'), {
+  type: 'bar',
+  data: {
+    labels: itemsData.map(d => d.name),
+    datasets: [{
+      label: 'Количество',
+      data: itemsData.map(d => d.qty),
+      backgroundColor: gold,
+    }],
+  },
+  options: {...chartDefaults, indexAxis: 'y'},
+});
+
+const venueData = {{ venue_revenue | tojson }};
+new Chart(document.getElementById('venues-chart'), {
+  type: 'doughnut',
+  data: {
+    labels: venueData.map(d => d.name),
+    datasets: [{
+      data: venueData.map(d => d.revenue),
+      backgroundColor: ['#C8A84B','#8B7336','#5C4E24','#3A3118','#1E1A0C'],
+    }],
+  },
+  options: { color: '#F7F5F0', plugins: { legend: { labels: { color: '#F7F5F0' } } } },
+});
+</script>
+{% endblock %}

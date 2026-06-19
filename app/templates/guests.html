@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Гости — RestOS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">Гости</h1>
+  <span class="muted">{{ guests|length }} в базе</span>
+</div>
+
+<div class="filters">
+  <input
+    type="search"
+    placeholder="Поиск по имени или телефону..."
+    class="search-input"
+    hx-get="/api/guests/"
+    hx-trigger="keyup changed delay:400ms"
+    hx-target="#guests-table-body"
+    hx-swap="innerHTML"
+    name="search"
+  >
+</div>
+
+<div class="table-wrapper">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Гость</th>
+        <th>Телефон</th>
+        <th>Баллы</th>
+        <th>Визиты</th>
+        <th>С нами с</th>
+      </tr>
+    </thead>
+    <tbody id="guests-table-body">
+      {% for g in guests %}
+      <tr>
+        <td>
+          <span class="guest-name">{{ g.name or '—' }}</span>
+          {% if g.telegram_id %}<span class="tg-badge">TG</span>{% endif %}
+        </td>
+        <td>{{ g.phone or '—' }}</td>
+        <td><span class="points-badge">{{ g.total_points }} ₽</span></td>
+        <td>{{ g.total_visits }}</td>
+        <td>{{ g.created_at.strftime('%d.%m.%Y') }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5" class="empty-state">Нет гостей</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<script>
+  document.addEventListener('htmx:configRequest', (e) => {
+    const t = localStorage.getItem('access_token');
+    if (t) e.detail.headers['Authorization'] = 'Bearer ' + t;
+  });
+</script>
+{% endblock %}

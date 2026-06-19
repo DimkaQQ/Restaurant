@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% block title %}Меню — RestOS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">Меню</h1>
+  <button onclick="openAddModal()" class="btn-primary">+ Добавить позицию</button>
+</div>
+
+<div class="filters">
+  <select id="venue-select" onchange="loadMenu()" class="select-input">
+    <option value="">Выберите заведение</option>
+    {% for v in venues %}
+    <option value="{{ v.id }}">{{ v.name }}</option>
+    {% endfor %}
+  </select>
+</div>
+
+<div id="menu-grid" class="menu-grid">
+  <p class="empty-state">Выберите заведение</p>
+</div>
+
+<div id="add-modal" class="modal" style="display:none">
+  <div class="modal-overlay" onclick="closeModal()"></div>
+  <div class="modal-content">
+    <h2 class="modal-title">Новая позиция</h2>
+    <form id="add-form">
+      <div class="form-group"><label>Название</label><input type="text" name="name" required></div>
+      <div class="form-group"><label>Описание</label><textarea name="description" rows="2"></textarea></div>
+      <div class="form-group"><label>Цена (₸)</label><input type="number" name="price" step="0.01" required></div>
+      <div class="form-group"><label>Категория</label><input type="text" name="category"></div>
+      <div class="form-row">
+        <button type="submit" class="btn-primary">Добавить</button>
+        <button type="button" onclick="closeModal()" class="btn-secondary">Отмена</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  const token = () => localStorage.getItem('access_token');
+
+  async function loadMenu() {
+    const venueId = document.getElementById('venue-select').value;
+    if (!venueId) return;
+    const res = await fetch('/api/menu/' + venueId);
+    const items = await res.json();
+    renderMenu(items, venueId);
+  }
+
+  function renderMenu(items, venueId) {
+    const grid = document.getElementById('menu-grid');
+    if (!items.length) { grid.innerHTML = '<p class="empty-state">Меню пусто</p>'; return; }
+    grid.innerHTML = items.map(item => `
+      <div class="menu-card ${!item.is_available ? 'unavailable' : ''}">
+        ${item.image_url ? `<img src="${item.image_url}" class="menu-img" alt="${item.name}">` : '<div class="menu-img-placeholder"></div>'}
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <span class="menu-item-name">${item.name}</span>
+            <span class="menu-item-price">${parseFloat(item.price).toLocaleString('ru-RU')} ₸</span>
+          </div>
+          ${item.category ? `<span class="menu-category">${item.category}</span>` : ''}
+          ${item.description ? `<p class="menu-desc">${item.description}</p>` : ''}
+          <div class="menu-card-footer">
+            <label class="toggle">
+              <input type="checkbox" ${item.is_available ? 'checked' : ''} onchange="toggleItem('${item.id}', this.checked)">
+              <span class="toggle-track"></span>
+              <span class="toggle-label">${item.is_available ? 'Доступно' : 'Скрыто'}</span>
+            </label>
+            <button onclick="deleteItem('${item.id}')" class="btn-icon-danger">✕</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  async function toggleItem(itemId, available) {
+    await fetch('/api/menu/' + itemId, {
+      method: 'PATCH',
+      headers: {'Content-Type':'application/json','Authorization':'Bearer '+token()},
+      body: JSON.stringify({is_available: available}),
+    });
+    loadMenu();
+  }
+
+  async function deleteItem(itemId) {
+    if (!confirm('Удалить позицию?')) return;
+    await fetch('/api/menu/' + itemId, {
+      method: 'DELETE',
+      headers: {'Authorization':'Bearer '+token()},
+    });
+    loadMenu();
+  }
+
+  function openAddModal() {
+    const venueId = document.getElementById('venue-select').value;
+    if (!venueId) { alert('Сначала выберите заведение'); return; }
+    document.getElementById('add-modal').style.display = 'flex';
+  }
+
+  function closeModal() {
+    document.getElementById('add-modal').style.display = 'none';
+    document.getElementById('add-form').reset();
+  }
+
+  document.getElementById('add-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const venueId = document.getElementById('venue-select').value;
+    const fd = new FormData(e.target);
+    const data = Object.fromEntries(fd.entries());
+    data.price = parseFloat(data.price);
+    await fetch('/api/menu/' + venueId, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json','Authorization':'Bearer '+token()},
+      body: JSON.stringify(data),
+    });
+    closeModal();
+    loadMenu();
+  });
+</script>
+{% endblock %}

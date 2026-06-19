@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}Заказы — RestOS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">Заказы</h1>
+  <span class="live-badge">● LIVE</span>
+</div>
+
+<div class="filters">
+  <select id="venue-filter" onchange="reloadOrders()" class="select-input">
+    <option value="">Все заведения</option>
+    {% for v in venues %}
+    <option value="{{ v.id }}">{{ v.name }}</option>
+    {% endfor %}
+  </select>
+</div>
+
+<div
+  id="orders-board"
+  hx-get="/api/orders/live"
+  hx-trigger="load, every 8s"
+  hx-swap="innerHTML"
+  class="orders-board"
+>
+  <div class="loading">Загрузка заказов...</div>
+</div>
+
+<script>
+  document.addEventListener('htmx:configRequest', (e) => {
+    const t = localStorage.getItem('access_token');
+    if (t) e.detail.headers['Authorization'] = 'Bearer ' + t;
+    const venueId = document.getElementById('venue-filter').value;
+    if (venueId) e.detail.parameters['venue_id'] = venueId;
+  });
+
+  function reloadOrders() {
+    htmx.trigger('#orders-board', 'load');
+  }
+
+  function changeStatus(orderId, newStatus) {
+    const t = localStorage.getItem('access_token');
+    fetch('/api/orders/' + orderId + '/status', {
+      method: 'PATCH',
+      headers: {'Content-Type':'application/json', 'Authorization': 'Bearer ' + t},
+      body: JSON.stringify({status: newStatus}),
+    }).then(() => htmx.trigger('#orders-board', 'load'));
+  }
+
+  document.addEventListener('htmx:afterSwap', (e) => {
+    if (e.target.id === 'orders-board') renderOrders(e.detail.xhr.responseText);
+  });
+
+  document.addEventListener('htmx:afterRequest', (e) => {
+    if (e.target.id !== 'orders-board') return;
+    try {
+      const orders = JSON.parse(e.detail.xhr.responseText);
+      renderOrders(orders);
+    } catch {}
+  });
+
+  function renderOrders(data) {
+    let orders;
+    try { orders = typeof data === 'string' ? JSON.parse(data) : data; } catch { return; }
+    if (!Array.isArray(orders)) return;
+    const board = document.getElementById('orders-board');
+
+    if (orders.length === 0) {
+      board.innerHTML = '<p class="empty-state">Нет активных заказов</p>';
+      return;
+    }
+
+    const statusLabels = {new:'Новый', confirmed:'Подтверждён', preparing:'Готовится', ready:'Готово'};
+    const nextStatus = {new:'confirmed', confirmed:'preparing', preparing:'ready', ready:'done'};
+    const nextLabel = {new:'Подтвердить', confirmed:'Готовить', preparing:'Готово', ready:'Выдать'};
+
+    board.innerHTML = orders.map(o => `
+      <div class="order-card status-${o.status}">
+        <div class="order-header">
+          <span class="order-id">#${o.id.slice(0,8)}</span>
+          <span class="order-status">${statusLabels[o.status] || o.status}</span>
+          <span class="order-time">${new Date(o.created_at).toLocaleTimeString('ru-RU', {hour:'2-digit',minute:'2-digit'})}</span>
+        </div>
+        <div class="order-guest">${o.guest?.name || 'Гость'}</div>
+        <div class="order-items">
+          ${o.items.map(i => `<span class="order-item">${i.name} × ${i.quantity}</span>`).join('')}
+        </div>
+        <div class="order-footer">
+          <span class="order-total">${parseFloat(o.total_amount).toLocaleString('ru-RU')} ₸</span>
+          ${nextStatus[o.status] ? `<button onclick="changeStatus('${o.id}','${nextStatus[o.status]}')" class="btn-status">${nextLabel[o.status]}</button>` : ''}
+          ${o.status !== 'cancelled' && o.status !== 'done' ? `<button onclick="changeStatus('${o.id}','cancelled')" class="btn-cancel">Отмена</button>` : ''}
+        </div>
+      </div>
+    `).join('');
+  }
+</script>
+{% endblock %}

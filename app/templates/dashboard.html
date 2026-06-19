@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Дашборд — RestOS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">Дашборд</h1>
+  <span class="page-date" id="current-date"></span>
+</div>
+
+<div class="stats-grid">
+  <div class="stat-card">
+    <span class="stat-label">Выручка сегодня</span>
+    <span class="stat-value gold">{{ "{:,.0f}".format(today_revenue) }} ₸</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-label">Всего выручки</span>
+    <span class="stat-value">{{ "{:,.0f}".format(total_revenue) }} ₸</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-label">Новых гостей сегодня</span>
+    <span class="stat-value">{{ new_guests }}</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-label">Активных заведений</span>
+    <span class="stat-value">{{ venues|length }}</span>
+  </div>
+</div>
+
+<div class="content-grid">
+  <div class="panel">
+    <div class="panel-header">
+      <h2 class="panel-title">Активные заказы</h2>
+      <span class="live-badge">● LIVE</span>
+    </div>
+    <div
+      id="live-orders"
+      hx-get="/api/orders/live"
+      hx-trigger="load, every 8s"
+      hx-headers='{"Authorization": "Bearer " + (localStorage.getItem("access_token") || "")}'
+      hx-swap="innerHTML"
+    >
+      {% include "partials/orders_list.html" ignore missing %}
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header">
+      <h2 class="panel-title">Топ позиций сегодня</h2>
+    </div>
+    <div class="top-items">
+      {% for item in top_items %}
+      <div class="top-item">
+        <span class="top-item-name">{{ item.name }}</span>
+        <span class="top-item-qty">{{ item.qty }} шт.</span>
+      </div>
+      {% else %}
+      <p class="empty-state">Нет данных за сегодня</p>
+      {% endfor %}
+    </div>
+
+    <div class="panel-header" style="margin-top:2rem">
+      <h2 class="panel-title">Заведения</h2>
+    </div>
+    <div class="venues-list">
+      {% for venue in venues %}
+      <div class="venue-item">
+        <div>
+          <span class="venue-name">{{ venue.name }}</span>
+          <span class="venue-addr">{{ venue.address or '' }}</span>
+        </div>
+        <span class="badge {% if venue.is_active %}badge-active{% else %}badge-inactive{% endif %}">
+          {% if venue.is_active %}Активно{% else %}Закрыто{% endif %}
+        </span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById('current-date').textContent = new Date().toLocaleDateString('ru-RU', {weekday:'long',day:'numeric',month:'long'});
+  document.addEventListener('htmx:configRequest', (e) => {
+    const t = localStorage.getItem('access_token');
+    if (t) e.detail.headers['Authorization'] = 'Bearer ' + t;
+  });
+</script>
+{% endblock %}
