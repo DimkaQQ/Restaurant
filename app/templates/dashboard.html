@@ -69,7 +69,7 @@
   </div>
   <div class="venues-list">
     {% for venue in venues %}
-    <a href="/orders?venue_id={{ venue.id }}" class="venue-item venue-item-link">
+    <a href="/analytics/?venue_id={{ venue.id }}" class="venue-item venue-item-link">
       <div>
         <span class="venue-name">{{ venue.name }}</span>
         <span class="venue-addr">{{ venue.address or '' }}</span>
