@@ -11,6 +11,36 @@
   <span class="muted">Последние 30 дней</span>
 </div>
 
+<div class="filters" style="margin-bottom:1.5rem">
+  <form method="get" action="/analytics/" style="display:flex;gap:0.75rem;align-items:center">
+    <select name="venue_id" class="select-input" onchange="this.form.submit()">
+      <option value="">Все заведения</option>
+      {% for v in venues %}
+      <option value="{{ v.id }}" {% if selected_venue_id == v.id | string %}selected{% endif %}>{{ v.name }}</option>
+      {% endfor %}
+    </select>
+    {% if selected_venue %}
+    <span class="badge badge-active" style="white-space:nowrap">{{ selected_venue.name }}</span>
+    <a href="/analytics/" class="btn-secondary" style="font-size:0.8rem;padding:0.4rem 0.75rem;text-decoration:none">✕ Сбросить</a>
+    {% endif %}
+  </form>
+</div>
+
+<div class="stats-grid" style="margin-bottom:1.5rem">
+  <div class="stat-card">
+    <span class="stat-label">Выручка за 30 дней</span>
+    <span class="stat-value gold">{{ "{:,.0f}".format(total_revenue) }} ₸</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-label">Завершённых заказов</span>
+    <span class="stat-value">{{ "{:,}".format(total_orders) }}</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-label">Средний чек</span>
+    <span class="stat-value">{{ "{:,.0f}".format(total_revenue / total_orders if total_orders else 0) }} ₸</span>
+  </div>
+</div>
+
 <div class="analytics-grid">
   <div class="panel panel-wide">
     <div class="panel-header">
@@ -23,17 +53,41 @@
     <div class="panel-header">
       <h2 class="panel-title">Популярные позиции</h2>
     </div>
-    <canvas id="items-chart" height="120"></canvas>
+    <canvas id="items-chart" height="150"></canvas>
   </div>
 
+  {% if venue_revenue | length > 1 %}
   <div class="panel">
     <div class="panel-header">
       <h2 class="panel-title">Выручка по заведениям</h2>
     </div>
-    <canvas id="venues-chart" height="120"></canvas>
+    <canvas id="venues-chart" height="150"></canvas>
   </div>
+  {% else %}
+  <div class="panel">
+    <div class="panel-header">
+      <h2 class="panel-title">Самые лояльные гости</h2>
+    </div>
+    <table class="data-table">
+      <thead><tr><th>#</th><th>Гость</th><th>Визиты</th><th>Баллы</th></tr></thead>
+      <tbody>
+        {% for g in loyal_guests %}
+        <tr>
+          <td class="muted">{{ loop.index }}</td>
+          <td>{{ g.name or '—' }}</td>
+          <td>{{ g.total_visits }}</td>
+          <td><span class="points-badge">{{ g.total_points }}</span></td>
+        </tr>
+        {% else %}
+        <tr><td colspan="4" class="empty-state">Нет данных</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
 </div>
 
+{% if venue_revenue | length > 1 %}
 <div class="panel" style="margin-top:1.5rem">
   <div class="panel-header">
     <h2 class="panel-title">Самые лояльные гости</h2>
@@ -54,16 +108,17 @@
     </tbody>
   </table>
 </div>
+{% endif %}
 
 <script>
 const gold = '#C8A84B';
 const muted = '#6B6560';
 const chartDefaults = {
   color: '#F7F5F0',
-  plugins: { legend: { labels: { color: '#F7F5F0' } } },
+  plugins: { legend: { labels: { color: '#F7F5F0', font: { family: 'Inter' } } } },
   scales: {
-    x: { ticks: { color: muted }, grid: { color: 'rgba(200,168,75,0.1)' } },
-    y: { ticks: { color: muted }, grid: { color: 'rgba(200,168,75,0.1)' } },
+    x: { ticks: { color: muted, maxRotation: 45 }, grid: { color: 'rgba(200,168,75,0.08)' } },
+    y: { ticks: { color: muted, callback: v => v >= 1000000 ? (v/1000000).toFixed(1)+'M' : v >= 1000 ? (v/1000).toFixed(0)+'K' : v }, grid: { color: 'rgba(200,168,75,0.08)' } },
   },
 };
 
@@ -71,14 +126,16 @@ const revenueData = {{ revenue_data | tojson }};
 new Chart(document.getElementById('revenue-chart'), {
   type: 'line',
   data: {
-    labels: revenueData.map(d => d.day),
+    labels: revenueData.map(d => d.day.slice(5)),
     datasets: [{
       label: 'Выручка ₸',
       data: revenueData.map(d => d.revenue),
       borderColor: gold,
-      backgroundColor: 'rgba(200,168,75,0.1)',
+      backgroundColor: 'rgba(200,168,75,0.08)',
       fill: true,
       tension: 0.4,
+      pointRadius: 3,
+      pointBackgroundColor: gold,
     }],
   },
   options: {...chartDefaults},
@@ -88,27 +145,29 @@ const itemsData = {{ top_items | tojson }};
 new Chart(document.getElementById('items-chart'), {
   type: 'bar',
   data: {
-    labels: itemsData.map(d => d.name),
-    datasets: [{
-      label: 'Количество',
-      data: itemsData.map(d => d.qty),
-      backgroundColor: gold,
-    }],
+    labels: itemsData.map(d => d.name.length > 20 ? d.name.slice(0,18)+'…' : d.name),
+    datasets: [{ label: 'Количество', data: itemsData.map(d => d.qty), backgroundColor: gold, borderRadius: 4 }],
   },
-  options: {...chartDefaults, indexAxis: 'y'},
+  options: { ...chartDefaults, indexAxis: 'y', plugins: { legend: { display: false } } },
 });
 
+{% if venue_revenue | length > 1 %}
 const venueData = {{ venue_revenue | tojson }};
+const palette = ['#C8A84B','#A08030','#78601E','#50400F','#2E2508','#8B9E5C','#5C6E3A','#3A4825'];
 new Chart(document.getElementById('venues-chart'), {
   type: 'doughnut',
   data: {
-    labels: venueData.map(d => d.name),
-    datasets: [{
-      data: venueData.map(d => d.revenue),
-      backgroundColor: ['#C8A84B','#8B7336','#5C4E24','#3A3118','#1E1A0C'],
-    }],
+    labels: venueData.map(d => d.name.replace(' — ', '\n')),
+    datasets: [{ data: venueData.map(d => d.revenue), backgroundColor: palette, borderWidth: 0 }],
   },
-  options: { color: '#F7F5F0', plugins: { legend: { labels: { color: '#F7F5F0' } } } },
+  options: {
+    cutout: '60%',
+    plugins: {
+      legend: { position: 'right', labels: { color: '#F7F5F0', boxWidth: 12, padding: 10, font: { size: 11 } } },
+      tooltip: { callbacks: { label: ctx => ' ' + parseFloat(ctx.raw).toLocaleString('ru-RU') + ' ₸' } }
+    }
+  },
 });
+{% endif %}
 </script>
 {% endblock %}

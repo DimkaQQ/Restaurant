@@ -514,6 +514,35 @@ select option { background: var(--card); }
 
 .loading { color: var(--muted); padding: 2rem; text-align: center; }
 
+/* ── Order Status Summary (dashboard) ── */
+.order-status-summary {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.oss-item {
+  flex: 1;
+  min-width: 90px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.oss-count { font-size: 2rem; font-weight: 700; line-height: 1; }
+.oss-label { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; text-align: center; }
+
+.oss-new      .oss-count { color: var(--gold); }
+.oss-confirmed .oss-count { color: #38BDF8; }
+.oss-preparing .oss-count { color: #F97316; }
+.oss-ready    .oss-count { color: var(--success); }
+.oss-done     .oss-count { color: var(--muted); }
+
 /* ── Scrollbar ── */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }

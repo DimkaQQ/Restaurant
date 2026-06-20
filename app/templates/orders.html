@@ -16,13 +16,7 @@
   </select>
 </div>
 
-<div
-  id="orders-board"
-  class="orders-board"
-  hx-get="/partials/orders"
-  hx-trigger="load, every 8s"
-  hx-swap="innerHTML"
->
+<div id="orders-board" class="orders-board">
   <div class="loading">Загрузка заказов...</div>
 </div>
 
@@ -32,5 +26,8 @@
     const url = '/partials/orders' + (venueId ? '?venue_id=' + venueId : '');
     htmx.ajax('GET', url, {target: '#orders-board', swap: 'innerHTML'});
   }
+
+  reloadOrders();
+  setInterval(reloadOrders, 8000);
 </script>
 {% endblock %}
