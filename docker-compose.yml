@@ -29,14 +29,14 @@ services:
 
   api:
     build: .
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8001 --reload
     environment:
       DATABASE_URL: postgresql+asyncpg://restos:restos_secret@db/restos
       SECRET_KEY: ${SECRET_KEY:-dev-secret-change-in-prod}
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
       BOT_TOKEN_VENUE_1: ${BOT_TOKEN_VENUE_1:-}
     ports:
-      - "8000:8000"
+      - "8001:8001"
     depends_on:
       db:
         condition: service_healthy
