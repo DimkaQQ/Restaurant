@@ -51,8 +51,12 @@
         localStorage.setItem('access_token', data.access_token);
         location.href = '/dashboard';
       } else {
-        const data = await res.json();
-        err.textContent = data.detail || 'Ошибка входа';
+        let msg = 'Ошибка входа';
+        try {
+          const data = await res.json();
+          msg = data.detail || msg;
+        } catch {}
+        err.textContent = msg;
         err.style.display = 'block';
       }
     });
