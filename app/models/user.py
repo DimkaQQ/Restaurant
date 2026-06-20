@@ -13,6 +13,12 @@ class User(Base):
     email: Mapped[str] = mapped_column(String(255), unique=True)
     hashed_password: Mapped[str] = mapped_column(String(255))
     role: Mapped[str] = mapped_column(String(50), default="manager")  # "owner", "manager"
+    venue_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("venues.id"), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     network: Mapped["Network"] = relationship("Network", back_populates="users")
+    venue: Mapped["Venue | None"] = relationship("Venue")
+
+    @property
+    def is_owner(self) -> bool:
+        return self.role == "owner"

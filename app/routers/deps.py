@@ -44,3 +44,13 @@ async def get_current_user_optional(
         return await get_current_user_dep(request, db)
     except HTTPException:
         return None
+
+
+async def get_accessible_venue_ids(user: User, db: AsyncSession) -> list:
+    from sqlalchemy import select
+    from app.models.venue import Venue
+    stmt = select(Venue.id).where(Venue.network_id == user.network_id, Venue.is_active == True)
+    if user.role != "owner" and user.venue_id:
+        stmt = stmt.where(Venue.id == user.venue_id)
+    result = await db.execute(stmt)
+    return list(result.scalars().all())

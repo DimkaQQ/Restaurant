@@ -1,7 +1,9 @@
 import logging
 import uuid
+import shutil
+import os
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -11,6 +13,9 @@ from app.models.user import User
 from app.models.venue import Venue
 from app.routers.deps import get_current_user_dep
 from app.schemas.menu import MenuItemCreate, MenuItemOut, MenuItemUpdate
+
+UPLOAD_DIR = "app/static/uploads/menu"
+os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 router = APIRouter(prefix="/api/menu", tags=["menu"])
 logger = logging.getLogger(__name__)
@@ -105,3 +110,37 @@ async def delete_item(
     except Exception as e:
         logger.error("Delete menu item error: %s", e)
         raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.post("/{item_id}/photo", response_model=MenuItemOut)
+async def upload_photo(
+    item_id: uuid.UUID,
+    photo: UploadFile = File(...),
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    try:
+        result = await db.execute(select(MenuItem).where(MenuItem.id == item_id))
+        item = result.scalar_one_or_none()
+        if not item:
+            raise HTTPException(status_code=404, detail="Позиция не найдена")
+        await _check_venue_owner(item.venue_id, current_user, db)
+
+        ext = photo.filename.rsplit(".", 1)[-1].lower() if "." in photo.filename else "jpg"
+        if ext not in ("jpg", "jpeg", "png", "webp"):
+            raise HTTPException(status_code=400, detail="Только jpg/png/webp")
+
+        filename = f"{item_id}.{ext}"
+        path = os.path.join(UPLOAD_DIR, filename)
+        with open(path, "wb") as f:
+            shutil.copyfileobj(photo.file, f)
+
+        item.image_url = f"/static/uploads/menu/{filename}"
+        await db.commit()
+        await db.refresh(item)
+        return item
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error("Upload photo error: %s", e)
+        raise HTTPException(status_code=500, detail="Ошибка загрузки фото")

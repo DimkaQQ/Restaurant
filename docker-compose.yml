@@ -49,7 +49,7 @@ services:
     command: python -m bot.main
     environment:
       DATABASE_URL: postgresql+asyncpg://restos:restos_secret@db/restos
-      API_URL: http://api:8000
+      API_URL: http://api:8001
       BOT_TOKEN_VENUE_1: ${BOT_TOKEN_VENUE_1:-}
       NETWORK_ID: ${NETWORK_ID:-}
       VENUE_ID_1: ${VENUE_ID_1:-}

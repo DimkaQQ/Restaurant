@@ -1,0 +1,279 @@
+{% extends "base.html" %}
+{% block title %}Пользователи — RestOS{% endblock %}
+
+{% block head %}
+<style>
+.settings-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.settings-header h1 {
+  font-family: 'Instrument Serif', serif;
+  font-size: 1.6rem;
+  font-weight: 400;
+}
+.users-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.user-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.25rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+.user-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(200,168,75,0.12);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--gold);
+  flex-shrink: 0;
+}
+.user-info { flex: 1; min-width: 0; }
+.user-email {
+  font-size: 0.9rem;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.user-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+  flex-wrap: wrap;
+}
+.role-badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.role-badge.owner {
+  background: rgba(200,168,75,0.15);
+  color: var(--gold);
+  border: 1px solid rgba(200,168,75,0.3);
+}
+.role-badge.manager {
+  background: rgba(59,130,246,0.12);
+  color: #60a5fa;
+  border: 1px solid rgba(59,130,246,0.25);
+}
+.user-venue {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+.btn-delete-user {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  cursor: pointer;
+  border-radius: 6px;
+  padding: 0.35rem 0.6rem;
+  font-size: 0.8rem;
+  transition: all 0.15s;
+  flex-shrink: 0;
+  align-self: center;
+}
+.btn-delete-user:hover {
+  border-color: #ef4444;
+  color: #ef4444;
+}
+.add-user-section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.5rem;
+  max-width: 480px;
+}
+.add-user-section h2 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+}
+.form-group {
+  margin-bottom: 1rem;
+}
+.form-group label {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-bottom: 0.35rem;
+}
+.form-group input,
+.form-group select {
+  width: 100%;
+  background: var(--black);
+  border: 1px solid var(--border);
+  color: var(--white);
+  padding: 0.55rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  box-sizing: border-box;
+}
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--gold);
+}
+.form-row {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+.error-msg {
+  background: rgba(239,68,68,0.1);
+  border: 1px solid rgba(239,68,68,0.3);
+  color: #fca5a5;
+  padding: 0.6rem 0.9rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+  display: none;
+}
+.empty-state {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: var(--muted);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="settings-header">
+  <h1>Пользователи</h1>
+</div>
+
+{% if users %}
+<div class="users-grid">
+  {% for u in users %}
+  <div class="user-card" id="user-card-{{ u.id }}">
+    <div class="user-avatar">{{ u.email[0].upper() }}</div>
+    <div class="user-info">
+      <div class="user-email">{{ u.email }}</div>
+      <div class="user-meta">
+        <span class="role-badge {{ u.role }}">
+          {% if u.role == "owner" %}Владелец{% else %}Менеджер{% endif %}
+        </span>
+        {% if u.venue %}
+        <span class="user-venue">{{ u.venue.name }}</span>
+        {% elif u.role == "owner" %}
+        <span class="user-venue">Все заведения</span>
+        {% endif %}
+      </div>
+    </div>
+    {% if u.id != user.id %}
+    <button class="btn-delete-user" onclick="deleteUser('{{ u.id }}')">✕</button>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+  <p>Пользователей нет</p>
+</div>
+{% endif %}
+
+<div class="add-user-section">
+  <h2>Добавить пользователя</h2>
+  <div class="error-msg" id="form-error"></div>
+  <form id="add-user-form">
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" name="email" required placeholder="user@example.com">
+    </div>
+    <div class="form-group">
+      <label>Пароль</label>
+      <input type="password" name="password" required placeholder="Минимум 6 символов">
+    </div>
+    <div class="form-group">
+      <label>Роль</label>
+      <select name="role">
+        <option value="manager">Менеджер</option>
+        <option value="owner">Владелец</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Заведение (необязательно)</label>
+      <select name="venue_id">
+        <option value="">Все заведения</option>
+        {% for v in venues %}
+        <option value="{{ v.id }}">{{ v.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-row">
+      <button type="submit" class="btn-primary">Добавить</button>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+async function deleteUser(userId) {
+  if (!confirm('Удалить пользователя?')) return;
+  const res = await fetch('/settings/users/' + userId, {
+    method: 'DELETE',
+    headers: {'Authorization': 'Bearer ' + localStorage.getItem('access_token')},
+  });
+  if (res.ok) {
+    const card = document.getElementById('user-card-' + userId);
+    if (card) card.remove();
+  } else {
+    const data = await res.json().catch(() => ({}));
+    alert(data.detail || 'Ошибка удаления');
+  }
+}
+
+document.getElementById('add-user-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const errEl = document.getElementById('form-error');
+  errEl.style.display = 'none';
+
+  const fd = new FormData(e.target);
+  const body = {
+    email: fd.get('email'),
+    password: fd.get('password'),
+    role: fd.get('role'),
+    venue_id: fd.get('venue_id') || null,
+  };
+
+  const res = await fetch('/settings/users', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + localStorage.getItem('access_token'),
+    },
+    body: JSON.stringify(body),
+  });
+
+  if (res.ok) {
+    location.reload();
+  } else {
+    const data = await res.json().catch(() => ({}));
+    errEl.textContent = data.detail || 'Ошибка создания пользователя';
+    errEl.style.display = 'block';
+  }
+});
+</script>
+{% endblock %}
