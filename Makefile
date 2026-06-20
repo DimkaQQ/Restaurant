@@ -1,4 +1,4 @@
-.PHONY: help up down logs setup bot reset
+.PHONY: help up down logs setup seed bot reset
 
 # Цвета
 GREEN  := \033[0;32m
@@ -10,6 +10,7 @@ help:
 	@echo "  $(GREEN)make up$(NC)     — запустить API + БД (миграции автоматом)"
 	@echo "  $(GREEN)make bot$(NC)    — запустить бот + всё остальное"
 	@echo "  $(GREEN)make setup$(NC)  — первый запуск: создать владельца сети"
+	@echo "  $(GREEN)make seed$(NC)   — залить тестовые данные (заведения, меню, гости)"
 	@echo "  $(GREEN)make down$(NC)   — остановить всё"
 	@echo "  $(GREEN)make logs$(NC)   — смотреть логи API"
 	@echo "  $(GREEN)make reset$(NC)  — удалить БД и начать заново"
@@ -32,6 +33,10 @@ bot:
 ## Создать первого владельца (запускать после make up)
 setup:
 	docker compose exec api python scripts/create_owner.py
+
+## Залить тестовые данные: заведения Chayla + меню + гости + заказы
+seed:
+	docker compose exec api python scripts/seed_data.py
 
 ## Логи
 logs:
