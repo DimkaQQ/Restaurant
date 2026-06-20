@@ -290,6 +290,7 @@ async def main():
 
         if existing and force:
             print("   Очищаем старые данные...")
+            await db.execute(sa.text("UPDATE users SET venue_id = NULL"))
             await db.execute(sa.text(
                 "TRUNCATE reviews, visits, points_transactions, order_items, orders, "
                 "menu_items, staff, guests, venues RESTART IDENTITY CASCADE"
