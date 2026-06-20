@@ -308,8 +308,9 @@ body {
 
 /* ── Badges ── */
 .badge { font-size: 0.7rem; padding: 0.2rem 0.5rem; border-radius: 20px; }
-.badge-active { background: rgba(75,200,122,0.15); color: #4BC87A; }
+.badge-active   { background: rgba(75,200,122,0.15); color: #4BC87A; }
 .badge-inactive { background: rgba(200,75,75,0.15); color: var(--danger); }
+.badge-launch   { background: rgba(200,168,75,0.15); color: var(--gold); }
 
 .tg-badge {
   font-size: 0.65rem;

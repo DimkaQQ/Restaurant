@@ -72,8 +72,8 @@
           <span class="venue-name">{{ venue.name }}</span>
           <span class="venue-addr">{{ venue.address or '' }}</span>
         </div>
-        <span class="badge {% if venue.is_active %}badge-active{% else %}badge-inactive{% endif %}">
-          {% if venue.is_active %}Активно{% else %}Закрыто{% endif %}
+        <span class="badge {% if venue.is_active %}badge-active{% else %}badge-launch{% endif %}">
+          {% if venue.is_active %}Активно{% else %}Запуск{% endif %}
         </span>
       </div>
       {% endfor %}
