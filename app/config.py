@@ -11,6 +11,9 @@ class Settings(BaseSettings):
     ANTHROPIC_API_KEY: str = ""
     BOT_TOKEN_VENUE_1: str = ""
     BOT_TOKEN_VENUE_2: str = ""
+    NETWORK_ID: str = ""
+    VENUE_ID_1: str = ""
+    VENUE_ID_2: str = ""
 
     class Config:
         env_file = ".env"
