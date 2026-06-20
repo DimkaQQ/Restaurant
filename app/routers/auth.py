@@ -48,6 +48,13 @@ async def login(data: LoginRequest, response: Response, db: AsyncSession = Depen
         samesite="lax",
         max_age=60 * 60 * 24 * 30,
     )
+    response.set_cookie(
+        key="access_token",
+        value=access_token,
+        httponly=False,
+        samesite="lax",
+        max_age=60 * settings.ACCESS_TOKEN_EXPIRE_MINUTES,
+    )
     return TokenResponse(access_token=access_token)
 
 
