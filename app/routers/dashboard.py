@@ -159,8 +159,13 @@ async def change_status_html(
     db: AsyncSession = Depends(get_db),
 ):
     try:
-        body = await request.json()
-        new_status = body.get("status")
+        content_type = request.headers.get("content-type", "")
+        if "application/json" in content_type:
+            body = await request.json()
+            new_status = body.get("status")
+        else:
+            form = await request.form()
+            new_status = form.get("status")
         order = await update_order_status(order_id, new_status, db)
 
         return templates.TemplateResponse("partials/orders_list.html", {
