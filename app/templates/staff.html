@@ -190,7 +190,7 @@
 {% if staff %}
 <div class="staff-grid">
   {% for s in staff %}
-  <div class="staff-card" onclick="openReviews('{{ s.id }}', '{{ s.name }}')">
+  <div class="staff-card" data-staff-id="{{ s.id }}" data-staff-name="{{ s.name }}" onclick="openReviews(this.dataset.staffId, this.dataset.staffName)">
     <div class="staff-card-top">
       <div class="staff-avatar">{{ s.initials }}</div>
       <div class="staff-info">

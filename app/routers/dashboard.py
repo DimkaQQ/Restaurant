@@ -176,6 +176,8 @@ async def change_status_html(
             return HTMLResponse("<p class='error-state'>Заказ не найден</p>", status_code=404)
         order = await update_order_status(order_id, new_status, db)
 
+        if order.status in ("done", "cancelled"):
+            return HTMLResponse("")
         return templates.TemplateResponse("partials/orders_list.html", {
             "request": request,
             "orders": [order],

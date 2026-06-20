@@ -119,25 +119,3 @@ async def get_order(
         raise HTTPException(status_code=500, detail="Ошибка загрузки заказа")
 
 
-@router.patch("/{order_id}/status", response_model=OrderOut)
-async def change_status(
-    order_id: uuid.UUID,
-    data: OrderStatusUpdate,
-    current_user: User = Depends(get_current_user_dep),
-    db: AsyncSession = Depends(get_db),
-):
-    try:
-        check = (await db.execute(
-            select(Order).join(Venue).where(Order.id == order_id, Venue.network_id == current_user.network_id)
-        )).scalar_one_or_none()
-        if not check:
-            raise HTTPException(status_code=404, detail="Заказ не найден")
-        order = await update_order_status(order_id, data.status, db)
-        return order
-    except HTTPException:
-        raise
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
-    except Exception as e:
-        logger.error("Update order status error: %s", e)
-        raise HTTPException(status_code=500, detail="Ошибка обновления статуса")
