@@ -14,7 +14,7 @@ from app.models.guest import Guest
 from app.models.order import Order, OrderItem
 from app.models.user import User
 from app.models.venue import Venue
-from app.routers.deps import get_current_user_dep, get_current_user_optional
+from app.routers.deps import get_current_user_dep, get_current_user_optional, get_accessible_venue_ids
 from app.services.order_service import update_order_status
 
 router = APIRouter(tags=["dashboard"])
@@ -39,11 +39,9 @@ async def dashboard(
         today = datetime.now(timezone.utc).date()
         today_start = datetime.combine(today, datetime.min.time()).replace(tzinfo=timezone.utc)
 
-        venues_result = await db.execute(
-            select(Venue).where(Venue.network_id == current_user.network_id, Venue.is_active == True)
-        )
+        venue_ids = await get_accessible_venue_ids(current_user, db)
+        venues_result = await db.execute(select(Venue).where(Venue.id.in_(venue_ids)))
         venues = venues_result.scalars().all()
-        venue_ids = [v.id for v in venues]
 
         total_rev = (await db.execute(
             select(func.sum(Order.total_amount))

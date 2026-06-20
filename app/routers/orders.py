@@ -46,6 +46,7 @@ async def live_orders(
 async def list_orders(
     venue_id: uuid.UUID | None = Query(None),
     status: str | None = Query(None),
+    telegram_id: int | None = Query(None),
     limit: int = Query(50, le=200),
     current_user: User = Depends(get_current_user_dep),
     db: AsyncSession = Depends(get_db),
@@ -63,6 +64,8 @@ async def list_orders(
             stmt = stmt.where(Order.venue_id == venue_id)
         if status:
             stmt = stmt.where(Order.status == status)
+        if telegram_id is not None:
+            stmt = stmt.join(Guest, Order.guest_id == Guest.id).where(Guest.telegram_id == telegram_id)
         result = await db.execute(stmt)
         return result.scalars().all()
     except Exception as e:

@@ -14,7 +14,7 @@ from app.models.staff import Staff
 from app.models.review import Review
 from app.models.venue import Venue
 from app.models.user import User
-from app.routers.deps import get_current_user_dep
+from app.routers.deps import get_current_user_dep, get_accessible_venue_ids
 
 router = APIRouter(prefix="/staff", tags=["staff"])
 logger = logging.getLogger(__name__)
@@ -29,9 +29,10 @@ async def staff_page(
     db: AsyncSession = Depends(get_db),
 ):
     try:
+        accessible_ids = await get_accessible_venue_ids(current_user, db)
         all_venues = (await db.execute(
             select(Venue)
-            .where(Venue.network_id == current_user.network_id, Venue.is_active == True)
+            .where(Venue.id.in_(accessible_ids))
             .order_by(Venue.name)
         )).scalars().all()
 
@@ -39,7 +40,7 @@ async def staff_page(
             venue_ids = [venue_id]
             selected_venue = next((v for v in all_venues if v.id == venue_id), None)
         else:
-            venue_ids = [v.id for v in all_venues]
+            venue_ids = accessible_ids
             selected_venue = None
 
         staff_list = (await db.execute(

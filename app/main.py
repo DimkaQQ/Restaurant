@@ -6,7 +6,7 @@ from fastapi.staticfiles import StaticFiles
 
 from app.database import engine
 from app.models import *  # noqa: F401,F403 — registers all models with Base
-from app.routers import auth, dashboard, venues, menu, orders, guests, analytics, staff
+from app.routers import auth, dashboard, venues, menu, orders, guests, analytics, staff, settings
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 logger = logging.getLogger(__name__)
@@ -32,3 +32,4 @@ app.include_router(orders.router)
 app.include_router(guests.router)
 app.include_router(analytics.router)
 app.include_router(staff.router)
+app.include_router(settings.router)

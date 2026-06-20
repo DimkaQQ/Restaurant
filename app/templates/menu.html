@@ -1,6 +1,37 @@
 {% extends "base.html" %}
 {% block title %}Меню — RestOS{% endblock %}
 
+{% block head %}
+<style>
+.menu-img-wrap { position: relative; cursor: pointer; }
+.menu-img-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.4);
+  opacity: 0;
+  transition: 0.15s;
+  font-size: 1.5rem;
+}
+.menu-img-wrap:hover .menu-img-overlay { opacity: 1; }
+.menu-img-placeholder {
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: rgba(200,168,75,0.08);
+  border: 1px dashed rgba(200,168,75,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+.menu-img-placeholder:hover { border-color: var(--gold); color: var(--gold); }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="page-header">
   <h1 class="page-title">Меню</h1>
@@ -53,7 +84,11 @@
     if (!items.length) { grid.innerHTML = '<p class="empty-state">Меню пусто</p>'; return; }
     grid.innerHTML = items.map(item => `
       <div class="menu-card ${!item.is_available ? 'unavailable' : ''}">
-        ${item.image_url ? `<img src="${item.image_url}" class="menu-img" alt="${item.name}">` : '<div class="menu-img-placeholder"></div>'}
+        ${item.image_url
+          ? `<div class="menu-img-wrap" onclick="triggerUpload('${item.id}')"><img src="${item.image_url}" class="menu-img" alt="${item.name}"><div class="menu-img-overlay">📷</div></div>`
+          : `<div class="menu-img-placeholder" onclick="triggerUpload('${item.id}')"><span>+ Фото</span></div>`
+        }
+        <input type="file" id="file-${item.id}" accept="image/*" style="display:none" onchange="uploadPhoto('${item.id}', this)">
         <div class="menu-card-body">
           <div class="menu-card-header">
             <span class="menu-item-name">${item.name}</span>
@@ -72,6 +107,22 @@
         </div>
       </div>
     `).join('');
+  }
+
+  function triggerUpload(itemId) {
+    document.getElementById('file-' + itemId).click();
+  }
+
+  async function uploadPhoto(itemId, input) {
+    if (!input.files[0]) return;
+    const fd = new FormData();
+    fd.append('photo', input.files[0]);
+    const res = await fetch('/api/menu/' + itemId + '/photo', {
+      method: 'POST',
+      headers: {'Authorization': 'Bearer ' + token()},
+      body: fd,
+    });
+    if (res.ok) loadMenu();
   }
 
   async function toggleItem(itemId, available) {
