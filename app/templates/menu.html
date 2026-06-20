@@ -119,27 +119,34 @@
     fd.append('photo', input.files[0]);
     const res = await fetch('/api/menu/' + itemId + '/photo', {
       method: 'POST',
+      credentials: 'include',
       headers: {'Authorization': 'Bearer ' + token()},
       body: fd,
     });
-    if (res.ok) loadMenu();
+    if (res.ok) { loadMenu(); }
+    else if (res.status === 401) { location.href = '/auth/login'; }
+    else { alert('Ошибка загрузки фото'); }
   }
 
   async function toggleItem(itemId, available) {
-    await fetch('/api/menu/' + itemId, {
+    const res = await fetch('/api/menu/' + itemId, {
       method: 'PATCH',
+      credentials: 'include',
       headers: {'Content-Type':'application/json','Authorization':'Bearer '+token()},
       body: JSON.stringify({is_available: available}),
     });
+    if (res.status === 401) { location.href = '/auth/login'; return; }
     loadMenu();
   }
 
   async function deleteItem(itemId) {
     if (!confirm('Удалить позицию?')) return;
-    await fetch('/api/menu/' + itemId, {
+    const res = await fetch('/api/menu/' + itemId, {
       method: 'DELETE',
+      credentials: 'include',
       headers: {'Authorization':'Bearer '+token()},
     });
+    if (res.status === 401) { location.href = '/auth/login'; return; }
     loadMenu();
   }
 
@@ -160,13 +167,18 @@
     const fd = new FormData(e.target);
     const data = Object.fromEntries(fd.entries());
     data.price = parseFloat(data.price);
-    await fetch('/api/menu/' + venueId, {
+    const res = await fetch('/api/menu/' + venueId, {
       method: 'POST',
+      credentials: 'include',
       headers: {'Content-Type':'application/json','Authorization':'Bearer '+token()},
       body: JSON.stringify(data),
     });
-    closeModal();
-    loadMenu();
+    if (res.ok) { closeModal(); loadMenu(); }
+    else if (res.status === 401) { location.href = '/auth/login'; }
+    else {
+      const err = await res.json().catch(() => ({}));
+      alert(err.detail || 'Ошибка добавления позиции');
+    }
   });
 </script>
 {% endblock %}

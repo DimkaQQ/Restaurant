@@ -5,6 +5,7 @@ import uuid
 from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import HTMLResponse
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -112,6 +113,9 @@ async def create_user(
         return {"id": str(new_user.id), "email": new_user.email, "role": new_user.role}
     except HTTPException:
         raise
+    except IntegrityError:
+        await db.rollback()
+        raise HTTPException(status_code=409, detail="Пользователь с таким email уже существует")
     except Exception as e:
         logger.error("Create user error: %s", e)
         raise HTTPException(status_code=500, detail="Ошибка создания пользователя")

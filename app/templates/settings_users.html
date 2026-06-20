@@ -249,6 +249,7 @@ async function deleteUser(userId) {
   if (!confirm('Удалить пользователя?')) return;
   const res = await fetch('/settings/users/' + userId, {
     method: 'DELETE',
+    credentials: 'include',
     headers: {'Authorization': 'Bearer ' + localStorage.getItem('access_token')},
   });
   if (res.ok) {
@@ -275,6 +276,7 @@ document.getElementById('add-user-form').addEventListener('submit', async (e) =>
 
   const res = await fetch('/settings/users', {
     method: 'POST',
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ' + localStorage.getItem('access_token'),

@@ -146,6 +146,11 @@
         location.href = '/auth/login';
       }
     });
+    document.addEventListener('htmx:afterRequest', (e) => {
+      if (e.detail.xhr && e.detail.xhr.responseURL && e.detail.xhr.responseURL.includes('/auth/login')) {
+        location.href = '/auth/login';
+      }
+    });
   </script>
 </body>
 </html>

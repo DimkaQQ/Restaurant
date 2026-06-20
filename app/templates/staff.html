@@ -177,7 +177,7 @@
   <h1>Персонал</h1>
   <div class="venue-filter">
     <form method="get" action="/staff">
-      <select name="venue_id" onchange="this.form.submit()">
+      <select name="venue_id" onchange="this.value ? this.form.submit() : location.href='/staff'">
         <option value="">Все заведения</option>
         {% for v in venues %}
         <option value="{{ v.id }}" {% if selected_venue_id == v.id|string %}selected{% endif %}>{{ v.name }}</option>
