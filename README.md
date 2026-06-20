@@ -14,71 +14,27 @@ SaaS-платформа для сетей ресторанов: Telegram-бот 
 
 ## Быстрый старт
 
-### 1. Клонирование и настройка
-
 ```bash
-cp .env.example .env
-# Заполните .env своими значениями
+cp .env.example .env   # заполните BOT_TOKEN_VENUE_1, ANTHROPIC_API_KEY
+make up                # БД + миграции + API — всё автоматом
+make setup             # создать первого владельца (один раз)
 ```
 
-### 2. Виртуальное окружение
+Панель управления: **http://localhost:8000**
+
+### С ботом
 
 ```bash
-python3.11 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
+make bot   # поднимает бот вместе с остальным
 ```
 
-### 3. База данных (через Docker)
+### Остальные команды
 
 ```bash
-docker compose up db -d
-```
-
-### 4. Миграции
-
-```bash
-alembic upgrade head
-```
-
-### 5. Создание первого владельца
-
-```bash
-python scripts/create_owner.py
-```
-
-Сохраните `Network ID` — он нужен для переменной `NETWORK_ID` в `.env`.
-
-### 6. Запуск API
-
-```bash
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-```
-
-Панель управления: http://localhost:8000
-
-### 7. Запуск бота
-
-```bash
-# В .env:
-# BOT_TOKEN_VENUE_1=токен_из_BotFather
-# NETWORK_ID=uuid_из_шага_5
-# VENUE_ID_1=uuid_заведения
-
-python -m bot.main
-```
-
----
-
-## Docker Compose (всё сразу)
-
-```bash
-cp .env.example .env
-# Заполните .env
-docker compose up --build
-# Затем в отдельном окне:
-docker compose exec api alembic upgrade head
-docker compose exec api python scripts/create_owner.py
+make logs    # логи API
+make down    # остановить всё
+make reset   # сбросить БД и начать заново
+make help    # список всех команд
 ```
 
 ---

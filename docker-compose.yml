@@ -13,16 +13,28 @@ services:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U restos"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+      interval: 3s
+      timeout: 3s
+      retries: 10
+
+  migrate:
+    build: .
+    command: alembic upgrade head
+    environment:
+      DATABASE_URL: postgresql+asyncpg://restos:restos_secret@db/restos
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - .:/app
+    working_dir: /app
 
   api:
     build: .
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     environment:
       DATABASE_URL: postgresql+asyncpg://restos:restos_secret@db/restos
-      SECRET_KEY: ${SECRET_KEY:-change-in-production}
+      SECRET_KEY: ${SECRET_KEY:-dev-secret-change-in-prod}
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
       BOT_TOKEN_VENUE_1: ${BOT_TOKEN_VENUE_1:-}
     ports:
@@ -30,6 +42,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
     volumes:
       - .:/app
     working_dir: /app
@@ -44,8 +58,11 @@ services:
       NETWORK_ID: ${NETWORK_ID:-}
       VENUE_ID_1: ${VENUE_ID_1:-}
     depends_on:
-      - api
+      api:
+        condition: service_started
     restart: unless-stopped
+    profiles:
+      - bot
 
 volumes:
   pgdata:
