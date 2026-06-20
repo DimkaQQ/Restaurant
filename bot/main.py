@@ -5,6 +5,7 @@ import os
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.client.session.aiohttp import AiohttpSession
+from aiogram.client.telegram import TelegramAPIServer
 from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
 
@@ -19,6 +20,7 @@ NETWORK_ID = os.getenv("NETWORK_ID", "")
 VENUE_ID = os.getenv("VENUE_ID_1", "")
 BOT_TOKEN = os.getenv("BOT_TOKEN_VENUE_1", "")
 HTTPS_PROXY = os.getenv("HTTPS_PROXY", "")
+TELEGRAM_API_SERVER = os.getenv("TELEGRAM_API_SERVER", "")
 
 
 async def main():
@@ -26,7 +28,13 @@ async def main():
         logger.error("BOT_TOKEN_VENUE_1 not set")
         return
 
-    session = AiohttpSession(proxy=HTTPS_PROXY) if HTTPS_PROXY else None
+    session_kwargs = {}
+    if TELEGRAM_API_SERVER:
+        session_kwargs["api"] = TelegramAPIServer.from_base(TELEGRAM_API_SERVER)
+        logger.info("Using custom Telegram API server: %s", TELEGRAM_API_SERVER)
+    elif HTTPS_PROXY:
+        session_kwargs["proxy"] = HTTPS_PROXY
+    session = AiohttpSession(**session_kwargs) if session_kwargs else None
     bot = Bot(token=BOT_TOKEN, session=session, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     dp = Dispatcher(storage=MemoryStorage())
 
