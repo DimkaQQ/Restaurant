@@ -25,14 +25,20 @@
     </div>
     {% endfor %}
   </div>
-  {% if next_status.get(order.status) %}
   <div class="kds-action">
+    {% if next_status.get(order.status) %}
     <button
       class="kds-btn kds-btn-advance"
       onclick="advanceOrder('{{ order.id }}', '{{ next_status[order.status] }}')"
     >{{ next_label[order.status] }}</button>
+    {% endif %}
+    {% if order.status != 'done' %}
+    <button
+      class="kds-btn kds-btn-cancel"
+      onclick="if(confirm('Отменить заказ #{{ order.id | string | truncate(8, True, '') }}?')) advanceOrder('{{ order.id }}', 'cancelled')"
+    >✕</button>
+    {% endif %}
   </div>
-  {% endif %}
 </div>
 {% endmacro %}
 
