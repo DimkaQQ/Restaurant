@@ -41,10 +41,24 @@ body {
   border-bottom: 1px solid var(--border);
   font-size: 1.4rem;
   letter-spacing: -0.02em;
+  display: flex;
+  align-items: baseline;
+  line-height: 1;
 }
 
-.logo-serif { font-family: 'Instrument Serif', serif; color: var(--gold); }
-.logo-mono { font-weight: 600; color: var(--white); }
+.logo-serif {
+  font-family: 'Instrument Serif', serif;
+  color: var(--gold);
+  font-size: 1em;
+  line-height: 1;
+}
+.logo-mono {
+  font-weight: 700;
+  color: var(--white);
+  font-size: 0.85em;
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
 
 .nav-links { list-style: none; padding: 1rem 0; flex: 1; }
 

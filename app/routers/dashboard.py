@@ -78,6 +78,11 @@ async def dashboard(
         )).all()
         top_items_data = [{"name": r.name, "qty": int(r.qty)} for r in top_items_rows]
 
+        orders_today_count = (await db.execute(
+            select(func.count(Order.id))
+            .where(Order.venue_id.in_(venue_ids), Order.created_at >= today_start)
+        )).scalar() or 0
+
         return templates.TemplateResponse("dashboard.html", {
             "request": request,
             "user": current_user,
@@ -85,6 +90,7 @@ async def dashboard(
             "total_revenue": total_rev,
             "today_revenue": today_rev,
             "new_guests": new_guests,
+            "orders_today": orders_today_count,
             "active_orders": orders,
             "top_items": top_items_data,
         })

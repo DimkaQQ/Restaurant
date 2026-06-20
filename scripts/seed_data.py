@@ -1,6 +1,10 @@
 """
-Seed script: adds Chayla venues, full menu, test guests and orders.
-Usage: python scripts/seed_data.py
+Seed script: all Daniyar venues, full menus, 800 guests, 90 days of orders.
+Uses bulk inserts — completes in ~15 seconds.
+
+Usage:
+  python scripts/seed_data.py           # skip if already seeded
+  python scripts/seed_data.py --force   # wipe and re-seed
 """
 import asyncio
 import os
@@ -8,13 +12,16 @@ import sys
 import uuid
 import random
 from datetime import datetime, timedelta, timezone
+from decimal import Decimal
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
 from dotenv import load_dotenv
 load_dotenv()
 
-from sqlalchemy import select
+import sqlalchemy as sa
+from sqlalchemy import select, delete, insert
+
 from app.database import AsyncSessionLocal
 from app.models.network import Network
 from app.models.venue import Venue
@@ -24,251 +31,374 @@ from app.models.order import Order, OrderItem, Visit
 from app.models.points import PointsTransaction
 
 
+# ── Venues ─────────────────────────────────────────────────────────────────────
 VENUES = [
-    {
-        "name": "Chayla — Арбат",
-        "address": "г. Алматы, ул. Арбат, 15",
-    },
-    {
-        "name": "Chayla — Достык",
-        "address": "г. Алматы, пр. Достык, 97",
-    },
+    # Chayla — чайхана
+    {"brand": "Chayla", "name": "Chayla — Алмалы",    "address": "г. Алматы, ул. Жибек Жолы, 115",       "daily_min": 55, "daily_max": 95,  "avg_check": 4200},
+    {"brand": "Chayla", "name": "Chayla — Достык",    "address": "г. Алматы, пр. Достык, 240",            "daily_min": 70, "daily_max": 130, "avg_check": 5100},
+    {"brand": "Chayla", "name": "Chayla — Байзақов",  "address": "г. Алматы, ул. Байзақов, 280",          "daily_min": 40, "daily_max": 75,  "avg_check": 3900},
+    {"brand": "Chayla", "name": "Chayla — Мега",      "address": "г. Алматы, ТРЦ Мега, Розы Багланова 7","daily_min": 80, "daily_max": 160, "avg_check": 4600},
+    # &milk — milk bar / specialty coffee
+    {"brand": "&milk", "name": "&milk — Esentai",     "address": "г. Алматы, пр. Аль-Фараби, 77/8",       "daily_min": 65, "daily_max": 120, "avg_check": 3400},
+    {"brand": "&milk", "name": "&milk — Алмалы",      "address": "г. Алматы, ул. Панфилова, 98",          "daily_min": 50, "daily_max": 95,  "avg_check": 3200},
 ]
 
-MENU = [
-    # ─── Чай & Кофе ────────────────────────────────────────────────────────────
-    {"name": "Чёрный чай (чайник)", "category": "Напитки", "price": 800, "description": "Крупнолистовой цейлонский чай, чайник 500 мл"},
-    {"name": "Зелёный чай (чайник)", "category": "Напитки", "price": 800, "description": "Китайский зелёный чай, чайник 500 мл"},
-    {"name": "Чай с молоком", "category": "Напитки", "price": 900, "description": "Крепкий чай с топлёным молоком"},
-    {"name": "Шальчай", "category": "Напитки", "price": 1000, "description": "Традиционный казахский чай с молоком и солью"},
-    {"name": "Чай с чабрецом и мёдом", "category": "Напитки", "price": 1100, "description": "Травяной чай с горным мёдом"},
-    {"name": "Матча латте", "category": "Напитки", "price": 1500, "description": "Японский чай матча с молоком"},
-    {"name": "Капучино", "category": "Напитки", "price": 1400, "description": "Двойной эспрессо с молочной пенкой"},
-    {"name": "Латте", "category": "Напитки", "price": 1500, "description": "Мягкий кофе с большим количеством молока"},
-    {"name": "Американо", "category": "Напитки", "price": 1000, "description": "Классический чёрный кофе"},
-    {"name": "Какао", "category": "Напитки", "price": 1200, "description": "Горячий какао на молоке"},
-    {"name": "Лимонад домашний", "category": "Напитки", "price": 1300, "description": "Сезонный лимонад, 400 мл"},
-
-    # ─── Завтраки ───────────────────────────────────────────────────────────────
-    {"name": "Каша молочная", "category": "Завтраки", "price": 1200, "description": "Овсяная каша на молоке с ягодами"},
-    {"name": "Яичница с овощами", "category": "Завтраки", "price": 1500, "description": "Три яйца, болгарский перец, помидор"},
-    {"name": "Омлет с сыром", "category": "Завтраки", "price": 1600, "description": "Пышный омлет с сыром Гауда"},
-    {"name": "Авокадо тост", "category": "Завтраки", "price": 2200, "description": "Хлеб на закваске, авокадо, яйцо пашот"},
-    {"name": "Сырники со сметаной", "category": "Завтраки", "price": 1800, "description": "Домашние сырники с джемом и сметаной"},
-    {"name": "Блинчики с мёдом", "category": "Завтраки", "price": 1700, "description": "5 тонких блинчиков с маслом и мёдом"},
-
-    # ─── Выпечка ────────────────────────────────────────────────────────────────
-    {"name": "Самса с мясом", "category": "Выпечка", "price": 600, "description": "Слоёная самса с говядиной и луком"},
-    {"name": "Самса с тыквой", "category": "Выпечка", "price": 550, "description": "Слоёная самса с тыквой"},
-    {"name": "Круассан масляный", "category": "Выпечка", "price": 900, "description": "Классический французский круассан"},
-    {"name": "Круассан с шоколадом", "category": "Выпечка", "price": 1000, "description": "Круассан с ганашем из тёмного шоколада"},
-    {"name": "Булочка с корицей", "category": "Выпечка", "price": 850, "description": "Мягкая булочка с корицей и глазурью"},
-    {"name": "Лепёшка тандырная", "category": "Выпечка", "price": 500, "description": "Свежая лепёшка из тандыра"},
-    {"name": "Баурсаки", "category": "Выпечка", "price": 700, "description": "Традиционные казахские пончики, 6 шт."},
-
-    # ─── Горячие блюда ──────────────────────────────────────────────────────────
-    {"name": "Лагман", "category": "Горячие блюда", "price": 2800, "description": "Узбекский лагман с говядиной и овощами"},
-    {"name": "Манты (6 шт.)", "category": "Горячие блюда", "price": 2500, "description": "Паровые манты с говядиной и луком"},
-    {"name": "Плов по-узбекски", "category": "Горячие блюда", "price": 2600, "description": "Рис с бараниной, морковью и специями"},
-    {"name": "Шурпа", "category": "Горячие блюда", "price": 2400, "description": "Наваристый суп с бараниной"},
-    {"name": "Бешбармак", "category": "Горячие блюда", "price": 3500, "description": "Традиционное казахское блюдо с говядиной"},
-
-    # ─── Десерты ────────────────────────────────────────────────────────────────
-    {"name": "Чизкейк классический", "category": "Десерты", "price": 1600, "description": "Нью-Йорк чизкейк с ягодным соусом"},
-    {"name": "Торт Наполеон (кусок)", "category": "Десерты", "price": 1400, "description": "Классический Наполеон с кремом"},
-    {"name": "Медовик (кусок)", "category": "Десерты", "price": 1400, "description": "Медовый торт со сметанным кремом"},
-    {"name": "Эклер шоколадный", "category": "Десерты", "price": 900, "description": "Заварной эклер с шоколадной глазурью"},
-    {"name": "Тирамису", "category": "Десерты", "price": 1800, "description": "Классический итальянский десерт"},
-    {"name": "Пахлава", "category": "Десерты", "price": 800, "description": "Восточная сладость с орехами и мёдом, 3 шт."},
-    {"name": "Мороженое (2 шарика)", "category": "Десерты", "price": 1000, "description": "Ванильное или шоколадное мороженое"},
+# ── Menus ───────────────────────────────────────────────────────────────────────
+MENU_CHAYLA = [
+    # Напитки
+    {"name": "Чёрный чай (чайник)",         "category": "Напитки",        "price": 800},
+    {"name": "Зелёный чай (чайник)",         "category": "Напитки",        "price": 800},
+    {"name": "Чай с молоком",                "category": "Напитки",        "price": 900},
+    {"name": "Шальчай",                      "category": "Напитки",        "price": 1000},
+    {"name": "Чай с чабрецом и мёдом",       "category": "Напитки",        "price": 1100},
+    {"name": "Матча латте",                  "category": "Напитки",        "price": 1500},
+    {"name": "Капучино",                     "category": "Напитки",        "price": 1400},
+    {"name": "Латте",                        "category": "Напитки",        "price": 1500},
+    {"name": "Американо",                    "category": "Напитки",        "price": 1000},
+    {"name": "Какао",                        "category": "Напитки",        "price": 1200},
+    {"name": "Лимонад домашний",             "category": "Напитки",        "price": 1300},
+    # Завтраки
+    {"name": "Каша молочная",                "category": "Завтраки",       "price": 1200},
+    {"name": "Яичница с овощами",            "category": "Завтраки",       "price": 1500},
+    {"name": "Омлет с сыром",                "category": "Завтраки",       "price": 1600},
+    {"name": "Авокадо тост",                 "category": "Завтраки",       "price": 2200},
+    {"name": "Сырники со сметаной",          "category": "Завтраки",       "price": 1800},
+    {"name": "Блинчики с мёдом",             "category": "Завтраки",       "price": 1700},
+    # Выпечка
+    {"name": "Самса с мясом",                "category": "Выпечка",        "price": 600},
+    {"name": "Самса с тыквой",               "category": "Выпечка",        "price": 550},
+    {"name": "Круассан масляный",            "category": "Выпечка",        "price": 900},
+    {"name": "Круассан с шоколадом",         "category": "Выпечка",        "price": 1000},
+    {"name": "Булочка с корицей",            "category": "Выпечка",        "price": 850},
+    {"name": "Лепёшка тандырная",            "category": "Выпечка",        "price": 500},
+    {"name": "Баурсаки",                     "category": "Выпечка",        "price": 700},
+    # Горячие блюда
+    {"name": "Лагман",                       "category": "Горячие блюда",  "price": 2800},
+    {"name": "Манты (6 шт.)",               "category": "Горячие блюда",  "price": 2500},
+    {"name": "Плов по-узбекски",             "category": "Горячие блюда",  "price": 2600},
+    {"name": "Шурпа",                        "category": "Горячие блюда",  "price": 2400},
+    {"name": "Бешбармак",                    "category": "Горячие блюда",  "price": 3500},
+    {"name": "Самса-тандыр XXL",            "category": "Горячие блюда",  "price": 1200},
+    # Десерты
+    {"name": "Чизкейк классический",         "category": "Десерты",        "price": 1600},
+    {"name": "Торт Наполеон (кусок)",        "category": "Десерты",        "price": 1400},
+    {"name": "Медовик (кусок)",              "category": "Десерты",        "price": 1400},
+    {"name": "Эклер шоколадный",             "category": "Десерты",        "price": 900},
+    {"name": "Тирамису",                     "category": "Десерты",        "price": 1800},
+    {"name": "Пахлава",                      "category": "Десерты",        "price": 800},
+    {"name": "Мороженое (2 шарика)",         "category": "Десерты",        "price": 1000},
+    {"name": "Шоколадный фондан",            "category": "Десерты",        "price": 1900},
 ]
 
-GUESTS = [
-    {"name": "Алия Сейткали", "phone": "+7 701 234 5678"},
-    {"name": "Марат Джаксыбеков", "phone": "+7 702 345 6789"},
-    {"name": "Динара Ахметова", "phone": "+7 707 456 7890"},
-    {"name": "Нурлан Бейсенов", "phone": "+7 747 567 8901"},
-    {"name": "Айгерим Касымова", "phone": "+7 771 678 9012"},
-    {"name": "Руслан Омаров", "phone": "+7 777 789 0123"},
-    {"name": "Зарина Тулегенова", "phone": "+7 701 890 1234"},
-    {"name": "Ержан Сагинтаев", "phone": "+7 702 901 2345"},
-    {"name": "Камила Абдрахманова", "phone": "+7 705 012 3456"},
-    {"name": "Тимур Байжанов", "phone": "+7 778 123 4567"},
-    {"name": "Гульназ Сейтханова", "phone": "+7 771 234 5670"},
-    {"name": "Асхат Мусаев", "phone": "+7 747 345 6781"},
-    {"name": "Инна Петрова", "phone": "+7 702 456 7892"},
-    {"name": "Владимир Ким", "phone": "+7 701 567 8903"},
-    {"name": "Бота Досмагамбетова", "phone": "+7 777 678 9014"},
+MENU_MILK = [
+    # Кофе
+    {"name": "Эспрессо",                     "category": "Кофе",           "price": 900},
+    {"name": "Американо",                    "category": "Кофе",           "price": 1000},
+    {"name": "Капучино",                     "category": "Кофе",           "price": 1400},
+    {"name": "Флэт Уайт",                    "category": "Кофе",           "price": 1500},
+    {"name": "Кортадо",                      "category": "Кофе",           "price": 1500},
+    {"name": "Латте",                        "category": "Кофе",           "price": 1500},
+    {"name": "Раф кофе",                     "category": "Кофе",           "price": 1700},
+    {"name": "Овсяный латте",                "category": "Кофе",           "price": 1800},
+    # Напитки
+    {"name": "Матча латте",                  "category": "Напитки",        "price": 1700},
+    {"name": "Золотое молоко",               "category": "Напитки",        "price": 1500},
+    {"name": "Смузи Клубника",               "category": "Напитки",        "price": 1800},
+    {"name": "Смузи Манго-Авокадо",          "category": "Напитки",        "price": 1900},
+    {"name": "Смузи Банан-Арахис",           "category": "Напитки",        "price": 1600},
+    {"name": "Лимонад Базилик",              "category": "Напитки",        "price": 1300},
+    # Еда
+    {"name": "Авокадо тост с яйцом пашот",  "category": "Еда",            "price": 2500},
+    {"name": "Клаб-сэндвич",                 "category": "Еда",            "price": 2800},
+    {"name": "Боул с гранолой",              "category": "Еда",            "price": 2000},
+    {"name": "Чиа-пудинг",                   "category": "Еда",            "price": 1400},
+    {"name": "Салат Цезарь",                 "category": "Еда",            "price": 2400},
+    {"name": "Яйца Бенедикт",               "category": "Еда",            "price": 2600},
+    # Выпечка
+    {"name": "Круассан масляный",            "category": "Выпечка",        "price": 900},
+    {"name": "Круассан Ветчина & Сыр",       "category": "Выпечка",        "price": 1200},
+    {"name": "Брауни",                       "category": "Выпечка",        "price": 1000},
+    {"name": "Чизкейк",                      "category": "Выпечка",        "price": 1600},
+    {"name": "Печенье (2 шт.)",              "category": "Выпечка",        "price": 700},
 ]
 
+MENU_BY_BRAND = {"Chayla": MENU_CHAYLA, "&milk": MENU_MILK}
 
-def rand_dt(days_back_min: int, days_back_max: int) -> datetime:
-    delta = random.randint(days_back_min * 86400, days_back_max * 86400)
-    return datetime.now(timezone.utc) - timedelta(seconds=delta)
+# ── 800 Guests ─────────────────────────────────────────────────────────────────
+FIRST_NAMES = [
+    "Алия", "Айгерим", "Динара", "Гульназ", "Зарина", "Камила", "Бота", "Сауле",
+    "Нагима", "Аида", "Асель", "Жания", "Малика", "Ксения", "Ирина", "Анна",
+    "Мария", "Наталья", "Екатерина", "Дарья", "Алина", "Юлия", "Кристина",
+    "Марат", "Нурлан", "Руслан", "Ержан", "Асхат", "Тимур", "Данияр", "Бауыржан",
+    "Ринат", "Алибек", "Сейткали", "Болат", "Санжар", "Максат", "Берик", "Талгат",
+    "Олжас", "Аманжол", "Дулат", "Нурсултан", "Аскар", "Рустем", "Виктор",
+    "Александр", "Сергей", "Дмитрий", "Андрей", "Иван", "Артём",
+]
+LAST_NAMES = [
+    "Сейткали", "Джаксыбеков", "Ахметова", "Бейсенов", "Касымова", "Омаров",
+    "Тулегенова", "Сагинтаев", "Абдрахманова", "Байжанов", "Сейтханова", "Мусаев",
+    "Петрова", "Ким", "Досмагамбетова", "Жаксыбеков", "Нурмаганбетов",
+    "Сулейменов", "Абенов", "Байдаулетов", "Ибрагимов", "Хасанов", "Назаров",
+    "Каримов", "Рахимов", "Юсупов", "Матвеев", "Соколов", "Новиков", "Попов",
+    "Лебедев", "Козлов", "Николаев", "Семёнов", "Голубев", "Виноградов",
+    "Кузнецов", "Смирнов", "Иванов", "Васильев",
+]
+
+PHONE_PREFIXES = ["+7 701", "+7 702", "+7 705", "+7 707", "+7 747", "+7 771", "+7 777", "+7 778"]
+
+
+def rand_phone() -> str:
+    return f"{random.choice(PHONE_PREFIXES)} {random.randint(100,999)} {random.randint(1000,9999)}"
+
+
+def rand_dt(days_back: float) -> datetime:
+    delta = int(days_back * 86400)
+    jitter = random.randint(0, 86400)
+    return datetime.now(timezone.utc) - timedelta(seconds=delta * random.random() + jitter)
 
 
 async def main():
+    force = "--force" in sys.argv
+
     async with AsyncSessionLocal() as db:
-        # Find the network
+        # Find network
         result = await db.execute(select(Network))
         network = result.scalars().first()
         if not network:
-            print("❌ Нет ни одной сети. Сначала запусти: make setup")
+            print("❌ Нет сети. Сначала: make setup")
+            return
+        print(f"✅ Сеть: {network.name}")
+
+        # Check existing
+        existing = (await db.execute(
+            select(Venue).where(Venue.network_id == network.id)
+        )).scalars().first()
+
+        if existing and not force:
+            print("⚠️  Данные уже есть. Для перезаписи: make reseed")
             return
 
-        print(f"✅ Сеть: {network.name} (id={network.id})")
-
-        # Check if already seeded
-        existing = await db.execute(select(Venue).where(Venue.network_id == network.id))
-        if existing.scalars().first():
-            print("⚠️  Данные уже есть. Пропускаем.")
-            return
-
-        # ── Venues ──────────────────────────────────────────────────────────────
-        venues = []
-        for v_data in VENUES:
-            venue = Venue(
-                id=uuid.uuid4(),
-                network_id=network.id,
-                name=v_data["name"],
-                address=v_data["address"],
-                is_active=True,
-            )
-            db.add(venue)
-            venues.append(venue)
-        await db.flush()
-        print(f"   + {len(venues)} заведений")
-
-        # ── Menu items (same menu for both venues) ───────────────────────────────
-        all_items = []
-        for venue in venues:
-            for m in MENU:
-                item = MenuItem(
-                    id=uuid.uuid4(),
-                    venue_id=venue.id,
-                    name=m["name"],
-                    category=m["category"],
-                    price=m["price"],
-                    description=m["description"],
-                    is_available=True,
+        if existing and force:
+            print("   Очищаем старые данные...")
+            await db.execute(delete(Visit).where(
+                Visit.venue_id.in_(select(Venue.id).where(Venue.network_id == network.id))
+            ))
+            await db.execute(delete(PointsTransaction).where(
+                PointsTransaction.network_id == network.id
+            ))
+            await db.execute(delete(OrderItem).where(
+                OrderItem.order_id.in_(
+                    select(Order.id).join(Venue).where(Venue.network_id == network.id)
                 )
-                db.add(item)
-                all_items.append(item)
+            ))
+            await db.execute(delete(Order).where(
+                Order.venue_id.in_(select(Venue.id).where(Venue.network_id == network.id))
+            ))
+            await db.execute(delete(MenuItem).where(
+                MenuItem.venue_id.in_(select(Venue.id).where(Venue.network_id == network.id))
+            ))
+            await db.execute(delete(Guest).where(Guest.network_id == network.id))
+            await db.execute(delete(Venue).where(Venue.network_id == network.id))
+            await db.commit()
+
+        # ── 1. Venues ───────────────────────────────────────────────────────────
+        venue_rows = []
+        venue_meta = []  # keep brand/daily info alongside id
+        for v in VENUES:
+            vid = uuid.uuid4()
+            venue_rows.append({
+                "id": vid,
+                "network_id": network.id,
+                "name": v["name"],
+                "address": v["address"],
+                "is_active": True,
+                "created_at": datetime.now(timezone.utc) - timedelta(days=365),
+            })
+            venue_meta.append({**v, "id": vid})
+        await db.execute(insert(Venue), venue_rows)
         await db.flush()
-        print(f"   + {len(all_items)} позиций меню")
+        print(f"   + {len(venue_rows)} заведений")
 
-        # ── Guests ───────────────────────────────────────────────────────────────
-        guests = []
-        for g_data in GUESTS:
-            guest = Guest(
-                id=uuid.uuid4(),
-                network_id=network.id,
-                name=g_data["name"],
-                phone=g_data["phone"],
-                total_points=0,
-                total_visits=0,
-                created_at=rand_dt(60, 180),
-            )
-            db.add(guest)
-            guests.append(guest)
+        # ── 2. Menu items ───────────────────────────────────────────────────────
+        menu_rows = []
+        venue_menu: dict[uuid.UUID, list[dict]] = {}
+        for vm in venue_meta:
+            items = []
+            for m in MENU_BY_BRAND[vm["brand"]]:
+                mid = uuid.uuid4()
+                menu_rows.append({
+                    "id": mid,
+                    "venue_id": vm["id"],
+                    "name": m["name"],
+                    "category": m["category"],
+                    "price": Decimal(str(m["price"])),
+                    "description": None,
+                    "is_available": True,
+                })
+                items.append({"id": mid, "name": m["name"], "price": m["price"]})
+            venue_menu[vm["id"]] = items
+        await db.execute(insert(MenuItem), menu_rows)
         await db.flush()
-        print(f"   + {len(guests)} гостей")
+        print(f"   + {len(menu_rows)} позиций меню")
 
-        # ── Orders ───────────────────────────────────────────────────────────────
-        statuses_hist = ["done"] * 8 + ["cancelled"]
-        statuses_live = ["new", "preparing", "ready"]
-        orders_added = 0
+        # ── 3. Guests ────────────────────────────────────────────────────────────
+        guest_count = 800
+        guest_rows = []
+        guest_ids = []
+        for i in range(guest_count):
+            gid = uuid.uuid4()
+            guest_rows.append({
+                "id": gid,
+                "network_id": network.id,
+                "name": f"{random.choice(FIRST_NAMES)} {random.choice(LAST_NAMES)}",
+                "phone": rand_phone(),
+                "telegram_id": None,
+                "total_points": 0,
+                "total_visits": 0,
+                "created_at": datetime.now(timezone.utc) - timedelta(days=random.randint(1, 400)),
+            })
+            guest_ids.append(gid)
+        await db.execute(insert(Guest), guest_rows)
+        await db.flush()
+        print(f"   + {guest_count} гостей")
 
-        for venue in venues:
-            venue_items = [i for i in all_items if i.venue_id == venue.id]
+        # ── 4. Orders (90 days history + live today) ─────────────────────────────
+        STATUSES_HIST = ["done"] * 9 + ["cancelled"]
+        STATUSES_LIVE = ["new", "new", "preparing", "preparing", "ready", "confirmed"]
 
-            # Historical orders (last 90 days)
-            for _ in range(80):
-                guest = random.choice(guests)
-                n_items = random.randint(1, 4)
-                chosen = random.sample(venue_items, min(n_items, len(venue_items)))
-                created = rand_dt(1, 90)
+        order_rows = []
+        order_item_rows = []
+        visit_rows = []
+        guest_visits: dict[uuid.UUID, int] = {g: 0 for g in guest_ids}
+        guest_points: dict[uuid.UUID, int] = {g: 0 for g in guest_ids}
 
-                order = Order(
-                    id=uuid.uuid4(),
-                    venue_id=venue.id,
-                    guest_id=guest.id,
-                    status=random.choice(statuses_hist),
-                    created_at=created,
-                    updated_at=created,
-                )
-                db.add(order)
-                await db.flush()
+        for vm in venue_meta:
+            items = venue_menu[vm["id"]]
 
-                total = 0
-                for mi in chosen:
-                    qty = random.randint(1, 3)
-                    oi = OrderItem(
-                        id=uuid.uuid4(),
-                        order_id=order.id,
-                        menu_item_id=mi.id,
-                        name=mi.name,
-                        price=mi.price,
-                        quantity=qty,
+            # Historical: 90 days
+            for day in range(1, 91):
+                n = random.randint(vm["daily_min"], vm["daily_max"])
+                # vary by day-of-week (weekends busier)
+                day_ts = datetime.now(timezone.utc) - timedelta(days=day)
+                weekday = day_ts.weekday()
+                if weekday >= 5:
+                    n = int(n * 1.3)
+
+                for _ in range(n):
+                    oid = uuid.uuid4()
+                    gid = random.choice(guest_ids)
+                    status = random.choice(STATUSES_HIST)
+                    n_items = random.choices([1, 2, 3, 4], weights=[20, 40, 30, 10])[0]
+                    chosen = random.sample(items, min(n_items, len(items)))
+
+                    total = 0.0
+                    for mi in chosen:
+                        qty = random.randint(1, 3)
+                        total += mi["price"] * qty
+                        order_item_rows.append({
+                            "id": uuid.uuid4(),
+                            "order_id": oid,
+                            "menu_item_id": mi["id"],
+                            "name": mi["name"],
+                            "price": Decimal(str(mi["price"])),
+                            "quantity": qty,
+                        })
+
+                    order_dt = day_ts.replace(
+                        hour=random.randint(9, 21),
+                        minute=random.randint(0, 59),
+                        second=0, microsecond=0
                     )
-                    db.add(oi)
-                    total += float(mi.price) * qty
+                    order_rows.append({
+                        "id": oid,
+                        "venue_id": vm["id"],
+                        "guest_id": gid,
+                        "status": status,
+                        "total_amount": Decimal(str(round(total, 2))),
+                        "points_earned": int(total // 1000) * 10 if status == "done" else 0,
+                        "notes": None,
+                        "created_at": order_dt,
+                        "updated_at": order_dt,
+                    })
 
-                order.total_amount = round(total, 2)
-                order.points_earned = int(total // 1000) * 10
+                    if status == "done":
+                        visit_rows.append({
+                            "id": uuid.uuid4(),
+                            "guest_id": gid,
+                            "venue_id": vm["id"],
+                            "order_id": oid,
+                            "visited_at": order_dt,
+                        })
+                        guest_visits[gid] = guest_visits.get(gid, 0) + 1
+                        guest_points[gid] = guest_points.get(gid, 0) + int(total // 1000) * 10
 
-                if order.status == "done":
-                    visit = Visit(
-                        id=uuid.uuid4(),
-                        guest_id=guest.id,
-                        venue_id=venue.id,
-                        order_id=order.id,
-                        visited_at=created,
-                    )
-                    db.add(visit)
-                    guest.total_visits += 1
-                    guest.total_points += order.points_earned
+            # Live: today
+            for _ in range(random.randint(vm["daily_min"] // 5, vm["daily_max"] // 5)):
+                oid = uuid.uuid4()
+                gid = random.choice(guest_ids)
+                n_items = random.choices([1, 2, 3], weights=[30, 50, 20])[0]
+                chosen = random.sample(items, min(n_items, len(items)))
 
-                orders_added += 1
-
-            # Live orders (today)
-            for _ in range(random.randint(3, 6)):
-                guest = random.choice(guests)
-                n_items = random.randint(1, 3)
-                chosen = random.sample(venue_items, min(n_items, len(venue_items)))
-                created = rand_dt(0, 0)
-
-                order = Order(
-                    id=uuid.uuid4(),
-                    venue_id=venue.id,
-                    guest_id=guest.id,
-                    status=random.choice(statuses_live),
-                    created_at=created,
-                    updated_at=created,
-                )
-                db.add(order)
-                await db.flush()
-
-                total = 0
+                total = 0.0
                 for mi in chosen:
                     qty = random.randint(1, 2)
-                    oi = OrderItem(
-                        id=uuid.uuid4(),
-                        order_id=order.id,
-                        menu_item_id=mi.id,
-                        name=mi.name,
-                        price=mi.price,
-                        quantity=qty,
-                    )
-                    db.add(oi)
-                    total += float(mi.price) * qty
+                    total += mi["price"] * qty
+                    order_item_rows.append({
+                        "id": uuid.uuid4(),
+                        "order_id": oid,
+                        "menu_item_id": mi["id"],
+                        "name": mi["name"],
+                        "price": Decimal(str(mi["price"])),
+                        "quantity": qty,
+                    })
 
-                order.total_amount = round(total, 2)
-                orders_added += 1
+                now = datetime.now(timezone.utc)
+                order_rows.append({
+                    "id": oid,
+                    "venue_id": vm["id"],
+                    "guest_id": gid,
+                    "status": random.choice(STATUSES_LIVE),
+                    "total_amount": Decimal(str(round(total, 2))),
+                    "points_earned": 0,
+                    "notes": None,
+                    "created_at": now - timedelta(minutes=random.randint(2, 90)),
+                    "updated_at": now - timedelta(minutes=random.randint(0, 5)),
+                })
+
+        # Bulk insert orders in batches to avoid memory issues
+        BATCH = 2000
+        for i in range(0, len(order_rows), BATCH):
+            await db.execute(insert(Order), order_rows[i:i+BATCH])
+        await db.flush()
+
+        for i in range(0, len(order_item_rows), BATCH):
+            await db.execute(insert(OrderItem), order_item_rows[i:i+BATCH])
+        await db.flush()
+
+        for i in range(0, len(visit_rows), BATCH):
+            await db.execute(insert(Visit), visit_rows[i:i+BATCH])
+        await db.flush()
+
+        # Update guest totals
+        guest_update_rows = [
+            {"id": gid, "total_visits": guest_visits[gid], "total_points": guest_points[gid]}
+            for gid in guest_ids
+            if guest_visits[gid] > 0
+        ]
+        for row in guest_update_rows:
+            await db.execute(
+                sa.update(Guest)
+                .where(Guest.id == row["id"])
+                .values(total_visits=row["total_visits"], total_points=row["total_points"])
+            )
 
         await db.commit()
-        print(f"   + {orders_added} заказов")
-        print("\n✅ Тестовые данные добавлены!")
+
+        total_orders = len(order_rows)
+        live_orders = sum(1 for o in order_rows if o["status"] in ("new", "confirmed", "preparing", "ready"))
+        print(f"   + {total_orders:,} заказов ({live_orders} активных сегодня)")
+        print(f"   + {len(visit_rows):,} визитов")
+        print(f"\n✅ Готово! Данные залиты.")
 
 
 if __name__ == "__main__":
