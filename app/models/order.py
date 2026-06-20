@@ -12,6 +12,7 @@ class Order(Base):
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
     venue_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("venues.id"))
     guest_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("guests.id"))
+    staff_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("staff.id"), nullable=True)
     status: Mapped[str] = mapped_column(String(50), default="new")
     total_amount: Mapped[Decimal] = mapped_column(Numeric(10, 2), default=0)
     points_earned: Mapped[int] = mapped_column(Integer, default=0)
@@ -23,8 +24,10 @@ class Order(Base):
 
     venue: Mapped["Venue"] = relationship("Venue", back_populates="orders")
     guest: Mapped["Guest"] = relationship("Guest", back_populates="orders")
+    staff: Mapped["Staff | None"] = relationship("Staff", back_populates="orders")
     items: Mapped[list["OrderItem"]] = relationship("OrderItem", back_populates="order", cascade="all, delete-orphan")
     visit: Mapped["Visit | None"] = relationship("Visit", back_populates="order", uselist=False)
+    review: Mapped["Review | None"] = relationship("Review", back_populates="order", uselist=False)
 
 
 class OrderItem(Base):

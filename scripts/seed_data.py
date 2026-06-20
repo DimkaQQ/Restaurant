@@ -29,6 +29,8 @@ from app.models.menu import MenuItem
 from app.models.guest import Guest
 from app.models.order import Order, OrderItem, Visit
 from app.models.points import PointsTransaction
+from app.models.staff import Staff
+from app.models.review import Review
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -283,9 +285,11 @@ async def main():
             order_ids_q = select(Order.id).join(Venue).where(Venue.network_id == network.id)
             await db.execute(delete(Visit).where(Visit.venue_id.in_(venue_ids_q)))
             await db.execute(delete(PointsTransaction).where(PointsTransaction.venue_id.in_(venue_ids_q)))
+            await db.execute(delete(Review).where(Review.venue_id.in_(venue_ids_q)))
             await db.execute(delete(OrderItem).where(OrderItem.order_id.in_(order_ids_q)))
             await db.execute(delete(Order).where(Order.venue_id.in_(venue_ids_q)))
             await db.execute(delete(MenuItem).where(MenuItem.venue_id.in_(venue_ids_q)))
+            await db.execute(delete(Staff).where(Staff.venue_id.in_(venue_ids_q)))
             await db.execute(delete(Guest).where(Guest.network_id == network.id))
             await db.execute(delete(Venue).where(Venue.network_id == network.id))
             await db.commit()
@@ -503,9 +507,165 @@ async def main():
         total_rev = sum(float(o["total_amount"]) for o in order_rows if o["status"] == "done")
         print(f"   + {len(order_rows):,} заказов ({live} активных сегодня)")
         print(f"   + {len(visit_rows):,} визитов")
+
+        # ── 5. Staff ─────────────────────────────────────────────────────────
+        STAFF_BY_BRAND = {
+            "Чайла":       [("waiter",4),("waiter",4),("senior_waiter",2),("manager",1),("barista",1)],
+            "Suli da Guli":[("waiter",4),("waiter",3),("senior_waiter",2),("manager",1),("hostess",1)],
+            "Lukum Vostok":[("waiter",4),("waiter",3),("senior_waiter",2),("manager",1),("bartender",1)],
+            "&milk":       [("barista",3),("barista",2),("senior_waiter",1),("manager",1)],
+            "Usta":        [("waiter",4),("waiter",3),("senior_waiter",1),("manager",1),("bartender",1)],
+            "Joy":         [("waiter",2),("barista",2),("manager",1)],
+        }
+        STAFF_FIRST = [
+            "Алия","Айгерим","Динара","Камила","Асель","Жания","Малика","Анна","Мария","Дарья",
+            "Алина","Меруерт","Назгуль","Гульмира","Арайлым","Руслан","Тимур","Алибек","Берик",
+            "Олжас","Аскар","Виктор","Александр","Артём","Азамат","Нурсултан","Арман","Мирас",
+        ]
+        STAFF_LAST = [
+            "Сейткали","Джаксыбеков","Ахметова","Бейсенов","Касымова","Омаров","Тулегенова",
+            "Мусаев","Петрова","Ким","Жаксыбеков","Сулейменов","Матвеев","Соколов","Новиков",
+            "Козлов","Кузнецов","Смирнов","Иванов","Ахметов","Бекенов","Маратов","Есенов",
+        ]
+
+        staff_rows = []
+        venue_staff: dict[uuid.UUID, list[uuid.UUID]] = {}
+        for vm in venue_meta:
+            if not vm["active"]:
+                continue
+            roles_def = STAFF_BY_BRAND.get(vm["brand"], [("waiter",3),("manager",1)])
+            sids = []
+            for role, count in roles_def:
+                for _ in range(count):
+                    sid = uuid.uuid4()
+                    staff_rows.append({
+                        "id": sid,
+                        "network_id": network.id,
+                        "venue_id": vm["id"],
+                        "name": f"{random.choice(STAFF_FIRST)} {random.choice(STAFF_LAST)}",
+                        "role": role,
+                        "is_active": True,
+                        "avg_rating": None,
+                        "total_reviews": 0,
+                        "created_at": datetime.now(timezone.utc) - timedelta(days=random.randint(30, 400)),
+                    })
+                    sids.append(sid)
+            venue_staff[vm["id"]] = sids
+        await db.execute(insert(Staff), staff_rows)
+        await db.flush()
+        print(f"   + {len(staff_rows)} сотрудников")
+
+        # ── 6. Reviews (for ~35% of done orders) ─────────────────────────────
+        COMMENTS_POSITIVE = [
+            "Всё понравилось, очень вкусно!",
+            "Отличный сервис, приятная атмосфера.",
+            "Вернёмся ещё, спасибо!",
+            "Быстро и вкусно, рекомендую.",
+            "Официант был очень внимательным.",
+            "Прекрасный вечер в хорошей компании.",
+            "Всё на высшем уровне!",
+            "Порции большие, цены приятные.",
+            "Чудесная еда и обслуживание.",
+            "Очень доброжелательный персонал.",
+        ]
+        COMMENTS_NEUTRAL = [
+            "В целом нормально, но можно лучше.",
+            "Еда хорошая, ждали немного долго.",
+            "Приятное место, но шумновато.",
+            "Средне, без особых впечатлений.",
+            "Еда вкусная, сервис мог бы быть быстрее.",
+        ]
+        COMMENTS_NEGATIVE = [
+            "Долго ждали заказ.",
+            "Официант был невнимательным.",
+            "Блюдо не соответствовало описанию.",
+            "Ожидал большего за такие деньги.",
+        ]
+
+        # collect done order ids per venue
+        done_orders_by_venue: dict[uuid.UUID, list] = {}
+        for o in order_rows:
+            if o["status"] == "done":
+                vid = o["venue_id"]
+                if vid not in done_orders_by_venue:
+                    done_orders_by_venue[vid] = []
+                done_orders_by_venue[vid].append(o)
+
+        review_rows = []
+        staff_rating_sum: dict[uuid.UUID, float] = {}
+        staff_review_count: dict[uuid.UUID, int] = {}
+
+        for vm in venue_meta:
+            if not vm["active"]:
+                continue
+            done_ords = done_orders_by_venue.get(vm["id"], [])
+            sids = venue_staff.get(vm["id"], [])
+            if not sids:
+                continue
+            waiter_ids = [
+                s["id"] for s in staff_rows
+                if s["venue_id"] == vm["id"] and s["role"] in ("waiter","senior_waiter","barista","hostess")
+            ]
+            if not waiter_ids:
+                waiter_ids = sids
+
+            for o in done_ords:
+                if random.random() > 0.35:
+                    continue
+                overall = random.choices([5,4,4,3,2], weights=[40,30,15,10,5])[0]
+                food_r = max(1, overall + random.randint(-1, 1))
+                service_r = max(1, overall + random.randint(-1, 1))
+                food_r = min(5, food_r)
+                service_r = min(5, service_r)
+                staff_id = random.choice(waiter_ids)
+
+                if overall >= 4:
+                    comment = random.choice(COMMENTS_POSITIVE) if random.random() < 0.6 else None
+                elif overall == 3:
+                    comment = random.choice(COMMENTS_NEUTRAL) if random.random() < 0.4 else None
+                else:
+                    comment = random.choice(COMMENTS_NEGATIVE) if random.random() < 0.5 else None
+
+                review_rows.append({
+                    "id": uuid.uuid4(),
+                    "venue_id": vm["id"],
+                    "order_id": o["id"],
+                    "guest_id": o["guest_id"],
+                    "staff_id": staff_id,
+                    "food_rating": food_r,
+                    "service_rating": service_r,
+                    "overall_rating": overall,
+                    "comment": comment,
+                    "source": "bot",
+                    "created_at": o["created_at"],
+                })
+
+                staff_rating_sum[staff_id] = staff_rating_sum.get(staff_id, 0.0) + overall
+                staff_review_count[staff_id] = staff_review_count.get(staff_id, 0) + 1
+
+        print(f"   Вставляем {len(review_rows):,} отзывов...")
+        for i in range(0, len(review_rows), BATCH):
+            await db.execute(insert(Review), review_rows[i:i+BATCH])
+        await db.flush()
+
+        # Update staff avg_rating and total_reviews
+        for s in staff_rows:
+            sid = s["id"]
+            cnt = staff_review_count.get(sid, 0)
+            if cnt > 0:
+                avg = staff_rating_sum[sid] / cnt
+                await db.execute(
+                    sa.update(Staff)
+                    .where(Staff.id == sid)
+                    .values(avg_rating=round(avg, 2), total_reviews=cnt)
+                )
+
+        await db.commit()
+
         print(f"\n✅ Готово!")
         print(f"   Общая выручка за 90 дней: {total_rev:,.0f} ₸")
         print(f"   Среднедневная на сеть: {total_rev/90:,.0f} ₸")
+        print(f"   Сотрудников: {len(staff_rows)}, отзывов: {len(review_rows):,}")
 
 
 if __name__ == "__main__":

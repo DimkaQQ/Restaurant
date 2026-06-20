@@ -1,0 +1,260 @@
+{% extends "base.html" %}
+{% block title %}Персонал — RestOS{% endblock %}
+
+{% block head %}
+<style>
+.staff-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.staff-header h1 {
+  font-family: 'Instrument Serif', serif;
+  font-size: 1.6rem;
+  font-weight: 400;
+}
+.venue-filter select {
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--white);
+  padding: 0.45rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+.staff-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+.staff-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.25rem;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+.staff-card:hover { border-color: var(--gold); }
+.staff-card-top {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin-bottom: 1rem;
+}
+.staff-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--gold-dim);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--gold);
+  flex-shrink: 0;
+}
+.staff-info { flex: 1; min-width: 0; }
+.staff-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.staff-role {
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-top: 0.15rem;
+}
+.staff-venue {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-bottom: 0.75rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.staff-rating-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.stars {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+}
+.star {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+.star.filled { color: var(--gold); }
+.rating-value {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--white);
+}
+.rating-count {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+.no-reviews {
+  font-size: 0.8rem;
+  color: var(--muted);
+  font-style: italic;
+}
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--muted);
+}
+.empty-state svg {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 1rem;
+  opacity: 0.4;
+}
+
+/* Drawer / modal for reviews */
+.review-drawer {
+  position: fixed;
+  top: 0; right: -480px;
+  width: 460px;
+  height: 100vh;
+  background: var(--card);
+  border-left: 1px solid var(--border);
+  z-index: 300;
+  transition: right 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.review-drawer.open { right: 0; }
+.drawer-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 299;
+}
+.drawer-overlay.open { display: block; }
+.drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.drawer-title { font-size: 1rem; font-weight: 600; }
+.drawer-close {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 1.2rem;
+  line-height: 1;
+  padding: 0.25rem;
+}
+.drawer-close:hover { color: var(--white); }
+.drawer-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem 1.5rem;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="staff-header">
+  <h1>Персонал</h1>
+  <div class="venue-filter">
+    <form method="get" action="/staff">
+      <select name="venue_id" onchange="this.form.submit()">
+        <option value="">Все заведения</option>
+        {% for v in venues %}
+        <option value="{{ v.id }}" {% if selected_venue_id == v.id|string %}selected{% endif %}>{{ v.name }}</option>
+        {% endfor %}
+      </select>
+    </form>
+  </div>
+</div>
+
+{% if staff %}
+<div class="staff-grid">
+  {% for s in staff %}
+  <div class="staff-card" onclick="openReviews('{{ s.id }}', '{{ s.name }}')">
+    <div class="staff-card-top">
+      <div class="staff-avatar">{{ s.initials }}</div>
+      <div class="staff-info">
+        <div class="staff-name">{{ s.name }}</div>
+        <div class="staff-role">{{ s.role_label }}</div>
+      </div>
+    </div>
+    {% if selected_venue_id == "" %}
+    <div class="staff-venue">{{ s.venue.name }}</div>
+    {% endif %}
+    <div class="staff-rating-row">
+      {% if s.avg_rating %}
+      <div class="stars">
+        {% set rating = s.avg_rating | round(0, 'floor') | int %}
+        {% for i in range(1, 6) %}
+        <span class="star {% if i <= rating %}filled{% endif %}">★</span>
+        {% endfor %}
+      </div>
+      <span class="rating-value">{{ "%.1f"|format(s.avg_rating) }}</span>
+      <span class="rating-count">{{ s.total_reviews }} отзывов</span>
+      {% else %}
+      <span class="no-reviews">Нет отзывов</span>
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+    <path d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/>
+  </svg>
+  <p>Сотрудники не найдены</p>
+</div>
+{% endif %}
+
+<!-- Reviews drawer -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
+<div class="review-drawer" id="review-drawer">
+  <div class="drawer-header">
+    <span class="drawer-title" id="drawer-name">Отзывы</span>
+    <button class="drawer-close" onclick="closeDrawer()">✕</button>
+  </div>
+  <div class="drawer-body" id="drawer-body">
+    <p style="color:var(--muted);text-align:center;padding:2rem 0">Загрузка...</p>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function openReviews(staffId, name) {
+  document.getElementById('drawer-name').textContent = name;
+  document.getElementById('drawer-overlay').classList.add('open');
+  document.getElementById('review-drawer').classList.add('open');
+  fetch('/staff/' + staffId + '/reviews')
+    .then(r => r.text())
+    .then(html => { document.getElementById('drawer-body').innerHTML = html; })
+    .catch(() => { document.getElementById('drawer-body').innerHTML = '<p style="color:var(--muted)">Ошибка загрузки</p>'; });
+}
+function closeDrawer() {
+  document.getElementById('drawer-overlay').classList.remove('open');
+  document.getElementById('review-drawer').classList.remove('open');
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+</script>
+{% endblock %}

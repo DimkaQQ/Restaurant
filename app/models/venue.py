@@ -21,3 +21,5 @@ class Venue(Base):
     orders: Mapped[list["Order"]] = relationship("Order", back_populates="venue")
     visits: Mapped[list["Visit"]] = relationship("Visit", back_populates="venue")
     points_transactions: Mapped[list["PointsTransaction"]] = relationship("PointsTransaction", back_populates="venue")
+    staff: Mapped[list["Staff"]] = relationship("Staff", back_populates="venue")
+    reviews: Mapped[list["Review"]] = relationship("Review", back_populates="venue")

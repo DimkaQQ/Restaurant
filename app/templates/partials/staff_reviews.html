@@ -1,0 +1,103 @@
+<style>
+.review-summary {
+  background: rgba(200,168,75,0.08);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.review-big-rating {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--gold);
+  line-height: 1;
+}
+.review-stars-big {
+  display: flex;
+  gap: 3px;
+  margin-bottom: 0.25rem;
+}
+.review-stars-big .star { font-size: 1rem; color: var(--muted); }
+.review-stars-big .star.filled { color: var(--gold); }
+.review-total { font-size: 0.8rem; color: var(--muted); }
+
+.review-item {
+  border-bottom: 1px solid var(--border);
+  padding: 0.9rem 0;
+}
+.review-item:last-child { border-bottom: none; }
+.review-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.4rem;
+}
+.review-guest { font-size: 0.82rem; font-weight: 500; }
+.review-date { font-size: 0.75rem; color: var(--muted); }
+.review-stars-small {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 0.35rem;
+}
+.review-stars-small .star { font-size: 0.8rem; color: var(--muted); }
+.review-stars-small .star.filled { color: var(--gold); }
+.review-comment { font-size: 0.83rem; color: rgba(247,245,240,0.8); line-height: 1.5; }
+.review-ratings-detail {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-bottom: 0.3rem;
+}
+.no-reviews-msg {
+  text-align: center;
+  padding: 2.5rem 0;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+</style>
+
+{% if staff.avg_rating %}
+<div class="review-summary">
+  <div class="review-big-rating">{{ "%.1f"|format(staff.avg_rating) }}</div>
+  <div>
+    <div class="review-stars-big">
+      {% set r = staff.avg_rating | round(0, 'floor') | int %}
+      {% for i in range(1, 6) %}
+      <span class="star {% if i <= r %}filled{% endif %}">★</span>
+      {% endfor %}
+    </div>
+    <div class="review-total">{{ staff.total_reviews }} отзывов</div>
+  </div>
+</div>
+{% endif %}
+
+{% if reviews %}
+{% for rv in reviews %}
+<div class="review-item">
+  <div class="review-meta">
+    <span class="review-guest">{{ rv.guest.name if rv.guest else "Гость" }}</span>
+    <span class="review-date">{{ rv.created_at.strftime("%d.%m.%Y") }}</span>
+  </div>
+  <div class="review-stars-small">
+    {% for i in range(1, 6) %}
+    <span class="star {% if i <= rv.overall_rating %}filled{% endif %}">★</span>
+    {% endfor %}
+  </div>
+  {% if rv.food_rating or rv.service_rating %}
+  <div class="review-ratings-detail">
+    {% if rv.food_rating %}<span>Еда: {{ rv.food_rating }}/5</span>{% endif %}
+    {% if rv.service_rating %}<span>Сервис: {{ rv.service_rating }}/5</span>{% endif %}
+  </div>
+  {% endif %}
+  {% if rv.comment %}
+  <div class="review-comment">{{ rv.comment }}</div>
+  {% endif %}
+</div>
+{% endfor %}
+{% else %}
+<div class="no-reviews-msg">Отзывов пока нет</div>
+{% endif %}
