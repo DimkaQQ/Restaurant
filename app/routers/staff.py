@@ -37,7 +37,7 @@ async def staff_page(
             .order_by(Venue.name)
         )).scalars().all()
 
-        if venue_id:
+        if venue_id and venue_id in accessible_ids:
             venue_ids = [venue_id]
             selected_venue = next((v for v in all_venues if v.id == venue_id), None)
         else:

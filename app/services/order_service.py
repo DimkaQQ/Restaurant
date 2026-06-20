@@ -86,7 +86,10 @@ async def update_order_status(order_id: uuid.UUID, new_status: str, db: AsyncSes
 
     order.status = new_status
     await db.commit()
-    await db.refresh(order)
+    result = await db.execute(
+        select(Order).options(selectinload(Order.items), selectinload(Order.guest)).where(Order.id == order_id)
+    )
+    order = result.scalar_one()
     logger.info("Order %s status -> %s", order_id, new_status)
     return order
 
