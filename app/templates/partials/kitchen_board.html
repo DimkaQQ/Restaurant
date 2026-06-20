@@ -29,10 +29,7 @@
   <div class="kds-action">
     <button
       class="kds-btn kds-btn-advance"
-      hx-patch="/api/orders/{{ order.id }}/status"
-      hx-vals='{"status": "{{ next_status[order.status] }}"}'
-      hx-swap="none"
-      hx-on:htmx:after-request="htmx.trigger('#kds-board', 'refresh')"
+      onclick="advanceOrder('{{ order.id }}', '{{ next_status[order.status] }}')"
     >{{ next_label[order.status] }}</button>
   </div>
   {% endif %}

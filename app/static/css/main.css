@@ -143,7 +143,7 @@ body {
 }
 
 .stat-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
-.stat-value { font-size: 1.5rem; font-weight: 600; white-space: nowrap; }
+.stat-value { font-size: 1.4rem; font-weight: 600; line-height: 1.2; word-break: break-word; }
 .stat-value.gold { color: var(--gold); }
 
 /* ── Content Grid ── */
