@@ -16,17 +16,53 @@ from app.services.auth_service import register_network
 
 
 async def main():
-    print("=== RestOS — Создание первого владельца ===\n")
-    network_name = input("Название сети (например, &milk): ").strip()
-    slug = input("Slug (например, andmilk): ").strip()
-    email = input("Email владельца: ").strip()
-    password = input("Пароль: ").strip()
+    print("=== RestOS — Создание владельца ===\n")
 
     async with AsyncSessionLocal() as db:
+        from sqlalchemy import select
+        from app.models.network import Network
+        from app.models.user import User
+        from app.services.auth_service import hash_password
+
+        networks = (await db.execute(select(Network))).scalars().all()
+        if networks:
+            print("Существующие сети:")
+            for n in networks:
+                print(f"  [{n.slug}] {n.name}  (ID: {n.id})")
+            print()
+            use_existing = input("Использовать существующую сеть? (y/n): ").strip().lower()
+        else:
+            use_existing = "n"
+
+        if use_existing == "y":
+            slug = input("Введи slug сети: ").strip()
+            network = next((n for n in networks if n.slug == slug), None)
+            if not network:
+                print("❌ Сеть не найдена")
+                return
+        else:
+            network_name = input("Название сети (например, &milk): ").strip()
+            slug = input("Slug (например, andmilk): ").strip()
+            from app.models.network import Network
+            network = Network(name=network_name, slug=slug)
+            db.add(network)
+            await db.flush()
+
+        email = input("Email владельца: ").strip()
+        password = input("Пароль: ").strip()
+
         try:
-            user = await register_network(network_name, slug, email, password, db)
+            user = User(
+                network_id=network.id,
+                email=email,
+                hashed_password=hash_password(password),
+                role="owner",
+            )
+            db.add(user)
+            await db.commit()
+            await db.refresh(user)
             print(f"\n✅ Готово!")
-            print(f"   Сеть: {network_name} (slug: {slug})")
+            print(f"   Сеть: {network.name} (slug: {network.slug})")
             print(f"   Пользователь: {email}")
             print(f"   User ID: {user.id}")
             print(f"   Network ID: {user.network_id}")
