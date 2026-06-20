@@ -281,17 +281,10 @@ async def main():
 
         if existing and force:
             print("   Очищаем старые данные...")
-            venue_ids_q = select(Venue.id).where(Venue.network_id == network.id)
-            order_ids_q = select(Order.id).join(Venue).where(Venue.network_id == network.id)
-            await db.execute(delete(Visit).where(Visit.venue_id.in_(venue_ids_q)))
-            await db.execute(delete(PointsTransaction).where(PointsTransaction.venue_id.in_(venue_ids_q)))
-            await db.execute(delete(Review).where(Review.venue_id.in_(venue_ids_q)))
-            await db.execute(delete(OrderItem).where(OrderItem.order_id.in_(order_ids_q)))
-            await db.execute(delete(Order).where(Order.venue_id.in_(venue_ids_q)))
-            await db.execute(delete(MenuItem).where(MenuItem.venue_id.in_(venue_ids_q)))
-            await db.execute(delete(Staff).where(Staff.venue_id.in_(venue_ids_q)))
-            await db.execute(delete(Guest).where(Guest.network_id == network.id))
-            await db.execute(delete(Venue).where(Venue.network_id == network.id))
+            await db.execute(sa.text(
+                "TRUNCATE reviews, visits, points_transactions, order_items, orders, "
+                "menu_items, staff, guests, venues RESTART IDENTITY CASCADE"
+            ))
             await db.commit()
             print("   ✓ Очищено")
 
