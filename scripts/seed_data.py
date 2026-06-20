@@ -293,8 +293,9 @@ async def main():
             await db.execute(sa.text("UPDATE users SET venue_id = NULL"))
             await db.execute(sa.text(
                 "TRUNCATE reviews, visits, points_transactions, order_items, orders, "
-                "menu_items, staff, guests, venues RESTART IDENTITY CASCADE"
+                "menu_items, staff, guests RESTART IDENTITY CASCADE"
             ))
+            await db.execute(sa.text("DELETE FROM venues"))
             await db.commit()
             print("   ✓ Очищено")
 
