@@ -19,7 +19,7 @@ VALID_TRANSITIONS = {
     "new": ["confirmed", "cancelled"],
     "confirmed": ["preparing", "cancelled"],
     "preparing": ["ready", "cancelled"],
-    "ready": ["done"],
+    "ready": ["done", "cancelled"],
     "done": [],
     "cancelled": [],
 }
