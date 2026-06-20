@@ -1,10 +1,11 @@
+from app.templates_env import templates
 import logging
 import uuid
 from datetime import datetime, timezone
 
 from fastapi import APIRouter, Depends, HTTPException, Request, Query
 from fastapi.responses import HTMLResponse, RedirectResponse
-from fastapi.templating import Jinja2Templates
+
 from sqlalchemy import select, func, case
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
@@ -19,7 +20,7 @@ from app.services.order_service import update_order_status
 
 router = APIRouter(tags=["dashboard"])
 logger = logging.getLogger(__name__)
-templates = Jinja2Templates(directory="app/templates")
+
 
 
 @router.get("/", response_class=HTMLResponse)

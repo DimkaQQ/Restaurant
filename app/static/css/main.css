@@ -303,6 +303,15 @@ body {
   padding: 0.6rem 0;
   border-bottom: 1px solid var(--border);
 }
+a.venue-item-link {
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.15s;
+  border-radius: 6px;
+  padding: 0.6rem 0.4rem;
+  margin: 0 -0.4rem;
+}
+a.venue-item-link:hover { background: rgba(255,255,255,0.05); }
 .venue-name { display: block; font-weight: 500; }
 .venue-addr { font-size: 0.75rem; color: var(--muted); }
 

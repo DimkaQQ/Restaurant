@@ -80,7 +80,7 @@
 <div class="review-item">
   <div class="review-meta">
     <span class="review-guest">{{ rv.guest.name if rv.guest else "Гость" }}</span>
-    <span class="review-date">{{ rv.created_at.strftime("%d.%m.%Y") }}</span>
+    <span class="review-date">{{ rv.created_at.strftime("%d.%m.%Y %H:%M") }}</span>
   </div>
   <div class="review-stars-small">
     {% for i in range(1, 6) %}
