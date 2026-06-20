@@ -1,9 +1,10 @@
+from app.templates_env import templates
 import logging
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, Response, Cookie, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
-from fastapi.templating import Jinja2Templates
+
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import settings
@@ -15,7 +16,7 @@ from app.services.auth_service import (
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 logger = logging.getLogger(__name__)
-templates = Jinja2Templates(directory="app/templates")
+
 
 
 @router.get("/login", response_class=HTMLResponse)

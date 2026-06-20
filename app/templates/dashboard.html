@@ -10,11 +10,11 @@
 <div class="stats-grid">
   <div class="stat-card">
     <span class="stat-label">Выручка сегодня</span>
-    <span class="stat-value gold">{{ "{:,.0f}".format(today_revenue) }} ₸</span>
+    <span class="stat-value gold">{{ today_revenue | money }} ₸</span>
   </div>
   <div class="stat-card">
     <span class="stat-label">Всего выручки</span>
-    <span class="stat-value">{{ "{:,.0f}".format(total_revenue) }} ₸</span>
+    <span class="stat-value">{{ total_revenue | money }} ₸</span>
   </div>
   <div class="stat-card">
     <span class="stat-label">Заказов сегодня</span>
@@ -63,40 +63,22 @@
   </div>
 </div>
 
-<div class="content-grid">
-  <div class="panel">
-    <div class="panel-header">
-      <h2 class="panel-title">Топ позиций сегодня</h2>
-    </div>
-    <div class="top-items">
-      {% for item in top_items %}
-      <div class="top-item">
-        <span class="top-item-name">{{ item.name }}</span>
-        <span class="top-item-qty">{{ item.qty }} шт.</span>
-      </div>
-      {% else %}
-      <p class="empty-state">Нет данных за сегодня</p>
-      {% endfor %}
-    </div>
+<div class="panel">
+  <div class="panel-header">
+    <h2 class="panel-title">Заведения</h2>
   </div>
-
-  <div class="panel">
-    <div class="panel-header">
-      <h2 class="panel-title">Заведения</h2>
-    </div>
-    <div class="venues-list">
-      {% for venue in venues %}
-      <div class="venue-item">
-        <div>
-          <span class="venue-name">{{ venue.name }}</span>
-          <span class="venue-addr">{{ venue.address or '' }}</span>
-        </div>
-        <span class="badge {% if venue.is_active %}badge-active{% else %}badge-launch{% endif %}">
-          {% if venue.is_active %}Активно{% else %}Запуск{% endif %}
-        </span>
+  <div class="venues-list">
+    {% for venue in venues %}
+    <a href="/orders?venue_id={{ venue.id }}" class="venue-item venue-item-link">
+      <div>
+        <span class="venue-name">{{ venue.name }}</span>
+        <span class="venue-addr">{{ venue.address or '' }}</span>
       </div>
-      {% endfor %}
-    </div>
+      <span class="badge {% if venue.is_active %}badge-active{% else %}badge-launch{% endif %}">
+        {% if venue.is_active %}Активно{% else %}Запуск{% endif %}
+      </span>
+    </a>
+    {% endfor %}
   </div>
 </div>
 

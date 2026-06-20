@@ -1,3 +1,4 @@
+from app.templates_env import templates
 import logging
 import uuid
 
@@ -6,7 +7,7 @@ from fastapi.responses import HTMLResponse
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
-from fastapi.templating import Jinja2Templates
+
 
 from app.database import get_db
 from app.models.user import User
@@ -16,7 +17,7 @@ from app.services.auth_service import hash_password
 
 router = APIRouter(prefix="/settings", tags=["settings"])
 logger = logging.getLogger(__name__)
-templates = Jinja2Templates(directory="app/templates")
+
 
 
 def _require_owner(current_user: User) -> None:

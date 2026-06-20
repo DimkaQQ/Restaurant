@@ -1,3 +1,4 @@
+from app.templates_env import templates
 import logging
 import uuid
 from datetime import datetime, timezone
@@ -7,7 +8,7 @@ from fastapi.responses import HTMLResponse
 from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
-from fastapi.templating import Jinja2Templates
+
 
 from app.database import get_db
 from app.models.staff import Staff
@@ -18,7 +19,7 @@ from app.routers.deps import get_current_user_dep, get_accessible_venue_ids
 
 router = APIRouter(prefix="/staff", tags=["staff"])
 logger = logging.getLogger(__name__)
-templates = Jinja2Templates(directory="app/templates")
+
 
 
 @router.get("", response_class=HTMLResponse)
