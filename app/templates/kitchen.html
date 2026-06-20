@@ -136,6 +136,7 @@
           body: JSON.stringify({status: newStatus}),
         });
         if (res.status === 401 || res.status === 307) { location.href = '/auth/login'; return; }
+        if (!res.ok) { console.error('advanceOrder failed', res.status); return; }
         htmx.trigger(document.getElementById('kds-board'), 'refresh');
       } catch(e) { console.error('advanceOrder error', e); }
     }

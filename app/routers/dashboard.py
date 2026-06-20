@@ -166,6 +166,14 @@ async def change_status_html(
         else:
             form = await request.form()
             new_status = form.get("status")
+        if not new_status:
+            return HTMLResponse("<p class='error-state'>Статус обязателен</p>", status_code=400)
+        venue_ids = await get_accessible_venue_ids(current_user, db)
+        check = (await db.execute(
+            select(Order).where(Order.id == order_id, Order.venue_id.in_(venue_ids))
+        )).scalar_one_or_none()
+        if not check:
+            return HTMLResponse("<p class='error-state'>Заказ не найден</p>", status_code=404)
         order = await update_order_status(order_id, new_status, db)
 
         return templates.TemplateResponse("partials/orders_list.html", {
@@ -196,10 +204,11 @@ async def guests_partial(
         if search:
             from sqlalchemy import func as sqlfunc
             normalized = search.replace(" ", "").replace("-", "").replace("(", "").replace(")", "")
+            db_normalized = sqlfunc.replace(sqlfunc.replace(sqlfunc.replace(sqlfunc.replace(Guest.phone, " ", ""), "-", ""), "(", ""), ")", "")
             stmt = stmt.where(
                 Guest.name.ilike(f"%{search}%") |
                 Guest.phone.ilike(f"%{search}%") |
-                sqlfunc.replace(sqlfunc.replace(sqlfunc.replace(Guest.phone, " ", ""), "-", ""), "(", "").ilike(f"%{normalized}%")
+                db_normalized.ilike(f"%{normalized}%")
             )
         guests = (await db.execute(stmt)).scalars().all()
         return templates.TemplateResponse("partials/guests_rows.html", {

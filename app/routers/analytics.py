@@ -40,7 +40,7 @@ async def analytics_page(
         )).scalars().all()
 
         # Determine which venue IDs to query
-        if venue_id:
+        if venue_id and venue_id in accessible_ids:
             venue_ids = [venue_id]
             selected_venue = next((v for v in all_venues if v.id == venue_id), None)
         else:
