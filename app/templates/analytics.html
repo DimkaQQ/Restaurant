@@ -3,6 +3,14 @@
 
 {% block head %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<style>
+.items-bars { display: flex; flex-direction: column; gap: 0.55rem; padding: 0.25rem 0; }
+.items-bar-row { display: grid; grid-template-columns: 1fr 2fr auto; gap: 0.75rem; align-items: center; }
+.items-bar-name { font-size: 0.82rem; color: var(--white); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.items-bar-wrap { background: rgba(255,255,255,0.06); border-radius: 4px; height: 10px; }
+.items-bar-fill { background: var(--gold); border-radius: 4px; height: 100%; min-width: 4px; transition: width 0.4s; }
+.items-bar-qty { font-size: 0.78rem; color: var(--muted); font-variant-numeric: tabular-nums; text-align: right; min-width: 2.5rem; }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -29,7 +37,7 @@
 <div class="stats-grid" style="margin-bottom:1.5rem">
   <div class="stat-card">
     <span class="stat-label">Выручка за 30 дней</span>
-    <span class="stat-value gold">{{ "{:,.0f}".format(total_revenue) }} ₸</span>
+    <span class="stat-value gold">{{ total_revenue | money }} ₸</span>
   </div>
   <div class="stat-card">
     <span class="stat-label">Завершённых заказов</span>
@@ -37,7 +45,7 @@
   </div>
   <div class="stat-card">
     <span class="stat-label">Средний чек</span>
-    <span class="stat-value">{{ "{:,.0f}".format(total_revenue / total_orders if total_orders else 0) }} ₸</span>
+    <span class="stat-value">{{ (total_revenue / total_orders if total_orders else 0) | money }} ₸</span>
   </div>
 </div>
 
@@ -53,7 +61,18 @@
     <div class="panel-header">
       <h2 class="panel-title">Популярные позиции</h2>
     </div>
-    <canvas id="items-chart" height="150"></canvas>
+    <div class="items-bars">
+      {% set max_qty = top_items[0].qty if top_items else 1 %}
+      {% for item in top_items %}
+      <div class="items-bar-row">
+        <span class="items-bar-name">{{ item.name }}</span>
+        <div class="items-bar-wrap">
+          <div class="items-bar-fill" style="width:{{ (item.qty / max_qty * 100) | int }}%"></div>
+        </div>
+        <span class="items-bar-qty">{{ item.qty }}</span>
+      </div>
+      {% endfor %}
+    </div>
   </div>
 
   {% if venue_revenue | length > 1 %}
@@ -141,15 +160,6 @@ new Chart(document.getElementById('revenue-chart'), {
   options: {...chartDefaults},
 });
 
-const itemsData = {{ top_items | tojson }};
-new Chart(document.getElementById('items-chart'), {
-  type: 'bar',
-  data: {
-    labels: itemsData.map(d => d.name.length > 20 ? d.name.slice(0,18)+'…' : d.name),
-    datasets: [{ label: 'Количество', data: itemsData.map(d => d.qty), backgroundColor: gold, borderRadius: 4 }],
-  },
-  options: { ...chartDefaults, indexAxis: 'y', plugins: { legend: { display: false } } },
-});
 
 {% if venue_revenue | length > 1 %}
 const venueData = {{ venue_revenue | tojson }};

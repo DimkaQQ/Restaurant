@@ -20,7 +20,7 @@
   <div class="kds-items">
     {% for item in order.items %}
     <div class="kds-item">
-      <span>{{ item.name }}</span>
+      <span class="kds-item-name">{{ item.name }}</span>
       <span class="kds-item-qty">×{{ item.quantity }}</span>
     </div>
     {% endfor %}

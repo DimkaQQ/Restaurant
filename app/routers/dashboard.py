@@ -189,8 +189,12 @@ async def guests_partial(
             .limit(100)
         )
         if search:
+            from sqlalchemy import func as sqlfunc
+            normalized = search.replace(" ", "").replace("-", "").replace("(", "").replace(")", "")
             stmt = stmt.where(
-                Guest.name.ilike(f"%{search}%") | Guest.phone.ilike(f"%{search}%")
+                Guest.name.ilike(f"%{search}%") |
+                Guest.phone.ilike(f"%{search}%") |
+                sqlfunc.replace(sqlfunc.replace(sqlfunc.replace(Guest.phone, " ", ""), "-", ""), "(", "").ilike(f"%{normalized}%")
             )
         guests = (await db.execute(stmt)).scalars().all()
         return templates.TemplateResponse("partials/guests_rows.html", {
