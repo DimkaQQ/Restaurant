@@ -31,10 +31,8 @@
       class="kds-btn kds-btn-advance"
       hx-patch="/api/orders/{{ order.id }}/status"
       hx-vals='{"status": "{{ next_status[order.status] }}"}'
-      hx-target="#kds-board"
-      hx-get="/partials/kitchen{% if venue_id %}?venue_id={{ venue_id }}{% endif %}"
-      hx-swap="innerHTML"
-      hx-trigger="click"
+      hx-swap="none"
+      hx-on:htmx:after-request="htmx.trigger('#kds-board', 'refresh')"
     >{{ next_label[order.status] }}</button>
   </div>
   {% endif %}

@@ -77,7 +77,7 @@ async def create_user(
 
         if not email or not password:
             raise HTTPException(status_code=400, detail="Email и пароль обязательны")
-        if role not in ("owner", "manager"):
+        if role not in ("owner", "manager", "cashier", "administrator"):
             raise HTTPException(status_code=400, detail="Некорректная роль")
 
         existing = (await db.execute(select(User).where(User.email == email))).scalar_one_or_none()
