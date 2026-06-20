@@ -17,9 +17,9 @@ logger = logging.getLogger(__name__)
 
 VALID_TRANSITIONS = {
     "new": ["confirmed", "cancelled"],
-    "confirmed": ["preparing", "cancelled"],
-    "preparing": ["ready", "cancelled"],
-    "ready": ["done", "cancelled"],
+    "confirmed": ["preparing", "new", "cancelled"],
+    "preparing": ["ready", "confirmed"],
+    "ready": ["done", "preparing"],
     "done": [],
     "cancelled": [],
 }
