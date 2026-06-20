@@ -53,6 +53,9 @@ services:
       BOT_TOKEN_VENUE_1: ${BOT_TOKEN_VENUE_1:-}
       NETWORK_ID: ${NETWORK_ID:-}
       VENUE_ID_1: ${VENUE_ID_1:-}
+      HTTPS_PROXY: ${HTTPS_PROXY:-}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       api:
         condition: service_started
