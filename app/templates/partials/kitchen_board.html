@@ -1,0 +1,82 @@
+{% set status_labels = {"new": "Новый", "confirmed": "Подтверждён", "preparing": "Готовится", "ready": "Готово!"} %}
+{% set next_status = {"new": "confirmed", "confirmed": "preparing", "preparing": "ready", "ready": "done"} %}
+{% set next_label  = {"new": "Принять", "confirmed": "Готовить", "preparing": "Готово", "ready": "Выдать"} %}
+
+{% set new_orders       = orders | selectattr("status", "equalto", "new")       | list %}
+{% set confirmed_orders = orders | selectattr("status", "equalto", "confirmed") | list %}
+{% set preparing_orders = orders | selectattr("status", "equalto", "preparing") | list %}
+{% set ready_orders     = orders | selectattr("status", "equalto", "ready")     | list %}
+
+{% macro order_card(order) %}
+{% set order_ts = order.created_at.timestamp() %}
+{% set now_ts = now.timestamp() %}
+{% set mins = ((now_ts - order_ts) / 60) | int %}
+<div class="kds-card status-{{ order.status }}">
+  <div class="kds-card-top">
+    <span class="kds-order-id">#{{ order.id | string | truncate(8, True, '') }}</span>
+    {% if order.venue %}<span class="kds-venue-tag">{{ order.venue.name.split('—')[-1].strip() }}</span>{% endif %}
+    <span class="kds-elapsed {% if mins < 10 %}fast{% elif mins < 20 %}medium{% else %}slow{% endif %}">{{ mins }} мин</span>
+  </div>
+  <div class="kds-items">
+    {% for item in order.items %}
+    <div class="kds-item">
+      <span>{{ item.name }}</span>
+      <span class="kds-item-qty">×{{ item.quantity }}</span>
+    </div>
+    {% endfor %}
+  </div>
+  {% if next_status.get(order.status) %}
+  <div class="kds-action">
+    <button
+      class="kds-btn kds-btn-advance"
+      hx-patch="/api/orders/{{ order.id }}/status"
+      hx-vals='{"status": "{{ next_status[order.status] }}"}'
+      hx-target="#kds-board"
+      hx-get="/partials/kitchen{% if venue_id %}?venue_id={{ venue_id }}{% endif %}"
+      hx-swap="innerHTML"
+      hx-trigger="click"
+    >{{ next_label[order.status] }}</button>
+  </div>
+  {% endif %}
+</div>
+{% endmacro %}
+
+<div class="kds-col">
+  <div class="kds-col-header">
+    <span class="kds-col-title new">Новые</span>
+    <span class="kds-col-count">{{ new_orders | length + confirmed_orders | length }}</span>
+  </div>
+  <div class="kds-cards">
+    {% for o in confirmed_orders %}{{ order_card(o) }}{% endfor %}
+    {% for o in new_orders %}{{ order_card(o) }}{% endfor %}
+    {% if not new_orders and not confirmed_orders %}
+    <p class="kds-empty">Нет новых заказов</p>
+    {% endif %}
+  </div>
+</div>
+
+<div class="kds-col">
+  <div class="kds-col-header">
+    <span class="kds-col-title preparing">Готовится</span>
+    <span class="kds-col-count">{{ preparing_orders | length }}</span>
+  </div>
+  <div class="kds-cards">
+    {% for o in preparing_orders %}{{ order_card(o) }}{% endfor %}
+    {% if not preparing_orders %}
+    <p class="kds-empty">Нет заказов в работе</p>
+    {% endif %}
+  </div>
+</div>
+
+<div class="kds-col">
+  <div class="kds-col-header">
+    <span class="kds-col-title ready">Готово</span>
+    <span class="kds-col-count">{{ ready_orders | length }}</span>
+  </div>
+  <div class="kds-cards">
+    {% for o in ready_orders %}{{ order_card(o) }}{% endfor %}
+    {% if not ready_orders %}
+    <p class="kds-empty">Пусто</p>
+    {% endif %}
+  </div>
+</div>

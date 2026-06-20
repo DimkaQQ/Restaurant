@@ -21,3 +21,4 @@ class Guest(Base):
     orders: Mapped[list["Order"]] = relationship("Order", back_populates="guest")
     visits: Mapped[list["Visit"]] = relationship("Visit", back_populates="guest")
     points_transactions: Mapped[list["PointsTransaction"]] = relationship("PointsTransaction", back_populates="guest")
+    reviews: Mapped[list["Review"]] = relationship("Review", back_populates="guest")

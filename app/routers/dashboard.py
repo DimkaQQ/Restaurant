@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException, Request, Query
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
-from sqlalchemy import select, func
+from sqlalchemy import select, func, case
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -78,6 +78,25 @@ async def dashboard(
         )).all()
         top_items_data = [{"name": r.name, "qty": int(r.qty)} for r in top_items_rows]
 
+        orders_today_count = (await db.execute(
+            select(func.count(Order.id))
+            .where(Order.venue_id.in_(venue_ids), Order.created_at >= today_start)
+        )).scalar() or 0
+
+        # Order counts by status (active)
+        status_counts_rows = (await db.execute(
+            select(Order.status, func.count(Order.id))
+            .where(Order.venue_id.in_(venue_ids), Order.status.in_(["new", "confirmed", "preparing", "ready"]))
+            .group_by(Order.status)
+        )).all()
+        status_map = {r[0]: r[1] for r in status_counts_rows}
+
+        # Done orders today
+        done_today = (await db.execute(
+            select(func.count(Order.id))
+            .where(Order.venue_id.in_(venue_ids), Order.status == "done", Order.created_at >= today_start)
+        )).scalar() or 0
+
         return templates.TemplateResponse("dashboard.html", {
             "request": request,
             "user": current_user,
@@ -85,6 +104,14 @@ async def dashboard(
             "total_revenue": total_rev,
             "today_revenue": today_rev,
             "new_guests": new_guests,
+            "orders_today": orders_today_count,
+            "orders_status": {
+                "new": status_map.get("new", 0),
+                "confirmed": status_map.get("confirmed", 0),
+                "preparing": status_map.get("preparing", 0),
+                "ready": status_map.get("ready", 0),
+                "done": done_today,
+            },
             "active_orders": orders,
             "top_items": top_items_data,
         })
@@ -214,6 +241,62 @@ async def menu_page(
     except Exception as e:
         logger.error("Menu page error: %s", e)
         raise HTTPException(status_code=500, detail="Ошибка загрузки меню")
+
+
+@router.get("/kitchen", response_class=HTMLResponse)
+async def kitchen_page(
+    request: Request,
+    venue_id: uuid.UUID | None = Query(None),
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    try:
+        venues = (await db.execute(
+            select(Venue)
+            .where(Venue.network_id == current_user.network_id, Venue.is_active == True)
+            .order_by(Venue.name)
+        )).scalars().all()
+        current_venue = next((v for v in venues if v.id == venue_id), None) if venue_id else None
+        return templates.TemplateResponse("kitchen.html", {
+            "request": request,
+            "venues": venues,
+            "current_venue": current_venue,
+        })
+    except Exception as e:
+        logger.error("Kitchen page error: %s", e)
+        raise HTTPException(status_code=500, detail="Ошибка кухонного экрана")
+
+
+@router.get("/partials/kitchen", response_class=HTMLResponse)
+async def kitchen_partial(
+    request: Request,
+    venue_id: uuid.UUID | None = Query(None),
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    try:
+        stmt = (
+            select(Order)
+            .options(selectinload(Order.items), selectinload(Order.venue))
+            .join(Venue)
+            .where(
+                Venue.network_id == current_user.network_id,
+                Order.status.in_(["new", "confirmed", "preparing", "ready"]),
+            )
+            .order_by(Order.created_at.asc())
+        )
+        if venue_id:
+            stmt = stmt.where(Order.venue_id == venue_id)
+        orders = (await db.execute(stmt)).scalars().all()
+        return templates.TemplateResponse("partials/kitchen_board.html", {
+            "request": request,
+            "orders": orders,
+            "venue_id": str(venue_id) if venue_id else None,
+            "now": datetime.now(timezone.utc),
+        })
+    except Exception as e:
+        logger.error("Kitchen partial error: %s", e)
+        return HTMLResponse("<p class='kds-empty'>Ошибка загрузки</p>")
 
 
 @router.get("/guests", response_class=HTMLResponse)

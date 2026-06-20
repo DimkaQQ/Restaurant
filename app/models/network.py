@@ -16,3 +16,4 @@ class Network(Base):
     venues: Mapped[list["Venue"]] = relationship("Venue", back_populates="network")
     users: Mapped[list["User"]] = relationship("User", back_populates="network")
     guests: Mapped[list["Guest"]] = relationship("Guest", back_populates="network")
+    staff: Mapped[list["Staff"]] = relationship("Staff", back_populates="network")

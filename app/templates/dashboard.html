@@ -17,6 +17,10 @@
     <span class="stat-value">{{ "{:,.0f}".format(total_revenue) }} ₸</span>
   </div>
   <div class="stat-card">
+    <span class="stat-label">Заказов сегодня</span>
+    <span class="stat-value">{{ orders_today }}</span>
+  </div>
+  <div class="stat-card">
     <span class="stat-label">Новых гостей сегодня</span>
     <span class="stat-value">{{ new_guests }}</span>
   </div>
@@ -26,23 +30,40 @@
   </div>
 </div>
 
-<div class="content-grid">
-  <div class="panel">
-    <div class="panel-header">
-      <h2 class="panel-title">Активные заказы</h2>
+<div class="panel" style="margin-bottom:1.5rem">
+  <div class="panel-header">
+    <h2 class="panel-title">Активные заказы</h2>
+    <div style="display:flex;gap:0.75rem;align-items:center">
       <span class="live-badge">● LIVE</span>
-    </div>
-    <div
-      id="live-orders"
-      class="orders-board"
-      hx-get="/partials/orders"
-      hx-trigger="load, every 8s"
-      hx-swap="innerHTML"
-    >
-      <div class="loading">Загрузка...</div>
+      <a href="/kitchen" class="btn-secondary" style="font-size:0.75rem;padding:0.3rem 0.75rem;text-decoration:none">🍳 Кухня</a>
+      <a href="/orders" class="btn-secondary" style="font-size:0.75rem;padding:0.3rem 0.75rem;text-decoration:none">Все заказы →</a>
     </div>
   </div>
+  <div class="order-status-summary">
+    <div class="oss-item oss-new">
+      <span class="oss-count">{{ orders_status.new }}</span>
+      <span class="oss-label">Новых</span>
+    </div>
+    <div class="oss-item oss-confirmed">
+      <span class="oss-count">{{ orders_status.confirmed }}</span>
+      <span class="oss-label">Подтверждено</span>
+    </div>
+    <div class="oss-item oss-preparing">
+      <span class="oss-count">{{ orders_status.preparing }}</span>
+      <span class="oss-label">Готовится</span>
+    </div>
+    <div class="oss-item oss-ready">
+      <span class="oss-count">{{ orders_status.ready }}</span>
+      <span class="oss-label">Готово</span>
+    </div>
+    <div class="oss-item oss-done">
+      <span class="oss-count">{{ orders_status.done }}</span>
+      <span class="oss-label">Выдано сегодня</span>
+    </div>
+  </div>
+</div>
 
+<div class="content-grid">
   <div class="panel">
     <div class="panel-header">
       <h2 class="panel-title">Топ позиций сегодня</h2>
@@ -57,8 +78,10 @@
       <p class="empty-state">Нет данных за сегодня</p>
       {% endfor %}
     </div>
+  </div>
 
-    <div class="panel-header" style="margin-top:2rem">
+  <div class="panel">
+    <div class="panel-header">
       <h2 class="panel-title">Заведения</h2>
     </div>
     <div class="venues-list">
@@ -68,8 +91,8 @@
           <span class="venue-name">{{ venue.name }}</span>
           <span class="venue-addr">{{ venue.address or '' }}</span>
         </div>
-        <span class="badge {% if venue.is_active %}badge-active{% else %}badge-inactive{% endif %}">
-          {% if venue.is_active %}Активно{% else %}Закрыто{% endif %}
+        <span class="badge {% if venue.is_active %}badge-active{% else %}badge-launch{% endif %}">
+          {% if venue.is_active %}Активно{% else %}Запуск{% endif %}
         </span>
       </div>
       {% endfor %}
