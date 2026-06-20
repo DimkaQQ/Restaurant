@@ -34,12 +34,12 @@
     </div>
     <div
       id="live-orders"
-      hx-get="/api/orders/live"
+      class="orders-board"
+      hx-get="/partials/orders"
       hx-trigger="load, every 8s"
-      hx-headers='{"Authorization": "Bearer " + (localStorage.getItem("access_token") || "")}'
       hx-swap="innerHTML"
     >
-      {% include "partials/orders_list.html" ignore missing %}
+      <div class="loading">Загрузка...</div>
     </div>
   </div>
 
@@ -78,10 +78,6 @@
 </div>
 
 <script>
-  document.getElementById('current-date').textContent = new Date().toLocaleDateString('ru-RU', {weekday:'long',day:'numeric',month:'long'});
-  document.addEventListener('htmx:configRequest', (e) => {
-    const t = localStorage.getItem('access_token');
-    if (t) e.detail.headers['Authorization'] = 'Bearer ' + t;
-  });
+  document.getElementById('current-date').textContent = new Date().toLocaleDateString('ru-RU', {weekday:'long', day:'numeric', month:'long'});
 </script>
 {% endblock %}

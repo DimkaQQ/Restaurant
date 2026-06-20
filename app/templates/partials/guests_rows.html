@@ -1,0 +1,16 @@
+{% if guests %}
+  {% for g in guests %}
+  <tr>
+    <td>
+      <span class="guest-name">{{ g.name or '—' }}</span>
+      {% if g.telegram_id %}<span class="tg-badge">TG</span>{% endif %}
+    </td>
+    <td>{{ g.phone or '—' }}</td>
+    <td><span class="points-badge">{{ g.total_points }}</span></td>
+    <td>{{ g.total_visits }}</td>
+    <td>{{ g.created_at.strftime('%d.%m.%Y') }}</td>
+  </tr>
+  {% endfor %}
+{% else %}
+  <tr><td colspan="5" class="empty-state">Ничего не найдено</td></tr>
+{% endif %}

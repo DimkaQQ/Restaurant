@@ -1,0 +1,44 @@
+{% set status_labels = {"new": "Новый", "confirmed": "Подтверждён", "preparing": "Готовится", "ready": "Готово!", "done": "Выдан", "cancelled": "Отменён"} %}
+{% set next_status = {"new": "confirmed", "confirmed": "preparing", "preparing": "ready", "ready": "done"} %}
+{% set next_label = {"new": "Подтвердить", "confirmed": "Готовить", "preparing": "Готово", "ready": "Выдать"} %}
+
+{% if orders %}
+  {% for order in orders %}
+  <div class="order-card status-{{ order.status }}">
+    <div class="order-header">
+      <span class="order-id">#{{ order.id | string | truncate(8, True, '') }}</span>
+      <span class="order-status">{{ status_labels.get(order.status, order.status) }}</span>
+      <span class="order-time">{{ order.created_at.strftime('%H:%M') }}</span>
+    </div>
+    <div class="order-guest">{{ order.guest.name if order.guest and order.guest.name else 'Гость' }}</div>
+    <div class="order-items">
+      {% for item in order.items %}
+      <span class="order-item">{{ item.name }} × {{ item.quantity }}</span>
+      {% endfor %}
+    </div>
+    <div class="order-footer">
+      <span class="order-total">{{ "{:,.0f}".format(order.total_amount) }} ₸</span>
+      {% if next_status.get(order.status) %}
+      <button
+        hx-patch="/api/orders/{{ order.id }}/status"
+        hx-vals='{"status": "{{ next_status[order.status] }}"}'
+        hx-target="closest .order-card"
+        hx-swap="outerHTML"
+        class="btn-status"
+      >{{ next_label[order.status] }}</button>
+      {% endif %}
+      {% if order.status not in ['done', 'cancelled'] %}
+      <button
+        hx-patch="/api/orders/{{ order.id }}/status"
+        hx-vals='{"status": "cancelled"}'
+        hx-target="closest .order-card"
+        hx-swap="outerHTML"
+        class="btn-cancel"
+      >Отмена</button>
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+{% else %}
+  <p class="empty-state">Нет активных заказов</p>
+{% endif %}

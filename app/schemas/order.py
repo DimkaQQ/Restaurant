@@ -25,6 +25,14 @@ class OrderItemOut(BaseModel):
     model_config = {"from_attributes": True}
 
 
+class GuestShort(BaseModel):
+    id: uuid.UUID
+    name: str | None
+    phone: str | None
+
+    model_config = {"from_attributes": True}
+
+
 class OrderOut(BaseModel):
     id: uuid.UUID
     venue_id: uuid.UUID
@@ -36,6 +44,7 @@ class OrderOut(BaseModel):
     created_at: datetime
     updated_at: datetime
     items: list[OrderItemOut] = []
+    guest: GuestShort | None = None
 
     model_config = {"from_attributes": True}
 

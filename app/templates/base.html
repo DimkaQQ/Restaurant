@@ -52,15 +52,19 @@
   {% endif %}
 
   <script>
-    const token = localStorage.getItem('access_token');
-    document.addEventListener('htmx:configRequest', (e) => {
-      if (token) e.detail.headers['Authorization'] = 'Bearer ' + token;
-    });
     async function logout() {
-      await fetch('/auth/logout', {method:'POST'});
+      await fetch('/auth/logout', { method: 'POST' });
       localStorage.removeItem('access_token');
+      document.cookie = 'access_token=; Max-Age=0; path=/';
       location.href = '/auth/login';
     }
+
+    // При 401 от htmx — редиректим на логин
+    document.addEventListener('htmx:responseError', (e) => {
+      if (e.detail.xhr.status === 401 || e.detail.xhr.status === 307) {
+        location.href = '/auth/login';
+      }
+    });
   </script>
   {% block scripts %}{% endblock %}
 </body>

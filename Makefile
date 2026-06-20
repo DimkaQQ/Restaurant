@@ -20,7 +20,7 @@ up:
 	@echo "$(GREEN)▶ Запускаем RestOS...$(NC)"
 	docker compose up --build -d
 	@echo ""
-	@echo "$(GREEN)✓ Готово!$(NC)  Панель управления: http://localhost:8000"
+	@echo "$(GREEN)✓ Готово!$(NC)  Панель управления: http://localhost:8001"
 	@echo "           Если первый раз — запусти: $(YELLOW)make setup$(NC)"
 
 ## Запуск вместе с ботом

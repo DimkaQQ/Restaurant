@@ -12,7 +12,7 @@
     type="search"
     placeholder="Поиск по имени или телефону..."
     class="search-input"
-    hx-get="/api/guests/"
+    hx-get="/partials/guests"
     hx-trigger="keyup changed delay:400ms"
     hx-target="#guests-table-body"
     hx-swap="innerHTML"
@@ -39,7 +39,7 @@
           {% if g.telegram_id %}<span class="tg-badge">TG</span>{% endif %}
         </td>
         <td>{{ g.phone or '—' }}</td>
-        <td><span class="points-badge">{{ g.total_points }} ₽</span></td>
+        <td><span class="points-badge">{{ g.total_points }}</span></td>
         <td>{{ g.total_visits }}</td>
         <td>{{ g.created_at.strftime('%d.%m.%Y') }}</td>
       </tr>
@@ -49,11 +49,4 @@
     </tbody>
   </table>
 </div>
-
-<script>
-  document.addEventListener('htmx:configRequest', (e) => {
-    const t = localStorage.getItem('access_token');
-    if (t) e.detail.headers['Authorization'] = 'Bearer ' + t;
-  });
-</script>
 {% endblock %}
