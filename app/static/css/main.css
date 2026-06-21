@@ -34,6 +34,7 @@ body {
   top: 0; left: 0; bottom: 0;
   z-index: 100;
   padding: 1.5rem 0;
+  overflow: hidden;
 }
 
 .sidebar-logo {
@@ -44,6 +45,7 @@ body {
   display: flex;
   align-items: baseline;
   line-height: 1;
+  flex-shrink: 0;
 }
 
 .logo-serif {
@@ -86,6 +88,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  flex-shrink: 0;
 }
 
 .user-email { font-size: 0.75rem; color: var(--muted); word-break: break-all; }
