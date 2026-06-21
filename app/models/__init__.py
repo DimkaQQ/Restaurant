@@ -7,9 +7,15 @@ from app.models.order import Order, OrderItem, Visit
 from app.models.points import PointsTransaction
 from app.models.staff import Staff
 from app.models.review import Review
+from app.models.inventory import Ingredient, WriteOff
+from app.models.finance import Expense
+from app.models.shift import Shift
 
 __all__ = [
     "Network", "Venue", "User", "Guest",
     "MenuItem", "Order", "OrderItem", "Visit", "PointsTransaction",
     "Staff", "Review",
+    "Ingredient", "WriteOff",
+    "Expense",
+    "Shift",
 ]

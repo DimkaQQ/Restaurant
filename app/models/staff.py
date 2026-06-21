@@ -31,6 +31,7 @@ class Staff(Base):
     network: Mapped["Network"] = relationship("Network", back_populates="staff")
     reviews: Mapped[list["Review"]] = relationship("Review", back_populates="staff")
     orders: Mapped[list["Order"]] = relationship("Order", back_populates="staff")
+    shifts: Mapped[list["Shift"]] = relationship("Shift", back_populates="staff")
 
     @property
     def role_label(self) -> str:

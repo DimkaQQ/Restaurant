@@ -1,0 +1,226 @@
+{% extends "base.html" %}
+{% block title %}Смены — RestOS{% endblock %}
+
+{% block head %}
+<style>
+.shifts-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem; flex-wrap:wrap; gap:1rem; }
+.shifts-header h1 { font-family:'Instrument Serif',serif; font-size:1.6rem; font-weight:400; }
+.shifts-controls { display:flex; gap:.75rem; align-items:center; flex-wrap:wrap; }
+.week-nav { display:flex; align-items:center; gap:.5rem; }
+.week-nav button { background:var(--card); border:1px solid var(--border); color:var(--white); padding:.35rem .75rem; border-radius:6px; cursor:pointer; font-size:.85rem; }
+.week-nav button:hover { border-color:var(--gold); }
+.week-nav span { font-size:.875rem; font-weight:500; min-width:130px; text-align:center; }
+.today-badge { background:rgba(200,168,75,.15); border:1px solid rgba(200,168,75,.3); color:var(--gold); border-radius:8px; padding:.4rem 1rem; font-size:.85rem; }
+.week-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:.75rem; margin-bottom:1.5rem; }
+@media(max-width:900px){ .week-grid{grid-template-columns:repeat(3,1fr);} }
+@media(max-width:500px){ .week-grid{grid-template-columns:1fr;} }
+.day-col { background:var(--card); border:1px solid var(--border); border-radius:10px; overflow:hidden; min-height:180px; }
+.day-col.today { border-color:var(--gold); }
+.day-header { padding:.6rem .75rem; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+.day-name { font-size:.72rem; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); }
+.day-date { font-size:1rem; font-weight:700; }
+.day-col.today .day-date { color:var(--gold); }
+.day-add { background:none; border:none; color:var(--muted); cursor:pointer; font-size:1rem; line-height:1; padding:.1rem; }
+.day-add:hover { color:var(--gold); }
+.day-body { padding:.5rem; }
+.shift-chip { background:rgba(255,255,255,.04); border:1px solid var(--border); border-radius:6px; padding:.4rem .6rem; margin-bottom:.35rem; display:flex; align-items:center; gap:.4rem; cursor:pointer; transition:all .15s; }
+.shift-chip:hover { border-color:var(--gold); }
+.shift-chip.status-planned { border-left:3px solid #60a5fa; }
+.shift-chip.status-active { border-left:3px solid #4ade80; }
+.shift-chip.status-done { border-left:3px solid var(--muted); opacity:.6; }
+.shift-chip.status-cancelled { border-left:3px solid #ef4444; opacity:.5; text-decoration:line-through; }
+.shift-avatar { width:24px; height:24px; border-radius:50%; background:rgba(200,168,75,.15); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:.6rem; font-weight:700; color:var(--gold); flex-shrink:0; }
+.shift-info { flex:1; min-width:0; }
+.shift-name { font-size:.75rem; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.shift-time { font-size:.68rem; color:var(--muted); }
+.shift-del { background:none; border:none; color:transparent; cursor:pointer; font-size:.8rem; padding:0; flex-shrink:0; }
+.shift-chip:hover .shift-del { color:var(--muted); }
+.shift-chip:hover .shift-del:hover { color:#ef4444; }
+.empty-day { color:var(--muted); font-size:.78rem; text-align:center; padding:.75rem .5rem; }
+
+/* Modal */
+.modal-form .form-group { margin-bottom:.85rem; }
+.modal-form label { display:block; font-size:.8rem; color:var(--muted); margin-bottom:.3rem; }
+.modal-form input, .modal-form select, .modal-form textarea { width:100%; background:var(--black); border:1px solid var(--border); color:var(--white); padding:.5rem .75rem; border-radius:6px; font-size:.875rem; box-sizing:border-box; }
+.modal-form input:focus, .modal-form select:focus { outline:none; border-color:var(--gold); }
+.form-row-2 { display:grid; grid-template-columns:1fr 1fr; gap:.5rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="shifts-header">
+  <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+    <h1>Смены</h1>
+    {% if active_today_count > 0 %}
+    <span class="today-badge">Сегодня работают: {{ active_today_count }}</span>
+    {% endif %}
+  </div>
+  <div class="shifts-controls">
+    <select class="select-input" onchange="changeVenue(this.value)">
+      <option value="">Все заведения</option>
+      {% for v in venues %}
+      <option value="{{ v.id }}" {% if selected_venue_id == v.id|string %}selected{% endif %}>{{ v.name }}</option>
+      {% endfor %}
+    </select>
+    <div class="week-nav">
+      <button onclick="changeWeek({{ week_offset - 1 }})">←</button>
+      <span>{{ week_days[0].strftime('%d.%m') }} — {{ week_days[-1].strftime('%d.%m.%Y') }}</span>
+      <button onclick="changeWeek({{ week_offset + 1 }})">→</button>
+      {% if week_offset != 0 %}<button onclick="changeWeek(0)" style="font-size:.75rem">Сегодня</button>{% endif %}
+    </div>
+    <button class="btn-primary" onclick="openAddModal()">+ Добавить смену</button>
+  </div>
+</div>
+
+<div class="week-grid">
+  {% set day_names = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'] %}
+  {% for day in week_days %}
+  <div class="day-col {% if day == today %}today{% endif %}">
+    <div class="day-header">
+      <div>
+        <div class="day-name">{{ day_names[loop.index0] }}</div>
+        <div class="day-date">{{ day.strftime('%d.%m') }}</div>
+      </div>
+      <button class="day-add" onclick="openAddModal('{{ day.strftime('%Y-%m-%d') }}')" title="Добавить смену">+</button>
+    </div>
+    <div class="day-body">
+      {% set day_shifts = shifts_by_day.get(day, []) %}
+      {% if day_shifts %}
+        {% for s in day_shifts %}
+        <div class="shift-chip status-{{ s.status }}" onclick="changeStatus('{{ s.id }}', '{{ s.status }}')">
+          <div class="shift-avatar">{{ s.staff.initials }}</div>
+          <div class="shift-info">
+            <div class="shift-name">{{ s.staff.name }}</div>
+            <div class="shift-time">{{ s.start_time.strftime('%H:%M') }}–{{ s.end_time.strftime('%H:%M') }}</div>
+          </div>
+          <button class="shift-del" onclick="event.stopPropagation();deleteShift('{{ s.id }}')">✕</button>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty-day">—</div>
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<!-- Add Shift Modal -->
+<div id="add-modal" class="modal" style="display:none">
+  <div class="modal-overlay" onclick="closeModal()"></div>
+  <div class="modal-content" style="max-width:380px">
+    <h2 class="modal-title">Добавить смену</h2>
+    <div id="modal-error" style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#fca5a5;padding:.5rem .75rem;border-radius:6px;font-size:.8rem;margin-bottom:.75rem;display:none"></div>
+    <form id="add-shift-form" class="modal-form">
+      <div class="form-group">
+        <label>Заведение</label>
+        <select name="venue_id" id="modal-venue" required onchange="loadStaff(this.value)">
+          <option value="">Выбрать...</option>
+          {% for v in venues %}
+          <option value="{{ v.id }}" {% if selected_venue_id == v.id|string %}selected{% endif %}>{{ v.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Сотрудник</label>
+        <select name="staff_id" id="modal-staff" required>
+          <option value="">Сначала выберите заведение</option>
+          {% for s in all_staff %}
+          <option value="{{ s.id }}" data-venue="{{ s.venue_id }}">{{ s.name }} ({{ s.role_label }})</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Дата</label>
+        <input type="date" name="shift_date" id="modal-date" required>
+      </div>
+      <div class="form-row-2">
+        <div class="form-group">
+          <label>Начало</label>
+          <input type="time" name="start_time" value="09:00" required>
+        </div>
+        <div class="form-group">
+          <label>Конец</label>
+          <input type="time" name="end_time" value="21:00" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Примечание</label>
+        <input type="text" name="notes" placeholder="Необязательно">
+      </div>
+      <div style="display:flex;gap:.5rem;margin-top:1rem">
+        <button type="submit" class="btn-primary">Добавить</button>
+        <button type="button" onclick="closeModal()" class="btn-secondary">Отмена</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const STATUS_CYCLE = { planned: 'active', active: 'done', done: 'planned', cancelled: 'planned' };
+
+function changeVenue(v) {
+  const p = new URLSearchParams(location.search);
+  v ? p.set('venue_id', v) : p.delete('venue_id');
+  p.delete('week_offset');
+  location.href = '/shifts?' + p.toString();
+}
+function changeWeek(offset) {
+  const p = new URLSearchParams(location.search);
+  p.set('week_offset', offset);
+  location.href = '/shifts?' + p.toString();
+}
+
+function openAddModal(date) {
+  document.getElementById('add-modal').style.display = 'flex';
+  if (date) document.getElementById('modal-date').value = date;
+  else document.getElementById('modal-date').value = new Date().toISOString().split('T')[0];
+  loadStaff(document.getElementById('modal-venue').value);
+}
+function closeModal() { document.getElementById('add-modal').style.display = 'none'; }
+
+function loadStaff(venueId) {
+  const sel = document.getElementById('modal-staff');
+  const opts = sel.querySelectorAll('option[data-venue]');
+  opts.forEach(o => { o.style.display = (!venueId || o.dataset.venue === venueId) ? '' : 'none'; });
+  // Reset if current selection is hidden
+  if (sel.selectedOptions[0]?.style.display === 'none') sel.value = '';
+}
+
+async function changeStatus(id, current) {
+  const next = STATUS_CYCLE[current] || 'planned';
+  const res = await fetch('/api/shifts/'+id, {
+    method:'PATCH', credentials:'include',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+localStorage.getItem('access_token')},
+    body: JSON.stringify({status: next}),
+  });
+  if (res.ok) location.reload();
+}
+
+async function deleteShift(id) {
+  if (!confirm('Удалить смену?')) return;
+  const res = await fetch('/api/shifts/'+id, {
+    method:'DELETE', credentials:'include',
+    headers:{'Authorization':'Bearer '+localStorage.getItem('access_token')},
+  });
+  if (res.ok) location.reload();
+}
+
+document.getElementById('add-shift-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const errEl = document.getElementById('modal-error');
+  errEl.style.display = 'none';
+  const fd = new FormData(e.target);
+  const body = Object.fromEntries(fd.entries());
+  if (!body.notes) delete body.notes;
+  const res = await fetch('/api/shifts', {
+    method:'POST', credentials:'include',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+localStorage.getItem('access_token')},
+    body: JSON.stringify(body),
+  });
+  if (res.ok) location.reload();
+  else { const d = await res.json().catch(()=>({})); errEl.textContent=d.detail||'Ошибка'; errEl.style.display='block'; }
+});
+</script>
+{% endblock %}
