@@ -37,7 +37,7 @@ def format_cart(cart: list, menu_map: dict, lang: str = 'ru') -> str:
         subtotal = float(item["price"]) * entry["qty"]
         total += subtotal
         lines.append(f"• {item['name']} × {entry['qty']} = {subtotal:.0f} ₸")
-    lines.append(f"\n💰 <b>Итого: {total:.0f} ₸</b>")
+    lines.append(f"\n💰 <b>{t('total', lang)}: {total:.0f} ₸</b>")
     return "\n".join(lines)
 
 
@@ -157,7 +157,9 @@ async def show_category(callback: CallbackQuery, state: FSMContext, api_url: str
         return
 
     text = f"<b>{category}</b>\n\n" + "\n".join(
-        f"• {i['name']} — {i['price']} ₸\n  <i>{i.get('description', '')}</i>" for i in cat_items
+        f"• {i['name']} — {float(i['price']):.0f} ₸"
+        + (f"\n  <i>{i['description']}</i>" if i.get('description') else "")
+        for i in cat_items
     )
     await callback.message.edit_text(
         text,
@@ -176,8 +178,9 @@ async def choose_item(callback: CallbackQuery, state: FSMContext, api_url: str, 
     if not item:
         await callback.answer(t('no_menu', lang), show_alert=True)
         return
+    desc_line = f"\n{item['description']}" if item.get('description') else ""
     await callback.message.edit_text(
-        f"<b>{item['name']}</b>\n{item.get('description', '')}\n{t('price', lang, price=item['price'])}\n\n{t('choose_qty', lang)}",
+        f"<b>{item['name']}</b>{desc_line}\n{t('price', lang, price=f\"{float(item['price']):.0f}\")}\n\n{t('choose_qty', lang)}",
         reply_markup=quantity_keyboard(item_id, lang),
     )
 
