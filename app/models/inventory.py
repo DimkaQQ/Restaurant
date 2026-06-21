@@ -29,7 +29,7 @@ class Ingredient(Base):
             return "empty"
         if self.quantity <= self.min_quantity:
             return "low"
-        if self.quantity <= self.min_quantity * 1.5:
+        if self.quantity <= self.min_quantity * Decimal('1.5'):
             return "warning"
         return "ok"
 
