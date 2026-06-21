@@ -14,7 +14,7 @@
 @media(max-width:800px){ .fin-kpis{grid-template-columns:repeat(2,1fr);} }
 .fin-kpi { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:1.25rem 1.5rem; }
 .fin-kpi-label { font-size:.72rem; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); margin-bottom:.35rem; }
-.fin-kpi-value { font-size:1.8rem; font-weight:700; line-height:1.1; }
+.fin-kpi-value { font-size:clamp(1.1rem,2.2vw,1.8rem); font-weight:700; line-height:1.1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .fin-kpi.profit .fin-kpi-value { color:{% if profit >= 0 %}#4ade80{% else %}#f87171{% endif %}; }
 .fin-kpi.margin .fin-kpi-value { color:{% if margin >= 15 %}#4ade80{% elif margin >= 5 %}#fbbf24{% else %}#f87171{% endif %}; }
 .fin-layout { display:grid; grid-template-columns:1fr 340px; gap:1.5rem; }
