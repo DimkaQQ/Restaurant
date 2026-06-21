@@ -319,6 +319,40 @@ async def kitchen_partial(
         return HTMLResponse("<p class='kds-empty'>Ошибка загрузки</p>")
 
 
+@router.get("/partials/kitchen/history", response_class=HTMLResponse)
+async def kitchen_history(
+    request: Request,
+    venue_id: uuid.UUID | None = Query(None),
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    try:
+        accessible_ids = await get_accessible_venue_ids(current_user, db)
+        filter_ids = [venue_id] if venue_id and venue_id in accessible_ids else accessible_ids
+        today_start = datetime.combine(
+            datetime.now(timezone.utc).date(), datetime.min.time()
+        ).replace(tzinfo=timezone.utc)
+        orders = (await db.execute(
+            select(Order)
+            .options(selectinload(Order.items), selectinload(Order.venue))
+            .where(
+                Order.venue_id.in_(filter_ids),
+                Order.status == "done",
+                Order.created_at >= today_start,
+            )
+            .order_by(Order.updated_at.desc())
+            .limit(100)
+        )).scalars().all()
+        return templates.TemplateResponse("partials/kitchen_history.html", {
+            "request": request,
+            "orders": orders,
+            "now": datetime.now(timezone.utc),
+        })
+    except Exception as e:
+        logger.error("Kitchen history error: %s", e)
+        return HTMLResponse("<p class='kds-empty'>Ошибка загрузки истории</p>")
+
+
 @router.get("/guests", response_class=HTMLResponse)
 async def guests_page(
     request: Request,

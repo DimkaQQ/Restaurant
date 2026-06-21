@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Склад — {{ "Все заведения" }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/main.css">
+  <style>
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { background:#0A0A0A; font-family:'Inter',sans-serif; margin:0; }
+
+    .tb-header {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:.75rem 1.25rem; background:#111; border-bottom:2px solid #222;
+      position:sticky; top:0; z-index:100;
+    }
+    .tb-brand { font-size:1.1rem; font-weight:700; color:var(--gold); }
+    .tb-subtitle { font-size:.8rem; color:var(--muted); margin-top:.1rem; }
+
+    .tb-controls {
+      display:flex; gap:.75rem; padding:.75rem 1.25rem;
+      background:#0f0f0f; border-bottom:1px solid #222;
+      flex-wrap:wrap; align-items:center;
+    }
+    .tb-search {
+      flex:1; min-width:180px; background:rgba(255,255,255,.05);
+      border:1px solid #333; color:#fff; padding:.6rem 1rem;
+      border-radius:8px; font-size:1rem;
+    }
+    .tb-search:focus { outline:none; border-color:var(--gold); }
+    .tb-venue { background:rgba(255,255,255,.05); border:1px solid #333; color:#fff;
+      padding:.6rem .9rem; border-radius:8px; font-size:.9rem; }
+
+    .tb-cat-bar {
+      display:flex; gap:.5rem; padding:.6rem 1.25rem;
+      background:#0f0f0f; border-bottom:1px solid #1a1a1a;
+      overflow-x:auto; -webkit-overflow-scrolling:touch;
+    }
+    .tb-cat-bar::-webkit-scrollbar { display:none; }
+    .tb-chip {
+      white-space:nowrap; padding:.35rem .9rem; border-radius:20px;
+      border:1px solid #333; color:var(--muted); font-size:.82rem;
+      background:none; cursor:pointer; flex-shrink:0;
+    }
+    .tb-chip.active { background:rgba(200,168,75,.15); border-color:var(--gold); color:var(--gold); }
+
+    .tb-grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));
+      gap:1rem; padding:1rem 1.25rem;
+    }
+
+    .tb-card {
+      background:#171512; border:2px solid #2a2520; border-radius:14px;
+      padding:1.1rem; display:flex; flex-direction:column; gap:.75rem;
+      transition:border-color .15s;
+    }
+    .tb-card.status-low   { border-left:5px solid #ef4444; }
+    .tb-card.status-warning { border-left:5px solid #f59e0b; }
+    .tb-card.status-empty { border-left:5px solid #6b7280; opacity:.7; }
+    .tb-card.status-ok    { border-left:5px solid #22c55e; }
+
+    .tb-card-name { font-size:1.05rem; font-weight:600; color:#fff; }
+    .tb-card-cat  { font-size:.78rem; color:var(--muted); margin-top:.1rem; }
+
+    .tb-qty-row { display:flex; align-items:baseline; gap:.5rem; }
+    .tb-qty     { font-size:2rem; font-weight:700; color:#fff; line-height:1; }
+    .tb-unit    { font-size:.9rem; color:var(--muted); }
+    .tb-min     { font-size:.78rem; color:var(--muted); margin-left:auto; }
+
+    .tb-bar-wrap { background:rgba(255,255,255,.07); border-radius:4px; height:6px; overflow:hidden; }
+    .tb-bar { height:100%; border-radius:4px; }
+    .tb-bar.ok      { background:#22c55e; }
+    .tb-bar.warning { background:#f59e0b; }
+    .tb-bar.low     { background:#ef4444; }
+    .tb-bar.empty   { background:#6b7280; }
+
+    .tb-actions { display:grid; grid-template-columns:1fr 1fr; gap:.5rem; }
+    .tb-btn {
+      padding:.8rem; border:none; border-radius:10px; font-size:.95rem; font-weight:700;
+      cursor:pointer; touch-action:manipulation; transition:opacity .1s, transform .1s;
+    }
+    .tb-btn:active { transform:scale(0.96); opacity:.85; }
+    .tb-btn-add { background:rgba(34,197,94,.15); color:#4ade80; border:1px solid rgba(34,197,94,.3); }
+    .tb-btn-sub { background:rgba(239,68,68,.15); color:#f87171; border:1px solid rgba(239,68,68,.3); }
+
+    /* Modal */
+    .tb-modal { display:none; position:fixed; inset:0; z-index:999; align-items:center; justify-content:center; background:rgba(0,0,0,.75); }
+    .tb-modal.open { display:flex; }
+    .tb-modal-box { background:#1a1a1a; border:1px solid #333; border-radius:16px; padding:1.5rem; width:90%; max-width:360px; }
+    .tb-modal-title { font-size:1.1rem; font-weight:700; color:#fff; margin-bottom:1rem; }
+    .tb-modal-label { font-size:.85rem; color:var(--muted); margin-bottom:.4rem; display:block; }
+    .tb-modal-input {
+      width:100%; background:#0f0f0f; border:1px solid #444; color:#fff;
+      padding:.75rem 1rem; border-radius:8px; font-size:1.4rem; font-weight:700;
+      text-align:center; margin-bottom:1rem;
+    }
+    .tb-modal-input:focus { outline:none; border-color:var(--gold); }
+    .tb-modal-select { width:100%; background:#0f0f0f; border:1px solid #444; color:#fff;
+      padding:.6rem .8rem; border-radius:8px; font-size:.95rem; margin-bottom:1rem; }
+    .tb-modal-actions { display:grid; grid-template-columns:1fr 1fr; gap:.75rem; }
+    .tb-modal-confirm { background:var(--gold); color:#000; border:none; border-radius:10px; padding:.85rem; font-size:1rem; font-weight:700; cursor:pointer; }
+    .tb-modal-cancel  { background:rgba(255,255,255,.07); color:var(--muted); border:1px solid #333; border-radius:10px; padding:.85rem; font-size:1rem; cursor:pointer; }
+    .tb-toast { position:fixed; bottom:1.5rem; left:50%; transform:translateX(-50%); background:#1e1e1e; border:1px solid #444; color:#fff; padding:.65rem 1.25rem; border-radius:10px; font-size:.9rem; z-index:9999; display:none; }
+  </style>
+</head>
+<body>
+
+<div class="tb-header">
+  <div>
+    <div class="tb-brand">RestOS · Склад</div>
+    <div class="tb-subtitle">Режим планшета</div>
+  </div>
+  <a href="/inventory" style="color:var(--muted);font-size:.85rem;text-decoration:none;">Полный вид →</a>
+</div>
+
+<div class="tb-controls">
+  <input type="text" class="tb-search" id="search" placeholder="Поиск по названию..." oninput="filterCards()">
+  <select class="tb-venue" onchange="changeVenue(this.value)">
+    <option value="">Все заведения</option>
+    {% for v in venues %}
+    <option value="{{ v.id }}" {% if selected_venue_id == v.id|string %}selected{% endif %}>{{ v.name }}</option>
+    {% endfor %}
+  </select>
+</div>
+
+{% set categories = ingredients | map(attribute='category') | select | unique | sort | list %}
+{% if categories %}
+<div class="tb-cat-bar" id="cat-bar">
+  <button class="tb-chip active" onclick="filterCat('', this)">Все</button>
+  {% for cat in categories %}
+  <button class="tb-chip" onclick="filterCat('{{ cat }}', this)">{{ cat }}</button>
+  {% endfor %}
+</div>
+{% endif %}
+
+<div class="tb-grid" id="tb-grid">
+  {% for item in ingredients %}
+  {% set pct = [[((item.quantity / (item.min_quantity * 2)) * 100) | int, 0] | max, 100] | min if item.min_quantity > 0 else 100 %}
+  <div class="tb-card status-{{ item.stock_status }}" data-name="{{ item.name | lower }}" data-cat="{{ item.category or '' }}" id="card-{{ item.id }}">
+    <div>
+      <div class="tb-card-name">{{ item.name }}</div>
+      {% if item.category %}<div class="tb-card-cat">{{ item.category }}</div>{% endif %}
+    </div>
+    <div>
+      <div class="tb-qty-row">
+        <span class="tb-qty" id="qty-{{ item.id }}">{{ "%.1f"|format(item.quantity|float) }}</span>
+        <span class="tb-unit">{{ item.unit }}</span>
+        {% if item.min_quantity > 0 %}
+        <span class="tb-min">мин: {{ "%.1f"|format(item.min_quantity|float) }}</span>
+        {% endif %}
+      </div>
+      {% if item.min_quantity > 0 %}
+      <div class="tb-bar-wrap" style="margin-top:.5rem">
+        <div class="tb-bar {{ item.stock_status }}" id="bar-{{ item.id }}" style="width:{{ pct }}%"></div>
+      </div>
+      {% endif %}
+    </div>
+    <div class="tb-actions">
+      <button class="tb-btn tb-btn-add" onclick="openModal('{{ item.id }}','{{ item.name }}','restock','{{ item.unit }}')">+ Приход</button>
+      <button class="tb-btn tb-btn-sub" onclick="openModal('{{ item.id }}','{{ item.name }}','writeoff','{{ item.unit }}')">− Списание</button>
+    </div>
+  </div>
+  {% else %}
+  <p style="color:var(--muted);padding:2rem;grid-column:1/-1;text-align:center;">Нет позиций на складе</p>
+  {% endfor %}
+</div>
+
+<!-- Modal -->
+<div class="tb-modal" id="modal">
+  <div class="tb-modal-box">
+    <div class="tb-modal-title" id="modal-title">Операция</div>
+    <label class="tb-modal-label" id="modal-label">Количество</label>
+    <input type="number" class="tb-modal-input" id="modal-qty" inputmode="decimal" step="0.1" min="0.1" placeholder="0.0">
+    <div id="modal-reason-wrap" style="display:none">
+      <label class="tb-modal-label">Причина</label>
+      <select class="tb-modal-select" id="modal-reason">
+        <option value="usage">Использование на кухне</option>
+        <option value="spoilage">Порча / просрочка</option>
+        <option value="damage">Повреждение</option>
+        <option value="inventory">Инвентаризация</option>
+      </select>
+    </div>
+    <div class="tb-modal-actions">
+      <button class="tb-modal-confirm" id="modal-confirm">Подтвердить</button>
+      <button class="tb-modal-cancel" onclick="closeModal()">Отмена</button>
+    </div>
+  </div>
+</div>
+
+<div class="tb-toast" id="toast"></div>
+
+<script>
+let _itemId = null, _action = null;
+
+function openModal(id, name, action, unit) {
+  _itemId = id; _action = action;
+  document.getElementById('modal-title').textContent =
+    action === 'restock' ? `Приход: ${name}` : `Списание: ${name}`;
+  document.getElementById('modal-label').textContent =
+    `Количество (${unit})`;
+  document.getElementById('modal-reason-wrap').style.display =
+    action === 'writeoff' ? 'block' : 'none';
+  document.getElementById('modal-qty').value = '';
+  document.getElementById('modal').classList.add('open');
+  setTimeout(() => document.getElementById('modal-qty').focus(), 100);
+}
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+
+document.getElementById('modal-confirm').addEventListener('click', async () => {
+  const qty = parseFloat(document.getElementById('modal-qty').value);
+  if (!qty || qty <= 0) { showToast('Введите количество'); return; }
+  const body = { quantity: qty };
+  if (_action === 'writeoff') {
+    body.reason = document.getElementById('modal-reason').value;
+  }
+  const res = await fetch(`/api/inventory/${_itemId}/${_action}`, {
+    method: 'POST', credentials: 'include',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('access_token') },
+    body: JSON.stringify(body),
+  });
+  if (res.ok) {
+    const d = await res.json();
+    // Update card qty and bar in place
+    const qtyEl = document.getElementById('qty-' + _itemId);
+    if (qtyEl) qtyEl.textContent = parseFloat(d.quantity).toFixed(1);
+    const card = document.getElementById('card-' + _itemId);
+    if (card) {
+      card.className = card.className.replace(/status-\w+/, 'status-' + d.status);
+    }
+    closeModal();
+    showToast(_action === 'restock' ? `✓ Приход записан` : `✓ Списание записано`);
+  } else {
+    const e = await res.json().catch(() => ({}));
+    showToast(e.detail || 'Ошибка');
+  }
+});
+
+// Close modal on overlay click
+document.getElementById('modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal')) closeModal();
+});
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  setTimeout(() => { t.style.display = 'none'; }, 2500);
+}
+
+function filterCards() {
+  const q = document.getElementById('search').value.toLowerCase();
+  const activeCat = document.querySelector('.tb-chip.active')?.dataset?.cat || '';
+  document.querySelectorAll('.tb-card').forEach(c => {
+    const nameMatch = !q || c.dataset.name.includes(q);
+    const catMatch = !activeCat || c.dataset.cat === activeCat;
+    c.style.display = (nameMatch && catMatch) ? '' : 'none';
+  });
+}
+
+function filterCat(cat, btn) {
+  document.querySelectorAll('.tb-chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  btn.dataset.cat = cat;
+  filterCards();
+}
+
+function changeVenue(v) {
+  location.href = '/inventory/tablet' + (v ? '?venue_id=' + v : '');
+}
+</script>
+</body>
+</html>

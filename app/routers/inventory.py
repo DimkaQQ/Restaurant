@@ -88,6 +88,38 @@ async def inventory_page(
         raise HTTPException(status_code=500, detail="Ошибка загрузки склада")
 
 
+@router.get("/inventory/tablet", response_class=HTMLResponse)
+async def inventory_tablet(
+    request: Request,
+    venue_id: uuid.UUID | None = Query(None),
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    try:
+        accessible_ids = await get_accessible_venue_ids(current_user, db)
+        venues = (await db.execute(
+            select(Venue).where(Venue.id.in_(accessible_ids), Venue.is_active == True).order_by(Venue.name)
+        )).scalars().all()
+
+        filter_ids = [venue_id] if venue_id and venue_id in accessible_ids else accessible_ids
+
+        ingredients = (await db.execute(
+            select(Ingredient)
+            .where(Ingredient.venue_id.in_(filter_ids))
+            .order_by(Ingredient.category, Ingredient.name)
+        )).scalars().all()
+
+        return templates.TemplateResponse("inventory_tablet.html", {
+            "request": request,
+            "venues": venues,
+            "selected_venue_id": str(venue_id) if venue_id and venue_id in accessible_ids else "",
+            "ingredients": ingredients,
+        })
+    except Exception as e:
+        logger.error("Inventory tablet error: %s", e)
+        raise HTTPException(status_code=500, detail="Ошибка загрузки склада")
+
+
 @router.post("/api/inventory")
 async def create_ingredient(
     data: IngredientCreate,

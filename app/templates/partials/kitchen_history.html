@@ -1,0 +1,29 @@
+{% if orders %}
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.75rem;padding:.75rem;">
+  {% for o in orders %}
+  {% set done_ts = o.updated_at.timestamp() if o.updated_at else o.created_at.timestamp() %}
+  {% set wait_mins = ((done_ts - o.created_at.timestamp()) / 60) | int %}
+  <div style="background:#171512;border:2px solid #2a2520;border-left:5px solid #4ade80;border-radius:12px;padding:1rem;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem;">
+      <span style="font-family:monospace;font-size:.95rem;color:rgba(255,255,255,.45);font-weight:600;">#{{ o.id | string | truncate(8, True, '') }}</span>
+      {% if o.venue %}<span style="font-size:.75rem;color:var(--muted);background:rgba(255,255,255,.06);padding:.15rem .45rem;border-radius:5px;">{{ o.venue.name.split('—')[-1].strip() }}</span>{% endif %}
+      <span style="font-size:.85rem;color:#4ade80;font-weight:600;">{{ o.updated_at.strftime('%H:%M') if o.updated_at else '—' }}</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:.35rem;margin-bottom:.6rem;">
+      {% for item in o.items %}
+      <div style="display:flex;justify-content:space-between;font-size:.95rem;">
+        <span style="color:var(--white);">{{ item.name }}</span>
+        <span style="color:var(--gold);font-weight:700;">×{{ item.quantity }}</span>
+      </div>
+      {% endfor %}
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;font-size:.78rem;color:var(--muted);border-top:1px solid rgba(255,255,255,.05);padding-top:.5rem;margin-top:.25rem;">
+      <span>{{ "{:,.0f}".format(o.total_amount | float) }} ₸</span>
+      <span>{{ wait_mins }} мин на кухне</span>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<p class="kds-empty">Выполненных заказов сегодня ещё нет</p>
+{% endif %}

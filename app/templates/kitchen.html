@@ -87,6 +87,11 @@
     .kds-btn-advance { background: var(--gold); color: #0D0D0D; flex: 1; }
     .kds-btn-cancel { background: rgba(200,75,75,0.15); color: var(--danger); border: 1px solid rgba(200,75,75,0.3); flex: 0; min-width: 48px; }
     .kds-empty { color: var(--muted); text-align: center; padding: 3rem 1rem; font-size: 1rem; }
+    .kds-tabs { display:flex; gap:0; border-bottom:2px solid #222; background:#0f0f0f; }
+    .kds-tab { padding:.7rem 1.5rem; background:none; border:none; color:var(--muted); font-size:.9rem; font-weight:600; cursor:pointer; letter-spacing:.04em; text-transform:uppercase; border-bottom:3px solid transparent; margin-bottom:-2px; transition:all .15s; }
+    .kds-tab.active { color:var(--gold); border-bottom-color:var(--gold); }
+    .kds-tab-count { display:inline-block; background:rgba(200,168,75,.2); color:var(--gold); border-radius:10px; padding:.05rem .45rem; font-size:.78rem; margin-left:.4rem; }
+    #tab-history-panel { height:calc(100vh - 162px); overflow-y:auto; }
   </style>
 </head>
 <body>
@@ -107,15 +112,47 @@
     </select>
   </div>
 
+  <div class="kds-tabs">
+    <button class="kds-tab active" id="tab-btn-active" onclick="switchTab('active')">
+      Активные <span class="kds-tab-count" id="active-count">—</span>
+    </button>
+    <button class="kds-tab" id="tab-btn-history" onclick="switchTab('history')">
+      История сегодня
+    </button>
+  </div>
+
   <div
-    id="kds-board"
+    id="tab-active-panel"
     class="kds-board"
     hx-get="/partials/kitchen{% if current_venue %}?venue_id={{ current_venue.id }}{% endif %}"
     hx-trigger="load, every 5s, refresh"
     hx-swap="innerHTML"
   ></div>
 
+  <div
+    id="tab-history-panel"
+    style="display:none"
+    hx-get="/partials/kitchen/history{% if current_venue %}?venue_id={{ current_venue.id }}{% endif %}"
+    hx-trigger="revealed, every 30s"
+    hx-swap="innerHTML"
+  ></div>
+
   <script>
+    function switchTab(tab) {
+      const isActive = tab === 'active';
+      document.getElementById('tab-active-panel').style.display = isActive ? 'grid' : 'none';
+      document.getElementById('tab-history-panel').style.display = isActive ? 'none' : 'block';
+      document.getElementById('tab-btn-active').classList.toggle('active', isActive);
+      document.getElementById('tab-btn-history').classList.toggle('active', !isActive);
+      if (!isActive) htmx.trigger(document.getElementById('tab-history-panel'), 'revealed');
+    }
+
+    // Update active order count badge
+    document.addEventListener('htmx:afterSettle', () => {
+      const cards = document.querySelectorAll('#tab-active-panel .kds-card');
+      document.getElementById('active-count').textContent = cards.length || '0';
+    });
+
     function tick() {
       document.getElementById('clock').textContent =
         new Date().toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
