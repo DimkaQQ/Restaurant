@@ -4,19 +4,27 @@ import uuid
 
 from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import HTMLResponse
-from sqlalchemy import select
+from pydantic import BaseModel
+from sqlalchemy import select, func
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 
 from app.database import get_db
+from app.models.broadcast import Broadcast
+from app.models.guest import Guest
 from app.models.user import User
 from app.models.venue import Venue
 from app.routers.deps import get_current_user_dep
 from app.services.auth_service import hash_password
 
 router = APIRouter(prefix="/settings", tags=["settings"])
+
+
+class BroadcastCreate(BaseModel):
+    message: str
+    lang_filter: str | None = None
 logger = logging.getLogger(__name__)
 
 
@@ -147,3 +155,74 @@ async def delete_user(
     except Exception as e:
         logger.error("Delete user error: %s", e)
         raise HTTPException(status_code=500, detail="Ошибка удаления пользователя")
+
+
+@router.get("/broadcasts", response_class=HTMLResponse)
+async def broadcasts_page(
+    request: Request,
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    _require_owner(current_user)
+    broadcasts = (await db.execute(
+        select(Broadcast)
+        .where(Broadcast.network_id == current_user.network_id)
+        .order_by(Broadcast.created_at.desc())
+    )).scalars().all()
+
+    total_guests = (await db.execute(
+        select(func.count()).where(Guest.network_id == current_user.network_id)
+    )).scalar() or 0
+    tg_guests = (await db.execute(
+        select(func.count()).where(
+            Guest.network_id == current_user.network_id,
+            Guest.telegram_id != None,
+        )
+    )).scalar() or 0
+    total_sent = sum(1 for b in broadcasts if b.sent_at)
+
+    return templates.TemplateResponse("broadcasts.html", {
+        "request": request,
+        "user": current_user,
+        "broadcasts": broadcasts,
+        "total_guests": total_guests,
+        "tg_guests": tg_guests,
+        "total_sent": total_sent,
+    })
+
+
+@router.post("/api/broadcasts")
+async def create_broadcast_api(
+    data: BroadcastCreate,
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    _require_owner(current_user)
+    if not data.message.strip():
+        raise HTTPException(status_code=400, detail="Сообщение не может быть пустым")
+    bc = Broadcast(
+        id=uuid.uuid4(),
+        network_id=current_user.network_id,
+        message=data.message.strip(),
+        lang_filter=data.lang_filter,
+    )
+    db.add(bc)
+    await db.commit()
+    return {"id": str(bc.id)}
+
+
+@router.delete("/api/broadcasts/{bc_id}")
+async def delete_broadcast_api(
+    bc_id: uuid.UUID,
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    _require_owner(current_user)
+    bc = (await db.execute(
+        select(Broadcast).where(Broadcast.id == bc_id, Broadcast.network_id == current_user.network_id)
+    )).scalar_one_or_none()
+    if not bc:
+        raise HTTPException(status_code=404, detail="Не найдено")
+    await db.delete(bc)
+    await db.commit()
+    return {"ok": True}

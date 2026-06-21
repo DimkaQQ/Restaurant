@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+{% block title %}Рассылки — RestOS{% endblock %}
+
+{% block head %}
+<style>
+.bc-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem; flex-wrap:wrap; gap:1rem; }
+.bc-header h1 { font-family:'Instrument Serif',serif; font-size:1.6rem; font-weight:400; }
+
+.bc-layout { display:grid; grid-template-columns:1fr 380px; gap:1.5rem; align-items:start; }
+@media(max-width:900px){ .bc-layout { grid-template-columns:1fr; } }
+
+.bc-form-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:1.5rem; }
+.bc-form-card h2 { font-size:1rem; font-weight:600; margin-bottom:1.25rem; }
+.bc-form-group { margin-bottom:1rem; }
+.bc-form-group label { display:block; font-size:.8rem; color:var(--muted); margin-bottom:.35rem; }
+.bc-form-group textarea { width:100%; background:var(--black); border:1px solid var(--border); color:var(--white); padding:.6rem .75rem; border-radius:6px; font-size:.875rem; resize:vertical; min-height:110px; box-sizing:border-box; font-family:inherit; }
+.bc-form-group textarea:focus { outline:none; border-color:var(--gold); }
+.bc-form-group select { width:100%; background:var(--black); border:1px solid var(--border); color:var(--white); padding:.5rem .75rem; border-radius:6px; font-size:.875rem; box-sizing:border-box; }
+.bc-preview { background:rgba(200,168,75,.06); border:1px solid rgba(200,168,75,.2); border-radius:8px; padding:.75rem 1rem; font-size:.85rem; color:var(--muted); margin-top:.75rem; min-height:48px; white-space:pre-wrap; word-break:break-word; }
+.bc-counter { font-size:.75rem; color:var(--muted); text-align:right; margin-top:.25rem; }
+
+.bc-list-card { background:var(--card); border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+.bc-list-header { padding:.875rem 1.25rem; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+.bc-list-header h2 { font-size:1rem; font-weight:600; }
+.bc-list-empty { padding:2.5rem; text-align:center; color:var(--muted); font-size:.875rem; }
+.bc-item { padding:.875rem 1.25rem; border-bottom:1px solid var(--border); display:grid; grid-template-columns:1fr auto; gap:.75rem; align-items:start; }
+.bc-item:last-child { border-bottom:none; }
+.bc-item-msg { font-size:.875rem; color:var(--white); word-break:break-word; margin-bottom:.4rem; line-height:1.4; }
+.bc-item-meta { font-size:.75rem; color:var(--muted); display:flex; gap:.75rem; flex-wrap:wrap; }
+.bc-badge { display:inline-block; padding:.15rem .5rem; border-radius:20px; font-size:.72rem; font-weight:600; }
+.bc-badge.sent { background:rgba(75,200,122,.12); color:var(--success); border:1px solid rgba(75,200,122,.25); }
+.bc-badge.pending { background:rgba(200,168,75,.12); color:var(--gold); border:1px solid rgba(200,168,75,.25); }
+.bc-badge.lang { background:rgba(255,255,255,.06); color:var(--muted); border:1px solid var(--border); }
+.bc-item-del { background:none; border:none; color:var(--muted); cursor:pointer; font-size:.85rem; padding:.2rem; }
+.bc-item-del:hover { color:#ef4444; }
+.bc-stats { display:flex; gap:1rem; margin-bottom:1.5rem; flex-wrap:wrap; }
+.bc-stat { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:.875rem 1.25rem; flex:1; min-width:120px; }
+.bc-stat-val { font-size:1.5rem; font-weight:700; color:var(--gold); }
+.bc-stat-lbl { font-size:.75rem; color:var(--muted); margin-top:.15rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="bc-header">
+  <h1>Рассылки</h1>
+</div>
+
+<div class="bc-stats">
+  <div class="bc-stat">
+    <div class="bc-stat-val">{{ total_guests }}</div>
+    <div class="bc-stat-lbl">Гостей в базе</div>
+  </div>
+  <div class="bc-stat">
+    <div class="bc-stat-val">{{ tg_guests }}</div>
+    <div class="bc-stat-lbl">Подключены в Telegram</div>
+  </div>
+  <div class="bc-stat">
+    <div class="bc-stat-val">{{ total_sent }}</div>
+    <div class="bc-stat-lbl">Рассылок отправлено</div>
+  </div>
+</div>
+
+<div class="bc-layout">
+  <div class="bc-list-card">
+    <div class="bc-list-header">
+      <h2>История рассылок</h2>
+      <span style="font-size:.8rem;color:var(--muted)">{{ broadcasts|length }} всего</span>
+    </div>
+    {% if broadcasts %}
+      {% for b in broadcasts %}
+      <div class="bc-item" id="bc-{{ b.id }}">
+        <div>
+          <div class="bc-item-msg">📢 {{ b.message }}</div>
+          <div class="bc-item-meta">
+            <span>{{ b.created_at.strftime('%d.%m.%Y %H:%M') }}</span>
+            {% if b.sent_at %}
+              <span class="bc-badge sent">Отправлена · {{ b.sent_count }} получ.</span>
+            {% else %}
+              <span class="bc-badge pending">Ожидает</span>
+            {% endif %}
+            {% if b.lang_filter %}
+              <span class="bc-badge lang">{{ b.lang_filter | upper }}</span>
+            {% else %}
+              <span class="bc-badge lang">Все языки</span>
+            {% endif %}
+          </div>
+        </div>
+        <button class="bc-item-del" onclick="deleteBroadcast('{{ b.id }}')" title="Удалить">✕</button>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="bc-list-empty">Рассылок пока не было</div>
+    {% endif %}
+  </div>
+
+  <div>
+    <div class="bc-form-card">
+      <h2>Новая рассылка</h2>
+      <div id="bc-error" style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#fca5a5;padding:.5rem .75rem;border-radius:6px;font-size:.8rem;margin-bottom:.75rem;display:none"></div>
+      <div class="bc-form-group">
+        <label>Язык получателей</label>
+        <select id="bc-lang">
+          <option value="">Все языки (ru + kz + en)</option>
+          <option value="ru">🇷🇺 Русский</option>
+          <option value="kz">🇰🇿 Қазақша</option>
+          <option value="en">🇬🇧 English</option>
+        </select>
+      </div>
+      <div class="bc-form-group">
+        <label>Текст сообщения</label>
+        <textarea id="bc-msg" placeholder="Введите текст рассылки..." oninput="updatePreview()" maxlength="4000"></textarea>
+        <div class="bc-counter"><span id="bc-len">0</span> / 4000</div>
+      </div>
+      <div class="bc-form-group">
+        <label>Предпросмотр</label>
+        <div class="bc-preview" id="bc-preview">Введите текст выше...</div>
+      </div>
+      <button class="btn-primary" style="width:100%" onclick="sendBroadcast()" id="bc-send-btn">
+        Создать рассылку →
+      </button>
+      <p style="font-size:.75rem;color:var(--muted);margin-top:.75rem;text-align:center">
+        Бот отправит сообщение гостям в течение 5 минут
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function updatePreview() {
+  const msg = document.getElementById('bc-msg').value;
+  document.getElementById('bc-len').textContent = msg.length;
+  const preview = document.getElementById('bc-preview');
+  preview.textContent = msg ? '📢 ' + msg : 'Введите текст выше...';
+}
+
+async function sendBroadcast() {
+  const msg = document.getElementById('bc-msg').value.trim();
+  const lang = document.getElementById('bc-lang').value;
+  const errEl = document.getElementById('bc-error');
+  errEl.style.display = 'none';
+
+  if (!msg) { errEl.textContent = 'Введите текст рассылки'; errEl.style.display = 'block'; return; }
+
+  const btn = document.getElementById('bc-send-btn');
+  btn.disabled = true; btn.textContent = 'Создаётся...';
+
+  const res = await fetch('/settings/api/broadcasts', {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('access_token') },
+    body: JSON.stringify({ message: msg, lang_filter: lang || null }),
+  });
+  btn.disabled = false; btn.textContent = 'Создать рассылку →';
+
+  if (res.ok) {
+    document.getElementById('bc-msg').value = '';
+    document.getElementById('bc-preview').textContent = 'Введите текст выше...';
+    document.getElementById('bc-len').textContent = '0';
+    location.reload();
+  } else {
+    const d = await res.json().catch(() => ({}));
+    errEl.textContent = d.detail || 'Ошибка'; errEl.style.display = 'block';
+  }
+}
+
+async function deleteBroadcast(id) {
+  if (!confirm('Удалить рассылку?')) return;
+  const res = await fetch('/settings/api/broadcasts/' + id, {
+    method: 'DELETE',
+    credentials: 'include',
+    headers: { 'Authorization': 'Bearer ' + localStorage.getItem('access_token') },
+  });
+  if (res.ok) document.getElementById('bc-' + id)?.remove();
+}
+</script>
+{% endblock %}
