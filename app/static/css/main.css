@@ -60,7 +60,8 @@ body {
   line-height: 1;
 }
 
-.nav-links { list-style: none; padding: 1rem 0; flex: 1; overflow-y: auto; }
+.nav-links { list-style: none; padding: 1rem 0; flex: 1; overflow-y: auto; scrollbar-width: none; }
+.nav-links::-webkit-scrollbar { display: none; }
 
 .nav-link {
   display: flex;
