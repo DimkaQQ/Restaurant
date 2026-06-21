@@ -20,6 +20,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 import sqlalchemy as sa
+from datetime import date, time
 from sqlalchemy import select, delete, insert
 
 from app.database import AsyncSessionLocal
@@ -31,6 +32,9 @@ from app.models.order import Order, OrderItem, Visit
 from app.models.points import PointsTransaction
 from app.models.staff import Staff
 from app.models.review import Review
+from app.models.inventory import Ingredient, WriteOff
+from app.models.finance import Expense, EXPENSE_CATEGORIES
+from app.models.shift import Shift
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -292,7 +296,8 @@ async def main():
             print("   Очищаем старые данные...")
             await db.execute(sa.text("UPDATE users SET venue_id = NULL"))
             await db.execute(sa.text(
-                "TRUNCATE reviews, visits, points_transactions, order_items, orders, "
+                "TRUNCATE shifts, writeoffs, ingredients, expenses, "
+                "reviews, visits, points_transactions, order_items, orders, "
                 "menu_items, staff, guests RESTART IDENTITY CASCADE"
             ))
             await db.execute(sa.text("DELETE FROM venues"))
@@ -674,10 +679,329 @@ async def main():
 
         await db.commit()
 
+        # ── 7. Ingredients (склад) ────────────────────────────────────────────
+        INGREDIENTS_BASE = [
+            # name, unit, qty, min_qty, cost
+            ("Мука пшеничная",    "кг",   50.0,  10.0,  250),
+            ("Сахар",             "кг",   30.0,   5.0,  200),
+            ("Соль",              "кг",   15.0,   3.0,   80),
+            ("Масло подсолнечное","л",    20.0,   5.0,  600),
+            ("Масло сливочное",   "кг",   10.0,   2.0, 2200),
+            ("Яйца",              "шт",  200.0,  50.0,   55),
+            ("Молоко",            "л",    40.0,  10.0,  350),
+            ("Сливки 33%",        "л",    15.0,   3.0,  900),
+            ("Сыр твёрдый",       "кг",    8.0,   2.0, 3500),
+            ("Лук репчатый",      "кг",   20.0,   5.0,  150),
+            ("Морковь",           "кг",   15.0,   3.0,  120),
+            ("Помидоры",          "кг",   10.0,   3.0,  450),
+            ("Огурцы",            "кг",    8.0,   2.0,  350),
+            ("Картофель",         "кг",   30.0,   8.0,  120),
+            ("Чеснок",            "кг",    3.0,   1.0,  800),
+            ("Зелень (пучок)",    "шт",   20.0,   5.0,  150),
+            ("Перец чёрный",      "кг",    1.0,  0.2, 2500),
+            ("Чай (листовой)",    "кг",    5.0,   1.0, 1800),
+            ("Кофе в зёрнах",     "кг",    8.0,   2.0, 6500),
+            ("Сахар тростниковый","кг",    5.0,   1.0,  450),
+        ]
+        INGREDIENTS_BRAND = {
+            "Чайла": [
+                ("Говядина (фарш)",   "кг",   15.0,  3.0, 3200),
+                ("Баранина",          "кг",    8.0,  2.0, 4500),
+                ("Рис",               "кг",   25.0,  5.0,  350),
+                ("Тыква",             "кг",   10.0,  2.0,  200),
+                ("Кефир",             "л",     8.0,  2.0,  320),
+                ("Творог",            "кг",    5.0,  1.0, 1200),
+            ],
+            "Suli da Guli": [
+                ("Говядина (вырезка)", "кг",  12.0,  3.0, 5500),
+                ("Свинина",           "кг",    8.0,  2.0, 3200),
+                ("Сулугуни",          "кг",   10.0,  2.0, 4200),
+                ("Вино красное (бутыль)","л",  20.0,  5.0, 1800),
+                ("Вино белое (бутыль)","л",   15.0,  3.0, 1600),
+                ("Кинза",             "кг",    2.0, 0.5,  800),
+                ("Грецкий орех",      "кг",    3.0,  1.0, 2800),
+                ("Аджика",            "кг",    2.0, 0.5, 1500),
+            ],
+            "Lukum Vostok": [
+                ("Баранина (на кости)","кг",  10.0,  3.0, 4200),
+                ("Нут",               "кг",    5.0,  1.0,  600),
+                ("Кунжут",            "кг",    2.0, 0.5, 1800),
+                ("Лукум (полуфабрикат)","кг", 10.0,  2.0, 3500),
+                ("Фисташки",          "кг",    2.0, 0.5, 8500),
+                ("Рисовый крахмал",   "кг",    3.0,  1.0,  700),
+                ("Розовая вода",      "л",     2.0, 0.5, 1200),
+            ],
+            "&milk": [
+                ("Кофе спешелти",     "кг",   10.0,  2.0, 9500),
+                ("Молоко овсяное",    "л",    20.0,  5.0,  650),
+                ("Молоко миндальное", "л",    10.0,  2.0,  850),
+                ("Авокадо",           "шт",   30.0, 10.0,  600),
+                ("Хлеб (буханка)",    "шт",   15.0,  5.0,  400),
+                ("Сироп ванильный",   "л",     3.0,  1.0, 1500),
+                ("Матча (порошок)",   "кг",    1.0, 0.2,12000),
+            ],
+            "Usta": [
+                ("Говядина (фарш)",   "кг",   12.0,  3.0, 3200),
+                ("Баранина",          "кг",   10.0,  3.0, 4500),
+                ("Лаваш (листы)",     "шт",   50.0, 10.0,  120),
+                ("Томатная паста",    "кг",    5.0,  1.0,  600),
+                ("Петрушка",          "кг",    2.0, 0.5,  700),
+                ("Перец красный",     "кг",    1.5, 0.3, 1200),
+                ("Чечевица красная",  "кг",    8.0,  2.0,  450),
+            ],
+            "Joy": [
+                ("Авокадо",           "шт",   20.0,  5.0,  600),
+                ("Чиа семена",        "кг",    2.0, 0.5, 3500),
+                ("Ягоды асаи (заморож.)","кг", 5.0, 1.0, 4500),
+                ("Кокосовое молоко",  "л",     8.0,  2.0, 1200),
+                ("Мёд натуральный",   "кг",    3.0,  1.0, 2500),
+                ("Гранола",           "кг",    5.0,  1.0, 1800),
+                ("Шпинат",            "кг",    3.0,  1.0,  600),
+            ],
+        }
+
+        ingredient_rows = []
+        writeoff_rows = []
+        venue_ingredient_ids: dict[uuid.UUID, list[uuid.UUID]] = {}
+
+        for vm in venue_meta:
+            if not vm["active"]:
+                continue
+            brand_specific = INGREDIENTS_BRAND.get(vm["brand"], [])
+            all_ing = INGREDIENTS_BASE + brand_specific
+            iids = []
+            for name, unit, qty, min_qty, cost in all_ing:
+                # randomize quantities a bit
+                actual_qty = round(qty * random.uniform(0.3, 1.8), 1)
+                iid = uuid.uuid4()
+                ingredient_rows.append({
+                    "id": iid,
+                    "network_id": network.id,
+                    "venue_id": vm["id"],
+                    "name": name,
+                    "unit": unit,
+                    "quantity": Decimal(str(actual_qty)),
+                    "min_quantity": Decimal(str(min_qty)),
+                    "cost_per_unit": Decimal(str(cost)),
+                    "category": "kitchen",
+                    "created_at": datetime.now(timezone.utc) - timedelta(days=random.randint(30, 180)),
+                })
+                iids.append(iid)
+
+                # seed a few writeoffs per ingredient
+                n_writeoffs = random.randint(1, 4)
+                for _ in range(n_writeoffs):
+                    wo_qty = round(random.uniform(0.5, min(qty * 0.3, actual_qty * 0.4 + 0.1)), 2)
+                    wo_date = datetime.now(timezone.utc) - timedelta(days=random.randint(1, 30))
+                    writeoff_rows.append({
+                        "id": uuid.uuid4(),
+                        "ingredient_id": iid,
+                        "quantity": Decimal(str(wo_qty)),
+                        "reason": random.choice(["spoilage", "usage", "damage", "inventory"]),
+                        "note": None,
+                        "created_by_id": None,
+                        "created_at": wo_date,
+                    })
+            venue_ingredient_ids[vm["id"]] = iids
+
+        await db.execute(insert(Ingredient), ingredient_rows)
+        await db.flush()
+        await db.execute(insert(WriteOff), writeoff_rows)
+        await db.flush()
+        print(f"   + {len(ingredient_rows)} позиций склада, {len(writeoff_rows)} списаний")
+
+        # ── 8. Expenses (финансы, 6 месяцев) ─────────────────────────────────
+        MONTHLY_EXPENSE_TEMPLATES = {
+            "Чайла": [
+                ("rent",       180_000, 220_000),
+                ("salaries",   420_000, 520_000),
+                ("ingredients",   180_000, 240_000),
+                ("utilities",   35_000,  55_000),
+                ("marketing",   20_000,  40_000),
+            ],
+            "Suli da Guli": [
+                ("rent",       220_000, 280_000),
+                ("salaries",   500_000, 620_000),
+                ("ingredients",   250_000, 330_000),
+                ("utilities",   40_000,  65_000),
+                ("marketing",   25_000,  50_000),
+            ],
+            "Lukum Vostok": [
+                ("rent",       200_000, 260_000),
+                ("salaries",   460_000, 580_000),
+                ("ingredients",   220_000, 290_000),
+                ("utilities",   35_000,  60_000),
+                ("marketing",   20_000,  45_000),
+            ],
+            "&milk": [
+                ("rent",       150_000, 190_000),
+                ("salaries",   350_000, 450_000),
+                ("ingredients",   120_000, 170_000),
+                ("utilities",   25_000,  45_000),
+                ("marketing",   30_000,  55_000),
+            ],
+            "Usta": [
+                ("rent",       210_000, 270_000),
+                ("salaries",   480_000, 600_000),
+                ("ingredients",   240_000, 310_000),
+                ("utilities",   38_000,  62_000),
+                ("marketing",   22_000,  45_000),
+            ],
+            "Joy": [
+                ("rent",       160_000, 200_000),
+                ("salaries",   380_000, 480_000),
+                ("ingredients",   140_000, 190_000),
+                ("utilities",   28_000,  48_000),
+                ("marketing",   35_000,  60_000),
+            ],
+        }
+        ONE_OFF_EXPENSES = [
+            ("equipment",  50_000,  250_000),
+            ("other",      30_000,  150_000),
+            ("other",      10_000,   80_000),
+        ]
+
+        today = date.today()
+        expense_rows = []
+        for vm in venue_meta:
+            if not vm["active"]:
+                continue
+            templates = MONTHLY_EXPENSE_TEMPLATES.get(vm["brand"], MONTHLY_EXPENSE_TEMPLATES["Чайла"])
+
+            for months_back in range(6):
+                # month start: first day of that month
+                m_date = today.replace(day=1)
+                for _ in range(months_back):
+                    m_date = (m_date - timedelta(days=1)).replace(day=1)
+
+                for cat, lo, hi in templates:
+                    exp_date = m_date.replace(
+                        day=random.randint(1, 5) if cat in ("rent", "salaries") else random.randint(1, 28)
+                    )
+                    if exp_date > today:
+                        exp_date = today
+                    expense_rows.append({
+                        "id": uuid.uuid4(),
+                        "network_id": network.id,
+                        "venue_id": vm["id"],
+                        "category": cat,
+                        "amount": Decimal(str(random.randint(lo // 1000, hi // 1000) * 1000)),
+                        "description": None,
+                        "expense_date": exp_date,
+                        "created_by_id": None,
+                        "created_at": datetime.now(timezone.utc) - timedelta(days=months_back * 30 + random.randint(0, 5)),
+                    })
+
+            # 1-2 one-off expenses per venue
+            for _ in range(random.randint(1, 2)):
+                cat, lo, hi = random.choice(ONE_OFF_EXPENSES)
+                exp_date = today - timedelta(days=random.randint(0, 90))
+                expense_rows.append({
+                    "id": uuid.uuid4(),
+                    "network_id": network.id,
+                    "venue_id": vm["id"],
+                    "category": cat,
+                    "amount": Decimal(str(random.randint(lo // 1000, hi // 1000) * 1000)),
+                    "description": None,
+                    "expense_date": exp_date,
+                    "created_by_id": None,
+                    "created_at": datetime.now(timezone.utc) - timedelta(days=random.randint(0, 90)),
+                })
+
+        await db.execute(insert(Expense), expense_rows)
+        await db.flush()
+        print(f"   + {len(expense_rows)} записей расходов")
+
+        # ── 9. Shifts (смены, 3 недели) ───────────────────────────────────────
+        SHIFT_TEMPLATES_BY_BRAND = {
+            "Чайла":        [(time(8, 0), time(16, 0)), (time(14, 0), time(22, 0))],
+            "Suli da Guli": [(time(10, 0), time(18, 0)), (time(16, 0), time(23, 0))],
+            "Lukum Vostok": [(time(10, 0), time(18, 0)), (time(16, 0), time(23, 0))],
+            "&milk":        [(time(7, 0),  time(15, 0)), (time(13, 0), time(21, 0))],
+            "Usta":         [(time(10, 0), time(18, 0)), (time(16, 0), time(23, 0))],
+            "Joy":          [(time(8, 0),  time(16, 0)), (time(14, 0), time(22, 0))],
+        }
+
+        shift_rows = []
+        week_start = today - timedelta(days=today.weekday())  # Monday this week
+
+        for vm in venue_meta:
+            if not vm["active"]:
+                continue
+            sids = venue_staff.get(vm["id"], [])
+            if not sids:
+                continue
+            shift_templates = SHIFT_TEMPLATES_BY_BRAND.get(vm["brand"], SHIFT_TEMPLATES_BY_BRAND["Чайла"])
+
+            for week_offset in range(-2, 2):  # last 2 weeks + current + next week
+                week_monday = week_start + timedelta(weeks=week_offset)
+                for day_offset in range(7):
+                    shift_date = week_monday + timedelta(days=day_offset)
+                    is_weekend = day_offset >= 5
+
+                    # fewer staff on weekdays, more on weekends
+                    n_morning = random.randint(2, 4) if is_weekend else random.randint(1, 3)
+                    n_evening = random.randint(2, 4) if is_weekend else random.randint(1, 3)
+
+                    assigned = random.sample(sids, min(n_morning + n_evening, len(sids)))
+                    morning_staff = assigned[:n_morning]
+                    evening_staff = assigned[n_morning:n_morning + n_evening]
+
+                    for sid in morning_staff:
+                        st, et = shift_templates[0]
+                        if shift_date < today:
+                            status = "done"
+                        elif shift_date == today:
+                            status = "active"
+                        else:
+                            status = "planned"
+                        shift_rows.append({
+                            "id": uuid.uuid4(),
+                            "staff_id": sid,
+                            "venue_id": vm["id"],
+                            "shift_date": shift_date,
+                            "start_time": st,
+                            "end_time": et,
+                            "status": status,
+                            "notes": None,
+                            "created_at": datetime.now(timezone.utc) - timedelta(days=random.randint(0, 14)),
+                        })
+
+                    for sid in evening_staff:
+                        if not shift_templates[1:]:
+                            continue
+                        st, et = shift_templates[1]
+                        if shift_date < today:
+                            status = "done"
+                        elif shift_date == today:
+                            status = "active"
+                        else:
+                            status = "planned"
+                        shift_rows.append({
+                            "id": uuid.uuid4(),
+                            "staff_id": sid,
+                            "venue_id": vm["id"],
+                            "shift_date": shift_date,
+                            "start_time": st,
+                            "end_time": et,
+                            "status": status,
+                            "notes": None,
+                            "created_at": datetime.now(timezone.utc) - timedelta(days=random.randint(0, 14)),
+                        })
+
+        await db.execute(insert(Shift), shift_rows)
+        await db.flush()
+        await db.commit()
+        print(f"   + {len(shift_rows)} смен (3 недели + следующая)")
+
         print(f"\n✅ Готово!")
         print(f"   Общая выручка за 90 дней: {total_rev:,.0f} ₸")
         print(f"   Среднедневная на сеть: {total_rev/90:,.0f} ₸")
         print(f"   Сотрудников: {len(staff_rows)}, отзывов: {len(review_rows):,}")
+        total_exp = sum(float(r["amount"]) for r in expense_rows)
+        print(f"   Расходов за 6 мес: {total_exp:,.0f} ₸ ({len(expense_rows)} записей)")
+        print(f"   Склад: {len(ingredient_rows)} позиций, {len(writeoff_rows)} списаний")
+        print(f"   Смен: {len(shift_rows)}")
 
 
 if __name__ == "__main__":
