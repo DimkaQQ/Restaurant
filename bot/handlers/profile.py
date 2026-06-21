@@ -36,20 +36,15 @@ async def show_history(callback: CallbackQuery, guest: dict | None, api_url: str
     try:
         async with httpx.AsyncClient() as client:
             resp = await client.get(
-                f"{api_url}/api/orders/",
-                params={"telegram_id": guest["telegram_id"]},
+                f"{api_url}/api/orders/guest/history",
+                params={"telegram_id": guest["telegram_id"], "limit": 10},
                 timeout=5.0,
             )
             if resp.status_code != 200:
-                raise ValueError("API error")
+                raise ValueError(f"API error {resp.status_code}")
+        orders = resp.json()
     except Exception as e:
         logger.error("History fetch error: %s", e)
-        await callback.message.edit_text("Не удалось загрузить историю.", reply_markup=back_keyboard())
-        return
-
-    try:
-        orders = resp.json()
-    except Exception:
         await callback.message.edit_text("Не удалось загрузить историю.", reply_markup=back_keyboard())
         return
     if not orders:

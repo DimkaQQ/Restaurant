@@ -62,8 +62,6 @@ services:
       api:
         condition: service_started
     restart: unless-stopped
-    profiles:
-      - bot
 
 volumes:
   pgdata:

@@ -71,6 +71,29 @@ async def list_orders(
         raise HTTPException(status_code=500, detail="Ошибка загрузки заказов")
 
 
+@router.get("/guest/history", response_model=list[OrderOut])
+async def guest_order_history(
+    telegram_id: int = Query(...),
+    limit: int = Query(10, le=50),
+    db: AsyncSession = Depends(get_db),
+):
+    """Public endpoint for Telegram bot — returns order history by telegram_id."""
+    try:
+        stmt = (
+            select(Order)
+            .options(selectinload(Order.items))
+            .join(Guest, Order.guest_id == Guest.id)
+            .where(Guest.telegram_id == telegram_id)
+            .order_by(Order.created_at.desc())
+            .limit(limit)
+        )
+        result = await db.execute(stmt)
+        return result.scalars().all()
+    except Exception as e:
+        logger.error("Guest history error: %s", e)
+        raise HTTPException(status_code=500, detail="Ошибка загрузки истории")
+
+
 @router.post("/", response_model=OrderOut)
 async def place_order(
     data: OrderCreate,
