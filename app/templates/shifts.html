@@ -38,6 +38,19 @@
 .shift-chip:hover .shift-del:hover { color:#ef4444; }
 .empty-day { color:var(--muted); font-size:.78rem; text-align:center; padding:.75rem .5rem; }
 
+/* Tooltip */
+.shift-chip { position:relative; }
+.shift-tooltip {
+  display:none; position:absolute; z-index:100; bottom:calc(100% + 6px); left:0;
+  background:#1a1a1a; border:1px solid var(--border); border-radius:8px;
+  padding:.6rem .8rem; min-width:170px; box-shadow:0 4px 16px rgba(0,0,0,.5);
+  pointer-events:none;
+}
+.shift-chip:hover .shift-tooltip { display:block; }
+.shift-tooltip-name { font-size:.82rem; font-weight:600; color:var(--white); margin-bottom:.2rem; }
+.shift-tooltip-role { font-size:.75rem; color:var(--gold); margin-bottom:.3rem; }
+.shift-tooltip-time { font-size:.75rem; color:var(--muted); }
+
 /* Modal */
 .modal-form .form-group { margin-bottom:.85rem; }
 .modal-form label { display:block; font-size:.8rem; color:var(--muted); margin-bottom:.3rem; }
@@ -88,6 +101,11 @@
       {% if day_shifts %}
         {% for s in day_shifts %}
         <div class="shift-chip status-{{ s.status }}" onclick="changeStatus('{{ s.id }}', '{{ s.status }}')">
+          <div class="shift-tooltip">
+            <div class="shift-tooltip-name">{{ s.staff.name }}</div>
+            <div class="shift-tooltip-role">{{ s.staff.role_label }}</div>
+            <div class="shift-tooltip-time">{{ s.start_time.strftime('%H:%M') }} — {{ s.end_time.strftime('%H:%M') }} ({{ s.duration_hours }} ч.)</div>
+          </div>
           <div class="shift-avatar">{{ s.staff.initials }}</div>
           <div class="shift-info">
             <div class="shift-name">{{ s.staff.name }}</div>

@@ -175,16 +175,43 @@ new Chart(ctx, {
   data: {
     labels: chartData.map(d => d.label),
     datasets: [
-      { label: 'Выручка', data: chartData.map(d => d.revenue), backgroundColor: 'rgba(200,168,75,0.7)', borderRadius: 4 },
-      { label: 'Расходы', data: chartData.map(d => d.expenses), backgroundColor: 'rgba(239,68,68,0.5)', borderRadius: 4 },
+      {
+        label: 'Выручка', data: chartData.map(d => d.revenue),
+        backgroundColor: 'rgba(200,168,75,0.7)', borderRadius: 4, yAxisID: 'y',
+      },
+      {
+        label: 'Расходы', data: chartData.map(d => d.expenses),
+        backgroundColor: 'rgba(239,68,68,0.65)', borderRadius: 4, yAxisID: 'y2',
+        type: 'line', borderColor: 'rgba(239,68,68,0.8)', borderWidth: 2,
+        pointBackgroundColor: 'rgba(239,68,68,1)', pointRadius: 4, fill: false,
+      },
     ]
   },
   options: {
     responsive: true,
-    plugins: { legend: { labels: { color: '#9ca3af', font: { size: 11 } } } },
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: { labels: { color: '#9ca3af', font: { size: 11 } } },
+      tooltip: {
+        callbacks: {
+          label: ctx => `${ctx.dataset.label}: ${(ctx.parsed.y/1000).toFixed(0)}k ₸`
+        }
+      }
+    },
     scales: {
       x: { ticks: { color: '#6b7280' }, grid: { color: 'rgba(255,255,255,0.04)' } },
-      y: { ticks: { color: '#6b7280', callback: v => (v/1000).toFixed(0)+'k' }, grid: { color: 'rgba(255,255,255,0.04)' } },
+      y: {
+        position: 'left',
+        ticks: { color: '#c8a84b', callback: v => (v/1000).toFixed(0)+'k' },
+        grid: { color: 'rgba(255,255,255,0.04)' },
+        title: { display: true, text: 'Выручка', color: '#c8a84b', font: { size: 10 } },
+      },
+      y2: {
+        position: 'right',
+        ticks: { color: '#ef4444', callback: v => (v/1000).toFixed(0)+'k' },
+        grid: { drawOnChartArea: false },
+        title: { display: true, text: 'Расходы', color: '#ef4444', font: { size: 10 } },
+      },
     }
   }
 });
