@@ -11,6 +11,8 @@ class GuestOut(BaseModel):
     phone: str | None
     total_points: int
     total_visits: int
+    language: str = 'ru'
+    preferred_venue_id: uuid.UUID | None = None
     created_at: datetime
 
     model_config = {"from_attributes": True}
@@ -21,3 +23,5 @@ class GuestCreate(BaseModel):
     telegram_id: int | None = None
     name: str | None = None
     phone: str | None = None
+    language: str = 'ru'
+    preferred_venue_id: uuid.UUID | None = None

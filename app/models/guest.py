@@ -15,6 +15,8 @@ class Guest(Base):
     phone: Mapped[str | None] = mapped_column(String(50))
     total_points: Mapped[int] = mapped_column(Integer, default=0)
     total_visits: Mapped[int] = mapped_column(Integer, default=0)
+    language: Mapped[str] = mapped_column(String(5), default='ru')
+    preferred_venue_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("venues.id"), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     network: Mapped["Network"] = relationship("Network", back_populates="guests")

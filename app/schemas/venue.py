@@ -7,6 +7,7 @@ class VenueCreate(BaseModel):
     name: str
     address: str | None = None
     telegram_bot_token: str | None = None
+    city: str | None = None
 
 
 class VenueUpdate(BaseModel):
@@ -14,6 +15,7 @@ class VenueUpdate(BaseModel):
     address: str | None = None
     telegram_bot_token: str | None = None
     is_active: bool | None = None
+    city: str | None = None
 
 
 class VenueOut(BaseModel):
@@ -21,6 +23,7 @@ class VenueOut(BaseModel):
     network_id: uuid.UUID
     name: str
     address: str | None
+    city: str | None = None
     is_active: bool
     created_at: datetime
 

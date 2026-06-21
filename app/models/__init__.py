@@ -10,6 +10,7 @@ from app.models.review import Review
 from app.models.inventory import Ingredient, WriteOff
 from app.models.finance import Expense
 from app.models.shift import Shift
+from app.models.broadcast import Broadcast
 
 __all__ = [
     "Network", "Venue", "User", "Guest",
@@ -18,4 +19,5 @@ __all__ = [
     "Ingredient", "WriteOff",
     "Expense",
     "Shift",
+    "Broadcast",
 ]
