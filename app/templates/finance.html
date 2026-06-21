@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+{% block title %}Финансы P&L — RestOS{% endblock %}
+
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+.fin-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem; flex-wrap:wrap; gap:1rem; }
+.fin-header h1 { font-family:'Instrument Serif',serif; font-size:1.6rem; font-weight:400; }
+.fin-controls { display:flex; gap:.75rem; flex-wrap:wrap; align-items:center; }
+.period-tabs { display:flex; background:var(--card); border:1px solid var(--border); border-radius:8px; overflow:hidden; }
+.period-tab { padding:.4rem .9rem; font-size:.8rem; cursor:pointer; border:none; background:none; color:var(--muted); transition:all .15s; }
+.period-tab.active { background:var(--gold); color:#000; font-weight:600; }
+.fin-kpis { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-bottom:1.5rem; }
+@media(max-width:800px){ .fin-kpis{grid-template-columns:repeat(2,1fr);} }
+.fin-kpi { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:1.25rem 1.5rem; }
+.fin-kpi-label { font-size:.72rem; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); margin-bottom:.35rem; }
+.fin-kpi-value { font-size:1.8rem; font-weight:700; line-height:1.1; }
+.fin-kpi.profit .fin-kpi-value { color:{% if profit >= 0 %}#4ade80{% else %}#f87171{% endif %}; }
+.fin-kpi.margin .fin-kpi-value { color:{% if margin >= 15 %}#4ade80{% elif margin >= 5 %}#fbbf24{% else %}#f87171{% endif %}; }
+.fin-layout { display:grid; grid-template-columns:1fr 340px; gap:1.5rem; }
+@media(max-width:1000px){ .fin-layout{grid-template-columns:1fr;} }
+.fin-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:1.25rem; }
+.fin-card h2 { font-size:.9rem; font-weight:600; margin-bottom:1rem; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; }
+.category-bar { display:flex; align-items:center; gap:.75rem; margin-bottom:.6rem; }
+.category-bar-label { font-size:.8rem; width:120px; flex-shrink:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.category-bar-track { flex:1; background:rgba(255,255,255,.07); border-radius:4px; height:8px; overflow:hidden; }
+.category-bar-fill { height:100%; background:var(--gold); border-radius:4px; }
+.category-bar-amount { font-size:.8rem; color:var(--muted); width:80px; text-align:right; flex-shrink:0; }
+.expense-list { max-height:400px; overflow-y:auto; }
+.expense-row { display:flex; align-items:center; justify-content:space-between; padding:.5rem 0; border-bottom:1px solid rgba(255,255,255,.04); }
+.expense-row:last-child { border-bottom:none; }
+.expense-info { flex:1; }
+.expense-desc { font-size:.85rem; font-weight:500; }
+.expense-meta { font-size:.75rem; color:var(--muted); margin-top:.1rem; }
+.expense-amount { font-size:.9rem; font-weight:600; color:#f87171; }
+.btn-del-expense { background:none; border:none; color:var(--muted); cursor:pointer; font-size:.9rem; padding:.2rem; }
+.btn-del-expense:hover { color:#ef4444; }
+.add-expense-panel { align-self:start; position:sticky; top:1rem; }
+.form-group { margin-bottom:.9rem; }
+.form-group label { display:block; font-size:.8rem; color:var(--muted); margin-bottom:.3rem; }
+.form-group input, .form-group select, .form-group textarea { width:100%; background:var(--black); border:1px solid var(--border); color:var(--white); padding:.5rem .75rem; border-radius:6px; font-size:.875rem; box-sizing:border-box; }
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline:none; border-color:var(--gold); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="fin-header">
+  <h1>Финансы · P&amp;L</h1>
+  <div class="fin-controls">
+    <select class="select-input" onchange="changeVenue(this.value)">
+      <option value="">Все заведения</option>
+      {% for v in venues %}
+      <option value="{{ v.id }}" {% if selected_venue_id == v.id|string %}selected{% endif %}>{{ v.name }}</option>
+      {% endfor %}
+    </select>
+    <div class="period-tabs">
+      {% for p, label in [('week','Неделя'),('month','Месяц'),('quarter','Квартал'),('year','Год')] %}
+      <button class="period-tab {% if period == p %}active{% endif %}" onclick="changePeriod('{{ p }}')">{{ label }}</button>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<div class="fin-kpis">
+  <div class="fin-kpi">
+    <div class="fin-kpi-label">Выручка</div>
+    <div class="fin-kpi-value">{{ "{:,.0f}".format(revenue) }} ₸</div>
+  </div>
+  <div class="fin-kpi">
+    <div class="fin-kpi-label">Расходы</div>
+    <div class="fin-kpi-value" style="color:#f87171">{{ "{:,.0f}".format(expenses_total) }} ₸</div>
+  </div>
+  <div class="fin-kpi profit">
+    <div class="fin-kpi-label">Прибыль</div>
+    <div class="fin-kpi-value">{{ "{:,.0f}".format(profit) }} ₸</div>
+  </div>
+  <div class="fin-kpi margin">
+    <div class="fin-kpi-label">Маржа</div>
+    <div class="fin-kpi-value">{{ margin }}%</div>
+  </div>
+</div>
+
+<div class="fin-layout">
+  <div>
+    <div class="fin-card" style="margin-bottom:1rem">
+      <h2>Выручка vs Расходы (6 мес.)</h2>
+      <canvas id="pl-chart" height="200"></canvas>
+    </div>
+
+    <div class="fin-card" style="margin-bottom:1rem">
+      <h2>Расходы по категориям</h2>
+      {% if by_category %}
+        {% set max_amt = by_category[0].amount %}
+        {% for cat in by_category %}
+        <div class="category-bar">
+          <span class="category-bar-label">{{ cat.label }}</span>
+          <div class="category-bar-track">
+            <div class="category-bar-fill" style="width:{{ (cat.amount / max_amt * 100)|round }}%"></div>
+          </div>
+          <span class="category-bar-amount">{{ "{:,.0f}".format(cat.amount) }} ₸</span>
+        </div>
+        {% endfor %}
+      {% else %}
+        <p style="color:var(--muted);font-size:.875rem">Нет расходов за период</p>
+      {% endif %}
+    </div>
+
+    <div class="fin-card">
+      <h2>Последние расходы</h2>
+      <div class="expense-list">
+        {% for exp in recent_expenses %}
+        <div class="expense-row" id="exp-{{ exp.id }}">
+          <div class="expense-info">
+            <div class="expense-desc">{{ exp.description or expense_categories.get(exp.category, exp.category) }}</div>
+            <div class="expense-meta">{{ expense_categories.get(exp.category, exp.category) }} · {{ exp.expense_date.strftime('%d.%m.%Y') }}</div>
+          </div>
+          <span class="expense-amount">−{{ "{:,.0f}".format(exp.amount|float) }} ₸</span>
+          <button class="btn-del-expense" onclick="deleteExpense('{{ exp.id }}')">✕</button>
+        </div>
+        {% else %}
+        <p style="color:var(--muted);font-size:.875rem;padding:.5rem 0">Нет расходов</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <div class="add-expense-panel">
+    <div class="fin-card">
+      <h2 style="margin-bottom:1rem;text-transform:none;letter-spacing:0;font-size:1rem;color:var(--white)">Добавить расход</h2>
+      <div id="exp-error" style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#fca5a5;padding:.5rem .75rem;border-radius:6px;font-size:.8rem;margin-bottom:.75rem;display:none"></div>
+      <form id="add-expense-form">
+        <div class="form-group">
+          <label>Заведение</label>
+          <select name="venue_id" required>
+            <option value="">Выбрать...</option>
+            {% for v in venues %}
+            <option value="{{ v.id }}" {% if selected_venue_id == v.id|string %}selected{% endif %}>{{ v.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Категория</label>
+          <select name="category">
+            {% for key, label in expense_categories.items() %}
+            <option value="{{ key }}">{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Сумма (₸)</label>
+          <input type="number" name="amount" min="1" step="1" required placeholder="0">
+        </div>
+        <div class="form-group">
+          <label>Дата</label>
+          <input type="date" name="expense_date" required value="{{ now.strftime('%Y-%m-%d') if now else '' }}">
+        </div>
+        <div class="form-group">
+          <label>Описание (необязательно)</label>
+          <input type="text" name="description" placeholder="Оплата аренды за июнь">
+        </div>
+        <button type="submit" class="btn-primary" style="width:100%">Добавить расход</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const chartData = {{ chart_data | tojson }};
+
+const ctx = document.getElementById('pl-chart').getContext('2d');
+new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: chartData.map(d => d.label),
+    datasets: [
+      { label: 'Выручка', data: chartData.map(d => d.revenue), backgroundColor: 'rgba(200,168,75,0.7)', borderRadius: 4 },
+      { label: 'Расходы', data: chartData.map(d => d.expenses), backgroundColor: 'rgba(239,68,68,0.5)', borderRadius: 4 },
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { labels: { color: '#9ca3af', font: { size: 11 } } } },
+    scales: {
+      x: { ticks: { color: '#6b7280' }, grid: { color: 'rgba(255,255,255,0.04)' } },
+      y: { ticks: { color: '#6b7280', callback: v => (v/1000).toFixed(0)+'k' }, grid: { color: 'rgba(255,255,255,0.04)' } },
+    }
+  }
+});
+
+function changeVenue(v) {
+  const p = new URLSearchParams(location.search);
+  v ? p.set('venue_id', v) : p.delete('venue_id');
+  location.href = '/finance?' + p.toString();
+}
+function changePeriod(p) {
+  const params = new URLSearchParams(location.search);
+  params.set('period', p);
+  location.href = '/finance?' + params.toString();
+}
+
+async function deleteExpense(id) {
+  if (!confirm('Удалить расход?')) return;
+  const res = await fetch('/api/expenses/'+id, {
+    method:'DELETE', credentials:'include',
+    headers:{'Authorization':'Bearer '+localStorage.getItem('access_token')},
+  });
+  if (res.ok) document.getElementById('exp-'+id)?.remove();
+  else alert('Ошибка удаления');
+}
+
+document.getElementById('add-expense-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const errEl = document.getElementById('exp-error');
+  errEl.style.display = 'none';
+  const fd = new FormData(e.target);
+  const body = Object.fromEntries(fd.entries());
+  body.amount = parseFloat(body.amount);
+  if (!body.description) delete body.description;
+  const res = await fetch('/api/expenses', {
+    method:'POST', credentials:'include',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+localStorage.getItem('access_token')},
+    body: JSON.stringify(body),
+  });
+  if (res.ok) location.reload();
+  else { const d = await res.json().catch(()=>({})); errEl.textContent=d.detail||'Ошибка'; errEl.style.display='block'; }
+});
+</script>
+{% endblock %}

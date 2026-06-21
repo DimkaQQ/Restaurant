@@ -1,0 +1,293 @@
+{% extends "base.html" %}
+{% block title %}Склад — RestOS{% endblock %}
+
+{% block head %}
+<style>
+.inv-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem; flex-wrap:wrap; gap:1rem; }
+.inv-header h1 { font-family:'Instrument Serif',serif; font-size:1.6rem; font-weight:400; }
+.inv-kpis { display:flex; gap:1rem; margin-bottom:1.5rem; flex-wrap:wrap; }
+.inv-kpi { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:1rem 1.5rem; flex:1; min-width:160px; }
+.inv-kpi-label { font-size:0.72rem; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); margin-bottom:.35rem; }
+.inv-kpi-value { font-size:1.6rem; font-weight:700; }
+.inv-kpi-value.alert { color:#ef4444; }
+.inv-layout { display:grid; grid-template-columns:1fr 320px; gap:1.5rem; }
+@media(max-width:900px){ .inv-layout{ grid-template-columns:1fr; } }
+.inv-table-wrap { background:var(--card); border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+.inv-filters { padding:.75rem 1rem; border-bottom:1px solid var(--border); display:flex; gap:.75rem; flex-wrap:wrap; align-items:center; }
+.category-chip { background:rgba(255,255,255,.05); border:1px solid var(--border); border-radius:20px; padding:.2rem .65rem; font-size:.78rem; cursor:pointer; transition:all .15s; }
+.category-chip.active, .category-chip:hover { background:rgba(200,168,75,.15); border-color:var(--gold); color:var(--gold); }
+.inv-table { width:100%; border-collapse:collapse; }
+.inv-table th { font-size:.72rem; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); padding:.6rem 1rem; text-align:left; border-bottom:1px solid var(--border); }
+.inv-table td { padding:.65rem 1rem; border-bottom:1px solid rgba(255,255,255,.04); font-size:.875rem; vertical-align:middle; }
+.inv-table tr:last-child td { border-bottom:none; }
+.inv-table tr:hover td { background:rgba(255,255,255,.02); }
+.stock-bar-wrap { width:100px; background:rgba(255,255,255,.07); border-radius:4px; height:6px; overflow:hidden; }
+.stock-bar { height:100%; border-radius:4px; transition:width .3s; }
+.stock-ok { background:#22c55e; }
+.stock-warning { background:#f59e0b; }
+.stock-low { background:#ef4444; }
+.stock-empty { background:#6b7280; }
+.status-badge { font-size:.7rem; padding:.15rem .5rem; border-radius:20px; font-weight:600; }
+.status-ok { background:rgba(34,197,94,.15); color:#4ade80; }
+.status-warning { background:rgba(245,158,11,.15); color:#fbbf24; }
+.status-low { background:rgba(239,68,68,.15); color:#f87171; }
+.status-empty { background:rgba(107,114,128,.15); color:#9ca3af; }
+.inv-add-panel { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:1.5rem; align-self:start; position:sticky; top:1rem; }
+.inv-add-panel h2 { font-size:1rem; font-weight:600; margin-bottom:1.25rem; }
+.form-group { margin-bottom:.9rem; }
+.form-group label { display:block; font-size:.8rem; color:var(--muted); margin-bottom:.3rem; }
+.form-group input, .form-group select { width:100%; background:var(--black); border:1px solid var(--border); color:var(--white); padding:.5rem .75rem; border-radius:6px; font-size:.875rem; box-sizing:border-box; }
+.form-group input:focus, .form-group select:focus { outline:none; border-color:var(--gold); }
+.form-row-2 { display:grid; grid-template-columns:1fr 1fr; gap:.5rem; }
+.qty-controls { display:flex; gap:.5rem; }
+.qty-controls button { flex:1; font-size:.8rem; padding:.4rem; border-radius:6px; cursor:pointer; border:1px solid var(--border); background:var(--black); color:var(--white); transition:all .15s; }
+.qty-controls .btn-add { border-color:rgba(34,197,94,.4); color:#4ade80; }
+.qty-controls .btn-add:hover { background:rgba(34,197,94,.1); }
+.qty-controls .btn-rem { border-color:rgba(239,68,68,.4); color:#f87171; }
+.qty-controls .btn-rem:hover { background:rgba(239,68,68,.1); }
+.action-btns { display:flex; gap:.4rem; }
+.btn-icon { background:none; border:1px solid var(--border); color:var(--muted); padding:.25rem .5rem; border-radius:5px; cursor:pointer; font-size:.8rem; transition:all .15s; }
+.btn-icon:hover { border-color:#ef4444; color:#ef4444; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="inv-header">
+  <h1>Склад</h1>
+  <div style="display:flex;gap:.75rem;align-items:center;">
+    <select class="select-input" onchange="this.value ? location.href='/inventory?venue_id='+this.value : location.href='/inventory'">
+      <option value="">Все заведения</option>
+      {% for v in venues %}
+      <option value="{{ v.id }}" {% if selected_venue_id == v.id|string %}selected{% endif %}>{{ v.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+</div>
+
+<div class="inv-kpis">
+  <div class="inv-kpi">
+    <div class="inv-kpi-label">Позиций на складе</div>
+    <div class="inv-kpi-value">{{ ingredients|length }}</div>
+  </div>
+  <div class="inv-kpi">
+    <div class="inv-kpi-label">Стоимость запасов</div>
+    <div class="inv-kpi-value">{{ "{:,.0f}".format(total_value) }} ₸</div>
+  </div>
+  <div class="inv-kpi">
+    <div class="inv-kpi-label">Низкий остаток</div>
+    <div class="inv-kpi-value {% if low_stock_count > 0 %}alert{% endif %}">{{ low_stock_count }}</div>
+  </div>
+</div>
+
+<div class="inv-layout">
+  <div class="inv-table-wrap">
+    <div class="inv-filters">
+      <span class="category-chip active" onclick="filterCategory('')">Все</span>
+      {% for cat in categories %}
+      <span class="category-chip" onclick="filterCategory('{{ cat }}')">{{ cat }}</span>
+      {% endfor %}
+    </div>
+    {% if ingredients %}
+    <table class="inv-table" id="inv-table">
+      <thead>
+        <tr>
+          <th>Наименование</th>
+          <th>Категория</th>
+          <th>Остаток</th>
+          <th>Ед.</th>
+          <th>Цена/ед.</th>
+          <th>Статус</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in ingredients %}
+        <tr data-category="{{ item.category or '' }}" id="row-{{ item.id }}">
+          <td><strong>{{ item.name }}</strong></td>
+          <td><span style="color:var(--muted);font-size:.8rem;">{{ item.category or '—' }}</span></td>
+          <td>
+            <div style="display:flex;align-items:center;gap:.5rem;">
+              <span id="qty-{{ item.id }}">{{ "%.2f"|format(item.quantity|float) }}</span>
+              {% if item.min_quantity > 0 %}
+              <div class="stock-bar-wrap">
+                <div class="stock-bar stock-{{ item.stock_status }}" style="width:{{ [[(item.quantity / (item.min_quantity * 2)) * 100, 0]|max, 100]|min }}%"></div>
+              </div>
+              {% endif %}
+            </div>
+          </td>
+          <td>{{ item.unit }}</td>
+          <td>{{ "{:,.0f}".format(item.cost_per_unit|float) }} ₸</td>
+          <td>
+            {% if item.stock_status == 'ok' %}<span class="status-badge status-ok">OK</span>
+            {% elif item.stock_status == 'warning' %}<span class="status-badge status-warning">Мало</span>
+            {% elif item.stock_status == 'low' %}<span class="status-badge status-low">Критично</span>
+            {% else %}<span class="status-badge status-empty">Нет</span>{% endif %}
+          </td>
+          <td>
+            <div class="qty-controls">
+              <button class="btn-add" onclick="openQtyModal('{{ item.id }}', '{{ item.name }}', 'restock')">+ Приход</button>
+              <button class="btn-rem" onclick="openQtyModal('{{ item.id }}', '{{ item.name }}', 'writeoff')">− Списать</button>
+              <button class="btn-icon" onclick="deleteIngredient('{{ item.id }}')">✕</button>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div style="padding:3rem;text-align:center;color:var(--muted);">Нет позиций на складе</div>
+    {% endif %}
+  </div>
+
+  <div class="inv-add-panel">
+    <h2>Добавить позицию</h2>
+    <div id="add-error" class="error-msg" style="display:none"></div>
+    <form id="add-form">
+      <div class="form-group">
+        <label>Заведение</label>
+        <select name="venue_id" required>
+          <option value="">Выбрать...</option>
+          {% for v in venues %}
+          <option value="{{ v.id }}" {% if selected_venue_id == v.id|string %}selected{% endif %}>{{ v.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Наименование</label>
+        <input type="text" name="name" required placeholder="Мясо говядина">
+      </div>
+      <div class="form-row-2">
+        <div class="form-group">
+          <label>Единица</label>
+          <select name="unit">
+            <option>кг</option><option>г</option><option>л</option><option>мл</option><option>шт</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Категория</label>
+          <input type="text" name="category" placeholder="Мясо">
+        </div>
+      </div>
+      <div class="form-row-2">
+        <div class="form-group">
+          <label>Остаток</label>
+          <input type="number" name="quantity" step="0.001" min="0" value="0">
+        </div>
+        <div class="form-group">
+          <label>Мин. остаток</label>
+          <input type="number" name="min_quantity" step="0.001" min="0" value="0">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Цена за ед. (₸)</label>
+        <input type="number" name="cost_per_unit" step="1" min="0" value="0">
+      </div>
+      <button type="submit" class="btn-primary" style="width:100%">Добавить</button>
+    </form>
+  </div>
+</div>
+
+<!-- Qty Modal -->
+<div id="qty-modal" class="modal" style="display:none">
+  <div class="modal-overlay" onclick="closeQtyModal()"></div>
+  <div class="modal-content" style="max-width:320px">
+    <h2 class="modal-title" id="qty-modal-title">Операция</h2>
+    <div class="form-group">
+      <label id="qty-label">Количество</label>
+      <input type="number" id="qty-input" step="0.001" min="0.001" placeholder="0.000">
+    </div>
+    <div id="writeoff-extra" style="display:none">
+      <div class="form-group">
+        <label>Причина</label>
+        <select id="writeoff-reason">
+          <option value="usage">Использование</option>
+          <option value="spoilage">Порча</option>
+          <option value="theft">Недостача</option>
+          <option value="other">Прочее</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Примечание</label>
+        <input type="text" id="writeoff-note" placeholder="Необязательно">
+      </div>
+    </div>
+    <div class="form-row" style="margin-top:1rem">
+      <button id="qty-confirm-btn" class="btn-primary">Подтвердить</button>
+      <button onclick="closeQtyModal()" class="btn-secondary">Отмена</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let currentItemId = null, currentAction = null;
+
+function filterCategory(cat) {
+  document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
+  event.target.classList.add('active');
+  document.querySelectorAll('#inv-table tbody tr').forEach(row => {
+    row.style.display = (!cat || row.dataset.category === cat) ? '' : 'none';
+  });
+}
+
+function openQtyModal(id, name, action) {
+  currentItemId = id; currentAction = action;
+  document.getElementById('qty-modal-title').textContent = action === 'restock' ? `Приход: ${name}` : `Списание: ${name}`;
+  document.getElementById('qty-label').textContent = action === 'restock' ? 'Количество прихода' : 'Количество списания';
+  document.getElementById('writeoff-extra').style.display = action === 'writeoff' ? 'block' : 'none';
+  document.getElementById('qty-input').value = '';
+  document.getElementById('qty-modal').style.display = 'flex';
+  document.getElementById('qty-input').focus();
+}
+
+function closeQtyModal() { document.getElementById('qty-modal').style.display = 'none'; }
+
+document.getElementById('qty-confirm-btn').addEventListener('click', async () => {
+  const qty = parseFloat(document.getElementById('qty-input').value);
+  if (!qty || qty <= 0) { alert('Введите количество'); return; }
+  const body = { quantity: qty };
+  if (currentAction === 'writeoff') {
+    body.reason = document.getElementById('writeoff-reason').value;
+    body.note = document.getElementById('writeoff-note').value || null;
+  }
+  const url = `/api/inventory/${currentItemId}/${currentAction}`;
+  const res = await fetch(url, {
+    method: 'POST', credentials: 'include',
+    headers: {'Content-Type':'application/json','Authorization':'Bearer '+localStorage.getItem('access_token')},
+    body: JSON.stringify(body),
+  });
+  if (res.ok) { closeQtyModal(); location.reload(); }
+  else { const d = await res.json().catch(()=>({})); alert(d.detail || 'Ошибка'); }
+});
+
+async function deleteIngredient(id) {
+  if (!confirm('Удалить позицию?')) return;
+  const res = await fetch('/api/inventory/'+id, {
+    method:'DELETE', credentials:'include',
+    headers:{'Authorization':'Bearer '+localStorage.getItem('access_token')},
+  });
+  if (res.ok) { document.getElementById('row-'+id)?.remove(); }
+  else { const d = await res.json().catch(()=>({})); alert(d.detail||'Ошибка'); }
+}
+
+document.getElementById('add-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const errEl = document.getElementById('add-error');
+  errEl.style.display = 'none';
+  const fd = new FormData(e.target);
+  const body = Object.fromEntries(fd.entries());
+  body.quantity = parseFloat(body.quantity)||0;
+  body.min_quantity = parseFloat(body.min_quantity)||0;
+  body.cost_per_unit = parseFloat(body.cost_per_unit)||0;
+  if (!body.category) delete body.category;
+  const res = await fetch('/api/inventory', {
+    method:'POST', credentials:'include',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+localStorage.getItem('access_token')},
+    body: JSON.stringify(body),
+  });
+  if (res.ok) { location.reload(); }
+  else { const d = await res.json().catch(()=>({})); errEl.textContent=d.detail||'Ошибка'; errEl.style.display='block'; }
+});
+</script>
+{% endblock %}
