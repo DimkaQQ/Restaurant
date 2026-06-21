@@ -51,16 +51,15 @@ async def list_orders(
     db: AsyncSession = Depends(get_db),
 ):
     try:
+        accessible_ids = await get_accessible_venue_ids(current_user, db)
+        filter_ids = [venue_id] if venue_id and venue_id in accessible_ids else accessible_ids
         stmt = (
             select(Order)
             .options(selectinload(Order.items))
-            .join(Venue)
-            .where(Venue.network_id == current_user.network_id)
+            .where(Order.venue_id.in_(filter_ids))
             .order_by(Order.created_at.desc())
             .limit(limit)
         )
-        if venue_id:
-            stmt = stmt.where(Order.venue_id == venue_id)
         if status:
             stmt = stmt.where(Order.status == status)
         if telegram_id is not None:

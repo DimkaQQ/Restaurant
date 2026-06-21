@@ -71,7 +71,9 @@ async def analytics_page(
 
         loyal_guests = (await db.execute(
             select(Guest)
-            .where(Guest.network_id == current_user.network_id)
+            .join(Order, Order.guest_id == Guest.id)
+            .where(Order.venue_id.in_(venue_ids))
+            .group_by(Guest.id)
             .order_by(Guest.total_visits.desc())
             .limit(10)
         )).scalars().all()

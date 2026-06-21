@@ -271,9 +271,10 @@ async def kitchen_page(
     db: AsyncSession = Depends(get_db),
 ):
     try:
+        accessible_ids = await get_accessible_venue_ids(current_user, db)
         venues = (await db.execute(
             select(Venue)
-            .where(Venue.network_id == current_user.network_id, Venue.is_active == True)
+            .where(Venue.id.in_(accessible_ids), Venue.is_active == True)
             .order_by(Venue.name)
         )).scalars().all()
         current_venue = next((v for v in venues if v.id == venue_id), None) if venue_id else None
@@ -295,18 +296,17 @@ async def kitchen_partial(
     db: AsyncSession = Depends(get_db),
 ):
     try:
+        accessible_ids = await get_accessible_venue_ids(current_user, db)
+        filter_ids = [venue_id] if venue_id and venue_id in accessible_ids else accessible_ids
         stmt = (
             select(Order)
             .options(selectinload(Order.items), selectinload(Order.venue))
-            .join(Venue)
             .where(
-                Venue.network_id == current_user.network_id,
+                Order.venue_id.in_(filter_ids),
                 Order.status.in_(["new", "confirmed", "preparing", "ready"]),
             )
             .order_by(Order.created_at.asc())
         )
-        if venue_id:
-            stmt = stmt.where(Order.venue_id == venue_id)
         orders = (await db.execute(stmt)).scalars().all()
         return templates.TemplateResponse("partials/kitchen_board.html", {
             "request": request,
