@@ -3,7 +3,10 @@ from fastapi.templating import Jinja2Templates
 templates = Jinja2Templates(directory="app/templates")
 
 
-def _money(value: float) -> str:
+def _money(value) -> str:
+    if value is None:
+        return "—"
+    value = float(value)
     if value >= 1_000_000:
         return f"{value / 1_000_000:.1f} млн"
     if value >= 1_000:

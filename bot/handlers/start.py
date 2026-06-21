@@ -48,9 +48,13 @@ async def cmd_start(message: Message, state: FSMContext, guest: dict | None, api
 
 @router.message(RegistrationStates.waiting_name)
 async def process_name(message: Message, state: FSMContext):
-    await state.update_data(name=message.text.strip())
+    if not message.text:
+        await message.answer("Пожалуйста, введите ваше имя текстом.")
+        return
+    name = message.text.strip()
+    await state.update_data(name=name)
     await message.answer(
-        f"Отлично, {message.text.strip()}! Поделитесь вашим номером телефона:",
+        f"Отлично, {name}! Поделитесь вашим номером телефона:",
         reply_markup=phone_request_keyboard(),
     )
     await state.set_state(RegistrationStates.waiting_phone)

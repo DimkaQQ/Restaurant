@@ -40,7 +40,7 @@ async def analytics_page(
         )).scalars().all()
 
         # Determine which venue IDs to query
-        if venue_id:
+        if venue_id and venue_id in accessible_ids:
             venue_ids = [venue_id]
             selected_venue = next((v for v in all_venues if v.id == venue_id), None)
         else:
@@ -71,7 +71,9 @@ async def analytics_page(
 
         loyal_guests = (await db.execute(
             select(Guest)
-            .where(Guest.network_id == current_user.network_id)
+            .join(Order, Order.guest_id == Guest.id)
+            .where(Order.venue_id.in_(venue_ids))
+            .group_by(Guest.id)
             .order_by(Guest.total_visits.desc())
             .limit(10)
         )).scalars().all()
@@ -97,7 +99,7 @@ async def analytics_page(
             "user": current_user,
             "venues": all_venues,
             "selected_venue": selected_venue,
-            "selected_venue_id": str(venue_id) if venue_id else "",
+            "selected_venue_id": str(venue_id) if (venue_id and venue_id in accessible_ids) else "",
             "revenue_data": revenue_data,
             "top_items": top_items_data,
             "loyal_guests": loyal_guests,

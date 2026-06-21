@@ -35,6 +35,8 @@ async def create_venue(
     db: AsyncSession = Depends(get_db),
 ):
     try:
+        if current_user.role != "owner":
+            raise HTTPException(status_code=403, detail="Доступ запрещён: только для владельца")
         venue = Venue(id=uuid.uuid4(), network_id=current_user.network_id, **data.model_dump())
         db.add(venue)
         await db.commit()
@@ -53,6 +55,8 @@ async def update_venue(
     db: AsyncSession = Depends(get_db),
 ):
     try:
+        if current_user.role != "owner":
+            raise HTTPException(status_code=403, detail="Доступ запрещён: только для владельца")
         result = await db.execute(
             select(Venue).where(Venue.id == venue_id, Venue.network_id == current_user.network_id)
         )

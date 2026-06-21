@@ -1,6 +1,7 @@
 {% set status_labels = {"new": "Новый", "confirmed": "Подтверждён", "preparing": "Готовится", "ready": "Готово!"} %}
 {% set next_status = {"new": "confirmed", "confirmed": "preparing", "preparing": "ready", "ready": "done"} %}
 {% set next_label  = {"new": "Принять", "confirmed": "Готовить", "preparing": "Готово", "ready": "Выдать"} %}
+{% set prev_status = {"confirmed": "new", "preparing": "confirmed", "ready": "preparing"} %}
 
 {% set new_orders       = orders | selectattr("status", "equalto", "new")       | list %}
 {% set confirmed_orders = orders | selectattr("status", "equalto", "confirmed") | list %}
@@ -32,10 +33,17 @@
       onclick="advanceOrder('{{ order.id }}', '{{ next_status[order.status] }}')"
     >{{ next_label[order.status] }}</button>
     {% endif %}
-    {% if order.status != 'done' %}
+    {% if prev_status.get(order.status) %}
+    <button
+      class="kds-btn kds-btn-cancel"
+      onclick="advanceOrder('{{ order.id }}', '{{ prev_status[order.status] }}')"
+      title="Вернуть назад"
+    >↩</button>
+    {% elif order.status == 'new' %}
     <button
       class="kds-btn kds-btn-cancel"
       onclick="if(confirm('Отменить заказ #{{ order.id | string | truncate(8, True, '') }}?')) advanceOrder('{{ order.id }}', 'cancelled')"
+      title="Отменить заказ"
     >✕</button>
     {% endif %}
   </div>

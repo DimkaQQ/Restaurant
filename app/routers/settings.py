@@ -5,6 +5,7 @@ import uuid
 from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import HTMLResponse
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -77,10 +78,12 @@ async def create_user(
 
         if not email or not password:
             raise HTTPException(status_code=400, detail="Email и пароль обязательны")
-        if role not in ("owner", "manager", "cashier", "administrator"):
+        if role not in ("manager", "cashier", "administrator"):
             raise HTTPException(status_code=400, detail="Некорректная роль")
 
-        existing = (await db.execute(select(User).where(User.email == email))).scalar_one_or_none()
+        existing = (await db.execute(
+            select(User).where(User.email == email, User.network_id == current_user.network_id)
+        )).scalar_one_or_none()
         if existing:
             raise HTTPException(status_code=409, detail="Пользователь с таким email уже существует")
 
@@ -110,6 +113,9 @@ async def create_user(
         return {"id": str(new_user.id), "email": new_user.email, "role": new_user.role}
     except HTTPException:
         raise
+    except IntegrityError:
+        await db.rollback()
+        raise HTTPException(status_code=409, detail="Пользователь с таким email уже существует")
     except Exception as e:
         logger.error("Create user error: %s", e)
         raise HTTPException(status_code=500, detail="Ошибка создания пользователя")

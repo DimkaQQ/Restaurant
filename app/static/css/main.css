@@ -564,3 +564,7 @@ select option { background: var(--card); }
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ── Guest name + error state ── */
+.guest-name { font-weight: 500; }
+.error-state { color: #ef4444; font-size: 0.875rem; padding: 0.5rem; }

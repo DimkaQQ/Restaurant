@@ -177,7 +177,7 @@
   <h1>Персонал</h1>
   <div class="venue-filter">
     <form method="get" action="/staff">
-      <select name="venue_id" onchange="this.form.submit()">
+      <select name="venue_id" onchange="this.value ? this.form.submit() : location.href='/staff'">
         <option value="">Все заведения</option>
         {% for v in venues %}
         <option value="{{ v.id }}" {% if selected_venue_id == v.id|string %}selected{% endif %}>{{ v.name }}</option>
@@ -190,7 +190,7 @@
 {% if staff %}
 <div class="staff-grid">
   {% for s in staff %}
-  <div class="staff-card" onclick="openReviews('{{ s.id }}', '{{ s.name }}')">
+  <div class="staff-card" data-staff-id="{{ s.id }}" data-staff-name="{{ s.name }}" onclick="openReviews(this.dataset.staffId, this.dataset.staffName)">
     <div class="staff-card-top">
       <div class="staff-avatar">{{ s.initials }}</div>
       <div class="staff-info">
@@ -246,9 +246,12 @@ function openReviews(staffId, name) {
   document.getElementById('drawer-name').textContent = name;
   document.getElementById('drawer-overlay').classList.add('open');
   document.getElementById('review-drawer').classList.add('open');
-  fetch('/staff/' + staffId + '/reviews')
-    .then(r => r.text())
-    .then(html => { document.getElementById('drawer-body').innerHTML = html; })
+  fetch('/staff/' + staffId + '/reviews', { credentials: 'include' })
+    .then(r => {
+      if (r.url && r.url.includes('/auth/login')) { location.href = '/auth/login'; return ''; }
+      return r.text();
+    })
+    .then(html => { if (html) document.getElementById('drawer-body').innerHTML = html; })
     .catch(() => { document.getElementById('drawer-body').innerHTML = '<p style="color:var(--muted)">Ошибка загрузки</p>'; });
 }
 function closeDrawer() {

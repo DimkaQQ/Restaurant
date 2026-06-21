@@ -71,8 +71,16 @@ async def choose_item(callback: CallbackQuery, api_url: str, venue_id: str):
 
 @router.callback_query(F.data.startswith("qty:"))
 async def add_to_cart(callback: CallbackQuery, state: FSMContext, api_url: str, venue_id: str):
-    _, item_id, qty_str = callback.data.split(":")
-    qty = int(qty_str)
+    parts = callback.data.split(":", 2)
+    if len(parts) != 3:
+        await callback.answer("Ошибка", show_alert=True)
+        return
+    _, item_id, qty_str = parts
+    try:
+        qty = int(qty_str)
+    except ValueError:
+        await callback.answer("Ошибка", show_alert=True)
+        return
 
     data = await state.get_data()
     cart: list = data.get("cart", [])
@@ -130,7 +138,10 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext, guest: dict 
                 reply_markup=main_menu_keyboard(),
             )
         else:
-            err = resp.json().get("detail", "Ошибка")
+            try:
+                err = resp.json().get("detail", "Ошибка")
+            except Exception:
+                err = "Ошибка"
             await callback.message.edit_text(f"❌ Ошибка: {err}", reply_markup=back_keyboard())
     except Exception as e:
         logger.error("Order creation error: %s", e)

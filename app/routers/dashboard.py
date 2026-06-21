@@ -127,19 +127,18 @@ async def orders_partial(
     db: AsyncSession = Depends(get_db),
 ):
     try:
+        accessible_ids = await get_accessible_venue_ids(current_user, db)
+        filter_ids = [venue_id] if venue_id and venue_id in accessible_ids else accessible_ids
         stmt = (
             select(Order)
             .options(selectinload(Order.items), selectinload(Order.guest))
-            .join(Venue)
             .where(
-                Venue.network_id == current_user.network_id,
+                Order.venue_id.in_(filter_ids),
                 Order.status.in_(["new", "confirmed", "preparing", "ready"]),
             )
             .order_by(Order.created_at.desc())
             .limit(50)
         )
-        if venue_id:
-            stmt = stmt.where(Order.venue_id == venue_id)
         orders = (await db.execute(stmt)).scalars().all()
 
         return templates.TemplateResponse("partials/orders_list.html", {
@@ -166,8 +165,18 @@ async def change_status_html(
         else:
             form = await request.form()
             new_status = form.get("status")
+        if not new_status:
+            return HTMLResponse("<p class='error-state'>Статус обязателен</p>", status_code=400)
+        venue_ids = await get_accessible_venue_ids(current_user, db)
+        check = (await db.execute(
+            select(Order).where(Order.id == order_id, Order.venue_id.in_(venue_ids))
+        )).scalar_one_or_none()
+        if not check:
+            return HTMLResponse("<p class='error-state'>Заказ не найден</p>", status_code=404)
         order = await update_order_status(order_id, new_status, db)
 
+        if order.status in ("done", "cancelled"):
+            return HTMLResponse("")
         return templates.TemplateResponse("partials/orders_list.html", {
             "request": request,
             "orders": [order],
@@ -196,10 +205,11 @@ async def guests_partial(
         if search:
             from sqlalchemy import func as sqlfunc
             normalized = search.replace(" ", "").replace("-", "").replace("(", "").replace(")", "")
+            db_normalized = sqlfunc.replace(sqlfunc.replace(sqlfunc.replace(sqlfunc.replace(Guest.phone, " ", ""), "-", ""), "(", ""), ")", "")
             stmt = stmt.where(
                 Guest.name.ilike(f"%{search}%") |
                 Guest.phone.ilike(f"%{search}%") |
-                sqlfunc.replace(sqlfunc.replace(sqlfunc.replace(Guest.phone, " ", ""), "-", ""), "(", "").ilike(f"%{normalized}%")
+                db_normalized.ilike(f"%{normalized}%")
             )
         guests = (await db.execute(stmt)).scalars().all()
         return templates.TemplateResponse("partials/guests_rows.html", {
@@ -218,8 +228,9 @@ async def orders_page(
     db: AsyncSession = Depends(get_db),
 ):
     try:
+        accessible_ids = await get_accessible_venue_ids(current_user, db)
         venues = (await db.execute(
-            select(Venue).where(Venue.network_id == current_user.network_id)
+            select(Venue).where(Venue.id.in_(accessible_ids))
         )).scalars().all()
         return templates.TemplateResponse("orders.html", {
             "request": request,
@@ -238,8 +249,9 @@ async def menu_page(
     db: AsyncSession = Depends(get_db),
 ):
     try:
+        accessible_ids = await get_accessible_venue_ids(current_user, db)
         venues = (await db.execute(
-            select(Venue).where(Venue.network_id == current_user.network_id)
+            select(Venue).where(Venue.id.in_(accessible_ids))
         )).scalars().all()
         return templates.TemplateResponse("menu.html", {
             "request": request,
@@ -259,9 +271,10 @@ async def kitchen_page(
     db: AsyncSession = Depends(get_db),
 ):
     try:
+        accessible_ids = await get_accessible_venue_ids(current_user, db)
         venues = (await db.execute(
             select(Venue)
-            .where(Venue.network_id == current_user.network_id, Venue.is_active == True)
+            .where(Venue.id.in_(accessible_ids), Venue.is_active == True)
             .order_by(Venue.name)
         )).scalars().all()
         current_venue = next((v for v in venues if v.id == venue_id), None) if venue_id else None
@@ -283,18 +296,17 @@ async def kitchen_partial(
     db: AsyncSession = Depends(get_db),
 ):
     try:
+        accessible_ids = await get_accessible_venue_ids(current_user, db)
+        filter_ids = [venue_id] if venue_id and venue_id in accessible_ids else accessible_ids
         stmt = (
             select(Order)
             .options(selectinload(Order.items), selectinload(Order.venue))
-            .join(Venue)
             .where(
-                Venue.network_id == current_user.network_id,
+                Order.venue_id.in_(filter_ids),
                 Order.status.in_(["new", "confirmed", "preparing", "ready"]),
             )
             .order_by(Order.created_at.asc())
         )
-        if venue_id:
-            stmt = stmt.where(Order.venue_id == venue_id)
         orders = (await db.execute(stmt)).scalars().all()
         return templates.TemplateResponse("partials/kitchen_board.html", {
             "request": request,

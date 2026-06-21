@@ -21,7 +21,7 @@
 
 <div class="filters" style="margin-bottom:1.5rem">
   <form method="get" action="/analytics/" style="display:flex;gap:0.75rem;align-items:center">
-    <select name="venue_id" class="select-input" onchange="this.form.submit()">
+    <select name="venue_id" class="select-input" onchange="this.value ? this.form.submit() : location.href='/analytics/'">
       <option value="">Все заведения</option>
       {% for v in venues %}
       <option value="{{ v.id }}" {% if selected_venue_id == v.id | string %}selected{% endif %}>{{ v.name }}</option>

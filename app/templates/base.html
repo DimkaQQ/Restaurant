@@ -75,7 +75,13 @@
 
     // При 401 от htmx — редиректим на логин
     document.addEventListener('htmx:responseError', (e) => {
-      if (e.detail.xhr.status === 401 || e.detail.xhr.status === 307) {
+      if (e.detail.xhr.status === 401) {
+        location.href = '/auth/login';
+      }
+    });
+    // Catch silent 307 redirects (browser auto-follows, htmx gets login page HTML)
+    document.addEventListener('htmx:afterRequest', (e) => {
+      if (e.detail.xhr && e.detail.xhr.responseURL && e.detail.xhr.responseURL.includes('/auth/login')) {
         location.href = '/auth/login';
       }
     });

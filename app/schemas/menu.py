@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from decimal import Decimal
 import uuid
 
@@ -6,7 +6,7 @@ import uuid
 class MenuItemCreate(BaseModel):
     name: str
     description: str | None = None
-    price: Decimal
+    price: Decimal = Field(..., gt=0)
     category: str | None = None
     is_available: bool = True
     image_url: str | None = None
@@ -15,7 +15,7 @@ class MenuItemCreate(BaseModel):
 class MenuItemUpdate(BaseModel):
     name: str | None = None
     description: str | None = None
-    price: Decimal | None = None
+    price: Decimal | None = Field(None, gt=0)
     category: str | None = None
     is_available: bool | None = None
     image_url: str | None = None

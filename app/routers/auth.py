@@ -63,4 +63,5 @@ async def login(data: LoginRequest, response: Response, db: AsyncSession = Depen
 @router.post("/logout")
 async def logout(response: Response):
     response.delete_cookie("refresh_token")
+    response.delete_cookie("access_token")
     return {"message": "Выход выполнен"}

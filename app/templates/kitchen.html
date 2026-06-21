@@ -29,7 +29,7 @@
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 0;
-      height: calc(100vh - 108px);
+      height: calc(100vh - 130px);
       overflow: hidden;
     }
     .kds-col {
@@ -136,12 +136,18 @@
           body: JSON.stringify({status: newStatus}),
         });
         if (res.status === 401 || res.status === 307) { location.href = '/auth/login'; return; }
+        if (!res.ok) { console.error('advanceOrder failed', res.status); return; }
         htmx.trigger(document.getElementById('kds-board'), 'refresh');
       } catch(e) { console.error('advanceOrder error', e); }
     }
 
     document.addEventListener('htmx:responseError', (e) => {
       if (e.detail.xhr.status === 401 || e.detail.xhr.status === 307) {
+        location.href = '/auth/login';
+      }
+    });
+    document.addEventListener('htmx:afterRequest', (e) => {
+      if (e.detail.xhr && e.detail.xhr.responseURL && e.detail.xhr.responseURL.includes('/auth/login')) {
         location.href = '/auth/login';
       }
     });

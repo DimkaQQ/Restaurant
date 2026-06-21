@@ -37,7 +37,7 @@ async def staff_page(
             .order_by(Venue.name)
         )).scalars().all()
 
-        if venue_id:
+        if venue_id and venue_id in accessible_ids:
             venue_ids = [venue_id]
             selected_venue = next((v for v in all_venues if v.id == venue_id), None)
         else:
@@ -76,9 +76,14 @@ async def staff_reviews(
     db: AsyncSession = Depends(get_db),
 ):
     try:
+        accessible_ids = await get_accessible_venue_ids(current_user, db)
         staff = (await db.execute(
             select(Staff)
-            .where(Staff.id == staff_id, Staff.network_id == current_user.network_id)
+            .where(
+                Staff.id == staff_id,
+                Staff.network_id == current_user.network_id,
+                Staff.venue_id.in_(accessible_ids),
+            )
             .options(selectinload(Staff.venue))
         )).scalar_one_or_none()
 
