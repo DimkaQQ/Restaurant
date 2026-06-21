@@ -200,17 +200,17 @@ new Chart(ctx, {
       legend: { labels: { color: '#9ca3af', font: { size: 11 } } },
       tooltip: {
         callbacks: {
-          label: item => `${item.dataset.label}: ${(item.parsed.y/1000).toFixed(0)}k ₸`,
+          label: item => `${item.dataset.label}: ${(item.parsed.y/1_000_000).toFixed(2)} млн ₸`,
           footer: items => {
             const total = items.reduce((s, i) => s + i.parsed.y, 0);
-            return `Выручка: ${(total/1000).toFixed(0)}k ₸`;
+            return `Выручка: ${(total/1_000_000).toFixed(2)} млн ₸`;
           }
         }
       }
     },
     scales: {
       x: { stacked: true, ticks: { color: '#6b7280' }, grid: { color: 'rgba(255,255,255,0.04)' } },
-      y: { stacked: true, ticks: { color: '#6b7280', callback: v => (v/1000).toFixed(0)+'k' }, grid: { color: 'rgba(255,255,255,0.04)' } },
+      y: { stacked: true, ticks: { color: '#6b7280', callback: v => (v/1_000_000).toFixed(1)+' млн' }, grid: { color: 'rgba(255,255,255,0.04)' } },
     }
   }
 });
