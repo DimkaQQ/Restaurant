@@ -8,7 +8,27 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
-  <link rel="stylesheet" href="/static/css/main.css">
+  <link rel="stylesheet" href="/static/css/main.css?v=3">
+  <style>
+    /* sidebar scroll — grid layout guarantee */
+    .sidebar {
+      display: grid !important;
+      grid-template-rows: auto 1fr auto !important;
+      overflow: hidden !important;
+      position: fixed !important;
+      top: 0; left: 0; bottom: 0;
+      flex-direction: unset !important;
+    }
+    .nav-links {
+      overflow-y: auto !important;
+      min-height: 0 !important;
+      flex: unset !important;
+    }
+    .sidebar-footer {
+      position: static !important;
+      margin-top: 0 !important;
+    }
+  </style>
   <script src="https://unpkg.com/htmx.org@1.9.12"></script>
   {% block head %}{% endblock %}
 </head>
