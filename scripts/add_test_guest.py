@@ -105,7 +105,8 @@ async def main(tg_id: int, name: str, lang: str):
                             order_id=order.id,
                             menu_item_id=it.id,
                             quantity=1,
-                            unit_price=it.price,
+                            price=it.price,
+                            name=it.name,
                         )
                         db.add(oi)
 
