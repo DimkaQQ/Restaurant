@@ -14,9 +14,9 @@
 .week-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:.75rem; margin-bottom:1.5rem; }
 @media(max-width:900px){ .week-grid{grid-template-columns:repeat(3,1fr);} }
 @media(max-width:500px){ .week-grid{grid-template-columns:1fr;} }
-.day-col { background:var(--card); border:1px solid var(--border); border-radius:10px; overflow:hidden; min-height:180px; }
+.day-col { background:var(--card); border:1px solid var(--border); border-radius:10px; min-height:180px; position:relative; }
 .day-col.today { border-color:var(--gold); }
-.day-header { padding:.6rem .75rem; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+.day-header { padding:.6rem .75rem; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; border-radius:10px 10px 0 0; }
 .day-name { font-size:.72rem; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); }
 .day-date { font-size:1rem; font-weight:700; }
 .day-col.today .day-date { color:var(--gold); }
@@ -41,15 +41,15 @@
 /* Tooltip */
 .shift-chip { position:relative; }
 .shift-tooltip {
-  display:none; position:absolute; z-index:100; bottom:calc(100% + 6px); left:0;
-  background:#1a1a1a; border:1px solid var(--border); border-radius:8px;
-  padding:.6rem .8rem; min-width:170px; box-shadow:0 4px 16px rgba(0,0,0,.5);
-  pointer-events:none;
+  display:none; position:fixed; z-index:9999;
+  background:#1e1e1e; border:1px solid rgba(200,168,75,.4); border-radius:8px;
+  padding:.65rem .9rem; min-width:180px; max-width:240px;
+  box-shadow:0 8px 24px rgba(0,0,0,.7); pointer-events:none;
 }
 .shift-chip:hover .shift-tooltip { display:block; }
-.shift-tooltip-name { font-size:.82rem; font-weight:600; color:var(--white); margin-bottom:.2rem; }
-.shift-tooltip-role { font-size:.75rem; color:var(--gold); margin-bottom:.3rem; }
-.shift-tooltip-time { font-size:.75rem; color:var(--muted); }
+.shift-tooltip-name { font-size:.85rem; font-weight:600; color:var(--white); margin-bottom:.25rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.shift-tooltip-role { font-size:.78rem; color:var(--gold); margin-bottom:.3rem; text-transform:uppercase; letter-spacing:.04em; }
+.shift-tooltip-time { font-size:.78rem; color:var(--muted); }
 
 /* Modal */
 .modal-form .form-group { margin-bottom:.85rem; }
@@ -100,12 +100,10 @@
       {% set day_shifts = shifts_by_day.get(day, []) %}
       {% if day_shifts %}
         {% for s in day_shifts %}
-        <div class="shift-chip status-{{ s.status }}" onclick="changeStatus('{{ s.id }}', '{{ s.status }}')">
-          <div class="shift-tooltip">
-            <div class="shift-tooltip-name">{{ s.staff.name }}</div>
-            <div class="shift-tooltip-role">{{ s.staff.role_label }}</div>
-            <div class="shift-tooltip-time">{{ s.start_time.strftime('%H:%M') }} — {{ s.end_time.strftime('%H:%M') }} ({{ s.duration_hours }} ч.)</div>
-          </div>
+        <div class="shift-chip status-{{ s.status }}"
+             onclick="changeStatus('{{ s.id }}', '{{ s.status }}')"
+             onmouseenter="showTip(event,'{{ s.staff.name }}','{{ s.staff.role_label }}','{{ s.start_time.strftime('%H:%M') }}–{{ s.end_time.strftime('%H:%M') }} ({{ s.duration_hours }} ч.)')"
+             onmouseleave="hideTip()">
           <div class="shift-avatar">{{ s.staff.initials }}</div>
           <div class="shift-info">
             <div class="shift-name">{{ s.staff.name }}</div>
@@ -120,6 +118,13 @@
     </div>
   </div>
   {% endfor %}
+</div>
+
+<!-- Global tooltip -->
+<div id="shift-tip" class="shift-tooltip">
+  <div class="shift-tooltip-name" id="tip-name"></div>
+  <div class="shift-tooltip-role" id="tip-role"></div>
+  <div class="shift-tooltip-time" id="tip-time"></div>
 </div>
 
 <!-- Add Shift Modal -->
@@ -177,6 +182,20 @@
 {% block scripts %}
 <script>
 const STATUS_CYCLE = { planned: 'active', active: 'done', done: 'planned', cancelled: 'planned' };
+const _tip = document.getElementById('shift-tip');
+
+function showTip(e, name, role, time) {
+  document.getElementById('tip-name').textContent = name;
+  document.getElementById('tip-role').textContent = role;
+  document.getElementById('tip-time').textContent = time;
+  _tip.style.display = 'block';
+  const rect = e.currentTarget.getBoundingClientRect();
+  let left = rect.right + 8;
+  if (left + 240 > window.innerWidth) left = rect.left - 248;
+  _tip.style.left = left + 'px';
+  _tip.style.top = Math.max(8, rect.top) + 'px';
+}
+function hideTip() { _tip.style.display = 'none'; }
 
 function changeVenue(v) {
   const p = new URLSearchParams(location.search);

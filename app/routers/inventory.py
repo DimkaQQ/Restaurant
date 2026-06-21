@@ -7,7 +7,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request, Query
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel, Field
 from decimal import Decimal
-from sqlalchemy import select, func, nulls_last
+from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -64,7 +64,7 @@ async def inventory_page(
         ingredients = (await db.execute(
             select(Ingredient)
             .where(Ingredient.venue_id.in_(filter_ids))
-            .order_by(nulls_last(Ingredient.category), Ingredient.name)
+            .order_by(Ingredient.category, Ingredient.name)
         )).scalars().all()
 
         # Stats
