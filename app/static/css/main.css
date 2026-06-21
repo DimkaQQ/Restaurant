@@ -60,8 +60,10 @@ body {
   line-height: 1;
 }
 
-.nav-links { list-style: none; padding: 1rem 0; flex: 1; min-height: 0; overflow-y: auto; scrollbar-width: none; }
-.nav-links::-webkit-scrollbar { display: none; }
+.nav-links { list-style: none; padding: 1rem 0; flex: 1 1 0; min-height: 0; overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(200,168,75,0.2) transparent; }
+.nav-links::-webkit-scrollbar { width: 3px; }
+.nav-links::-webkit-scrollbar-track { background: transparent; }
+.nav-links::-webkit-scrollbar-thumb { background: rgba(200,168,75,0.25); border-radius: 3px; }
 
 .nav-link {
   display: flex;

@@ -760,6 +760,40 @@ async def main():
             ],
         }
 
+        # Bar-specific ingredients (category="bar") for venues with bartenders
+        BAR_INGREDIENTS_BASE = [
+            ("Водка",              "л",    10.0,  2.0, 4500),
+            ("Виски",              "л",     8.0,  1.5, 8500),
+            ("Ром тёмный",         "л",     5.0,  1.0, 6500),
+            ("Джин",               "л",     5.0,  1.0, 7000),
+            ("Тоник (бутылка)",    "шт",   48.0, 12.0,  350),
+            ("Сок апельсиновый",   "л",    15.0,  4.0,  600),
+            ("Сок томатный",       "л",    10.0,  3.0,  550),
+            ("Лайм",               "кг",    5.0,  1.5,  900),
+            ("Мята свежая",        "шт",   20.0,  5.0,  250),
+            ("Сироп сахарный",     "л",     5.0,  1.0,  800),
+            ("Биттер Ангостура",   "мл",  200.0, 50.0, 3200),
+            ("Кола (бутылка)",     "шт",   48.0, 12.0,  280),
+        ]
+        BAR_INGREDIENTS_BRAND = {
+            "Suli da Guli": [
+                ("Чача",           "л",     4.0,  1.0, 5500),
+                ("Вермут красный", "л",     3.0,  0.5, 3800),
+                ("Вермут белый",   "л",     3.0,  0.5, 3500),
+            ],
+            "Lukum Vostok": [
+                ("Арак",           "л",     3.0,  0.5, 4200),
+                ("Айран (бутылка)","шт",   24.0,  6.0,  300),
+                ("Гранатовый сок", "л",     8.0,  2.0,  750),
+            ],
+            "Usta": [
+                ("Пиво разливное", "л",    50.0, 10.0,  850),
+                ("Квас",           "л",    20.0,  5.0,  400),
+            ],
+        }
+        # brands that have a bar
+        BAR_BRANDS = {"Suli da Guli", "Lukum Vostok", "Usta"}
+
         ingredient_rows = []
         writeoff_rows = []
         venue_ingredient_ids: dict[uuid.UUID, list[uuid.UUID]] = {}
@@ -768,9 +802,17 @@ async def main():
             if not vm["active"]:
                 continue
             brand_specific = INGREDIENTS_BRAND.get(vm["brand"], [])
-            all_ing = INGREDIENTS_BASE + brand_specific
+            # kitchen ingredients
+            all_ing = [(name, unit, qty, min_qty, cost, "kitchen")
+                       for name, unit, qty, min_qty, cost in INGREDIENTS_BASE + brand_specific]
+            # bar ingredients for applicable brands
+            if vm["brand"] in BAR_BRANDS:
+                bar_base = BAR_INGREDIENTS_BASE
+                bar_brand = BAR_INGREDIENTS_BRAND.get(vm["brand"], [])
+                all_ing += [(name, unit, qty, min_qty, cost, "bar")
+                            for name, unit, qty, min_qty, cost in bar_base + bar_brand]
             iids = []
-            for name, unit, qty, min_qty, cost in all_ing:
+            for name, unit, qty, min_qty, cost, category in all_ing:
                 # randomize quantities a bit
                 actual_qty = round(qty * random.uniform(0.3, 1.8), 1)
                 iid = uuid.uuid4()
@@ -783,7 +825,7 @@ async def main():
                     "quantity": Decimal(str(actual_qty)),
                     "min_quantity": Decimal(str(min_qty)),
                     "cost_per_unit": Decimal(str(cost)),
-                    "category": "kitchen",
+                    "category": category,
                     "created_at": datetime.now(timezone.utc) - timedelta(days=random.randint(30, 180)),
                 })
                 iids.append(iid)

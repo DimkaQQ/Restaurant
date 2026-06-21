@@ -11,9 +11,7 @@
 .week-nav button:hover { border-color:var(--gold); }
 .week-nav span { font-size:.875rem; font-weight:500; min-width:130px; text-align:center; }
 .today-badge { background:rgba(200,168,75,.15); border:1px solid rgba(200,168,75,.3); color:var(--gold); border-radius:8px; padding:.4rem 1rem; font-size:.85rem; }
-.week-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:.75rem; margin-bottom:1.5rem; }
-@media(max-width:900px){ .week-grid{grid-template-columns:repeat(3,1fr);} }
-@media(max-width:500px){ .week-grid{grid-template-columns:1fr;} }
+.week-grid { display:grid; grid-template-columns:repeat(7,minmax(155px,1fr)); gap:.75rem; min-width:1085px; }
 .day-col { background:var(--card); border:1px solid var(--border); border-radius:10px; min-height:180px; position:relative; }
 .day-col.today { border-color:var(--gold); }
 .day-header { padding:.6rem .75rem; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; border-radius:10px 10px 0 0; }
@@ -85,7 +83,8 @@
   </div>
 </div>
 
-<div class="week-grid">
+<div style="overflow-x:auto;margin-bottom:1.5rem;">
+<div class="week-grid" style="margin-bottom:0">
   {% set day_names = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'] %}
   {% for day in week_days %}
   <div class="day-col {% if day == today %}today{% endif %}">
@@ -118,6 +117,7 @@
     </div>
   </div>
   {% endfor %}
+</div>
 </div>
 
 <!-- Global tooltip -->
