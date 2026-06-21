@@ -39,13 +39,18 @@ class GuestMiddleware(BaseMiddleware):
                         timeout=5.0,
                     )
                     if resp.status_code in (200, 201):
-                        data["guest"] = resp.json()
+                        guest = resp.json()
+                        data["guest"] = guest
+                        data["lang"] = guest.get("language", "ru")
                     else:
                         data["guest"] = None
+                        data["lang"] = "ru"
             except Exception as e:
                 logger.error("Guest middleware error: %s", e)
                 data["guest"] = None
+                data["lang"] = "ru"
         else:
             data["guest"] = None
+            data["lang"] = "ru"
 
         return await handler(event, data)
