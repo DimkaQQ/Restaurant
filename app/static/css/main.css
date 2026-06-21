@@ -33,12 +33,16 @@ body {
   position: fixed;
   top: 0; left: 0; bottom: 0;
   z-index: 100;
-  padding: 1.5rem 0;
-  overflow: hidden;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(200,168,75,0.15) transparent;
 }
+.sidebar::-webkit-scrollbar { width: 3px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: rgba(200,168,75,0.25); border-radius: 3px; }
 
 .sidebar-logo {
-  padding: 0 1.5rem 1.5rem;
+  padding: 1.5rem 1.5rem 1.5rem;
   border-bottom: 1px solid var(--border);
   font-size: 1.4rem;
   letter-spacing: -0.02em;
@@ -62,10 +66,7 @@ body {
   line-height: 1;
 }
 
-.nav-links { list-style: none; padding: 1rem 0; flex: 1 1 0; min-height: 0; overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(200,168,75,0.2) transparent; }
-.nav-links::-webkit-scrollbar { width: 3px; }
-.nav-links::-webkit-scrollbar-track { background: transparent; }
-.nav-links::-webkit-scrollbar-thumb { background: rgba(200,168,75,0.25); border-radius: 3px; }
+.nav-links { list-style: none; padding: 1rem 0; flex: 1; }
 
 .nav-link {
   display: flex;
@@ -88,7 +89,10 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  flex-shrink: 0;
+  margin-top: auto;
+  position: sticky;
+  bottom: 0;
+  background: var(--card);
 }
 
 .user-email { font-size: 0.75rem; color: var(--muted); word-break: break-all; }
