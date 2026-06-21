@@ -127,19 +127,18 @@ async def orders_partial(
     db: AsyncSession = Depends(get_db),
 ):
     try:
+        accessible_ids = await get_accessible_venue_ids(current_user, db)
+        filter_ids = [venue_id] if venue_id and venue_id in accessible_ids else accessible_ids
         stmt = (
             select(Order)
             .options(selectinload(Order.items), selectinload(Order.guest))
-            .join(Venue)
             .where(
-                Venue.network_id == current_user.network_id,
+                Order.venue_id.in_(filter_ids),
                 Order.status.in_(["new", "confirmed", "preparing", "ready"]),
             )
             .order_by(Order.created_at.desc())
             .limit(50)
         )
-        if venue_id:
-            stmt = stmt.where(Order.venue_id == venue_id)
         orders = (await db.execute(stmt)).scalars().all()
 
         return templates.TemplateResponse("partials/orders_list.html", {
@@ -229,8 +228,9 @@ async def orders_page(
     db: AsyncSession = Depends(get_db),
 ):
     try:
+        accessible_ids = await get_accessible_venue_ids(current_user, db)
         venues = (await db.execute(
-            select(Venue).where(Venue.network_id == current_user.network_id)
+            select(Venue).where(Venue.id.in_(accessible_ids))
         )).scalars().all()
         return templates.TemplateResponse("orders.html", {
             "request": request,
@@ -249,8 +249,9 @@ async def menu_page(
     db: AsyncSession = Depends(get_db),
 ):
     try:
+        accessible_ids = await get_accessible_venue_ids(current_user, db)
         venues = (await db.execute(
-            select(Venue).where(Venue.network_id == current_user.network_id)
+            select(Venue).where(Venue.id.in_(accessible_ids))
         )).scalars().all()
         return templates.TemplateResponse("menu.html", {
             "request": request,

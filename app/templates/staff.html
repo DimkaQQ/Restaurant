@@ -246,9 +246,12 @@ function openReviews(staffId, name) {
   document.getElementById('drawer-name').textContent = name;
   document.getElementById('drawer-overlay').classList.add('open');
   document.getElementById('review-drawer').classList.add('open');
-  fetch('/staff/' + staffId + '/reviews')
-    .then(r => r.text())
-    .then(html => { document.getElementById('drawer-body').innerHTML = html; })
+  fetch('/staff/' + staffId + '/reviews', { credentials: 'include' })
+    .then(r => {
+      if (r.url && r.url.includes('/auth/login')) { location.href = '/auth/login'; return ''; }
+      return r.text();
+    })
+    .then(html => { if (html) document.getElementById('drawer-body').innerHTML = html; })
     .catch(() => { document.getElementById('drawer-body').innerHTML = '<p style="color:var(--muted)">Ошибка загрузки</p>'; });
 }
 function closeDrawer() {

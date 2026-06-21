@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from decimal import Decimal
 from datetime import datetime
 import uuid
@@ -6,7 +6,7 @@ import uuid
 
 class OrderItemCreate(BaseModel):
     menu_item_id: uuid.UUID
-    quantity: int
+    quantity: int = Field(..., ge=1)
 
 
 class OrderCreate(BaseModel):

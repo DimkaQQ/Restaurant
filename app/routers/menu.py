@@ -1,3 +1,4 @@
+import asyncio
 import logging
 import uuid
 import shutil
@@ -17,6 +18,12 @@ from app.schemas.menu import MenuItemCreate, MenuItemOut, MenuItemUpdate
 UPLOAD_DIR = "app/static/uploads/menu"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
+
+def _write_file(path: str, content: bytes) -> None:
+    with open(path, "wb") as f:
+        f.write(content)
+
+
 router = APIRouter(prefix="/api/menu", tags=["menu"])
 logger = logging.getLogger(__name__)
 
@@ -28,6 +35,8 @@ async def _check_venue_owner(venue_id: uuid.UUID, user: User, db: AsyncSession) 
     venue = result.scalar_one_or_none()
     if not venue:
         raise HTTPException(status_code=404, detail="Заведение не найдено")
+    if user.role != "owner" and user.venue_id != venue_id:
+        raise HTTPException(status_code=403, detail="Нет доступа к этому заведению")
     return venue
 
 
@@ -126,14 +135,15 @@ async def upload_photo(
             raise HTTPException(status_code=404, detail="Позиция не найдена")
         await _check_venue_owner(item.venue_id, current_user, db)
 
-        ext = photo.filename.rsplit(".", 1)[-1].lower() if "." in photo.filename else "jpg"
+        original_name = photo.filename or ""
+        ext = original_name.rsplit(".", 1)[-1].lower() if "." in original_name else "jpg"
         if ext not in ("jpg", "jpeg", "png", "webp"):
             raise HTTPException(status_code=400, detail="Только jpg/png/webp")
 
         filename = f"{item_id}.{ext}"
         path = os.path.join(UPLOAD_DIR, filename)
-        with open(path, "wb") as f:
-            shutil.copyfileobj(photo.file, f)
+        content = await photo.read()
+        await asyncio.to_thread(_write_file, path, content)
 
         item.image_url = f"/static/uploads/menu/{filename}"
         await db.commit()

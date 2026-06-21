@@ -97,7 +97,7 @@ async def analytics_page(
             "user": current_user,
             "venues": all_venues,
             "selected_venue": selected_venue,
-            "selected_venue_id": str(venue_id) if venue_id else "",
+            "selected_venue_id": str(venue_id) if (venue_id and venue_id in accessible_ids) else "",
             "revenue_data": revenue_data,
             "top_items": top_items_data,
             "loyal_guests": loyal_guests,

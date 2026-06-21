@@ -27,6 +27,12 @@ async def main():
     if not BOT_TOKEN:
         logger.error("BOT_TOKEN_VENUE_1 not set")
         return
+    if not VENUE_ID:
+        logger.error("VENUE_ID_1 not set")
+        return
+    if not NETWORK_ID:
+        logger.error("NETWORK_ID not set")
+        return
 
     session_kwargs = {}
     if TELEGRAM_API_SERVER:

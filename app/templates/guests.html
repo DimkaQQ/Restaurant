@@ -41,7 +41,7 @@
         <td>{{ g.phone or '—' }}</td>
         <td><span class="points-badge">{{ g.total_points }}</span></td>
         <td>{{ g.total_visits }}</td>
-        <td>{{ g.created_at.strftime('%d.%m.%Y') }}</td>
+        <td>{{ g.created_at.strftime('%d.%m.%Y') if g.created_at else '—' }}</td>
       </tr>
       {% else %}
       <tr><td colspan="5" class="empty-state">Нет гостей</td></tr>

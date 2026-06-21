@@ -11,7 +11,7 @@ from app.models.guest import Guest
 from app.models.order import Order
 from app.models.user import User
 from app.models.venue import Venue
-from app.routers.deps import get_current_user_dep
+from app.routers.deps import get_current_user_dep, get_accessible_venue_ids
 from app.schemas.order import OrderCreate, OrderOut, OrderStatusUpdate
 from app.services.order_service import create_order, update_order_status, get_order_with_items
 
@@ -26,15 +26,14 @@ async def live_orders(
     db: AsyncSession = Depends(get_db),
 ):
     try:
+        accessible_ids = await get_accessible_venue_ids(current_user, db)
+        filter_ids = [venue_id] if venue_id and venue_id in accessible_ids else accessible_ids
         stmt = (
             select(Order)
             .options(selectinload(Order.items), selectinload(Order.guest))
-            .join(Venue)
-            .where(Venue.network_id == current_user.network_id, Order.status.in_(["new", "confirmed", "preparing", "ready"]))
+            .where(Order.venue_id.in_(filter_ids), Order.status.in_(["new", "confirmed", "preparing", "ready"]))
             .order_by(Order.created_at.desc())
         )
-        if venue_id:
-            stmt = stmt.where(Order.venue_id == venue_id)
         result = await db.execute(stmt)
         return result.scalars().all()
     except Exception as e:

@@ -71,10 +71,15 @@
 <script>
   const token = () => localStorage.getItem('access_token');
 
+  function esc(s) {
+    return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
   async function loadMenu() {
     const venueId = document.getElementById('venue-select').value;
     if (!venueId) return;
-    const res = await fetch('/api/menu/' + venueId);
+    const res = await fetch('/api/menu/' + venueId, { credentials: 'include' });
+    if (res.status === 401) { location.href = '/auth/login'; return; }
     const items = await res.json();
     renderMenu(items, venueId);
   }
@@ -85,24 +90,24 @@
     grid.innerHTML = items.map(item => `
       <div class="menu-card ${!item.is_available ? 'unavailable' : ''}">
         ${item.image_url
-          ? `<div class="menu-img-wrap" onclick="triggerUpload('${item.id}')"><img src="${item.image_url}" class="menu-img" alt="${item.name}"><div class="menu-img-overlay">📷</div></div>`
-          : `<div class="menu-img-placeholder" onclick="triggerUpload('${item.id}')"><span>+ Фото</span></div>`
+          ? `<div class="menu-img-wrap" onclick="triggerUpload('${esc(item.id)}')"><img src="${esc(item.image_url)}" class="menu-img" alt="${esc(item.name)}"><div class="menu-img-overlay">📷</div></div>`
+          : `<div class="menu-img-placeholder" onclick="triggerUpload('${esc(item.id)}')"><span>+ Фото</span></div>`
         }
-        <input type="file" id="file-${item.id}" accept="image/*" style="display:none" onchange="uploadPhoto('${item.id}', this)">
+        <input type="file" id="file-${esc(item.id)}" accept="image/*" style="display:none" onchange="uploadPhoto('${esc(item.id)}', this)">
         <div class="menu-card-body">
           <div class="menu-card-header">
-            <span class="menu-item-name">${item.name}</span>
+            <span class="menu-item-name">${esc(item.name)}</span>
             <span class="menu-item-price">${parseFloat(item.price).toLocaleString('ru-RU')} ₸</span>
           </div>
-          ${item.category ? `<span class="menu-category">${item.category}</span>` : ''}
-          ${item.description ? `<p class="menu-desc">${item.description}</p>` : ''}
+          ${item.category ? `<span class="menu-category">${esc(item.category)}</span>` : ''}
+          ${item.description ? `<p class="menu-desc">${esc(item.description)}</p>` : ''}
           <div class="menu-card-footer">
             <label class="toggle">
-              <input type="checkbox" ${item.is_available ? 'checked' : ''} onchange="toggleItem('${item.id}', this.checked)">
+              <input type="checkbox" ${item.is_available ? 'checked' : ''} onchange="toggleItem('${esc(item.id)}', this.checked)">
               <span class="toggle-track"></span>
               <span class="toggle-label">${item.is_available ? 'Доступно' : 'Скрыто'}</span>
             </label>
-            <button onclick="deleteItem('${item.id}')" class="btn-icon-danger">✕</button>
+            <button onclick="deleteItem('${esc(item.id)}')" class="btn-icon-danger">✕</button>
           </div>
         </div>
       </div>

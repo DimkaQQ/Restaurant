@@ -47,7 +47,11 @@ async def show_history(callback: CallbackQuery, guest: dict | None, api_url: str
         await callback.message.edit_text("Не удалось загрузить историю.", reply_markup=back_keyboard())
         return
 
-    orders = resp.json()
+    try:
+        orders = resp.json()
+    except Exception:
+        await callback.message.edit_text("Не удалось загрузить историю.", reply_markup=back_keyboard())
+        return
     if not orders:
         await callback.message.edit_text("У вас пока нет заказов.", reply_markup=back_keyboard())
         return
