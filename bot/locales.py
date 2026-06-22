@@ -44,6 +44,12 @@ STRINGS = {
         'history_title': '📜 Последние заказы',
         'status_new': '🆕', 'status_confirmed': '✅', 'status_preparing': '👨‍🍳',
         'status_ready': '🔔', 'status_done': '✔️', 'status_cancelled': '❌',
+        'review_ask': '⭐ Как вам визит в {venue}?\nОцените от 1 до 5:',
+        'review_thanks_good': '🎉 Спасибо! +50 баллов за отзыв.',
+        'review_gis': '📝 Оставить отзыв в 2ГИС',
+        'review_ask_comment': '😔 Жаль, что не всё понравилось. Что именно пошло не так?',
+        'review_thanks_bad': '🙏 Спасибо за честность! Мы обязательно разберёмся. +50 баллов.',
+        'btn_skip': 'Пропустить →',
     },
     'kz': {
         'welcome_new': 'Қош келдіңіз! 🎉',
@@ -90,6 +96,12 @@ STRINGS = {
         'history_title': '📜 Соңғы тапсырыстар',
         'status_new': '🆕', 'status_confirmed': '✅', 'status_preparing': '👨‍🍳',
         'status_ready': '🔔', 'status_done': '✔️', 'status_cancelled': '❌',
+        'review_ask': '⭐ {venue} сапасын қалай бағалайсыз?\n1-ден 5-ке дейін:',
+        'review_thanks_good': '🎉 Рахмет! +50 бонус ұпай.',
+        'review_gis': '📝 2GIS-те пікір қалдыру',
+        'review_ask_comment': '😔 Кешіріңіз. Не ұнамады?',
+        'review_thanks_bad': '🙏 Адалдығыңыз үшін рахмет! +50 бонус.',
+        'btn_skip': 'Өткізу →',
     },
     'en': {
         'welcome_new': 'Welcome! 🎉',
@@ -136,6 +148,12 @@ STRINGS = {
         'history_title': '📜 Recent orders',
         'status_new': '🆕', 'status_confirmed': '✅', 'status_preparing': '👨‍🍳',
         'status_ready': '🔔', 'status_done': '✔️', 'status_cancelled': '❌',
+        'review_ask': '⭐ How was your visit to {venue}?\nRate from 1 to 5:',
+        'review_thanks_good': '🎉 Thank you! +50 bonus points.',
+        'review_gis': '📝 Leave a review on 2GIS',
+        'review_ask_comment': '😔 Sorry to hear that. What went wrong?',
+        'review_thanks_bad': '🙏 Thank you for your honest feedback! +50 points.',
+        'btn_skip': 'Skip →',
     }
 }
 

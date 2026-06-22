@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% block title %}Заведения — RestOS{% endblock %}
+
+{% block head %}
+<style>
+.venue-settings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+.venue-settings-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+.venue-settings-name {
+  font-weight: 600;
+  font-size: 1.05rem;
+  margin-bottom: 1rem;
+  color: var(--white);
+}
+.venue-settings-addr {
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin-bottom: 1.25rem;
+}
+.form-row { margin-bottom: 1rem; }
+.form-row label { display: block; font-size: 0.8rem; color: var(--muted); margin-bottom: 0.3rem; }
+.form-row input { width: 100%; box-sizing: border-box; }
+.save-btn {
+  margin-top: 0.25rem;
+  font-size: 0.85rem;
+}
+.save-result { font-size: 0.8rem; margin-top: 0.4rem; min-height: 1.2em; }
+.save-result.ok { color: #4ade80; }
+.save-result.err { color: #f87171; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">Настройки заведений</h1>
+  <span class="muted">2GIS ссылки и Telegram менеджеров</span>
+</div>
+
+{% if venues %}
+<div class="venue-settings-grid">
+  {% for venue in venues %}
+  <div class="venue-settings-card">
+    <div class="venue-settings-name">{{ venue.name }}</div>
+    {% if venue.address %}
+    <div class="venue-settings-addr">{{ venue.address }}</div>
+    {% endif %}
+
+    <div class="form-row">
+      <label>Ссылка 2GIS</label>
+      <input
+        type="url"
+        id="gis_{{ venue.id }}"
+        class="input-field"
+        placeholder="https://2gis.kz/..."
+        value="{{ venue.gis_url or '' }}"
+      >
+    </div>
+    <div class="form-row">
+      <label>Telegram ID менеджера</label>
+      <input
+        type="number"
+        id="mgr_{{ venue.id }}"
+        class="input-field"
+        placeholder="123456789"
+        value="{{ venue.manager_telegram_id or '' }}"
+      >
+    </div>
+    <button class="btn-primary save-btn" onclick="saveVenue('{{ venue.id }}')">Сохранить</button>
+    <div class="save-result" id="res_{{ venue.id }}"></div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="card" style="text-align:center; padding:2.5rem; color:var(--muted)">
+  Заведения не найдены.
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+async function saveVenue(venueId) {
+  const gisUrl = document.getElementById('gis_' + venueId).value.trim();
+  const mgrRaw = document.getElementById('mgr_' + venueId).value.trim();
+  const mgrId = mgrRaw ? parseInt(mgrRaw, 10) : null;
+  const resEl = document.getElementById('res_' + venueId);
+
+  try {
+    const token = document.cookie.split(';').find(c => c.trim().startsWith('access_token='));
+    const headers = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = 'Bearer ' + token.split('=')[1];
+
+    const resp = await fetch('/settings/api/venues/' + venueId, {
+      method: 'PATCH',
+      headers,
+      credentials: 'include',
+      body: JSON.stringify({ gis_url: gisUrl || null, manager_telegram_id: mgrId }),
+    });
+    if (resp.ok) {
+      resEl.textContent = '✅ Сохранено';
+      resEl.className = 'save-result ok';
+    } else {
+      const err = await resp.json().catch(() => ({}));
+      resEl.textContent = '❌ ' + (err.detail || 'Ошибка');
+      resEl.className = 'save-result err';
+    }
+  } catch (e) {
+    resEl.textContent = '❌ Ошибка соединения';
+    resEl.className = 'save-result err';
+  }
+  setTimeout(() => { resEl.textContent = ''; }, 4000);
+}
+</script>
+{% endblock %}

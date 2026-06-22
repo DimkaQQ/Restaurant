@@ -10,7 +10,7 @@ from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
 
 from bot.handlers import start, menu, order, profile
-from bot.handlers import settings_handler, broadcast
+from bot.handlers import settings_handler, broadcast, review
 from bot.middlewares.guest_middleware import GuestMiddleware
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
@@ -52,12 +52,15 @@ async def main():
     dp.include_router(menu.router)
     dp.include_router(order.router)
     dp.include_router(profile.router)
+    dp.include_router(review.router)
 
     dp["api_url"] = API_URL
     dp["venue_id"] = VENUE_ID
     dp["network_id"] = NETWORK_ID
+    dp["bot_instance"] = bot
 
     asyncio.create_task(broadcast.broadcast_loop(bot, API_URL, NETWORK_ID))
+    asyncio.create_task(broadcast.review_loop(bot, API_URL, NETWORK_ID))
 
     logger.info("Bot starting for venue %s", VENUE_ID)
     await bot.delete_webhook(drop_pending_updates=True)

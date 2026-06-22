@@ -226,3 +226,48 @@ async def delete_broadcast_api(
     await db.delete(bc)
     await db.commit()
     return {"ok": True}
+
+
+class VenueSettingsPatch(BaseModel):
+    gis_url: str | None = None
+    manager_telegram_id: int | None = None
+
+
+@router.get("/venues", response_class=HTMLResponse)
+async def settings_venues_page(
+    request: Request,
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    _require_owner(current_user)
+    venues = (await db.execute(
+        select(Venue)
+        .where(Venue.network_id == current_user.network_id)
+        .order_by(Venue.name)
+    )).scalars().all()
+    return templates.TemplateResponse("settings_venues.html", {
+        "request": request,
+        "user": current_user,
+        "venues": venues,
+    })
+
+
+@router.patch("/api/venues/{venue_id}")
+async def update_venue_settings(
+    venue_id: uuid.UUID,
+    data: VenueSettingsPatch,
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    _require_owner(current_user)
+    venue = (await db.execute(
+        select(Venue).where(Venue.id == venue_id, Venue.network_id == current_user.network_id)
+    )).scalar_one_or_none()
+    if not venue:
+        raise HTTPException(status_code=404, detail="Заведение не найдено")
+    if data.gis_url is not None:
+        venue.gis_url = data.gis_url.strip() or None
+    if data.manager_telegram_id is not None:
+        venue.manager_telegram_id = data.manager_telegram_id
+    await db.commit()
+    return {"ok": True, "id": str(venue.id)}

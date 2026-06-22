@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+{% block title %}NPS — RestOS{% endblock %}
+
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<style>
+.nps-badge {
+  display: inline-block;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+.nps-badge.green { background: rgba(34,197,94,0.2); color: #4ade80; }
+.nps-badge.yellow { background: rgba(234,179,8,0.2); color: #facc15; }
+.nps-badge.red { background: rgba(239,68,68,0.2); color: #f87171; }
+.stars-display { color: var(--gold); letter-spacing: 0.05em; }
+.venue-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+.venue-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; }
+.venue-card-name { font-weight: 600; font-size: 1rem; margin-bottom: 0.75rem; }
+.venue-card-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; font-size: 0.85rem; }
+.venue-card-label { color: var(--muted); }
+.neg-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+.neg-table th { text-align: left; color: var(--muted); font-weight: 500; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border); }
+.neg-table td { padding: 0.65rem 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; }
+.neg-table tr:hover td { background: rgba(255,255,255,0.03); }
+.comment-cell { max-width: 320px; color: var(--muted); font-size: 0.82rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">NPS &amp; Отзывы</h1>
+  <span class="muted">Net Promoter Score</span>
+</div>
+
+<div class="stats-grid" style="margin-bottom:1.75rem">
+  <div class="stat-card">
+    <span class="stat-label">Общий NPS</span>
+    <span class="stat-value {% if overall_nps >= 50 %}gold{% elif overall_nps >= 0 %}{% else %}muted{% endif %}">
+      {{ overall_nps }}
+    </span>
+    <span class="muted" style="font-size:0.78rem">
+      {% if overall_nps >= 50 %}Отлично{% elif overall_nps >= 0 %}Нормально{% else %}Нужно улучшить{% endif %}
+    </span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-label">Отзывов за месяц</span>
+    <span class="stat-value">{{ total_month }}</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-label">Средняя оценка</span>
+    <span class="stat-value gold">{{ avg_rating }} ⭐</span>
+  </div>
+</div>
+
+{% if trend_data %}
+<div class="card" style="margin-bottom:1.75rem">
+  <div class="card-header"><h2 class="card-title">Динамика отзывов (30 дней)</h2></div>
+  <div style="height:200px; padding: 0.5rem 0.5rem 0">
+    <canvas id="trendChart"></canvas>
+  </div>
+</div>
+{% endif %}
+
+{% if venue_cards %}
+<h2 style="font-size:1rem; font-weight:600; margin-bottom:1rem; color:var(--white)">По заведениям</h2>
+<div class="venue-cards">
+  {% for vc in venue_cards %}
+  <div class="venue-card">
+    <div class="venue-card-name">{{ vc.name }}</div>
+    <div class="venue-card-row">
+      <span class="venue-card-label">Средняя оценка</span>
+      <span class="stars-display">{{ vc.avg_rating }} ⭐</span>
+    </div>
+    <div class="venue-card-row">
+      <span class="venue-card-label">Отзывов</span>
+      <span>{{ vc.count }}</span>
+    </div>
+    <div class="venue-card-row">
+      <span class="venue-card-label">NPS</span>
+      <span class="nps-badge {{ vc.nps_badge }}">{{ vc.nps }}</span>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% if negative_reviews %}
+<div class="card">
+  <div class="card-header"><h2 class="card-title">Негативные отзывы</h2></div>
+  <table class="neg-table">
+    <thead>
+      <tr>
+        <th>Дата</th>
+        <th>Заведение</th>
+        <th>Гость</th>
+        <th>Оценка</th>
+        <th>Комментарий</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for rev in negative_reviews %}
+      <tr>
+        <td style="white-space:nowrap; color:var(--muted)">{{ rev.date }}</td>
+        <td>{{ rev.venue }}</td>
+        <td>{{ rev.guest_name }}</td>
+        <td>
+          {% for i in range(rev.rating) %}⭐{% endfor %}
+        </td>
+        <td class="comment-cell">{{ rev.comment or '—' }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="card" style="text-align:center; padding:2.5rem; color:var(--muted)">
+  Негативных отзывов пока нет 🎉
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+{% if trend_data %}
+<script>
+(function() {
+  const data = {{ trend_data | tojson }};
+  const ctx = document.getElementById('trendChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: data.map(d => d.day),
+      datasets: [{
+        label: 'Отзывов',
+        data: data.map(d => d.cnt),
+        borderColor: '#d4a843',
+        backgroundColor: 'rgba(212,168,67,0.12)',
+        tension: 0.4,
+        fill: true,
+        pointRadius: 3,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: '#888', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.05)' } },
+        y: { ticks: { color: '#888', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.05)' }, beginAtZero: true }
+      }
+    }
+  });
+})();
+</script>
+{% endif %}
+{% endblock %}

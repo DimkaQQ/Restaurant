@@ -7,6 +7,7 @@ from aiogram import Bot
 logger = logging.getLogger(__name__)
 
 POLL_INTERVAL = 300
+REVIEW_POLL_INTERVAL = 300
 
 
 async def broadcast_loop(bot: Bot, api_url: str, network_id: str):
@@ -50,3 +51,35 @@ async def _send_broadcasts(bot: Bot, api_url: str, network_id: str):
                 await asyncio.sleep(0.05)
             except Exception as e:
                 logger.warning("Could not send broadcast to %s: %s", tg_id, e)
+
+
+async def review_loop(bot: Bot, api_url: str, network_id: str):
+    from bot.keyboards.main import rating_keyboard
+    from bot.locales import t
+
+    while True:
+        await asyncio.sleep(REVIEW_POLL_INTERVAL)
+        try:
+            async with httpx.AsyncClient() as client:
+                resp = await client.get(
+                    f"{api_url}/api/bot/orders-for-review",
+                    params={"network_id": network_id},
+                    timeout=10.0,
+                )
+                if resp.status_code != 200:
+                    continue
+                orders = resp.json()
+            for o in orders:
+                tg_id = o["guest_telegram_id"]
+                lang = o.get("guest_lang", "ru")
+                venue_name = o["venue_name"]
+                try:
+                    await bot.send_message(
+                        tg_id,
+                        t("review_ask", lang, venue=venue_name),
+                        reply_markup=rating_keyboard(o["order_id"]),
+                    )
+                except Exception as e:
+                    logger.warning("Could not send review request to %s: %s", tg_id, e)
+        except Exception as e:
+            logger.error("Review loop error: %s", e)

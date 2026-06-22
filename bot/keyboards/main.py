@@ -96,3 +96,24 @@ def back_keyboard(lang: str = 'ru') -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text=t('btn_back', lang), callback_data="back_main")],
     ])
+
+
+def rating_keyboard(order_id: str) -> InlineKeyboardMarkup:
+    """5 star buttons for review."""
+    stars = ["⭐", "⭐⭐", "⭐⭐⭐", "⭐⭐⭐⭐", "⭐⭐⭐⭐⭐"]
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text=stars[i], callback_data=f"rate:{order_id}:{i+1}") for i in range(5)]
+    ])
+
+
+def gis_keyboard(gis_url: str, lang: str) -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text=t('review_gis', lang), url=gis_url)],
+        [InlineKeyboardButton(text=t('btn_back', lang), callback_data="back_main")],
+    ])
+
+
+def skip_keyboard(lang: str) -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text=t('btn_skip', lang), callback_data="skip_review")],
+    ])

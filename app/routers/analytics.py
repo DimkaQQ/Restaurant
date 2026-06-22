@@ -12,6 +12,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
 from app.models.guest import Guest
 from app.models.order import Order, OrderItem
+from app.models.review import Review
 from app.models.user import User
 from app.models.venue import Venue
 from app.routers.deps import get_current_user_dep, get_accessible_venue_ids
@@ -110,3 +111,116 @@ async def analytics_page(
     except Exception as e:
         logger.error("Analytics error: %s", e)
         raise HTTPException(status_code=500, detail="Ошибка аналитики")
+
+
+@router.get("/nps", response_class=HTMLResponse)
+async def nps_page(
+    request: Request,
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    try:
+        now = datetime.now(timezone.utc)
+        thirty_days_ago = now - timedelta(days=30)
+        month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+
+        accessible_ids = await get_accessible_venue_ids(current_user, db)
+
+        # All reviews for accessible venues
+        all_reviews = (await db.execute(
+            select(Review, Guest, Venue)
+            .join(Venue, Venue.id == Review.venue_id)
+            .outerjoin(Guest, Guest.id == Review.guest_id)
+            .where(Venue.id.in_(accessible_ids))
+            .order_by(Review.created_at.desc())
+        )).all()
+
+        total_reviews = len(all_reviews)
+        month_reviews = [r for r, g, v in all_reviews if r.created_at >= month_start]
+        total_month = len(month_reviews)
+
+        # Overall NPS: promoters (4-5) - detractors (1-2) as percentage of total
+        if total_reviews > 0:
+            promoters = sum(1 for r, g, v in all_reviews if r.overall_rating >= 4)
+            detractors = sum(1 for r, g, v in all_reviews if r.overall_rating <= 2)
+            overall_nps = round((promoters - detractors) / total_reviews * 100)
+        else:
+            overall_nps = 0
+
+        avg_rating = round(
+            sum(r.overall_rating for r, g, v in all_reviews) / total_reviews, 1
+        ) if total_reviews > 0 else 0
+
+        # Per-venue stats
+        venue_stats: dict[uuid.UUID, dict] = {}
+        for review, guest, venue in all_reviews:
+            vid = venue.id
+            if vid not in venue_stats:
+                venue_stats[vid] = {
+                    "name": venue.name,
+                    "ratings": [],
+                    "promoters": 0,
+                    "detractors": 0,
+                    "count": 0,
+                }
+            venue_stats[vid]["ratings"].append(review.overall_rating)
+            venue_stats[vid]["count"] += 1
+            if review.overall_rating >= 4:
+                venue_stats[vid]["promoters"] += 1
+            elif review.overall_rating <= 2:
+                venue_stats[vid]["detractors"] += 1
+
+        venue_cards = []
+        for vid, stats in venue_stats.items():
+            count = stats["count"]
+            avg = round(sum(stats["ratings"]) / count, 1) if count > 0 else 0
+            nps = round((stats["promoters"] - stats["detractors"]) / count * 100) if count > 0 else 0
+            nps_badge = "green" if nps >= 50 else ("yellow" if nps >= 0 else "red")
+            venue_cards.append({
+                "name": stats["name"],
+                "avg_rating": avg,
+                "count": count,
+                "nps": nps,
+                "nps_badge": nps_badge,
+            })
+        venue_cards.sort(key=lambda x: x["nps"], reverse=True)
+
+        # Recent negative reviews (rating 1-3)
+        negative_reviews = [
+            {
+                "date": r.created_at.strftime("%d.%m.%Y %H:%M"),
+                "venue": v.name,
+                "guest_name": g.name if g else "—",
+                "rating": r.overall_rating,
+                "comment": r.comment or "",
+            }
+            for r, g, v in all_reviews
+            if r.overall_rating <= 3
+        ][:20]
+
+        # Trend: reviews per day for last 30 days
+        trend_rows = (await db.execute(
+            select(cast(Review.created_at, Date).label("day"), func.count(Review.id).label("cnt"))
+            .join(Venue, Venue.id == Review.venue_id)
+            .where(
+                Venue.id.in_(accessible_ids),
+                Review.created_at >= thirty_days_ago,
+            )
+            .group_by("day")
+            .order_by("day")
+        )).all()
+        trend_data = [{"day": str(r.day), "cnt": r.cnt} for r in trend_rows]
+
+        return templates.TemplateResponse("nps.html", {
+            "request": request,
+            "user": current_user,
+            "overall_nps": overall_nps,
+            "total_month": total_month,
+            "avg_rating": avg_rating,
+            "venue_cards": venue_cards,
+            "negative_reviews": negative_reviews,
+            "trend_data": trend_data,
+        })
+    except Exception as e:
+        logger.error("NPS analytics error: %s", e)
+        raise HTTPException(status_code=500, detail="Ошибка NPS аналитики")
