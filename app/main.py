@@ -1,3 +1,4 @@
+import asyncio
 import logging
 from contextlib import asynccontextmanager
 
@@ -7,6 +8,7 @@ from fastapi.staticfiles import StaticFiles
 from app.database import engine
 from app.models import *  # noqa: F401,F403 — registers all models with Base
 from app.routers import auth, dashboard, venues, menu, orders, guests, analytics, staff, settings, inventory, finance, shifts, bot_api, online_order
+from app.services.cleanup_service import stale_order_cleanup_loop
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 logger = logging.getLogger(__name__)
@@ -15,7 +17,9 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info("RestOS starting up")
+    cleanup_task = asyncio.create_task(stale_order_cleanup_loop())
     yield
+    cleanup_task.cancel()
     await engine.dispose()
     logger.info("RestOS shut down")
 
