@@ -16,6 +16,9 @@ class Settings(BaseSettings):
     VENUE_ID_2: str = ""
     HTTPS_PROXY: str = ""
     TELEGRAM_API_SERVER: str = ""
+    API_URL: str = ""
+    BOT_NAME: str = ""
+    BOT_API_SECRET: str = ""
 
     class Config:
         env_file = ".env"
