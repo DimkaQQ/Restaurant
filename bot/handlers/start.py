@@ -7,7 +7,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import Message, CallbackQuery
 
-from bot.keyboards.main import lang_keyboard, main_menu_keyboard, phone_request_keyboard
+from bot.keyboards.main import lang_keyboard, main_menu_keyboard, phone_request_keyboard, staff_menu_keyboard
 from bot.locales import t
 
 router = Router()
@@ -21,15 +21,67 @@ class RegistrationStates(StatesGroup):
 
 
 @router.message(CommandStart())
-async def cmd_start(message: Message, state: FSMContext, guest: dict | None, lang: str):
-    if guest:
+async def cmd_start(
+    message: Message,
+    state: FSMContext,
+    guest: dict | None,
+    staff_user: dict | None,
+    lang: str,
+    api_url: str,
+    network_id: str,
+):
+    args = message.text.split(maxsplit=1)[1] if len(message.text.split()) > 1 else ""
+
+    # Staff deeplink: /start link_TOKEN
+    if args.startswith("link_"):
+        token = args[5:]
+        try:
+            async with httpx.AsyncClient(timeout=5.0) as client:
+                resp = await client.post(
+                    f"{api_url}/api/bot/staff/link",
+                    json={
+                        "token": token,
+                        "telegram_id": message.from_user.id,
+                        "telegram_name": message.from_user.full_name,
+                    },
+                )
+            if resp.status_code == 200:
+                result = resp.json()
+                await message.answer(
+                    f"✅ Аккаунт сотрудника привязан!\n"
+                    f"Роль: <b>{result['role']}</b>\n"
+                    f"Email: {result['email']}\n\n"
+                    f"Используйте /staff для меню сотрудника.",
+                )
+            else:
+                err = resp.json().get("detail", "Ошибка")
+                await message.answer(f"❌ {err}")
+        except Exception as e:
+            logger.error("Staff link error: %s", e)
+            await message.answer("❌ Ошибка соединения")
+        return
+
+    # If staff user is already linked
+    if staff_user:
         await message.answer(
-            t('welcome_back', lang, name=guest['name'] or 'гость', points=guest['total_points']),
+            f"👋 Привет, {message.from_user.first_name}!\n"
+            f"Вы вошли как сотрудник ({staff_user['role']}).",
+            reply_markup=staff_menu_keyboard(lang),
+        )
+        return
+
+    # Registered guest
+    if guest:
+        await state.clear()
+        await message.answer(
+            t('welcome_back', lang, name=guest['name'] or 'Гость', points=guest['total_points']),
             reply_markup=main_menu_keyboard(lang),
         )
-    else:
-        await message.answer(t('choose_lang', lang), reply_markup=lang_keyboard())
-        await state.set_state(RegistrationStates.waiting_lang)
+        return
+
+    # New user — start registration
+    await message.answer(t('choose_lang', lang), reply_markup=lang_keyboard())
+    await state.set_state(RegistrationStates.waiting_lang)
 
 
 @router.callback_query(F.data.startswith("lang:"), RegistrationStates.waiting_lang)
@@ -70,9 +122,9 @@ async def process_phone(
     lang = data.get('lang', 'ru')
 
     try:
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(timeout=5.0) as client:
             resp = await client.post(
-                f"{api_url}/api/guests/",
+                f"{api_url}/api/bot/guest",
                 json={
                     "network_id": network_id,
                     "telegram_id": message.from_user.id,
@@ -80,12 +132,11 @@ async def process_phone(
                     "phone": phone,
                     "language": lang,
                 },
-                timeout=5.0,
             )
-            guest = resp.json() if resp.status_code in (200, 201) else None
+            if resp.status_code not in (200, 201):
+                logger.error("Guest creation failed: %s", resp.text)
     except Exception as e:
         logger.error("Guest creation error: %s", e)
-        guest = None
 
     await state.clear()
     await message.answer(
@@ -95,8 +146,21 @@ async def process_phone(
 
 
 @router.callback_query(F.data == "back_main")
-async def back_to_main(callback: CallbackQuery, guest: dict | None, lang: str):
-    name = guest["name"] if guest else "гость"
+async def back_to_main(
+    callback: CallbackQuery,
+    state: FSMContext,
+    guest: dict | None,
+    staff_user: dict | None,
+    lang: str,
+):
+    if staff_user:
+        await callback.message.edit_text(
+            f"👨‍💼 Меню сотрудника",
+            reply_markup=staff_menu_keyboard(lang),
+        )
+        return
+
+    name = guest["name"] if guest else "Гость"
     points = guest["total_points"] if guest else 0
     await callback.message.edit_text(
         t('welcome_back', lang, name=name, points=points),

@@ -241,6 +241,19 @@
     </div>
   </form>
 </div>
+
+<div class="add-user-section" style="margin-top:1.5rem">
+  <h2>🤖 Привязать Telegram (для официантов)</h2>
+  <p style="font-size:.85rem;color:var(--muted);margin-bottom:1rem;line-height:1.5">
+    Сотрудник может принимать заказы прямо из Telegram-бота. Сгенерируйте ссылку и передайте её сотруднику — он перейдёт по ней и его аккаунт привяжется автоматически.
+  </p>
+  <div id="bot-link-result" style="display:none;background:rgba(200,168,75,.08);border:1px solid rgba(200,168,75,.2);border-radius:8px;padding:.875rem;margin-bottom:1rem">
+    <div style="font-size:.78rem;color:var(--muted);margin-bottom:.4rem">Ссылка для входа (действует 1 раз):</div>
+    <div id="bot-link-url" style="font-size:.85rem;word-break:break-all;color:var(--gold)"></div>
+    <button onclick="copyLink()" style="margin-top:.5rem;background:none;border:1px solid var(--border);color:var(--white);padding:.3rem .75rem;border-radius:6px;font-size:.8rem;cursor:pointer">📋 Скопировать</button>
+  </div>
+  <button class="btn-primary" onclick="generateBotLink()" id="gen-link-btn">Сгенерировать ссылку</button>
+</div>
 {% endblock %}
 
 {% block scripts %}
@@ -292,5 +305,30 @@ document.getElementById('add-user-form').addEventListener('submit', async (e) =>
     errEl.style.display = 'block';
   }
 });
+
+const BOT_NAME = '{{ bot_name }}';
+let generatedLink = '';
+async function generateBotLink() {
+  const btn = document.getElementById('gen-link-btn');
+  btn.disabled = true; btn.textContent = 'Генерируем...';
+  const res = await fetch('/settings/api/me/bot-token', {
+    method: 'POST', credentials: 'include',
+    headers: {'Authorization': 'Bearer ' + localStorage.getItem('access_token')},
+  });
+  btn.disabled = false; btn.textContent = 'Сгенерировать ссылку';
+  if (res.ok) {
+    const data = await res.json();
+    generatedLink = BOT_NAME
+      ? `https://t.me/${BOT_NAME}?start=link_${data.token}`
+      : `Токен: ${data.token} (скопируйте и передайте сотруднику для ввода /staff)`;
+    document.getElementById('bot-link-url').textContent = generatedLink;
+    document.getElementById('bot-link-result').style.display = 'block';
+  } else {
+    alert('Ошибка генерации токена');
+  }
+}
+function copyLink() {
+  navigator.clipboard.writeText(generatedLink).then(() => alert('Скопировано!'));
+}
 </script>
 {% endblock %}

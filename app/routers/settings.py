@@ -11,6 +11,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 
+import os as _os
+
 from app.database import get_db
 from app.models.broadcast import Broadcast
 from app.models.guest import Guest
@@ -19,13 +21,17 @@ from app.models.venue import Venue
 from app.routers.deps import get_current_user_dep
 from app.services.auth_service import hash_password
 
+_BOT_NAME = _os.getenv("BOT_NAME", "")
+
 router = APIRouter(prefix="/settings", tags=["settings"])
+
+
+logger = logging.getLogger(__name__)
 
 
 class BroadcastCreate(BaseModel):
     message: str
     lang_filter: str | None = None
-logger = logging.getLogger(__name__)
 
 
 
@@ -61,6 +67,7 @@ async def settings_users_page(
             "user": current_user,
             "users": users,
             "venues": venues,
+            "bot_name": _BOT_NAME,
         })
     except HTTPException:
         raise
@@ -271,3 +278,30 @@ async def update_venue_settings(
         venue.manager_telegram_id = data.manager_telegram_id
     await db.commit()
     return {"ok": True, "id": str(venue.id)}
+
+
+import secrets as _secrets
+
+
+@router.post("/api/me/bot-token")
+async def generate_bot_link_token(
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    """Generate a one-time token to link staff Telegram account via bot deeplink."""
+    token = _secrets.token_urlsafe(32)
+    current_user.bot_link_token = token
+    await db.commit()
+    return {"token": token}
+
+
+@router.delete("/api/me/bot-token")
+async def unlink_telegram(
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    """Unlink Telegram from staff account."""
+    current_user.telegram_id = None
+    current_user.bot_link_token = None
+    await db.commit()
+    return {"ok": True}

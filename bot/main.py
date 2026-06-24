@@ -10,7 +10,7 @@ from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
 
 from bot.handlers import start, menu, order, profile
-from bot.handlers import settings_handler, broadcast, review
+from bot.handlers import settings_handler, broadcast, review, staff as staff_handler
 from bot.middlewares.guest_middleware import GuestMiddleware
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
@@ -48,6 +48,7 @@ async def main():
     dp.update.middleware(GuestMiddleware(api_url=API_URL, network_id=NETWORK_ID))
 
     dp.include_router(start.router)
+    dp.include_router(staff_handler.router)
     dp.include_router(settings_handler.router)
     dp.include_router(menu.router)
     dp.include_router(order.router)
@@ -58,6 +59,7 @@ async def main():
     dp["venue_id"] = VENUE_ID
     dp["network_id"] = NETWORK_ID
     dp["bot_instance"] = bot
+    dp["staff_user"] = None  # set per-request by middleware
 
     asyncio.create_task(broadcast.broadcast_loop(bot, API_URL, NETWORK_ID))
     asyncio.create_task(broadcast.review_loop(bot, API_URL, NETWORK_ID))

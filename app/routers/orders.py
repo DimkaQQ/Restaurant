@@ -13,7 +13,7 @@ from app.models.user import User
 from app.models.venue import Venue
 from app.routers.deps import get_current_user_dep, get_accessible_venue_ids
 from app.schemas.order import OrderCreate, OrderOut, OrderStatusUpdate
-from app.services.order_service import create_order, update_order_status, get_order_with_items
+from app.services.order_service import create_order, update_order_status, cancel_order, get_order_with_items
 
 router = APIRouter(prefix="/api/orders", tags=["orders"])
 logger = logging.getLogger(__name__)
@@ -139,4 +139,62 @@ async def get_order(
         logger.error("Get order error: %s", e)
         raise HTTPException(status_code=500, detail="Ошибка загрузки заказа")
 
+
+@router.patch("/{order_id}/status", response_model=OrderOut)
+async def change_order_status(
+    order_id: uuid.UUID,
+    data: OrderStatusUpdate,
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    try:
+        order = await update_order_status(order_id, data.status, db, changed_by=current_user.email)
+        return order
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logger.error("Status update error: %s", e)
+        raise HTTPException(status_code=500, detail="Ошибка обновления статуса")
+
+
+@router.post("/{order_id}/cancel", response_model=OrderOut)
+async def cancel_order_endpoint(
+    order_id: uuid.UUID,
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    """Staff can always cancel; guests get 10-min window via bot."""
+    try:
+        order = await cancel_order(order_id, db, changed_by=current_user.email, allow_always=True)
+        return order
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logger.error("Cancel order error: %s", e)
+        raise HTTPException(status_code=500, detail="Ошибка отмены заказа")
+
+
+@router.post("/{order_id}/cancel/guest", response_model=OrderOut)
+async def guest_cancel_order(
+    order_id: uuid.UUID,
+    telegram_id: int = Query(...),
+    db: AsyncSession = Depends(get_db),
+):
+    """Public endpoint — guest self-cancel within 10 min."""
+    try:
+        guest = (await db.execute(select(Guest).where(Guest.telegram_id == telegram_id))).scalar_one_or_none()
+        if not guest:
+            raise HTTPException(status_code=404, detail="Гость не найден")
+        order = (await db.execute(select(Order).where(Order.id == order_id, Order.guest_id == guest.id))).scalar_one_or_none()
+        if not order:
+            raise HTTPException(status_code=404, detail="Заказ не найден")
+        order = await cancel_order(order_id, db, changed_by=f"guest:{telegram_id}", allow_always=False)
+        return order
+    except HTTPException:
+        raise
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logger.error("Guest cancel error: %s", e)
+        raise HTTPException(status_code=500, detail="Ошибка отмены заказа")
 

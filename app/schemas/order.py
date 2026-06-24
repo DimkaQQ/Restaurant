@@ -7,12 +7,15 @@ import uuid
 class OrderItemCreate(BaseModel):
     menu_item_id: uuid.UUID
     quantity: int = Field(..., ge=1)
+    comment: str | None = None
 
 
 class OrderCreate(BaseModel):
     venue_id: uuid.UUID
     items: list[OrderItemCreate]
     notes: str | None = None
+    table_number: str | None = None
+    source: str | None = None
 
 
 class OrderItemOut(BaseModel):
@@ -21,6 +24,7 @@ class OrderItemOut(BaseModel):
     quantity: int
     price: Decimal
     name: str
+    comment: str | None = None
 
     model_config = {"from_attributes": True}
 
@@ -41,6 +45,8 @@ class OrderOut(BaseModel):
     total_amount: Decimal
     points_earned: int
     notes: str | None
+    table_number: str | None = None
+    source: str | None = None
     created_at: datetime
     updated_at: datetime
     items: list[OrderItemOut] = []

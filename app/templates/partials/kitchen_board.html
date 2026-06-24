@@ -18,13 +18,25 @@
     {% if order.venue %}<span class="kds-venue-tag">{{ order.venue.name.split('—')[-1].strip() }}</span>{% endif %}
     <span class="kds-elapsed {% if mins < 10 %}fast{% elif mins < 20 %}medium{% else %}slow{% endif %}">{{ mins }} мин</span>
   </div>
+  {% if order.table_number or order.source == 'online' %}
+  <div style="font-size:.78rem;color:var(--muted);margin-bottom:.5rem">
+    {% if order.table_number %}📍 Стол {{ order.table_number }}{% endif %}
+    {% if order.source == 'online' %} · 🌐 Онлайн{% elif order.source == 'staff' %} · 👨‍💼 Официант{% endif %}
+  </div>
+  {% endif %}
   <div class="kds-items">
     {% for item in order.items %}
     <div class="kds-item">
       <span class="kds-item-name">{{ item.name }}</span>
       <span class="kds-item-qty">×{{ item.quantity }}</span>
     </div>
+    {% if item.comment %}
+    <div style="font-size:.75rem;color:var(--muted);padding-left:.5rem;margin-top:-.25rem">💬 {{ item.comment }}</div>
+    {% endif %}
     {% endfor %}
+    {% if order.notes %}
+    <div style="font-size:.78rem;color:var(--gold);margin-top:.25rem;padding:.25rem .4rem;background:rgba(200,168,75,.06);border-radius:4px">📝 {{ order.notes }}</div>
+    {% endif %}
   </div>
   <div class="kds-action">
     {% if next_status.get(order.status) %}
@@ -39,10 +51,10 @@
       onclick="advanceOrder('{{ order.id }}', '{{ prev_status[order.status] }}')"
       title="Вернуть назад"
     >↩</button>
-    {% elif order.status == 'new' %}
+    {% elif order.status in ('new', 'confirmed') %}
     <button
       class="kds-btn kds-btn-cancel"
-      onclick="if(confirm('Отменить заказ #{{ order.id | string | truncate(8, True, '') }}?')) advanceOrder('{{ order.id }}', 'cancelled')"
+      onclick="cancelOrder('{{ order.id }}')"
       title="Отменить заказ"
     >✕</button>
     {% endif %}

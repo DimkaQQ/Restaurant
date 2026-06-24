@@ -87,6 +87,36 @@ def quantity_keyboard(item_id: str, lang: str = 'ru') -> InlineKeyboardMarkup:
 def cart_keyboard(lang: str = 'ru') -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text=t('btn_confirm_order', lang), callback_data="confirm_order")],
+        [InlineKeyboardButton(text="💬 " + t('btn_add_note', lang), callback_data="add_order_note")],
+        [InlineKeyboardButton(text=t('btn_clear_cart', lang), callback_data="clear_cart")],
+        [InlineKeyboardButton(text=t('btn_add_more', lang), callback_data="order")],
+    ])
+
+
+def staff_menu_keyboard(lang: str = 'ru') -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="📋 Активные заказы", callback_data="staff_orders")],
+        [InlineKeyboardButton(text="🧾 Принять заказ (стол)", callback_data="staff_new_order")],
+        [InlineKeyboardButton(text="🔍 Найти гостя", callback_data="staff_find_guest")],
+    ])
+
+
+def table_number_keyboard() -> InlineKeyboardMarkup:
+    nums = [str(i) for i in range(1, 13)]
+    rows = []
+    for i in range(0, len(nums), 4):
+        rows.append([InlineKeyboardButton(text=n, callback_data=f"table:{n}") for n in nums[i:i+4]])
+    rows.append([
+        InlineKeyboardButton(text="📝 Ввести вручную", callback_data="table:custom"),
+        InlineKeyboardButton(text="◀ Назад", callback_data="back_staff"),
+    ])
+    return InlineKeyboardMarkup(inline_keyboard=rows)
+
+
+def confirm_with_comment_keyboard(lang: str = 'ru') -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text=t('btn_confirm_order', lang), callback_data="confirm_order")],
+        [InlineKeyboardButton(text="💬 Добавить комментарий", callback_data="add_order_note")],
         [InlineKeyboardButton(text=t('btn_clear_cart', lang), callback_data="clear_cart")],
         [InlineKeyboardButton(text=t('btn_add_more', lang), callback_data="order")],
     ])

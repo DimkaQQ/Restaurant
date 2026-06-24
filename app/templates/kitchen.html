@@ -174,9 +174,30 @@
           body: JSON.stringify({status: newStatus}),
         });
         if (res.status === 401 || res.status === 307) { location.href = '/auth/login'; return; }
-        if (!res.ok) { console.error('advanceOrder failed', res.status); return; }
+        if (!res.ok) {
+          const d = await res.json().catch(() => ({}));
+          alert(d.detail || 'Ошибка обновления статуса');
+          return;
+        }
         htmx.trigger(document.getElementById('tab-active-panel'), 'refresh');
       } catch(e) { console.error('advanceOrder error', e); }
+    }
+
+    async function cancelOrder(orderId) {
+      if (!confirm('Отменить заказ?')) return;
+      try {
+        const res = await fetch('/api/orders/' + orderId + '/cancel', {
+          method: 'POST',
+          credentials: 'include',
+        });
+        if (res.status === 401 || res.status === 307) { location.href = '/auth/login'; return; }
+        if (!res.ok) {
+          const d = await res.json().catch(() => ({}));
+          alert(d.detail || 'Ошибка отмены');
+          return;
+        }
+        htmx.trigger(document.getElementById('tab-active-panel'), 'refresh');
+      } catch(e) { console.error('cancelOrder error', e); }
     }
 
     document.addEventListener('htmx:responseError', (e) => {

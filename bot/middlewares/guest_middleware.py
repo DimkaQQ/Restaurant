@@ -27,30 +27,31 @@ class GuestMiddleware(BaseMiddleware):
                 user = event.callback_query.from_user
 
         if user:
+            tg_id = user.id
             try:
-                async with httpx.AsyncClient() as client:
-                    resp = await client.post(
-                        f"{self.api_url}/api/guests/",
-                        json={
-                            "network_id": self.network_id,
-                            "telegram_id": user.id,
-                            "name": user.full_name,
-                        },
-                        timeout=5.0,
-                    )
-                    if resp.status_code in (200, 201):
-                        guest = resp.json()
+                async with httpx.AsyncClient(timeout=5.0) as client:
+                    # Fetch guest (read-only — creation happens only in registration flow)
+                    guest_resp = await client.get(f"{self.api_url}/api/bot/guest/{tg_id}")
+                    if guest_resp.status_code == 200:
+                        guest = guest_resp.json()
                         data["guest"] = guest
-                        data["lang"] = guest.get("language", "ru")
+                        data["lang"] = guest.get("language") or "ru"
                     else:
                         data["guest"] = None
                         data["lang"] = "ru"
+
+                    # Check if this Telegram account belongs to a staff user
+                    staff_resp = await client.get(f"{self.api_url}/api/bot/staff/{tg_id}")
+                    data["staff_user"] = staff_resp.json() if staff_resp.status_code == 200 else None
+
             except Exception as e:
                 logger.error("Guest middleware error: %s", e)
                 data["guest"] = None
                 data["lang"] = "ru"
+                data["staff_user"] = None
         else:
             data["guest"] = None
             data["lang"] = "ru"
+            data["staff_user"] = None
 
         return await handler(event, data)
