@@ -123,6 +123,28 @@ async def bot_update_guest(telegram_id: int, data: GuestPatch, db: AsyncSession 
     return {"ok": True, "language": guest.language, "preferred_venue_id": str(guest.preferred_venue_id) if guest.preferred_venue_id else None}
 
 
+@router.get("/guest-search")
+async def search_guest_by_phone(
+    phone: str = Query(...),
+    db: AsyncSession = Depends(get_db),
+) -> dict[str, Any]:
+    """Staff bot endpoint — find guest by phone number."""
+    phone_clean = phone.strip()
+    guest = (await db.execute(
+        select(Guest).where(Guest.phone == phone_clean)
+    )).scalar_one_or_none()
+    if not guest:
+        raise HTTPException(status_code=404, detail="Гость не найден")
+    return {
+        "id": str(guest.id),
+        "name": guest.name,
+        "phone": guest.phone,
+        "total_points": guest.total_points,
+        "total_visits": guest.total_visits,
+        "language": guest.language or "ru",
+    }
+
+
 # ── Venue / menu endpoints ───────────────────────────────────────────────────
 
 @router.get("/venues", response_model=list[VenueOut])

@@ -42,6 +42,8 @@ async def create_venue(
         await db.commit()
         await db.refresh(venue)
         return venue
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error("Create venue error: %s", e)
         raise HTTPException(status_code=400, detail=str(e))

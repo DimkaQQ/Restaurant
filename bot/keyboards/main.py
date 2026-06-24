@@ -97,7 +97,17 @@ def staff_menu_keyboard(lang: str = 'ru') -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="📋 Активные заказы", callback_data="staff_orders")],
         [InlineKeyboardButton(text="🧾 Принять заказ (стол)", callback_data="staff_new_order")],
-        [InlineKeyboardButton(text="🔍 Найти гостя", callback_data="staff_find_guest")],
+        [InlineKeyboardButton(text="🔍 Найти гостя по телефону", callback_data="staff_find_guest")],
+    ])
+
+
+def staff_cart_keyboard(lang: str = 'ru') -> InlineKeyboardMarkup:
+    """Cart keyboard for staff order flow — confirms via staff endpoint."""
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text=t('btn_confirm_order', lang), callback_data="confirm_staff_order")],
+        [InlineKeyboardButton(text="💬 " + t('btn_add_note', lang), callback_data="add_order_note")],
+        [InlineKeyboardButton(text=t('btn_clear_cart', lang), callback_data="clear_cart")],
+        [InlineKeyboardButton(text=t('btn_add_more', lang), callback_data="order")],
     ])
 
 

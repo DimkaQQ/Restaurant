@@ -10,6 +10,7 @@ from aiogram.types import CallbackQuery, Message
 from bot.keyboards.main import (
     categories_keyboard, menu_items_keyboard, quantity_keyboard, cart_keyboard,
     back_keyboard, main_menu_keyboard, cities_keyboard, venues_keyboard,
+    staff_cart_keyboard,
 )
 from bot.locales import t
 
@@ -205,7 +206,9 @@ async def add_to_cart(callback: CallbackQuery, state: FSMContext, api_url: str, 
     menu_map = {i["id"]: i for i in items}
     notes = data.get("order_notes", "")
     text = f"{t('cart_title', lang)}\n\n" + format_cart(cart, menu_map, lang, notes)
-    await callback.message.edit_text(text, reply_markup=cart_keyboard(lang))
+    # Staff orders use a different confirm callback to route to the staff endpoint
+    keyboard = staff_cart_keyboard(lang) if data.get('is_staff_order') else cart_keyboard(lang)
+    await callback.message.edit_text(text, reply_markup=keyboard)
 
 
 @router.callback_query(F.data == "clear_cart")
@@ -241,7 +244,8 @@ async def save_order_note(
     items = await fetch_menu(api_url, effective_venue)
     menu_map = {i["id"]: i for i in items}
     text = f"✅ {t('note_added', lang)}\n\n{t('cart_title', lang)}\n\n" + format_cart(cart, menu_map, lang, note)
-    await message.answer(text, reply_markup=cart_keyboard(lang))
+    keyboard = staff_cart_keyboard(lang) if data.get('is_staff_order') else cart_keyboard(lang)
+    await message.answer(text, reply_markup=keyboard)
 
 
 @router.callback_query(F.data == "confirm_order")

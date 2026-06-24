@@ -122,6 +122,7 @@ async def process_phone(
     phone = message.contact.phone_number
     lang = data.get('lang', 'ru')
 
+    registered = False
     try:
         async with bot_client(timeout=5.0) as client:
             resp = await client.post(
@@ -134,10 +135,17 @@ async def process_phone(
                     "language": lang,
                 },
             )
-            if resp.status_code not in (200, 201):
-                logger.error("Guest creation failed: %s", resp.text)
+        registered = resp.status_code in (200, 201)
+        if not registered:
+            logger.error("Guest creation failed: %s", resp.text)
     except Exception as e:
         logger.error("Guest creation error: %s", e)
+
+    if not registered:
+        await message.answer(
+            "❌ Произошла ошибка при регистрации. Попробуйте ещё раз — нажмите /start",
+        )
+        return
 
     await state.clear()
     await message.answer(

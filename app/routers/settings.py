@@ -178,10 +178,10 @@ async def broadcasts_page(
     )).scalars().all()
 
     total_guests = (await db.execute(
-        select(func.count()).where(Guest.network_id == current_user.network_id)
+        select(func.count(Guest.id)).where(Guest.network_id == current_user.network_id)
     )).scalar() or 0
     tg_guests = (await db.execute(
-        select(func.count()).where(
+        select(func.count(Guest.id)).where(
             Guest.network_id == current_user.network_id,
             Guest.telegram_id != None,
         )
@@ -272,10 +272,10 @@ async def update_venue_settings(
     )).scalar_one_or_none()
     if not venue:
         raise HTTPException(status_code=404, detail="Заведение не найдено")
-    if data.gis_url is not None:
-        venue.gis_url = data.gis_url.strip() or None
-    if data.manager_telegram_id is not None:
-        venue.manager_telegram_id = data.manager_telegram_id
+    if 'gis_url' in data.model_fields_set:
+        venue.gis_url = data.gis_url.strip() if data.gis_url else None
+    if 'manager_telegram_id' in data.model_fields_set:
+        venue.manager_telegram_id = data.manager_telegram_id  # None clears the field
     await db.commit()
     return {"ok": True, "id": str(venue.id)}
 

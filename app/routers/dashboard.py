@@ -338,7 +338,7 @@ async def kitchen_history(
             .where(
                 Order.venue_id.in_(filter_ids),
                 Order.status == "done",
-                Order.created_at >= today_start,
+                Order.updated_at >= today_start,
             )
             .order_by(Order.updated_at.desc())
             .limit(100)

@@ -299,3 +299,58 @@ async def confirm_staff_order(
     except Exception as e:
         logger.error("Staff order error: %s", e)
         await callback.message.edit_text(t('conn_error', lang), reply_markup=back_keyboard(lang))
+
+
+class StaffFindGuestStates(StatesGroup):
+    waiting_phone = State()
+
+
+@router.callback_query(F.data == "staff_find_guest")
+async def staff_find_guest_start(callback: CallbackQuery, state: FSMContext, staff_user: dict | None, lang: str):
+    if not staff_user:
+        await callback.answer("Требуется авторизация", show_alert=True)
+        return
+    await callback.message.edit_text(
+        "🔍 Введите номер телефона гостя:",
+        reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="◀ Назад", callback_data="back_staff")],
+        ]),
+    )
+    await state.set_state(StaffFindGuestStates.waiting_phone)
+
+
+@router.message(StaffFindGuestStates.waiting_phone)
+async def staff_find_guest_search(message: Message, state: FSMContext, api_url: str, lang: str):
+    phone = message.text.strip() if message.text else ""
+    await state.clear()
+    if not phone:
+        await message.answer("❌ Введите номер телефона", reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="◀ Назад", callback_data="back_staff")],
+        ]))
+        return
+    try:
+        async with bot_client(timeout=5.0) as client:
+            resp = await client.get(f"{api_url}/api/bot/guest-search", params={"phone": phone})
+        if resp.status_code == 200:
+            g = resp.json()
+            name = g.get("name") or "—"
+            pts = g.get("total_points", 0)
+            visits = g.get("total_visits", 0)
+            await message.answer(
+                f"👤 <b>{name}</b>\n📞 {phone}\n⭐ Баллы: {pts} · Визиты: {visits}",
+                reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+                    [InlineKeyboardButton(text="◀ Назад", callback_data="back_staff")],
+                ]),
+            )
+        else:
+            await message.answer(
+                f"❌ Гость с номером {phone} не найден",
+                reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+                    [InlineKeyboardButton(text="◀ Назад", callback_data="back_staff")],
+                ]),
+            )
+    except Exception as e:
+        logger.error("Staff find guest error: %s", e)
+        await message.answer(t('conn_error', lang), reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="◀ Назад", callback_data="back_staff")],
+        ]))
