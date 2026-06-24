@@ -176,6 +176,14 @@ async def cancel_order(
             ))
             logger.info("Reversed %d points for guest %s on order cancellation", points_to_reverse, guest.id)
 
+    # Reverse visit counter — cancelled orders shouldn't count as visits
+    if order.guest:
+        visit = (await db.execute(select(Visit).where(Visit.order_id == order_id))).scalar_one_or_none()
+        if visit:
+            await db.delete(visit)
+            if order.guest.total_visits and order.guest.total_visits > 0:
+                order.guest.total_visits -= 1
+
     await db.commit()
     await db.refresh(order)
     return order

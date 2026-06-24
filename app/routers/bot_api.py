@@ -14,6 +14,7 @@ from app.models.broadcast import Broadcast
 from app.models.guest import Guest
 from app.models.menu import MenuItem
 from app.models.order import Order, OrderItem
+from app.models.points import PointsTransaction
 from app.models.review import Review
 from app.models.user import User
 from app.models.venue import Venue
@@ -126,12 +127,13 @@ async def bot_update_guest(telegram_id: int, data: GuestPatch, db: AsyncSession 
 @router.get("/guest-search")
 async def search_guest_by_phone(
     phone: str = Query(...),
+    network_id: uuid.UUID = Query(...),
     db: AsyncSession = Depends(get_db),
 ) -> dict[str, Any]:
-    """Staff bot endpoint — find guest by phone number."""
+    """Staff bot endpoint — find guest by phone number within a specific network."""
     phone_clean = phone.strip()
     guest = (await db.execute(
-        select(Guest).where(Guest.phone == phone_clean)
+        select(Guest).where(Guest.phone == phone_clean, Guest.network_id == network_id)
     )).scalar_one_or_none()
     if not guest:
         raise HTTPException(status_code=404, detail="Гость не найден")
@@ -409,6 +411,13 @@ async def submit_review(data: ReviewCreate, db: AsyncSession = Depends(get_db)):
     if not order:
         raise HTTPException(status_code=404, detail="Заказ не найден")
 
+    # Prevent duplicate review for the same order
+    existing_review = (await db.execute(
+        select(Review).where(Review.order_id == data.order_id)
+    )).scalar_one_or_none()
+    if existing_review:
+        raise HTTPException(status_code=409, detail="Отзыв на этот заказ уже оставлен")
+
     venue = (await db.execute(select(Venue).where(Venue.id == order.venue_id))).scalar_one_or_none()
 
     review = Review(
@@ -421,7 +430,17 @@ async def submit_review(data: ReviewCreate, db: AsyncSession = Depends(get_db)):
         source="bot",
     )
     db.add(review)
-    guest.total_points = (guest.total_points or 0) + 50
+
+    # Award review bonus via PointsTransaction so ledger stays consistent
+    REVIEW_BONUS = 50
+    guest.total_points = (guest.total_points or 0) + REVIEW_BONUS
+    db.add(PointsTransaction(
+        id=uuid.uuid4(),
+        guest_id=guest.id,
+        venue_id=order.venue_id,
+        amount=REVIEW_BONUS,
+        reason=f"Отзыв о заказе #{str(order.id)[:8].upper()}",
+    ))
     await db.commit()
 
     return {
@@ -430,7 +449,7 @@ async def submit_review(data: ReviewCreate, db: AsyncSession = Depends(get_db)):
         "venue_name": venue.name if venue else None,
         "venue_id": str(venue.id) if venue else None,
         "manager_telegram_id": venue.manager_telegram_id if venue else None,
-        "points_awarded": 50,
+        "points_awarded": REVIEW_BONUS,
     }
 
 

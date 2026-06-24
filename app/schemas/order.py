@@ -12,7 +12,7 @@ class OrderItemCreate(BaseModel):
 
 class OrderCreate(BaseModel):
     venue_id: uuid.UUID
-    items: list[OrderItemCreate]
+    items: list[OrderItemCreate] = Field(..., min_length=1)
     notes: str | None = None
     table_number: str | None = None
     source: str | None = None

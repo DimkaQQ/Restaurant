@@ -105,6 +105,12 @@ async def place_order(
         guest = guest_result.scalar_one_or_none()
         if not guest:
             raise HTTPException(status_code=404, detail="Гость не найден")
+        # Verify venue belongs to guest's network to prevent cross-network order injection
+        venue = (await db.execute(
+            select(Venue).where(Venue.id == data.venue_id, Venue.network_id == guest.network_id)
+        )).scalar_one_or_none()
+        if not venue:
+            raise HTTPException(status_code=403, detail="Заведение недоступно")
         order = await create_order(data, guest, db)
         return order
     except HTTPException:
@@ -148,8 +154,16 @@ async def change_order_status(
     db: AsyncSession = Depends(get_db),
 ):
     try:
+        # Verify order belongs to current user's network before mutating
+        check = (await db.execute(
+            select(Order).join(Venue).where(Order.id == order_id, Venue.network_id == current_user.network_id)
+        )).scalar_one_or_none()
+        if not check:
+            raise HTTPException(status_code=404, detail="Заказ не найден")
         order = await update_order_status(order_id, data.status, db, changed_by=current_user.email)
         return order
+    except HTTPException:
+        raise
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
@@ -165,8 +179,16 @@ async def cancel_order_endpoint(
 ):
     """Staff can always cancel; guests get 10-min window via bot."""
     try:
+        # Verify order belongs to current user's network before mutating
+        check = (await db.execute(
+            select(Order).join(Venue).where(Order.id == order_id, Venue.network_id == current_user.network_id)
+        )).scalar_one_or_none()
+        if not check:
+            raise HTTPException(status_code=404, detail="Заказ не найден")
         order = await cancel_order(order_id, db, changed_by=current_user.email, allow_always=True)
         return order
+    except HTTPException:
+        raise
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:

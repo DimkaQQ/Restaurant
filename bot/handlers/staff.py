@@ -320,7 +320,7 @@ async def staff_find_guest_start(callback: CallbackQuery, state: FSMContext, sta
 
 
 @router.message(StaffFindGuestStates.waiting_phone)
-async def staff_find_guest_search(message: Message, state: FSMContext, api_url: str, lang: str):
+async def staff_find_guest_search(message: Message, state: FSMContext, api_url: str, lang: str, network_id: str):
     phone = message.text.strip() if message.text else ""
     await state.clear()
     if not phone:
@@ -330,7 +330,7 @@ async def staff_find_guest_search(message: Message, state: FSMContext, api_url: 
         return
     try:
         async with bot_client(timeout=5.0) as client:
-            resp = await client.get(f"{api_url}/api/bot/guest-search", params={"phone": phone})
+            resp = await client.get(f"{api_url}/api/bot/guest-search", params={"phone": phone, "network_id": network_id})
         if resp.status_code == 200:
             g = resp.json()
             name = g.get("name") or "—"
