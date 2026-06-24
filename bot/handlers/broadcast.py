@@ -2,6 +2,7 @@ import asyncio
 import logging
 
 import httpx
+from bot.http_client import bot_client
 from aiogram import Bot
 
 logger = logging.getLogger(__name__)
@@ -21,7 +22,7 @@ async def broadcast_loop(bot: Bot, api_url: str, network_id: str):
 
 async def _send_broadcasts(bot: Bot, api_url: str, network_id: str):
     try:
-        async with httpx.AsyncClient() as client:
+        async with bot_client() as client:
             ids_resp = await client.get(
                 f"{api_url}/api/bot/guest-ids",
                 params={"network_id": network_id},
@@ -60,7 +61,7 @@ async def review_loop(bot: Bot, api_url: str, network_id: str):
     while True:
         await asyncio.sleep(REVIEW_POLL_INTERVAL)
         try:
-            async with httpx.AsyncClient() as client:
+            async with bot_client() as client:
                 resp = await client.get(
                     f"{api_url}/api/bot/orders-for-review",
                     params={"network_id": network_id},

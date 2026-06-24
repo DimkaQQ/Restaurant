@@ -22,6 +22,7 @@ VENUE_ID = os.getenv("VENUE_ID_1", "")
 BOT_TOKEN = os.getenv("BOT_TOKEN_VENUE_1", "")
 HTTPS_PROXY = os.getenv("HTTPS_PROXY", "")
 TELEGRAM_API_SERVER = os.getenv("TELEGRAM_API_SERVER", "")
+BOT_API_SECRET = os.getenv("BOT_API_SECRET", "")
 
 
 async def main():
@@ -45,7 +46,7 @@ async def main():
     bot = Bot(token=BOT_TOKEN, session=session, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     dp = Dispatcher(storage=MemoryStorage())
 
-    dp.update.middleware(GuestMiddleware(api_url=API_URL, network_id=NETWORK_ID))
+    dp.update.middleware(GuestMiddleware(api_url=API_URL, network_id=NETWORK_ID, bot_api_secret=BOT_API_SECRET))
 
     dp.include_router(start.router)
     dp.include_router(staff_handler.router)
@@ -60,6 +61,7 @@ async def main():
     dp["network_id"] = NETWORK_ID
     dp["bot_instance"] = bot
     dp["staff_user"] = None  # set per-request by middleware
+    dp["bot_api_secret"] = BOT_API_SECRET
 
     asyncio.create_task(broadcast.broadcast_loop(bot, API_URL, NETWORK_ID))
     asyncio.create_task(broadcast.review_loop(bot, API_URL, NETWORK_ID))

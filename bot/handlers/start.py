@@ -1,6 +1,7 @@
 import logging
 
 import httpx
+from bot.http_client import bot_client
 from aiogram import Router, F
 from aiogram.filters import CommandStart
 from aiogram.fsm.context import FSMContext
@@ -36,7 +37,7 @@ async def cmd_start(
     if args.startswith("link_"):
         token = args[5:]
         try:
-            async with httpx.AsyncClient(timeout=5.0) as client:
+            async with bot_client(timeout=5.0) as client:
                 resp = await client.post(
                     f"{api_url}/api/bot/staff/link",
                     json={
@@ -122,7 +123,7 @@ async def process_phone(
     lang = data.get('lang', 'ru')
 
     try:
-        async with httpx.AsyncClient(timeout=5.0) as client:
+        async with bot_client(timeout=5.0) as client:
             resp = await client.post(
                 f"{api_url}/api/bot/guest",
                 json={
@@ -160,7 +161,7 @@ async def back_to_main(
         )
         return
 
-    name = guest["name"] if guest else "Гость"
+    name = (guest["name"] or "Гость") if guest else "Гость"
     points = guest["total_points"] if guest else 0
     await callback.message.edit_text(
         t('welcome_back', lang, name=name, points=points),

@@ -1,6 +1,7 @@
 import logging
 
 import httpx
+from bot.http_client import bot_client
 from aiogram import Router, F
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
@@ -22,7 +23,7 @@ class OrderStates(StatesGroup):
 
 async def fetch_menu(api_url: str, venue_id: str) -> list[dict]:
     try:
-        async with httpx.AsyncClient() as client:
+        async with bot_client() as client:
             resp = await client.get(f"{api_url}/api/bot/menu", params={"venue_id": venue_id}, timeout=5.0)
             return resp.json() if resp.status_code == 200 else []
     except Exception as e:
@@ -83,7 +84,7 @@ async def start_order(
 
     if not preferred_venue_id:
         try:
-            async with httpx.AsyncClient() as client:
+            async with bot_client() as client:
                 resp = await client.get(
                     f"{api_url}/api/bot/venues",
                     params={"network_id": network_id},
@@ -124,7 +125,7 @@ async def venue_order_selected(callback: CallbackQuery, state: FSMContext, api_u
 async def order_city_selected(callback: CallbackQuery, state: FSMContext, api_url: str, network_id: str, lang: str):
     city = callback.data.split(":", 1)[1]
     try:
-        async with httpx.AsyncClient() as client:
+        async with bot_client() as client:
             resp = await client.get(f"{api_url}/api/bot/venues", params={"network_id": network_id}, timeout=5.0)
             venues = resp.json() if resp.status_code == 200 else []
     except Exception as e:
@@ -268,7 +269,7 @@ async def confirm_order(
 
     order_items = [{"menu_item_id": e["id"], "quantity": e["qty"], "comment": e.get("comment")} for e in cart]
     try:
-        async with httpx.AsyncClient() as client:
+        async with bot_client() as client:
             resp = await client.post(
                 f"{api_url}/api/orders/",
                 params={"telegram_id": guest["telegram_id"]},
@@ -324,7 +325,7 @@ async def cancel_order_callback(
 
     order_id = callback.data.split(":", 1)[1]
     try:
-        async with httpx.AsyncClient() as client:
+        async with bot_client() as client:
             resp = await client.post(
                 f"{api_url}/api/orders/{order_id}/cancel/guest",
                 params={"telegram_id": guest["telegram_id"]},

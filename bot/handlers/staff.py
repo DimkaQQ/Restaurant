@@ -2,6 +2,7 @@
 import logging
 
 import httpx
+from bot.http_client import bot_client
 from aiogram import Router, F
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
@@ -76,7 +77,7 @@ async def process_staff_password(message: Message, state: FSMContext, api_url: s
         pass
 
     try:
-        async with httpx.AsyncClient(timeout=5.0) as client:
+        async with bot_client(timeout=5.0) as client:
             resp = await client.post(
                 f"{api_url}/api/bot/staff/login",
                 json={"email": email, "password": password, "telegram_id": message.from_user.id},
@@ -112,7 +113,7 @@ async def view_staff_orders(callback: CallbackQuery, staff_user: dict | None, ap
         await callback.answer("Требуется авторизация", show_alert=True)
         return
     try:
-        async with httpx.AsyncClient(timeout=5.0) as client:
+        async with bot_client(timeout=5.0) as client:
             resp = await client.get(
                 f"{api_url}/api/bot/staff/orders/active",
                 params={"telegram_id": callback.from_user.id},
@@ -209,7 +210,7 @@ async def skip_guest_phone(callback: CallbackQuery, state: FSMContext, api_url: 
     effective_venue = data.get('order_venue_id') or venue_id
 
     try:
-        async with httpx.AsyncClient() as client:
+        async with bot_client() as client:
             resp = await client.get(f"{api_url}/api/bot/menu", params={"venue_id": effective_venue}, timeout=5.0)
             items = resp.json() if resp.status_code == 200 else []
     except Exception as e:
@@ -231,7 +232,7 @@ async def _show_menu_for_staff(message: Message, state: FSMContext, api_url: str
     effective_venue = data.get('order_venue_id') or venue_id
 
     try:
-        async with httpx.AsyncClient() as client:
+        async with bot_client() as client:
             resp = await client.get(f"{api_url}/api/bot/menu", params={"venue_id": effective_venue}, timeout=5.0)
             items = resp.json() if resp.status_code == 200 else []
     except Exception as e:
@@ -269,7 +270,7 @@ async def confirm_staff_order(
 
     order_items = [{"menu_item_id": e["id"], "quantity": e["qty"], "comment": e.get("comment")} for e in cart]
     try:
-        async with httpx.AsyncClient() as client:
+        async with bot_client() as client:
             resp = await client.post(
                 f"{api_url}/api/bot/staff/order",
                 params={"telegram_id": callback.from_user.id},

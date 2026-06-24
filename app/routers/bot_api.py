@@ -1,9 +1,10 @@
 import logging
+import os
 import uuid
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, Header, HTTPException, Query
 from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -21,7 +22,18 @@ from app.services.auth_service import verify_password
 from app.services.order_service import create_order
 from app.schemas.order import OrderCreate, OrderItemCreate
 
-router = APIRouter(prefix="/api/bot", tags=["bot"])
+_BOT_API_SECRET = os.getenv("BOT_API_SECRET", "")
+
+
+async def _require_bot_secret(x_bot_secret: str = Header(default="")) -> None:
+    """Shared-secret guard for all bot-internal endpoints.
+    Set BOT_API_SECRET in .env; if the env var is empty the check is skipped
+    (backwards-compatible for local dev without the variable set)."""
+    if _BOT_API_SECRET and x_bot_secret != _BOT_API_SECRET:
+        raise HTTPException(status_code=403, detail="Forbidden")
+
+
+router = APIRouter(prefix="/api/bot", tags=["bot"], dependencies=[Depends(_require_bot_secret)])
 logger = logging.getLogger(__name__)
 
 
@@ -239,6 +251,15 @@ async def create_staff_order(
     if not staff:
         raise HTTPException(status_code=403, detail="Не авторизован как сотрудник")
 
+    # Verify the requested venue belongs to staff's network (and their venue if assigned)
+    venue = (await db.execute(
+        select(Venue).where(Venue.id == data.venue_id, Venue.network_id == staff.network_id)
+    )).scalar_one_or_none()
+    if not venue:
+        raise HTTPException(status_code=403, detail="Заведение недоступно")
+    if staff.venue_id and staff.venue_id != data.venue_id:
+        raise HTTPException(status_code=403, detail="Вы не закреплены за этим заведением")
+
     # Find or create guest
     guest = None
     if data.guest_phone:
@@ -304,7 +325,7 @@ async def staff_active_orders(
             "total": float(o.total_amount),
             "guest": g.name or g.phone or "Гость",
             "venue": v.name,
-            "age_min": int((datetime.now(timezone.utc) - o.created_at.replace(tzinfo=timezone.utc)).total_seconds() / 60),
+            "age_min": int((datetime.now(timezone.utc) - (o.created_at if o.created_at.tzinfo else o.created_at.replace(tzinfo=timezone.utc))).total_seconds() / 60),
         }
         for o, g, v in rows
     ]
@@ -319,7 +340,7 @@ async def get_broadcasts(
     db: AsyncSession = Depends(get_db),
 ) -> list[dict[str, Any]]:
     result = await db.execute(
-        select(Broadcast).where(Broadcast.network_id == network_id, Broadcast.sent_at == None)
+        select(Broadcast).where(Broadcast.network_id == network_id, Broadcast.sent_at == None).limit(200)
     )
     broadcasts = result.scalars().all()
 

@@ -2,6 +2,7 @@ import logging
 from collections import Counter
 
 import httpx
+from bot.http_client import bot_client
 from aiogram import Router, F
 from aiogram.types import CallbackQuery
 
@@ -41,7 +42,7 @@ async def show_history(callback: CallbackQuery, guest: dict | None, api_url: str
         await callback.answer(t('register_first', lang), show_alert=True)
         return
     try:
-        async with httpx.AsyncClient() as client:
+        async with bot_client() as client:
             resp = await client.get(
                 f"{api_url}/api/orders/guest/history",
                 params={"telegram_id": guest["telegram_id"], "limit": 10},
@@ -77,7 +78,7 @@ async def show_favorites(callback: CallbackQuery, guest: dict | None, api_url: s
         await callback.answer(t('register_first', lang), show_alert=True)
         return
     try:
-        async with httpx.AsyncClient() as client:
+        async with bot_client() as client:
             resp = await client.get(
                 f"{api_url}/api/orders/guest/history",
                 params={"telegram_id": guest["telegram_id"], "limit": 50},

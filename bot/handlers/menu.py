@@ -1,6 +1,7 @@
 import logging
 
 import httpx
+from bot.http_client import bot_client
 from aiogram import Router, F
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery
@@ -14,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 async def fetch_menu(api_url: str, venue_id: str) -> list[dict]:
     try:
-        async with httpx.AsyncClient() as client:
+        async with bot_client() as client:
             resp = await client.get(f"{api_url}/api/bot/menu", params={"venue_id": venue_id}, timeout=5.0)
             return resp.json() if resp.status_code == 200 else []
     except Exception as e:

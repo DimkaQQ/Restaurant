@@ -1,6 +1,7 @@
 import logging
 
 import httpx
+from bot.http_client import bot_client
 from aiogram import Router, F
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery
@@ -30,7 +31,7 @@ async def change_language(
 
     if guest:
         try:
-            async with httpx.AsyncClient() as client:
+            async with bot_client() as client:
                 await client.patch(
                     f"{api_url}/api/bot/guest/{guest['telegram_id']}",
                     json={"language": new_lang},
@@ -53,7 +54,7 @@ async def show_city_selection(
     lang: str,
 ):
     try:
-        async with httpx.AsyncClient() as client:
+        async with bot_client() as client:
             resp = await client.get(
                 f"{api_url}/api/bot/venues",
                 params={"network_id": network_id},
@@ -88,7 +89,7 @@ async def show_venues_in_city(
 ):
     city = callback.data.split(":", 1)[1]
     try:
-        async with httpx.AsyncClient() as client:
+        async with bot_client() as client:
             resp = await client.get(
                 f"{api_url}/api/bot/venues",
                 params={"network_id": network_id},
@@ -126,7 +127,7 @@ async def set_preferred_venue(
 
     venue_name = venue_id
     try:
-        async with httpx.AsyncClient() as client:
+        async with bot_client() as client:
             resp = await client.get(
                 f"{api_url}/api/bot/venues",
                 params={"network_id": network_id},

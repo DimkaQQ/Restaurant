@@ -9,9 +9,10 @@ logger = logging.getLogger(__name__)
 
 
 class GuestMiddleware(BaseMiddleware):
-    def __init__(self, api_url: str, network_id: str):
+    def __init__(self, api_url: str, network_id: str, bot_api_secret: str = ""):
         self.api_url = api_url
         self.network_id = network_id
+        self._headers = {"X-Bot-Secret": bot_api_secret} if bot_api_secret else {}
 
     async def __call__(
         self,
@@ -29,7 +30,7 @@ class GuestMiddleware(BaseMiddleware):
         if user:
             tg_id = user.id
             try:
-                async with httpx.AsyncClient(timeout=5.0) as client:
+                async with httpx.AsyncClient(timeout=5.0, headers=self._headers) as client:
                     # Fetch guest (read-only — creation happens only in registration flow)
                     guest_resp = await client.get(f"{self.api_url}/api/bot/guest/{tg_id}")
                     if guest_resp.status_code == 200:

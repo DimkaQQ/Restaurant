@@ -1,6 +1,7 @@
 import logging
 
 import httpx
+from bot.http_client import bot_client
 from aiogram import Router, F, Bot
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
@@ -41,7 +42,7 @@ async def handle_rating(
     if rating >= 4:
         # Submit review immediately without comment
         try:
-            async with httpx.AsyncClient() as client:
+            async with bot_client() as client:
                 resp = await client.post(
                     f"{api_url}/api/bot/review",
                     json={
@@ -93,7 +94,7 @@ async def handle_comment(
     tg_id = message.from_user.id
 
     try:
-        async with httpx.AsyncClient() as client:
+        async with bot_client() as client:
             resp = await client.post(
                 f"{api_url}/api/bot/review",
                 json={

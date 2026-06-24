@@ -185,10 +185,8 @@ async def guest_cancel_order(
         guest = (await db.execute(select(Guest).where(Guest.telegram_id == telegram_id))).scalar_one_or_none()
         if not guest:
             raise HTTPException(status_code=404, detail="Гость не найден")
-        order = (await db.execute(select(Order).where(Order.id == order_id, Order.guest_id == guest.id))).scalar_one_or_none()
-        if not order:
-            raise HTTPException(status_code=404, detail="Заказ не найден")
-        order = await cancel_order(order_id, db, changed_by=f"guest:{telegram_id}", allow_always=False)
+        # Pass guest_id into cancel_order so ownership is checked atomically — no TOCTOU
+        order = await cancel_order(order_id, db, changed_by=f"guest:{telegram_id}", allow_always=False, guest_id=guest.id)
         return order
     except HTTPException:
         raise

@@ -66,7 +66,6 @@ class OnlineOrderItem(BaseModel):
 
 
 class OnlineOrderSubmit(BaseModel):
-    venue_id: uuid.UUID
     items: list[OnlineOrderItem]
     guest_name: str | None = None
     guest_phone: str | None = None

@@ -10,6 +10,7 @@ from sqlalchemy.orm import selectinload
 from app.models.guest import Guest
 from app.models.menu import MenuItem
 from app.models.order import Order, OrderItem, OrderStatusLog, Visit
+from app.models.points import PointsTransaction
 from app.schemas.order import OrderCreate
 from app.services.points_service import add_points, calculate_points_earned
 
@@ -124,13 +125,18 @@ async def cancel_order(
     db: AsyncSession,
     changed_by: str = "guest",
     allow_always: bool = False,
+    guest_id: uuid.UUID | None = None,
 ) -> Order:
-    """Cancel order. Guests can cancel only within 10 min; staff/manager can always cancel."""
+    """Cancel order. Guests can cancel only within 10 min; staff/manager can always cancel.
+    Pass guest_id to enforce ownership check atomically inside the service."""
     result = await db.execute(
         select(Order).options(selectinload(Order.items), selectinload(Order.guest)).where(Order.id == order_id)
     )
     order = result.scalar_one_or_none()
     if not order:
+        raise ValueError("Заказ не найден")
+    # Ownership check — prevents TOCTOU if called with guest_id
+    if guest_id is not None and order.guest_id != guest_id:
         raise ValueError("Заказ не найден")
     if order.status == "cancelled":
         raise ValueError("Заказ уже отменён")
@@ -140,7 +146,8 @@ async def cancel_order(
         raise ValueError("Заказ уже готовится — отмена возможна только через менеджера")
 
     if not allow_always:
-        age = datetime.now(timezone.utc) - order.created_at.replace(tzinfo=timezone.utc)
+        created_at_utc = order.created_at if order.created_at.tzinfo else order.created_at.replace(tzinfo=timezone.utc)
+        age = datetime.now(timezone.utc) - created_at_utc
         if age > timedelta(minutes=10):
             raise ValueError("Время для самостоятельной отмены истекло (10 мин)")
 
@@ -153,6 +160,22 @@ async def cancel_order(
         new_status="cancelled",
         changed_by=changed_by,
     ))
+
+    # Reverse points earned on this order to prevent farming
+    if order.points_earned and order.points_earned > 0 and order.guest:
+        guest = order.guest
+        points_to_reverse = min(order.points_earned, guest.total_points or 0)
+        if points_to_reverse > 0:
+            guest.total_points -= points_to_reverse
+            db.add(PointsTransaction(
+                id=uuid.uuid4(),
+                guest_id=guest.id,
+                venue_id=order.venue_id,
+                amount=-points_to_reverse,
+                reason=f"Отмена заказа #{str(order.id)[:8].upper()}",
+            ))
+            logger.info("Reversed %d points for guest %s on order cancellation", points_to_reverse, guest.id)
+
     await db.commit()
     await db.refresh(order)
     return order
