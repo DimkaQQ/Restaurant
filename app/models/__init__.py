@@ -11,6 +11,7 @@ from app.models.inventory import Ingredient, WriteOff
 from app.models.finance import Expense
 from app.models.shift import Shift
 from app.models.broadcast import Broadcast
+from app.models.onboarding import OnboardingModule, OnboardingQuestion, OnboardingProgress
 
 __all__ = [
     "Network", "Venue", "User", "Guest",
@@ -20,4 +21,5 @@ __all__ = [
     "Expense",
     "Shift",
     "Broadcast",
+    "OnboardingModule", "OnboardingQuestion", "OnboardingProgress",
 ]
