@@ -66,16 +66,19 @@ async def get_guest(
 @router.post("/", response_model=GuestOut)
 async def create_or_get_guest(
     data: GuestCreate,
+    current_user: User = Depends(get_current_user_dep),
     db: AsyncSession = Depends(get_db),
 ):
     try:
         if data.telegram_id:
-            result = await db.execute(select(Guest).where(Guest.telegram_id == data.telegram_id))
+            result = await db.execute(
+                select(Guest).where(Guest.telegram_id == data.telegram_id, Guest.network_id == current_user.network_id)
+            )
             existing = result.scalar_one_or_none()
             if existing:
                 return existing
 
-        guest = Guest(id=uuid.uuid4(), **data.model_dump())
+        guest = Guest(id=uuid.uuid4(), **{**data.model_dump(), "network_id": current_user.network_id})
         db.add(guest)
         await db.commit()
         await db.refresh(guest)
@@ -89,11 +92,20 @@ async def create_or_get_guest(
 async def guest_recommendation(
     guest_id: uuid.UUID,
     venue_id: uuid.UUID = Query(...),
+    current_user: User = Depends(get_current_user_dep),
     db: AsyncSession = Depends(get_db),
 ):
     try:
+        # Verify guest and venue both belong to current user's network
+        guest = (await db.execute(
+            select(Guest).where(Guest.id == guest_id, Guest.network_id == current_user.network_id)
+        )).scalar_one_or_none()
+        if not guest:
+            raise HTTPException(status_code=404, detail="Гость не найден")
         text = await get_guest_recommendation(guest_id, venue_id, db)
         return {"recommendation": text}
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error("AI recommendation error: %s", e)
         return {"recommendation": "Добро пожаловать! Рады видеть вас."}

@@ -4,7 +4,7 @@ import uuid
 
 from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import HTMLResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -61,7 +61,7 @@ async def online_menu_page(
 
 class OnlineOrderItem(BaseModel):
     menu_item_id: uuid.UUID
-    quantity: int = 1
+    quantity: int = Field(1, ge=1)
     comment: str | None = None
 
 

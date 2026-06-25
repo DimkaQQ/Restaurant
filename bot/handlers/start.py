@@ -55,7 +55,10 @@ async def cmd_start(
                     f"Используйте /staff для меню сотрудника.",
                 )
             else:
-                err = resp.json().get("detail", "Ошибка")
+                try:
+                    err = resp.json().get("detail", "Ошибка")
+                except Exception:
+                    err = "Ошибка"
                 await message.answer(f"❌ {err}")
         except Exception as e:
             logger.error("Staff link error: %s", e)
@@ -66,7 +69,7 @@ async def cmd_start(
     if staff_user:
         await message.answer(
             f"👋 Привет, {message.from_user.first_name}!\n"
-            f"Вы вошли как сотрудник ({staff_user['role']}).",
+            f"Вы вошли как сотрудник ({staff_user.get('role', 'сотрудник')}).",
             reply_markup=staff_menu_keyboard(lang),
         )
         return
@@ -162,6 +165,7 @@ async def back_to_main(
     staff_user: dict | None,
     lang: str,
 ):
+    await callback.answer()
     if staff_user:
         await callback.message.edit_text(
             f"👨‍💼 Меню сотрудника",

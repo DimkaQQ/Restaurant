@@ -101,7 +101,10 @@
         {% for s in day_shifts %}
         <div class="shift-chip status-{{ s.status }}"
              onclick="changeStatus('{{ s.id }}', '{{ s.status }}')"
-             onmouseenter="showTip(event,'{{ s.staff.name }}','{{ s.staff.role_label }}','{{ s.start_time.strftime('%H:%M') }}–{{ s.end_time.strftime('%H:%M') }} ({{ s.duration_hours }} ч.)')"
+             data-tip-name="{{ s.staff.name | e }}"
+             data-tip-role="{{ s.staff.role_label | e }}"
+             data-tip-time="{{ s.start_time.strftime('%H:%M') }}–{{ s.end_time.strftime('%H:%M') }} ({{ s.duration_hours }} ч.)"
+             onmouseenter="showTipFromEl(event, this)"
              onmouseleave="hideTip()">
           <div class="shift-avatar">{{ s.staff.initials }}</div>
           <div class="shift-info">
@@ -184,12 +187,12 @@
 const STATUS_CYCLE = { planned: 'active', active: 'done', done: 'planned', cancelled: 'planned' };
 const _tip = document.getElementById('shift-tip');
 
-function showTip(e, name, role, time) {
-  document.getElementById('tip-name').textContent = name;
-  document.getElementById('tip-role').textContent = role;
-  document.getElementById('tip-time').textContent = time;
+function showTipFromEl(e, el) {
+  document.getElementById('tip-name').textContent = el.dataset.tipName || '';
+  document.getElementById('tip-role').textContent = el.dataset.tipRole || '';
+  document.getElementById('tip-time').textContent = el.dataset.tipTime || '';
   _tip.style.display = 'block';
-  const rect = e.currentTarget.getBoundingClientRect();
+  const rect = el.getBoundingClientRect();
   let left = rect.right + 8;
   if (left + 240 > window.innerWidth) left = rect.left - 248;
   _tip.style.left = left + 'px';

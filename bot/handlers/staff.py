@@ -89,7 +89,10 @@ async def process_staff_password(message: Message, state: FSMContext, api_url: s
                 reply_markup=staff_menu_keyboard(lang),
             )
         else:
-            err = resp.json().get("detail", "Ошибка")
+            try:
+                err = resp.json().get("detail", "Ошибка")
+            except Exception:
+                err = "Ошибка"
             await message.answer(f"❌ {err}")
     except Exception as e:
         logger.error("Staff login error: %s", e)
@@ -135,8 +138,8 @@ async def view_staff_orders(callback: CallbackQuery, staff_user: dict | None, ap
     status_labels = {"new": "🆕 Новый", "confirmed": "✅ Принят", "preparing": "👨‍🍳 Готовится", "ready": "🔔 Готов"}
     lines = ["<b>📋 Активные заказы:</b>\n"]
     for o in orders:
-        status = status_labels.get(o['status'], o['status'])
-        lines.append(f"#{o['short_id']} · Стол <b>{o['table']}</b> · {o['total']:.0f} ₸ · {status} · {o['age_min']} мин")
+        status = status_labels.get(o.get('status', ''), o.get('status', ''))
+        lines.append(f"#{o.get('short_id', '?')} · Стол <b>{o.get('table', '—')}</b> · {float(o.get('total', 0)):.0f} ₸ · {status} · {o.get('age_min', '?')} мин")
     text = "\n".join(lines)
 
     await callback.message.edit_text(

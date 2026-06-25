@@ -114,12 +114,12 @@ async def create_shift(
         if data.venue_id not in accessible_ids:
             raise HTTPException(status_code=403, detail="Нет доступа к заведению")
 
-        # Verify staff belongs to accessible venue
+        # Verify staff belongs to the target venue specifically
         staff = (await db.execute(
-            select(Staff).where(Staff.id == data.staff_id, Staff.venue_id.in_(accessible_ids))
+            select(Staff).where(Staff.id == data.staff_id, Staff.venue_id == data.venue_id)
         )).scalar_one_or_none()
         if not staff:
-            raise HTTPException(status_code=404, detail="Сотрудник не найден")
+            raise HTTPException(status_code=404, detail="Сотрудник не найден или не принадлежит этому заведению")
 
         if data.end_time <= data.start_time:
             raise HTTPException(status_code=400, detail="Время окончания должно быть позже начала")

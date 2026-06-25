@@ -234,7 +234,10 @@ async def save_order_note(
     venue_id: str,
     lang: str,
 ):
-    note = message.text.strip() if message.text else ""
+    if not message.text:
+        await message.answer(t('ask_order_note', lang))
+        return
+    note = message.text.strip()
     data = await state.get_data()
     await state.update_data(order_notes=note)
     await state.set_state(None)
@@ -299,7 +302,7 @@ async def confirm_order(
                 t('order_ok', lang,
                   short_id=short_id,
                   amount=f"{float(order['total_amount']):.0f}",
-                  points=order['points_earned']),
+                  points=order.get('points_earned', 0)),
                 reply_markup=cancel_kb,
             )
         else:

@@ -110,6 +110,10 @@ async def handle_comment(
         logger.error("Review comment submit error: %s", e)
         result = {}
 
+    if not result:
+        await message.answer("❌ Не удалось сохранить отзыв. Попробуйте ещё раз.")
+        return
+
     await state.clear()
     await message.answer(
         t("review_thanks_bad", lang),

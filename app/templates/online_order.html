@@ -234,7 +234,7 @@
         <div class="item-price">{{ item.price | int }} ₸</div>
       </div>
       <div id="ctrl-{{ item.id }}">
-        <button class="item-add-btn" onclick="event.stopPropagation(); addItem('{{ item.id }}', '{{ item.name | e }}', {{ item.price }})">+</button>
+        <button class="item-add-btn" onclick="event.stopPropagation(); addItem('{{ item.id }}', {{ item.name | tojson }}, {{ item.price }})">+</button>
       </div>
     </div>
     {% endfor %}
@@ -400,16 +400,17 @@ function updateCartUI() {
     itemsEl.innerHTML = '<p style="color:var(--muted);font-size:.9rem;padding:.5rem 0">Корзина пуста</p>';
     return;
   }
+  function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
   itemsEl.innerHTML = cart.map(i => `
     <div class="cart-item">
       <div class="cart-item-name">
-        ${i.name}
-        ${i.comment ? `<span class="cart-item-comment">💬 ${i.comment}</span>` : ''}
+        ${esc(i.name)}
+        ${i.comment ? `<span class="cart-item-comment">💬 ${esc(i.comment)}</span>` : ''}
       </div>
       <div class="cart-item-qty">
-        <button class="qty-btn" onclick="removeItem('${i.id}');renderCartSheet()">−</button>
+        <button class="qty-btn" onclick="removeItem('${esc(i.id)}');renderCartSheet()">−</button>
         <span class="qty-num">${i.qty}</span>
-        <button class="qty-btn" onclick="addItemSheet('${i.id}')">+</button>
+        <button class="qty-btn" onclick="addItemSheet('${esc(i.id)}')">+</button>
       </div>
       <div class="cart-item-price">${(i.price * i.qty).toFixed(0)} ₸</div>
     </div>

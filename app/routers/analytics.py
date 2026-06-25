@@ -7,6 +7,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request, Query
 from fastapi.responses import HTMLResponse
 from sqlalchemy import select, func, cast, Date
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import load_only
 
 
 from app.database import get_db
@@ -58,7 +59,7 @@ async def analytics_page(
             .group_by("day")
             .order_by("day")
         )).all()
-        revenue_data = [{"day": str(r.day), "revenue": float(r.revenue)} for r in revenue_rows]
+        revenue_data = [{"day": str(r.day), "revenue": float(r.revenue or 0)} for r in revenue_rows]
 
         top_items = (await db.execute(
             select(OrderItem.name, func.sum(OrderItem.quantity).label("total_qty"))
@@ -77,6 +78,7 @@ async def analytics_page(
             .group_by(Guest.id)
             .order_by(Guest.total_visits.desc())
             .limit(10)
+            .options(load_only(Guest.id, Guest.name, Guest.phone, Guest.total_visits, Guest.total_points))
         )).scalars().all()
 
         venue_revenue = (await db.execute(
@@ -86,7 +88,7 @@ async def analytics_page(
             .group_by(Venue.name)
             .order_by(func.sum(Order.total_amount).desc())
         )).all()
-        venue_revenue_data = [{"name": r.name, "revenue": float(r.revenue)} for r in venue_revenue]
+        venue_revenue_data = [{"name": r.name, "revenue": float(r.revenue or 0)} for r in venue_revenue]
 
         # Summary stats for selected scope
         total_revenue = sum(r["revenue"] for r in venue_revenue_data)

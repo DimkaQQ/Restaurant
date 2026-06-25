@@ -176,7 +176,7 @@ async def change_status_html(
         order = await update_order_status(order_id, new_status, db)
 
         if order.status in ("done", "cancelled"):
-            return HTMLResponse("")
+            return HTMLResponse("", headers={"HX-Reswap": "delete"})
         return templates.TemplateResponse("partials/orders_list.html", {
             "request": request,
             "orders": [order],

@@ -53,7 +53,7 @@ async def login(data: LoginRequest, response: Response, db: AsyncSession = Depen
     response.set_cookie(
         key="access_token",
         value=access_token,
-        httponly=False,
+        httponly=True,
         samesite="lax",
         max_age=60 * settings.ACCESS_TOKEN_EXPIRE_MINUTES,
     )

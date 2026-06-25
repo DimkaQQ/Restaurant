@@ -63,7 +63,7 @@ async def show_history(callback: CallbackQuery, guest: dict | None, api_url: str
     for o in orders[:10]:
         status_key = STATUS_KEYS.get(o["status"], "status_new")
         st = t(status_key, lang)
-        items_str = ", ".join(i['name'] for i in o.get("items", []))
+        items_str = ", ".join(i.get('name', '?') for i in o.get("items", []))
         lines.append(f"{st} {float(o['total_amount']):.0f} ₸ — {items_str}")
 
     await callback.message.edit_text(
