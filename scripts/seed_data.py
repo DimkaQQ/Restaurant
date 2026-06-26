@@ -304,6 +304,15 @@ async def main():
             await db.commit()
             print("   ✓ Очищено")
 
+        # Rename network to demo name so real client data is not exposed
+        await db.execute(
+            sa.update(Network)
+            .where(Network.id == network.id)
+            .values(name="Chayla Group", slug="chayla")
+        )
+        await db.commit()
+        print("   ✓ Сеть переименована в «Chayla Group»")
+
         # ── 1. Venues ────────────────────────────────────────────────────────
         venue_rows = []
         venue_meta = []

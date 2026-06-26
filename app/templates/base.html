@@ -34,7 +34,18 @@
 </head>
 <body>
   {% if user is defined and user %}
-  <nav class="sidebar">
+  <!-- Mobile top bar -->
+  <div class="mobile-topbar">
+    <button class="hamburger" onclick="toggleSidebar()" aria-label="Меню">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+    <div class="logo-wrap">
+      <span class="logo-serif">Rest</span><span class="logo-mono">OS</span>
+    </div>
+  </div>
+  <!-- Sidebar overlay -->
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+  <nav class="sidebar" id="sidebar">
     <div class="sidebar-logo">
       <span class="logo-serif">Rest</span><span class="logo-mono">OS</span>
     </div>
@@ -119,6 +130,19 @@
   {% endif %}
 
   <script>
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('sidebar-overlay').classList.toggle('open');
+    }
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('sidebar-overlay').classList.remove('open');
+    }
+    // Close sidebar when a nav link is clicked on mobile
+    document.querySelectorAll('.nav-link').forEach(function(link) {
+      link.addEventListener('click', closeSidebar);
+    });
+
     async function logout() {
       await fetch('/auth/logout', { method: 'POST' });
       localStorage.removeItem('access_token');
