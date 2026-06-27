@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
-  <link rel="stylesheet" href="/static/css/main.css?v=3">
+  <link rel="stylesheet" href="/static/css/main.css?v=4">
   <style>
     /* sidebar scroll — grid layout guarantee */
     .sidebar {
@@ -131,16 +131,27 @@
 
   <script>
     function toggleSidebar() {
-      document.getElementById('sidebar').classList.toggle('open');
-      document.getElementById('sidebar-overlay').classList.toggle('open');
+      var sb = document.getElementById('sidebar');
+      var ov = document.getElementById('sidebar-overlay');
+      if (!sb) return;
+      sb.classList.toggle('open');
+      ov.classList.toggle('open');
     }
     function closeSidebar() {
-      document.getElementById('sidebar').classList.remove('open');
-      document.getElementById('sidebar-overlay').classList.remove('open');
+      var sb = document.getElementById('sidebar');
+      var ov = document.getElementById('sidebar-overlay');
+      if (!sb) return;
+      sb.classList.remove('open');
+      ov.classList.remove('open');
     }
-    // Close sidebar when a nav link is clicked on mobile
-    document.querySelectorAll('.nav-link').forEach(function(link) {
-      link.addEventListener('click', closeSidebar);
+    // Close sidebar on nav link click (event delegation — works with HTMX swaps)
+    var navLinks = document.querySelector('.nav-links');
+    if (navLinks) navLinks.addEventListener('click', function(e) {
+      if (e.target.closest('.nav-link')) closeSidebar();
+    });
+    // Close sidebar on Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeSidebar();
     });
 
     async function logout() {

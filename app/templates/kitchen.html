@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
-  <link rel="stylesheet" href="/static/css/main.css">
+  <link rel="stylesheet" href="/static/css/main.css?v=4">
   <script src="https://unpkg.com/htmx.org@1.9.12"></script>
   <style>
     * { box-sizing: border-box; }
@@ -93,6 +93,26 @@
     .kds-tab.active { color:var(--gold); border-bottom-color:var(--gold); }
     .kds-tab-count { display:inline-block; background:rgba(200,168,75,.2); color:var(--gold); border-radius:10px; padding:.05rem .45rem; font-size:.78rem; margin-left:.4rem; }
     #tab-history-panel { height:calc(100vh - 162px); overflow-y:auto; }
+
+    @media (max-width: 768px) {
+      .kds-header { padding: 0.5rem 0.75rem; }
+      .kds-clock { font-size: 1.4rem; }
+      .kds-filter { flex-wrap: wrap; gap: 0.5rem; padding: 0.4rem 0.75rem; }
+      .kds-filter select { max-width: 100%; width: 100%; }
+      .kds-tabs .kds-tab { padding: 0.6rem 0.75rem; font-size: 0.78rem; }
+      .kds-board {
+        grid-template-columns: 1fr;
+        height: auto;
+        overflow: visible;
+      }
+      .kds-col {
+        border-right: none;
+        border-bottom: 2px solid #1a1a1a;
+        max-height: 60vh;
+      }
+      .kds-col:last-child { border-bottom: none; }
+      #tab-history-panel { height: auto; max-height: 80vh; }
+    }
   </style>
 </head>
 <body>
