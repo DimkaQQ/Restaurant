@@ -100,7 +100,8 @@ body {
   background: none;
   border: 1px solid var(--border);
   color: var(--muted);
-  padding: 0.4rem 0.75rem;
+  padding: 0.5rem 0.75rem;
+  min-height: 36px;
   border-radius: 6px;
   cursor: pointer;
   font-size: 0.75rem;
@@ -182,7 +183,7 @@ body {
 .panel-title { font-size: 1rem; font-weight: 500; }
 
 .live-badge {
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   color: var(--gold);
   letter-spacing: 0.05em;
   animation: pulse 2s ease infinite;
@@ -215,10 +216,10 @@ body {
 .order-header { display: flex; align-items: center; gap: 0.5rem; }
 .order-id { font-family: monospace; font-size: 0.8rem; color: var(--muted); }
 .order-status {
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   background: var(--gold-dim);
   color: var(--gold);
-  padding: 0.15rem 0.5rem;
+  padding: 0.25rem 0.5rem;
   border-radius: 20px;
 }
 .order-time { margin-left: auto; font-size: 0.75rem; color: var(--muted); }
@@ -229,7 +230,7 @@ body {
 .order-item {
   font-size: 0.75rem;
   background: rgba(255,255,255,0.05);
-  padding: 0.2rem 0.5rem;
+  padding: 0.3rem 0.5rem;
   border-radius: 4px;
 }
 
@@ -266,7 +267,8 @@ body {
   background: var(--gold);
   color: #0D0D0D;
   border: none;
-  padding: 0.3rem 0.65rem;
+  padding: 0.5rem 0.65rem;
+  min-height: 36px;
   border-radius: 6px;
   font-size: 0.75rem;
   font-weight: 600;
@@ -277,7 +279,8 @@ body {
   background: transparent;
   color: var(--danger);
   border: 1px solid rgba(200,75,75,0.3);
-  padding: 0.3rem 0.65rem;
+  padding: 0.5rem 0.65rem;
+  min-height: 36px;
   border-radius: 6px;
   font-size: 0.75rem;
   cursor: pointer;
@@ -328,16 +331,16 @@ a.venue-item-link .venue-name { color: var(--white); }
 .venue-addr { font-size: 0.75rem; color: var(--muted); }
 
 /* ── Badges ── */
-.badge { font-size: 0.7rem; padding: 0.2rem 0.5rem; border-radius: 20px; }
+.badge { font-size: 0.75rem; padding: 0.25rem 0.5rem; border-radius: 20px; }
 .badge-active   { background: rgba(75,200,122,0.15); color: #4BC87A; }
 .badge-inactive { background: rgba(200,75,75,0.15); color: var(--danger); }
 .badge-launch   { background: rgba(200,168,75,0.15); color: var(--gold); }
 
 .tg-badge {
-  font-size: 0.65rem;
+  font-size: 0.72rem;
   background: rgba(41,182,246,0.15);
   color: #29B6F6;
-  padding: 0.1rem 0.4rem;
+  padding: 0.2rem 0.4rem;
   border-radius: 4px;
   margin-left: 0.35rem;
 }
@@ -462,7 +465,7 @@ select option { background: var(--card); }
 .menu-card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; }
 .menu-item-name { font-weight: 500; font-size: 0.9rem; }
 .menu-item-price { font-weight: 600; color: var(--gold); white-space: nowrap; }
-.menu-category { font-size: 0.7rem; color: var(--muted); }
+.menu-category { font-size: 0.75rem; color: var(--muted); }
 .menu-desc { font-size: 0.8rem; color: var(--muted); }
 
 .menu-card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 0.5rem; }
@@ -569,7 +572,7 @@ select option { background: var(--card); }
 }
 
 .oss-count { font-size: 2rem; font-weight: 700; line-height: 1; }
-.oss-label { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; text-align: center; }
+.oss-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; text-align: center; }
 
 .oss-new      .oss-count { color: var(--gold); }
 .oss-confirmed .oss-count { color: #38BDF8; }
