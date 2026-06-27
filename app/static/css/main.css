@@ -606,7 +606,7 @@ select option { background: var(--card); }
   background: none;
   border: 1px solid var(--border);
   color: var(--white);
-  width: 36px; height: 36px;
+  width: 44px; height: 44px;
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -717,6 +717,15 @@ select option { background: var(--card); }
   /* Staff: review drawer full-width on mobile */
   .review-drawer { width: 100%; right: -100%; }
   .review-drawer.open { right: 0; }
+
+  /* Form row: stack 2-col grids on mobile */
+  .form-row-2 { grid-template-columns: 1fr; }
+
+  /* Shifts: increase tap targets */
+  .shift-del { padding: .3rem .4rem; color: var(--muted); opacity: 0; }
+  .shift-chip:hover .shift-del { opacity: 1; }
+  .day-add { padding: .35rem .5rem; }
+  .week-nav button { padding: .5rem 1rem; min-height: 44px; }
 }
 
 @media (max-width: 420px) {
@@ -724,4 +733,8 @@ select option { background: var(--card); }
   .stats-grid { grid-template-columns: 1fr; }
   .menu-grid { grid-template-columns: 1fr; }
   .main-content { padding: .75rem; padding-top: calc(52px + .75rem); }
+  .fin-kpis { grid-template-columns: 1fr; }
+  .oss-item { min-width: 56px; padding: .6rem .35rem; }
+  .oss-count { font-size: 1.25rem; }
+  .oss-label { font-size: .65rem; }
 }

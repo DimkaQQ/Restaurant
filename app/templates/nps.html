@@ -21,7 +21,7 @@
 .venue-card-name { font-weight: 600; font-size: 1rem; margin-bottom: 0.75rem; }
 .venue-card-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; font-size: 0.85rem; }
 .venue-card-label { color: var(--muted); }
-.neg-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+.neg-table { width: 100%; min-width: 520px; border-collapse: collapse; font-size: 0.84rem; }
 .neg-table th { text-align: left; color: var(--muted); font-weight: 500; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border); }
 .neg-table td { padding: 0.65rem 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; }
 .neg-table tr:hover td { background: rgba(255,255,255,0.03); }
@@ -90,6 +90,7 @@
 {% if negative_reviews %}
 <div class="card">
   <div class="card-header"><h2 class="card-title">Негативные отзывы</h2></div>
+  <div class="table-wrapper">
   <table class="neg-table">
     <thead>
       <tr>
@@ -114,6 +115,7 @@
       {% endfor %}
     </tbody>
   </table>
+  </div>
 </div>
 {% else %}
 <div class="card" style="text-align:center; padding:2.5rem; color:var(--muted)">
