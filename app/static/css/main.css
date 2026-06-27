@@ -288,7 +288,8 @@ body {
   border: none;
   color: var(--muted);
   cursor: pointer;
-  padding: 0.25rem;
+  padding: 0.4rem 0.5rem;
+  min-height: 36px;
   transition: color 0.15s;
 }
 .btn-icon-danger:hover { color: var(--danger); }
@@ -375,7 +376,8 @@ a.venue-item-link .venue-name { color: var(--white); }
 label { font-size: 0.8rem; color: var(--muted); }
 
 input[type=text], input[type=email], input[type=password], input[type=number],
-input[type=search], textarea, select {
+input[type=search], input[type=url], input[type=tel], input[type=date],
+input[type=time], textarea, select {
   background: rgba(255,255,255,0.04);
   border: 1px solid var(--border);
   color: var(--white);
@@ -394,7 +396,8 @@ input[type=search], textarea, select {
 }
 /* Non-select inputs don't get the dropdown arrow */
 input[type=text], input[type=email], input[type=password],
-input[type=number], input[type=search], textarea {
+input[type=number], input[type=search], input[type=url],
+input[type=tel], input[type=date], input[type=time], textarea {
   padding-right: 0.75rem;
   background-image: none;
 }
@@ -754,6 +757,9 @@ select option { background: var(--card); }
 
   /* Inventory: larger category chips */
   .category-chip { padding: .35rem .75rem; min-height: 36px; display: inline-flex; align-items: center; }
+
+  /* Order action buttons: ensure 36px touch targets */
+  .btn-status, .btn-cancel { padding: 0.5rem 0.75rem; min-height: 36px; }
 }
 
 @media (max-width: 420px) {

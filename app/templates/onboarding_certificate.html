@@ -48,6 +48,14 @@
     .btn-back { background:transparent; border:1px solid #ccc; color:#555; padding:.65rem 1.75rem; border-radius:8px; font-size:.9rem; cursor:pointer; text-decoration:none; display:inline-block; }
     .btn-back:hover { border-color:#c8a84b; color:#c8a84b; }
 
+    @media (max-width: 480px) {
+      .cert { padding: 2rem 1.25rem; }
+      .cert-name { font-size: 1.5rem; }
+      .cert-title { font-size: 1.4rem; }
+      .cert-actions { flex-direction: column; align-items: stretch; }
+      .btn-print, .btn-back { text-align: center; }
+    }
+
     @media print {
       body { background:#fff; padding:0; }
       .cert-actions { display:none; }
