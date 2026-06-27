@@ -7,7 +7,7 @@
 .shifts-header h1 { font-family:'Instrument Serif',serif; font-size:1.6rem; font-weight:400; }
 .shifts-controls { display:flex; gap:.75rem; align-items:center; flex-wrap:wrap; }
 .week-nav { display:flex; align-items:center; gap:.5rem; }
-.week-nav button { background:var(--card); border:1px solid var(--border); color:var(--white); padding:.35rem .75rem; border-radius:6px; cursor:pointer; font-size:.85rem; }
+.week-nav button { background:var(--card); border:1px solid var(--border); color:var(--white); padding:.5rem .75rem; min-height:36px; border-radius:6px; cursor:pointer; font-size:.85rem; }
 .week-nav button:hover { border-color:var(--gold); }
 .week-nav span { font-size:.875rem; font-weight:500; min-width:130px; text-align:center; }
 .today-badge { background:rgba(200,168,75,.15); border:1px solid rgba(200,168,75,.3); color:var(--gold); border-radius:8px; padding:.4rem 1rem; font-size:.85rem; }
@@ -18,7 +18,7 @@
 .day-name { font-size:.72rem; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); }
 .day-date { font-size:1rem; font-weight:700; }
 .day-col.today .day-date { color:var(--gold); }
-.day-add { background:none; border:none; color:var(--muted); cursor:pointer; font-size:1rem; line-height:1; padding:.1rem; }
+.day-add { background:none; border:none; color:var(--muted); cursor:pointer; font-size:1rem; line-height:1; padding:.5rem; min-height:36px; min-width:36px; display:flex; align-items:center; justify-content:center; }
 .day-add:hover { color:var(--gold); }
 .day-body { padding:.5rem; }
 .shift-chip { background:rgba(255,255,255,.04); border:1px solid var(--border); border-radius:6px; padding:.4rem .6rem; margin-bottom:.35rem; display:flex; align-items:center; gap:.4rem; cursor:pointer; transition:all .15s; }

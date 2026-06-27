@@ -131,7 +131,7 @@
           {% for q in m.questions %}
           <div style="display:flex;align-items:center;justify-content:space-between;padding:.3rem 0;border-bottom:1px solid rgba(255,255,255,.04);">
             <span style="font-size:.78rem;">{{ loop.index }}. {{ q.question }}</span>
-            <button class="btn-icon btn-danger" style="font-size:.7rem;padding:.2rem .4rem" onclick="deleteQuestion('{{ q.id }}')">✕</button>
+            <button class="btn-icon btn-danger" style="font-size:.7rem;padding:.4rem .6rem;min-height:36px" onclick="deleteQuestion('{{ q.id }}')">✕</button>
           </div>
           {% endfor %}
         </div>

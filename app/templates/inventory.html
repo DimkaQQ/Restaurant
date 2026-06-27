@@ -41,13 +41,13 @@
 .form-group input:focus, .form-group select:focus { outline:none; border-color:var(--gold); }
 .form-row-2 { display:grid; grid-template-columns:1fr 1fr; gap:.5rem; }
 .qty-controls { display:flex; gap:.5rem; }
-.qty-controls button { flex:1; font-size:.8rem; padding:.4rem; border-radius:6px; cursor:pointer; border:1px solid var(--border); background:var(--black); color:var(--white); transition:all .15s; }
+.qty-controls button { flex:1; font-size:.8rem; padding:.4rem; min-height:36px; border-radius:6px; cursor:pointer; border:1px solid var(--border); background:var(--black); color:var(--white); transition:all .15s; }
 .qty-controls .btn-add { border-color:rgba(34,197,94,.4); color:#4ade80; }
 .qty-controls .btn-add:hover { background:rgba(34,197,94,.1); }
 .qty-controls .btn-rem { border-color:rgba(239,68,68,.4); color:#f87171; }
 .qty-controls .btn-rem:hover { background:rgba(239,68,68,.1); }
 .action-btns { display:flex; gap:.4rem; }
-.btn-icon { background:none; border:1px solid var(--border); color:var(--muted); padding:.25rem .5rem; border-radius:5px; cursor:pointer; font-size:.8rem; transition:all .15s; }
+.btn-icon { background:none; border:1px solid var(--border); color:var(--muted); padding:.4rem .6rem; min-height:36px; border-radius:5px; cursor:pointer; font-size:.8rem; transition:all .15s; }
 .btn-icon:hover { border-color:#ef4444; color:#ef4444; }
 </style>
 {% endblock %}
