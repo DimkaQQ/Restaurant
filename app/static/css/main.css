@@ -12,6 +12,7 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+button, a, [role=button], label { touch-action: manipulation; }
 
 body {
   background: var(--black);
@@ -391,7 +392,12 @@ input[type=search], textarea, select {
   background-repeat: no-repeat;
   background-position: right 0.75rem center;
 }
-input[type=search] { padding-right: 0.75rem; background-image: none; }
+/* Non-select inputs don't get the dropdown arrow */
+input[type=text], input[type=email], input[type=password],
+input[type=number], input[type=search], textarea {
+  padding-right: 0.75rem;
+  background-image: none;
+}
 input:focus, textarea:focus, select:focus { border-color: var(--gold); }
 textarea { resize: vertical; }
 select option { background: var(--card); }
@@ -739,6 +745,15 @@ select option { background: var(--card); }
   /* Finance: period tabs touch-friendly */
   .period-tab { padding: .5rem .9rem; }
   .fin-controls { gap: .5rem; }
+
+  /* Sidebar nav links: larger tap target on mobile */
+  .nav-link { padding: 0.75rem 1.5rem; }
+
+  /* Finance KPI: allow wrapping so large numbers don't get clipped */
+  .fin-kpi-value { white-space: normal; word-break: break-word; }
+
+  /* Inventory: larger category chips */
+  .category-chip { padding: .35rem .75rem; min-height: 36px; display: inline-flex; align-items: center; }
 }
 
 @media (max-width: 420px) {
