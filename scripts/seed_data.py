@@ -1,6 +1,6 @@
 """
-Seed: Chayla Group — 6 концепций, 14 активных + 3 в запуске.
-  Чайла | Suli da Guli | Lukum Vostok | &milk | Usta | Joy (launch)
+Seed: Gastro Group — 6 концепций, 14 активных + 3 в запуске.
+  Дастархан | Тбилиси | Восток | Brew | Istanbul | Fresh (launch)
 
 Usage:
   python scripts/seed_data.py           # пропустит если данные есть
@@ -42,33 +42,33 @@ from app.models.shift import Shift
 # ══════════════════════════════════════════════════════════════════════════════
 VENUES = [
     # ── Чайла — еда на каждый день в лаунж-пространстве ──────────────────────
-    {"brand": "Чайла",         "name": "Чайла — Достык",         "address": "пр. Достык, 240",              "city": "Алматы",  "active": True,  "dmin": 65, "dmax": 120, "avg_check": 5200},
-    {"brand": "Чайла",         "name": "Чайла — Жибек Жолы",     "address": "ул. Жибек Жолы, 115",          "city": "Алматы",  "active": True,  "dmin": 55, "dmax": 100, "avg_check": 4800},
-    {"brand": "Чайла",         "name": "Чайла — Байзақов",       "address": "ул. Байзақов, 280",            "city": "Алматы",  "active": True,  "dmin": 45, "dmax": 85,  "avg_check": 4500},
-    {"brand": "Чайла",         "name": "Чайла — Мега",           "address": "ТРЦ Мега, пр. Розы Багланова, 7", "city": "Алматы", "active": True, "dmin": 80, "dmax": 155, "avg_check": 4600},
-    {"brand": "Чайла",         "name": "Чайла — Астана",         "address": "ул. Кабанбай батыра, 61",      "city": "Астана",  "active": True,  "dmin": 50, "dmax": 95,  "avg_check": 4900},
+    {"brand": "Дастархан",         "name": "Дастархан — Достык",         "address": "пр. Достык, 240",              "city": "Алматы",  "active": True,  "dmin": 65, "dmax": 120, "avg_check": 5200},
+    {"brand": "Дастархан",         "name": "Дастархан — Жибек Жолы",     "address": "ул. Жибек Жолы, 115",          "city": "Алматы",  "active": True,  "dmin": 55, "dmax": 100, "avg_check": 4800},
+    {"brand": "Дастархан",         "name": "Дастархан — Байзақов",       "address": "ул. Байзақов, 280",            "city": "Алматы",  "active": True,  "dmin": 45, "dmax": 85,  "avg_check": 4500},
+    {"brand": "Дастархан",         "name": "Дастархан — Мега",           "address": "ТРЦ Мега, пр. Розы Багланова, 7", "city": "Алматы", "active": True, "dmin": 80, "dmax": 155, "avg_check": 4600},
+    {"brand": "Дастархан",         "name": "Дастархан — Астана",         "address": "ул. Кабанбай батыра, 61",      "city": "Астана",  "active": True,  "dmin": 50, "dmax": 95,  "avg_check": 4900},
 
     # ── Suli da Guli — грузинская история ────────────────────────────────────
-    {"brand": "Suli da Guli",  "name": "Suli da Guli — Гоголя",  "address": "ул. Гоголя, 20",               "city": "Алматы",  "active": True,  "dmin": 45, "dmax": 85,  "avg_check": 10500},
-    {"brand": "Suli da Guli",  "name": "Suli da Guli — Тимирязева","address": "ул. Тимирязева, 42",          "city": "Алматы",  "active": True,  "dmin": 40, "dmax": 75,  "avg_check": 9800},
-    {"brand": "Suli da Guli",  "name": "Suli da Guli — Астана",  "address": "ул. Туркестан, 2",             "city": "Астана",  "active": True,  "dmin": 40, "dmax": 78,  "avg_check": 10200},
+    {"brand": "Тбилиси",  "name": "Тбилиси — Гоголя",  "address": "ул. Гоголя, 20",               "city": "Алматы",  "active": True,  "dmin": 45, "dmax": 85,  "avg_check": 10500},
+    {"brand": "Тбилиси",  "name": "Тбилиси — Тимирязева","address": "ул. Тимирязева, 42",          "city": "Алматы",  "active": True,  "dmin": 40, "dmax": 75,  "avg_check": 9800},
+    {"brand": "Тбилиси",  "name": "Тбилиси — Астана",  "address": "ул. Туркестан, 2",             "city": "Астана",  "active": True,  "dmin": 40, "dmax": 78,  "avg_check": 10200},
 
     # ── Lukum Vostok — восточная кухня ───────────────────────────────────────
-    {"brand": "Lukum Vostok",  "name": "Lukum Vostok — Казыбек Би","address": "ул. Казыбек Би, 48",         "city": "Алматы",  "active": True,  "dmin": 40, "dmax": 75,  "avg_check": 8200},
-    {"brand": "Lukum Vostok",  "name": "Lukum Vostok — Достык",  "address": "пр. Достык, 162",              "city": "Алматы",  "active": True,  "dmin": 35, "dmax": 65,  "avg_check": 7800},
+    {"brand": "Восток",  "name": "Восток — Казыбек Би","address": "ул. Казыбек Би, 48",         "city": "Алматы",  "active": True,  "dmin": 40, "dmax": 75,  "avg_check": 8200},
+    {"brand": "Восток",  "name": "Восток — Достык",  "address": "пр. Достык, 162",              "city": "Алматы",  "active": True,  "dmin": 35, "dmax": 65,  "avg_check": 7800},
 
     # ── &milk — кофейня ──────────────────────────────────────────────────────
-    {"brand": "&milk",         "name": "&milk — Esentai",         "address": "пр. Аль-Фараби, 77/8",         "city": "Алматы",  "active": True,  "dmin": 75, "dmax": 140, "avg_check": 3200},
-    {"brand": "&milk",         "name": "&milk — Алмалы",          "address": "ул. Панфилова, 98",            "city": "Алматы",  "active": True,  "dmin": 60, "dmax": 110, "avg_check": 3000},
+    {"brand": "Brew",         "name": "Brew — Esentai",         "address": "пр. Аль-Фараби, 77/8",         "city": "Алматы",  "active": True,  "dmin": 75, "dmax": 140, "avg_check": 3200},
+    {"brand": "Brew",         "name": "Brew — Алмалы",          "address": "ул. Панфилова, 98",            "city": "Алматы",  "active": True,  "dmin": 60, "dmax": 110, "avg_check": 3000},
 
     # ── Usta — турецкая кухня ────────────────────────────────────────────────
-    {"brand": "Usta",          "name": "Usta — Омаров",           "address": "ул. Омаров, 11",               "city": "Алматы",  "active": True,  "dmin": 40, "dmax": 80,  "avg_check": 9500},
-    {"brand": "Usta",          "name": "Usta — Кунаева",          "address": "ул. Кунаева, 35",              "city": "Алматы",  "active": True,  "dmin": 35, "dmax": 70,  "avg_check": 9000},
+    {"brand": "Istanbul",          "name": "Istanbul — Омаров",           "address": "ул. Омаров, 11",               "city": "Алматы",  "active": True,  "dmin": 40, "dmax": 80,  "avg_check": 9500},
+    {"brand": "Istanbul",          "name": "Istanbul — Кунаева",          "address": "ул. Кунаева, 35",              "city": "Алматы",  "active": True,  "dmin": 35, "dmax": 70,  "avg_check": 9000},
 
     # ── Joy — well-being bistro (в запуске) ──────────────────────────────────
-    {"brand": "Joy",           "name": "Joy — Достык",            "address": "пр. Достык, 295",              "city": "Алматы",  "active": False, "dmin": 0, "dmax": 0, "avg_check": 0},
-    {"brand": "Joy",           "name": "Joy — Esentai",           "address": "пр. Аль-Фараби, 77/8",         "city": "Алматы",  "active": False, "dmin": 0, "dmax": 0, "avg_check": 0},
-    {"brand": "Joy",           "name": "Joy — Астана",            "address": "пр. Туран, 22",                "city": "Астана",  "active": False, "dmin": 0, "dmax": 0, "avg_check": 0},
+    {"brand": "Fresh",           "name": "Fresh — Достык",            "address": "пр. Достык, 295",              "city": "Алматы",  "active": False, "dmin": 0, "dmax": 0, "avg_check": 0},
+    {"brand": "Fresh",           "name": "Fresh — Esentai",           "address": "пр. Аль-Фараби, 77/8",         "city": "Алматы",  "active": False, "dmin": 0, "dmax": 0, "avg_check": 0},
+    {"brand": "Fresh",           "name": "Fresh — Астана",            "address": "пр. Туран, 22",                "city": "Астана",  "active": False, "dmin": 0, "dmax": 0, "avg_check": 0},
 ]
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -229,12 +229,12 @@ MENU_JOY = [
 ]
 
 MENU_BY_BRAND = {
-    "Чайла": MENU_CHAYLA,
-    "Suli da Guli": MENU_SULI,
-    "Lukum Vostok": MENU_LUKUM,
-    "&milk": MENU_MILK,
-    "Usta": MENU_USTA,
-    "Joy": MENU_JOY,
+    "Дастархан": MENU_CHAYLA,
+    "Тбилиси": MENU_SULI,
+    "Восток": MENU_LUKUM,
+    "Brew": MENU_MILK,
+    "Istanbul": MENU_USTA,
+    "Fresh": MENU_JOY,
 }
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -282,7 +282,7 @@ async def main():
         if not network:
             print("❌ Нет сети. Сначала: make setup")
             return
-        print(f"✅ Сеть: {network.name} — Chayla Group")
+        print(f"✅ Сеть: {network.name}")
 
         existing = (await db.execute(
             select(Venue).where(Venue.network_id == network.id)
@@ -308,10 +308,10 @@ async def main():
         await db.execute(
             sa.update(Network)
             .where(Network.id == network.id)
-            .values(name="Chayla Group", slug="chayla")
+            .values(name="Gastro Group", slug="gastro")
         )
         await db.commit()
-        print("   ✓ Сеть переименована в «Chayla Group»")
+        print("   ✓ Сеть переименована")
 
         # ── 1. Venues ────────────────────────────────────────────────────────
         venue_rows = []
@@ -528,12 +528,12 @@ async def main():
 
         # ── 5. Staff ─────────────────────────────────────────────────────────
         STAFF_BY_BRAND = {
-            "Чайла":       [("waiter",4),("waiter",4),("senior_waiter",2),("manager",1),("barista",1)],
-            "Suli da Guli":[("waiter",4),("waiter",3),("senior_waiter",2),("manager",1),("hostess",1)],
-            "Lukum Vostok":[("waiter",4),("waiter",3),("senior_waiter",2),("manager",1),("bartender",1)],
-            "&milk":       [("barista",3),("barista",2),("senior_waiter",1),("manager",1)],
-            "Usta":        [("waiter",4),("waiter",3),("senior_waiter",1),("manager",1),("bartender",1)],
-            "Joy":         [("waiter",2),("barista",2),("manager",1)],
+            "Дастархан":       [("waiter",4),("waiter",4),("senior_waiter",2),("manager",1),("barista",1)],
+            "Тбилиси":[("waiter",4),("waiter",3),("senior_waiter",2),("manager",1),("hostess",1)],
+            "Восток":[("waiter",4),("waiter",3),("senior_waiter",2),("manager",1),("bartender",1)],
+            "Brew":       [("barista",3),("barista",2),("senior_waiter",1),("manager",1)],
+            "Istanbul":        [("waiter",4),("waiter",3),("senior_waiter",1),("manager",1),("bartender",1)],
+            "Fresh":         [("waiter",2),("barista",2),("manager",1)],
         }
         STAFF_FEMALE_FIRST = [
             "Алия","Айгерим","Динара","Камила","Асель","Жания","Малика","Анна","Мария","Дарья",
@@ -713,7 +713,7 @@ async def main():
             ("Сахар тростниковый","кг",    5.0,   1.0,  450),
         ]
         INGREDIENTS_BRAND = {
-            "Чайла": [
+            "Дастархан": [
                 ("Говядина (фарш)",   "кг",   15.0,  3.0, 3200),
                 ("Баранина",          "кг",    8.0,  2.0, 4500),
                 ("Рис",               "кг",   25.0,  5.0,  350),
@@ -721,7 +721,7 @@ async def main():
                 ("Кефир",             "л",     8.0,  2.0,  320),
                 ("Творог",            "кг",    5.0,  1.0, 1200),
             ],
-            "Suli da Guli": [
+            "Тбилиси": [
                 ("Говядина (вырезка)", "кг",  12.0,  3.0, 5500),
                 ("Свинина",           "кг",    8.0,  2.0, 3200),
                 ("Сулугуни",          "кг",   10.0,  2.0, 4200),
@@ -731,7 +731,7 @@ async def main():
                 ("Грецкий орех",      "кг",    3.0,  1.0, 2800),
                 ("Аджика",            "кг",    2.0, 0.5, 1500),
             ],
-            "Lukum Vostok": [
+            "Восток": [
                 ("Баранина (на кости)","кг",  10.0,  3.0, 4200),
                 ("Нут",               "кг",    5.0,  1.0,  600),
                 ("Кунжут",            "кг",    2.0, 0.5, 1800),
@@ -740,7 +740,7 @@ async def main():
                 ("Рисовый крахмал",   "кг",    3.0,  1.0,  700),
                 ("Розовая вода",      "л",     2.0, 0.5, 1200),
             ],
-            "&milk": [
+            "Brew": [
                 ("Кофе спешелти",     "кг",   10.0,  2.0, 9500),
                 ("Молоко овсяное",    "л",    20.0,  5.0,  650),
                 ("Молоко миндальное", "л",    10.0,  2.0,  850),
@@ -749,7 +749,7 @@ async def main():
                 ("Сироп ванильный",   "л",     3.0,  1.0, 1500),
                 ("Матча (порошок)",   "кг",    1.0, 0.2,12000),
             ],
-            "Usta": [
+            "Istanbul": [
                 ("Говядина (фарш)",   "кг",   12.0,  3.0, 3200),
                 ("Баранина",          "кг",   10.0,  3.0, 4500),
                 ("Лаваш (листы)",     "шт",   50.0, 10.0,  120),
@@ -758,7 +758,7 @@ async def main():
                 ("Перец красный",     "кг",    1.5, 0.3, 1200),
                 ("Чечевица красная",  "кг",    8.0,  2.0,  450),
             ],
-            "Joy": [
+            "Fresh": [
                 ("Авокадо",           "шт",   20.0,  5.0,  600),
                 ("Чиа семена",        "кг",    2.0, 0.5, 3500),
                 ("Ягоды асаи (заморож.)","кг", 5.0, 1.0, 4500),
@@ -785,23 +785,23 @@ async def main():
             ("Кола (бутылка)",     "шт",   48.0, 12.0,  280),
         ]
         BAR_INGREDIENTS_BRAND = {
-            "Suli da Guli": [
+            "Тбилиси": [
                 ("Чача",           "л",     4.0,  1.0, 5500),
                 ("Вермут красный", "л",     3.0,  0.5, 3800),
                 ("Вермут белый",   "л",     3.0,  0.5, 3500),
             ],
-            "Lukum Vostok": [
+            "Восток": [
                 ("Арак",           "л",     3.0,  0.5, 4200),
                 ("Айран (бутылка)","шт",   24.0,  6.0,  300),
                 ("Гранатовый сок", "л",     8.0,  2.0,  750),
             ],
-            "Usta": [
+            "Istanbul": [
                 ("Пиво разливное", "л",    50.0, 10.0,  850),
                 ("Квас",           "л",    20.0,  5.0,  400),
             ],
         }
         # brands that have a bar
-        BAR_BRANDS = {"Suli da Guli", "Lukum Vostok", "Usta"}
+        BAR_BRANDS = {"Тбилиси", "Восток", "Istanbul"}
 
         ingredient_rows = []
         writeoff_rows = []
@@ -863,42 +863,42 @@ async def main():
 
         # ── 8. Expenses (финансы, 6 месяцев) ─────────────────────────────────
         MONTHLY_EXPENSE_TEMPLATES = {
-            "Чайла": [
+            "Дастархан": [
                 ("rent",       180_000, 220_000),
                 ("salaries",   420_000, 520_000),
                 ("ingredients",   180_000, 240_000),
                 ("utilities",   35_000,  55_000),
                 ("marketing",   20_000,  40_000),
             ],
-            "Suli da Guli": [
+            "Тбилиси": [
                 ("rent",       220_000, 280_000),
                 ("salaries",   500_000, 620_000),
                 ("ingredients",   250_000, 330_000),
                 ("utilities",   40_000,  65_000),
                 ("marketing",   25_000,  50_000),
             ],
-            "Lukum Vostok": [
+            "Восток": [
                 ("rent",       200_000, 260_000),
                 ("salaries",   460_000, 580_000),
                 ("ingredients",   220_000, 290_000),
                 ("utilities",   35_000,  60_000),
                 ("marketing",   20_000,  45_000),
             ],
-            "&milk": [
+            "Brew": [
                 ("rent",       150_000, 190_000),
                 ("salaries",   350_000, 450_000),
                 ("ingredients",   120_000, 170_000),
                 ("utilities",   25_000,  45_000),
                 ("marketing",   30_000,  55_000),
             ],
-            "Usta": [
+            "Istanbul": [
                 ("rent",       210_000, 270_000),
                 ("salaries",   480_000, 600_000),
                 ("ingredients",   240_000, 310_000),
                 ("utilities",   38_000,  62_000),
                 ("marketing",   22_000,  45_000),
             ],
-            "Joy": [
+            "Fresh": [
                 ("rent",       160_000, 200_000),
                 ("salaries",   380_000, 480_000),
                 ("ingredients",   140_000, 190_000),
@@ -917,7 +917,7 @@ async def main():
         for vm in venue_meta:
             if not vm["active"]:
                 continue
-            templates = MONTHLY_EXPENSE_TEMPLATES.get(vm["brand"], MONTHLY_EXPENSE_TEMPLATES["Чайла"])
+            templates = MONTHLY_EXPENSE_TEMPLATES.get(vm["brand"], MONTHLY_EXPENSE_TEMPLATES["Дастархан"])
 
             for months_back in range(6):
                 # month start: first day of that month
@@ -965,12 +965,12 @@ async def main():
 
         # ── 9. Shifts (смены, 3 недели) ───────────────────────────────────────
         SHIFT_TEMPLATES_BY_BRAND = {
-            "Чайла":        [(time(8, 0), time(16, 0)), (time(14, 0), time(22, 0))],
-            "Suli da Guli": [(time(10, 0), time(18, 0)), (time(16, 0), time(23, 0))],
-            "Lukum Vostok": [(time(10, 0), time(18, 0)), (time(16, 0), time(23, 0))],
-            "&milk":        [(time(7, 0),  time(15, 0)), (time(13, 0), time(21, 0))],
-            "Usta":         [(time(10, 0), time(18, 0)), (time(16, 0), time(23, 0))],
-            "Joy":          [(time(8, 0),  time(16, 0)), (time(14, 0), time(22, 0))],
+            "Дастархан":        [(time(8, 0), time(16, 0)), (time(14, 0), time(22, 0))],
+            "Тбилиси": [(time(10, 0), time(18, 0)), (time(16, 0), time(23, 0))],
+            "Восток": [(time(10, 0), time(18, 0)), (time(16, 0), time(23, 0))],
+            "Brew":        [(time(7, 0),  time(15, 0)), (time(13, 0), time(21, 0))],
+            "Istanbul":         [(time(10, 0), time(18, 0)), (time(16, 0), time(23, 0))],
+            "Fresh":          [(time(8, 0),  time(16, 0)), (time(14, 0), time(22, 0))],
         }
 
         shift_rows = []
@@ -982,7 +982,7 @@ async def main():
             sids = venue_staff.get(vm["id"], [])
             if not sids:
                 continue
-            shift_templates = SHIFT_TEMPLATES_BY_BRAND.get(vm["brand"], SHIFT_TEMPLATES_BY_BRAND["Чайла"])
+            shift_templates = SHIFT_TEMPLATES_BY_BRAND.get(vm["brand"], SHIFT_TEMPLATES_BY_BRAND["Дастархан"])
 
             for week_offset in range(-2, 2):  # last 2 weeks + current + next week
                 week_monday = week_start + timedelta(weeks=week_offset)
