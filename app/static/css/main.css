@@ -721,11 +721,24 @@ select option { background: var(--card); }
   /* Form row: stack 2-col grids on mobile */
   .form-row-2 { grid-template-columns: 1fr; }
 
+  /* Onboarding answer grid */
+  .q-row { grid-template-columns: 1fr; }
+
   /* Shifts: increase tap targets */
   .shift-del { padding: .3rem .4rem; color: var(--muted); opacity: 0; }
   .shift-chip:hover .shift-del { opacity: 1; }
   .day-add { padding: .35rem .5rem; }
   .week-nav button { padding: .5rem 1rem; min-height: 44px; }
+
+  /* Broadcasts: delete button tap target */
+  .bc-item-del { padding: .4rem .6rem; }
+
+  /* Staff drawer close button */
+  .drawer-close { padding: .5rem .75rem; min-width: 36px; }
+
+  /* Finance: period tabs touch-friendly */
+  .period-tab { padding: .5rem .9rem; }
+  .fin-controls { gap: .5rem; }
 }
 
 @media (max-width: 420px) {

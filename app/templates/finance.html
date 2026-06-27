@@ -84,7 +84,7 @@
   <div>
     <div class="fin-card" style="margin-bottom:1rem">
       <h2>Выручка vs Расходы (6 мес.)</h2>
-      <canvas id="pl-chart" height="200"></canvas>
+      <div style="position:relative;height:200px"><canvas id="pl-chart"></canvas></div>
     </div>
 
     <div class="fin-card" style="margin-bottom:1rem">
@@ -195,6 +195,7 @@ new Chart(ctx, {
   },
   options: {
     responsive: true,
+    maintainAspectRatio: false,
     interaction: { mode: 'index', intersect: false },
     plugins: {
       legend: { labels: { color: '#9ca3af', font: { size: 11 } } },
