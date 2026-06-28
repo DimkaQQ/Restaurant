@@ -148,7 +148,9 @@
         </div>
         <div class="form-group">
           <label>Сумма (₸)</label>
-          <input type="number" name="amount" min="1" step="1" required placeholder="0">
+          <input type="text" id="amount-display" inputmode="numeric" required placeholder="0" autocomplete="off"
+            oninput="formatAmountInput(this)">
+          <input type="hidden" name="amount" id="amount-raw">
         </div>
         <div class="form-group">
           <label>Дата</label>
@@ -243,7 +245,7 @@ document.getElementById('add-expense-form').addEventListener('submit', async (e)
   errEl.style.display = 'none';
   const fd = new FormData(e.target);
   const body = Object.fromEntries(fd.entries());
-  body.amount = parseFloat(body.amount);
+  body.amount = parseFloat(body.amount.replace(/\s/g, '').replace(/,/g, '')) || 0;
   if (!body.description) delete body.description;
   const res = await fetch('/api/expenses', {
     method:'POST', credentials:'include',
@@ -253,5 +255,11 @@ document.getElementById('add-expense-form').addEventListener('submit', async (e)
   if (res.ok) location.reload();
   else { const d = await res.json().catch(()=>({})); errEl.textContent=d.detail||'Ошибка'; errEl.style.display='block'; }
 });
+
+function formatAmountInput(el) {
+  const raw = el.value.replace(/\D/g, '');
+  document.getElementById('amount-raw').value = raw;
+  el.value = raw ? Number(raw).toLocaleString('ru-RU') : '';
+}
 </script>
 {% endblock %}
