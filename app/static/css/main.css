@@ -404,6 +404,12 @@ input[type=tel], input[type=date], input[type=time], textarea {
   padding-right: 0.75rem;
   background-image: none;
 }
+/* Restore native date/time picker controls */
+input[type=date], input[type=time] {
+  appearance: auto;
+  -webkit-appearance: auto;
+  color-scheme: dark;
+}
 input:focus, textarea:focus, select:focus { border-color: var(--gold); }
 textarea { resize: vertical; }
 select option { background: var(--card); }
