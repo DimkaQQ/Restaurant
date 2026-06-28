@@ -148,7 +148,8 @@
       </div>
       <div class="form-group">
         <label>Сотрудник</label>
-        <select name="staff_id" id="modal-staff" required>
+        <select name="staff_id" id="modal-staff" required disabled
+          style="opacity:.45;cursor:not-allowed;pointer-events:none">
           <option value="">Сначала выберите заведение</option>
           {% for s in all_staff %}
           <option value="{{ s.id }}" data-venue="{{ s.venue_id }}">{{ s.name }} ({{ s.role_label }})</option>
@@ -224,8 +225,19 @@ function loadStaff(venueId) {
   const sel = document.getElementById('modal-staff');
   const opts = sel.querySelectorAll('option[data-venue]');
   opts.forEach(o => { o.style.display = (!venueId || o.dataset.venue === venueId) ? '' : 'none'; });
-  // Reset if current selection is hidden
   if (sel.selectedOptions[0]?.style.display === 'none') sel.value = '';
+  if (venueId) {
+    sel.disabled = false;
+    sel.style.opacity = '';
+    sel.style.cursor = '';
+    sel.style.pointerEvents = '';
+  } else {
+    sel.disabled = true;
+    sel.style.opacity = '.45';
+    sel.style.cursor = 'not-allowed';
+    sel.style.pointerEvents = 'none';
+    sel.value = '';
+  }
 }
 
 async function changeStatus(id, current) {
