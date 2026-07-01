@@ -13,8 +13,23 @@ from app.models.menu import MenuItem
 from app.models.order import Order, OrderItem, OrderStatusLog, Visit
 from app.models.points import PointsTransaction
 from app.models.recipe import Recipe
+from app.models.table import Table
 from app.schemas.order import OrderCreate
 from app.services.points_service import add_points, calculate_points_earned
+
+ACTIVE_ORDER_STATUSES = ("new", "confirmed", "preparing", "ready")
+
+
+async def _sync_table_status(table_id: uuid.UUID, db: AsyncSession) -> None:
+    """Free a table once it has no more active orders; occupy it otherwise.
+    Reserved tables are left alone — that status is set/cleared manually."""
+    table = (await db.execute(select(Table).where(Table.id == table_id).with_for_update())).scalar_one_or_none()
+    if not table or table.status == "reserved":
+        return
+    has_active = (await db.execute(
+        select(Order.id).where(Order.table_id == table_id, Order.status.in_(ACTIVE_ORDER_STATUSES)).limit(1)
+    )).first()
+    table.status = "occupied" if has_active else "free"
 
 logger = logging.getLogger(__name__)
 
@@ -53,6 +68,15 @@ async def get_or_create_walkin_guest(network_id: uuid.UUID, db: AsyncSession) ->
 
 
 async def create_order(data: OrderCreate, guest: Guest, db: AsyncSession, changed_by: str = "bot") -> Order:
+    table = None
+    table_id = getattr(data, 'table_id', None)
+    if table_id:
+        table = (await db.execute(
+            select(Table).where(Table.id == table_id, Table.venue_id == data.venue_id)
+        )).scalar_one_or_none()
+        if not table:
+            raise ValueError("Стол не найден в этом заведении")
+
     item_ids = [i.menu_item_id for i in data.items]
     result = await db.execute(
         select(MenuItem).where(MenuItem.id.in_(item_ids), MenuItem.venue_id == data.venue_id)
@@ -88,7 +112,8 @@ async def create_order(data: OrderCreate, guest: Guest, db: AsyncSession, change
         total_amount=total,
         points_earned=points,
         notes=data.notes,
-        table_number=getattr(data, 'table_number', None),
+        table_number=table.label if table else getattr(data, 'table_number', None),
+        table_id=table.id if table else None,
         source=getattr(data, 'source', None) or 'bot',
         items=order_items,
     )
@@ -110,6 +135,9 @@ async def create_order(data: OrderCreate, guest: Guest, db: AsyncSession, change
         db.add(visit)
         guest.total_visits += 1
         await add_points(guest, data.venue_id, points, f"Заказ #{order.id}", db)
+
+    if table:
+        await _sync_table_status(table.id, db)
 
     await db.commit()
     await db.refresh(order)
@@ -193,6 +221,9 @@ async def update_order_status(
     if new_status == "done":
         await _deduct_inventory_for_order(order, db)
 
+    if order.table_id and new_status in ("done", "cancelled"):
+        await _sync_table_status(order.table_id, db)
+
     await db.commit()
     result = await db.execute(
         select(Order).options(selectinload(Order.items), selectinload(Order.guest)).where(Order.id == order_id)
@@ -265,6 +296,9 @@ async def cancel_order(
             await db.delete(visit)
             if order.guest.total_visits and order.guest.total_visits > 0:
                 order.guest.total_visits -= 1
+
+    if order.table_id:
+        await _sync_table_status(order.table_id, db)
 
     await db.commit()
     await db.refresh(order)

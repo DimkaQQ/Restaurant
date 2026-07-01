@@ -1,11 +1,14 @@
 from app.templates_env import templates
 import logging
+import uuid
 
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request, Query
 from fastapi.responses import HTMLResponse
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
+from app.models.table import Table
 from app.models.user import User
 from app.models.venue import Venue
 from app.routers.deps import get_current_user_dep, get_accessible_venue_ids
@@ -14,6 +17,21 @@ from app.services.order_service import create_order, get_or_create_walkin_guest
 
 router = APIRouter(tags=["pos"])
 logger = logging.getLogger(__name__)
+
+
+@router.get("/api/pos/tables")
+async def list_tables(
+    venue_id: uuid.UUID = Query(...),
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    accessible_ids = await get_accessible_venue_ids(current_user, db)
+    if venue_id not in accessible_ids:
+        raise HTTPException(status_code=403, detail="Нет доступа к этому заведению")
+    tables = (await db.execute(
+        select(Table).where(Table.venue_id == venue_id).order_by(Table.label)
+    )).scalars().all()
+    return [{"id": str(t.id), "label": t.label, "seats": t.seats, "status": t.status} for t in tables]
 
 
 @router.get("/pos", response_class=HTMLResponse)

@@ -18,6 +18,7 @@ class Order(Base):
     points_earned: Mapped[int] = mapped_column(Integer, default=0)
     notes: Mapped[str | None] = mapped_column(Text)
     table_number: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    table_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("tables.id", ondelete="SET NULL"), nullable=True)
     source: Mapped[str | None] = mapped_column(String(20), nullable=True, default='bot')
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(
@@ -28,6 +29,7 @@ class Order(Base):
     venue: Mapped["Venue"] = relationship("Venue", back_populates="orders")
     guest: Mapped["Guest"] = relationship("Guest", back_populates="orders")
     staff: Mapped["Staff | None"] = relationship("Staff", back_populates="orders")
+    table: Mapped["Table | None"] = relationship("Table")
     items: Mapped[list["OrderItem"]] = relationship("OrderItem", back_populates="order", cascade="all, delete-orphan")
     status_log: Mapped[list["OrderStatusLog"]] = relationship("OrderStatusLog", back_populates="order", cascade="all, delete-orphan")
     visit: Mapped["Visit | None"] = relationship("Visit", back_populates="order", uselist=False)

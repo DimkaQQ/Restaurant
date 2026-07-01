@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}Столы — RestOS{% endblock %}
+
+{% block head %}
+<style>
+.tables-venue-block { margin-bottom: 2rem; }
+.tables-venue-name { font-weight: 600; font-size: 1.05rem; margin-bottom: .75rem; }
+.tables-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: .75rem; margin-bottom: 1rem; }
+.table-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; text-align: center; position: relative; }
+.table-card.free { border-left: 4px solid #4ade80; }
+.table-card.occupied { border-left: 4px solid #f87171; }
+.table-card.reserved { border-left: 4px solid #fbbf24; }
+.table-label { font-size: 1.1rem; font-weight: 700; }
+.table-seats { font-size: .78rem; color: var(--muted); margin: .3rem 0 .6rem; }
+.table-status-select { width: 100%; font-size: .78rem; background: var(--black); border: 1px solid var(--border); color: var(--white); border-radius: 6px; padding: .25rem; }
+.table-del { position: absolute; top: .4rem; right: .5rem; background: none; border: none; color: var(--muted); cursor: pointer; font-size: .8rem; }
+.table-del:hover { color: #ef4444; }
+.add-table-form { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
+.add-table-form input { width: 100px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">Столы</h1>
+</div>
+
+{% if venues %}
+{% for v in venues %}
+<div class="tables-venue-block">
+  <div class="tables-venue-name">{{ v.name }}</div>
+  <div class="tables-grid" id="grid-{{ v.id }}">
+    {% for t in tables_by_venue.get(v.id, []) %}
+    <div class="table-card {{ t.status }}" id="table-{{ t.id }}">
+      <button class="table-del" onclick="deleteTable('{{ t.id }}')">✕</button>
+      <div class="table-label">{{ t.label }}</div>
+      <div class="table-seats">{{ t.seats }} мест</div>
+      <select class="table-status-select" onchange="setStatus('{{ t.id }}', this.value)">
+        <option value="free" {% if t.status == 'free' %}selected{% endif %}>Свободен</option>
+        <option value="occupied" {% if t.status == 'occupied' %}selected{% endif %}>Занят</option>
+        <option value="reserved" {% if t.status == 'reserved' %}selected{% endif %}>Бронь</option>
+      </select>
+    </div>
+    {% else %}
+    <p class="empty-state">Столов пока нет</p>
+    {% endfor %}
+  </div>
+  <form class="add-table-form" onsubmit="addTable(event, '{{ v.id }}')">
+    <input type="text" placeholder="Номер стола" required class="table-label-input">
+    <input type="number" placeholder="Мест" value="4" min="1" class="table-seats-input">
+    <button type="submit" class="btn-primary">+ Добавить стол</button>
+  </form>
+</div>
+{% endfor %}
+{% else %}
+<p class="empty-state">Сначала добавьте заведение</p>
+{% endif %}
+
+<script>
+  const token = () => localStorage.getItem('access_token');
+
+  async function addTable(e, venueId) {
+    e.preventDefault();
+    const form = e.target;
+    const label = form.querySelector('.table-label-input').value.trim();
+    const seats = parseInt(form.querySelector('.table-seats-input').value, 10) || 4;
+    if (!label) return;
+    const res = await fetch('/settings/api/tables', {
+      method: 'POST', credentials: 'include',
+      headers: {'Content-Type':'application/json','Authorization':'Bearer '+token()},
+      body: JSON.stringify({venue_id: venueId, label, seats}),
+    });
+    if (res.ok) location.reload();
+    else { const d = await res.json().catch(()=>({})); alert(d.detail || 'Ошибка добавления стола'); }
+  }
+
+  async function setStatus(tableId, status) {
+    const res = await fetch('/settings/api/tables/' + tableId, {
+      method: 'PATCH', credentials: 'include',
+      headers: {'Content-Type':'application/json','Authorization':'Bearer '+token()},
+      body: JSON.stringify({status}),
+    });
+    if (res.ok) {
+      const card = document.getElementById('table-' + tableId);
+      card.className = 'table-card ' + status;
+    } else { alert('Ошибка обновления статуса'); }
+  }
+
+  async function deleteTable(tableId) {
+    if (!confirm('Удалить стол?')) return;
+    const res = await fetch('/settings/api/tables/' + tableId, {
+      method: 'DELETE', credentials: 'include',
+      headers: {'Authorization':'Bearer '+token()},
+    });
+    if (res.ok) location.reload();
+    else alert('Ошибка удаления стола');
+  }
+</script>
+{% endblock %}

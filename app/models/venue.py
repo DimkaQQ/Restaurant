@@ -29,3 +29,4 @@ class Venue(Base):
     ingredients: Mapped[list["Ingredient"]] = relationship("Ingredient", back_populates="venue")
     expenses: Mapped[list["Expense"]] = relationship("Expense", back_populates="venue")
     shifts: Mapped[list["Shift"]] = relationship("Shift", back_populates="venue")
+    tables: Mapped[list["Table"]] = relationship("Table", back_populates="venue", cascade="all, delete-orphan")

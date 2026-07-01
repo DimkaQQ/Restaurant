@@ -19,6 +19,12 @@
 .pos-cart-qty { display:flex; align-items:center; gap:.4rem; }
 .pos-cart-qty button { width:24px; height:24px; border-radius:6px; border:1px solid var(--border); background:none; color:var(--white); cursor:pointer; }
 .pos-total { display:flex; justify-content:space-between; font-size:1.1rem; font-weight:700; margin:1rem 0; }
+.pos-tables { display:flex; flex-wrap:wrap; gap:.4rem; margin-bottom:.75rem; }
+.pos-table-chip { padding:.35rem .7rem; min-height:32px; border-radius:8px; border:1px solid var(--border); background:none; color:var(--white); cursor:pointer; font-size:.8rem; }
+.pos-table-chip.free { border-color:#4ade80; color:#4ade80; }
+.pos-table-chip.occupied { border-color:#f87171; color:#f87171; }
+.pos-table-chip.reserved { border-color:#fbbf24; color:#fbbf24; }
+.pos-table-chip.selected { background:var(--gold); color:#000; border-color:var(--gold); }
 </style>
 {% endblock %}
 
@@ -44,7 +50,11 @@
 
   <div class="pos-cart">
     <h2>Заказ</h2>
-    <div class="form-group">
+    <div class="form-group" id="table-picker-wrap" style="display:none">
+      <label style="font-size:.8rem;color:var(--muted)">Стол</label>
+      <div class="pos-tables" id="pos-tables"></div>
+    </div>
+    <div class="form-group" id="table-fallback-wrap">
       <label style="font-size:.8rem;color:var(--muted)">Стол / номер заказа</label>
       <input type="text" id="table-number" placeholder="Например, 5">
     </div>
@@ -58,6 +68,7 @@
   const token = () => localStorage.getItem('access_token');
   let _menuItems = [];
   let _cart = {}; // menu_item_id -> {item, qty}
+  let _selectedTableId = null;
 
   function esc(s) {
     return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -66,13 +77,40 @@
   async function loadMenu() {
     const venueId = document.getElementById('venue-select').value;
     _cart = {};
+    _selectedTableId = null;
     renderCart();
     if (!venueId) { document.getElementById('pos-grid').innerHTML = '<p class="empty-state">Выберите заведение</p>'; return; }
-    const res = await fetch('/api/menu/' + venueId, { credentials: 'include' });
-    if (res.status === 401) { location.href = '/auth/login'; return; }
-    _menuItems = (await res.json()).filter(i => i.is_available);
+    const [menuRes, tablesRes] = await Promise.all([
+      fetch('/api/menu/' + venueId, { credentials: 'include' }),
+      fetch('/api/pos/tables?venue_id=' + venueId, { credentials: 'include' }),
+    ]);
+    if (menuRes.status === 401) { location.href = '/auth/login'; return; }
+    _menuItems = (await menuRes.json()).filter(i => i.is_available);
     renderCats();
     renderGrid(null);
+    renderTables(tablesRes.ok ? await tablesRes.json() : []);
+  }
+
+  function renderTables(tables) {
+    const pickerWrap = document.getElementById('table-picker-wrap');
+    const fallbackWrap = document.getElementById('table-fallback-wrap');
+    if (!tables.length) {
+      pickerWrap.style.display = 'none';
+      fallbackWrap.style.display = '';
+      return;
+    }
+    pickerWrap.style.display = '';
+    fallbackWrap.style.display = 'none';
+    const el = document.getElementById('pos-tables');
+    el.innerHTML = tables.map(t => `
+      <button type="button" class="pos-table-chip ${t.status}" data-id="${esc(t.id)}" onclick="selectTable('${esc(t.id)}', this)">${esc(t.label)}</button>
+    `).join('');
+  }
+
+  function selectTable(tableId, btn) {
+    _selectedTableId = (_selectedTableId === tableId) ? null : tableId;
+    document.querySelectorAll('.pos-table-chip').forEach(c => c.classList.remove('selected'));
+    if (_selectedTableId) btn.classList.add('selected');
   }
 
   function renderCats() {
@@ -155,7 +193,8 @@
         body: JSON.stringify({
           venue_id: venueId,
           items,
-          table_number: document.getElementById('table-number').value || null,
+          table_id: _selectedTableId || null,
+          table_number: _selectedTableId ? null : (document.getElementById('table-number').value || null),
         }),
       });
       if (res.status === 401) { location.href = '/auth/login'; return; }
@@ -163,6 +202,7 @@
         _cart = {};
         document.getElementById('table-number').value = '';
         renderCart();
+        loadMenu();
         alert('Заказ отправлен на кухню');
       } else {
         const err = await res.json().catch(() => ({}));

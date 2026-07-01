@@ -15,6 +15,7 @@ class OrderCreate(BaseModel):
     items: list[OrderItemCreate] = Field(..., min_length=1)
     notes: str | None = None
     table_number: str | None = None
+    table_id: uuid.UUID | None = None
     source: str | None = None
 
 
@@ -46,6 +47,7 @@ class OrderOut(BaseModel):
     points_earned: int
     notes: str | None
     table_number: str | None = None
+    table_id: uuid.UUID | None = None
     source: str | None = None
     created_at: datetime
     updated_at: datetime

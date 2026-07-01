@@ -16,6 +16,7 @@ import os as _os
 from app.database import get_db
 from app.models.broadcast import Broadcast
 from app.models.guest import Guest
+from app.models.table import Table
 from app.models.user import User
 from app.models.venue import Venue
 from app.routers.deps import get_current_user_dep
@@ -278,6 +279,98 @@ async def update_venue_settings(
         venue.manager_telegram_id = data.manager_telegram_id  # None clears the field
     await db.commit()
     return {"ok": True, "id": str(venue.id)}
+
+
+class TableCreate(BaseModel):
+    venue_id: uuid.UUID
+    label: str
+    seats: int = 4
+
+
+class TableStatusUpdate(BaseModel):
+    status: str
+
+
+@router.get("/tables", response_class=HTMLResponse)
+async def settings_tables_page(
+    request: Request,
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    _require_owner(current_user)
+    venues = (await db.execute(
+        select(Venue).where(Venue.network_id == current_user.network_id, Venue.is_active == True).order_by(Venue.name)
+    )).scalars().all()
+    tables = (await db.execute(
+        select(Table).join(Venue).where(Venue.network_id == current_user.network_id).order_by(Table.label)
+    )).scalars().all()
+    tables_by_venue: dict[uuid.UUID, list[Table]] = {}
+    for t in tables:
+        tables_by_venue.setdefault(t.venue_id, []).append(t)
+    return templates.TemplateResponse("settings_tables.html", {
+        "request": request,
+        "user": current_user,
+        "venues": venues,
+        "tables_by_venue": tables_by_venue,
+    })
+
+
+@router.post("/api/tables")
+async def create_table(
+    data: TableCreate,
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    _require_owner(current_user)
+    venue = (await db.execute(
+        select(Venue).where(Venue.id == data.venue_id, Venue.network_id == current_user.network_id)
+    )).scalar_one_or_none()
+    if not venue:
+        raise HTTPException(status_code=404, detail="Заведение не найдено")
+    if not data.label.strip():
+        raise HTTPException(status_code=400, detail="Название стола обязательно")
+
+    table = Table(id=uuid.uuid4(), venue_id=data.venue_id, label=data.label.strip(), seats=max(1, data.seats))
+    db.add(table)
+    await db.commit()
+    return {"id": str(table.id), "label": table.label, "seats": table.seats, "status": table.status}
+
+
+@router.patch("/api/tables/{table_id}")
+async def update_table_status(
+    table_id: uuid.UUID,
+    data: TableStatusUpdate,
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    _require_owner(current_user)
+    if data.status not in ("free", "occupied", "reserved"):
+        raise HTTPException(status_code=400, detail="Неверный статус")
+    table = (await db.execute(
+        select(Table).join(Venue).where(Table.id == table_id, Venue.network_id == current_user.network_id)
+    )).scalar_one_or_none()
+    if not table:
+        raise HTTPException(status_code=404, detail="Стол не найден")
+    table.status = data.status
+    await db.commit()
+    return {"ok": True, "status": table.status}
+
+
+@router.delete("/api/tables/{table_id}")
+async def delete_table(
+    table_id: uuid.UUID,
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    _require_owner(current_user)
+    table = (await db.execute(
+        select(Table).join(Venue).where(Table.id == table_id, Venue.network_id == current_user.network_id)
+    )).scalar_one_or_none()
+    if not table:
+        raise HTTPException(status_code=404, detail="Стол не найден")
+    await db.delete(table)
+    await db.commit()
+    return {"message": "Удалено"}
 
 
 import secrets as _secrets
