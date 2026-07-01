@@ -4,7 +4,11 @@
 {% block content %}
 <div class="page-header">
   <h1 class="page-title">Заказы</h1>
-  <span class="live-badge">● LIVE</span>
+  <div style="display:flex;gap:1rem;align-items:center;">
+    <span class="live-badge">● LIVE</span>
+    <a href="/kitchen" target="_blank" style="color:var(--muted);font-size:.85rem;text-decoration:none;white-space:nowrap;">Экран кухни ↗</a>
+    <a href="/pos" class="btn-primary" style="text-decoration:none;">+ Новый заказ</a>
+  </div>
 </div>
 
 <div class="filters">

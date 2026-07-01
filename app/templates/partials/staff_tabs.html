@@ -1,0 +1,14 @@
+<style>
+.staff-tabs { display: flex; gap: .25rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.staff-tab {
+  padding: .65rem 1rem; font-size: .85rem; color: var(--muted); text-decoration: none;
+  border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all .15s;
+  min-height: 36px; display: flex; align-items: center;
+}
+.staff-tab:hover { color: var(--white); }
+.staff-tab.active { color: var(--gold); border-bottom-color: var(--gold); font-weight: 600; }
+</style>
+<div class="staff-tabs">
+  <a href="/staff" class="staff-tab {% if '/staff' in request.url.path %}active{% endif %}">Сотрудники</a>
+  <a href="/shifts" class="staff-tab {% if request.url.path == '/shifts' %}active{% endif %}">Смены</a>
+</div>

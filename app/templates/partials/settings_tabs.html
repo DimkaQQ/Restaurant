@@ -1,0 +1,19 @@
+<style>
+.settings-tabs { display: flex; gap: .25rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.settings-tab {
+  padding: .65rem 1rem; font-size: .85rem; color: var(--muted); text-decoration: none;
+  border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all .15s;
+  min-height: 36px; display: flex; align-items: center;
+}
+.settings-tab:hover { color: var(--white); }
+.settings-tab.active { color: var(--gold); border-bottom-color: var(--gold); font-weight: 600; }
+</style>
+<div class="settings-tabs">
+  <a href="/settings/venues" class="settings-tab {% if request.url.path == '/settings/venues' %}active{% endif %}">Заведения</a>
+  <a href="/settings/tables" class="settings-tab {% if request.url.path == '/settings/tables' %}active{% endif %}">Столы</a>
+  <a href="/settings/users" class="settings-tab {% if request.url.path == '/settings/users' %}active{% endif %}">Пользователи</a>
+  <a href="/settings/broadcasts" class="settings-tab {% if request.url.path == '/settings/broadcasts' %}active{% endif %}">Рассылки</a>
+  {% if user.role == 'owner' %}
+  <a href="/billing" class="settings-tab {% if request.url.path == '/billing' %}active{% endif %}">Подписка</a>
+  {% endif %}
+</div>
