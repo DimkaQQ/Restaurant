@@ -34,7 +34,7 @@ async def main(tg_id: int, name: str, lang: str):
 
         # Upsert guest
         existing = (await db.execute(
-            select(Guest).where(Guest.telegram_id == tg_id)
+            select(Guest).where(Guest.telegram_id == tg_id, Guest.network_id == network.id)
         )).scalar_one_or_none()
 
         if existing:

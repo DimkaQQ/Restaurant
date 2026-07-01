@@ -483,15 +483,19 @@ class ReviewCreate(BaseModel):
 
 @router.post("/review")
 async def submit_review(data: ReviewCreate, db: AsyncSession = Depends(get_db)):
-    guest = (await db.execute(select(Guest).where(Guest.telegram_id == data.guest_telegram_id))).scalar_one_or_none()
-    if not guest:
-        raise HTTPException(status_code=404, detail="Гость не найден")
-
-    order = (await db.execute(
-        select(Order).where(Order.id == data.order_id, Order.guest_id == guest.id)
-    )).scalar_one_or_none()
-    if not order:
+    # Join order->guest directly (rather than looking the guest up standalone
+    # by telegram_id) since the same Telegram account can now have a separate
+    # Guest row per network — this matches the specific guest who placed this
+    # specific order, which is unambiguous regardless of how many networks
+    # that Telegram account has a guest row in.
+    row = (await db.execute(
+        select(Order, Guest)
+        .join(Guest, Order.guest_id == Guest.id)
+        .where(Order.id == data.order_id, Guest.telegram_id == data.guest_telegram_id)
+    )).first()
+    if not row:
         raise HTTPException(status_code=404, detail="Заказ не найден")
+    order, guest = row
 
     # Prevent duplicate review for the same order
     existing_review = (await db.execute(

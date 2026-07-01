@@ -11,6 +11,7 @@ from app.models.guest import Guest
 from app.models.order import Order
 from app.models.user import User
 from app.models.venue import Venue
+from app.routers.bot_api import _require_bot_secret
 from app.routers.deps import get_current_user_dep, get_accessible_venue_ids
 from app.schemas.order import OrderCreate, OrderOut, OrderStatusUpdate
 from app.services.order_service import create_order, update_order_status, cancel_order, get_order_with_items
@@ -71,19 +72,21 @@ async def list_orders(
         raise HTTPException(status_code=500, detail="Ошибка загрузки заказов")
 
 
-@router.get("/guest/history", response_model=list[OrderOut])
+@router.get("/guest/history", response_model=list[OrderOut], dependencies=[Depends(_require_bot_secret)])
 async def guest_order_history(
     telegram_id: int = Query(...),
+    network_id: uuid.UUID = Query(...),
     limit: int = Query(10, le=50),
     db: AsyncSession = Depends(get_db),
 ):
-    """Public endpoint for Telegram bot — returns order history by telegram_id."""
+    """Bot-internal endpoint (shared-secret gated) — returns a guest's order
+    history scoped to one network, by telegram_id."""
     try:
         stmt = (
             select(Order)
             .options(selectinload(Order.items))
             .join(Guest, Order.guest_id == Guest.id)
-            .where(Guest.telegram_id == telegram_id)
+            .where(Guest.telegram_id == telegram_id, Guest.network_id == network_id)
             .order_by(Order.created_at.desc())
             .limit(limit)
         )
@@ -101,16 +104,18 @@ async def place_order(
     db: AsyncSession = Depends(get_db),
 ):
     try:
-        guest_result = await db.execute(select(Guest).where(Guest.telegram_id == telegram_id))
-        guest = guest_result.scalar_one_or_none()
+        venue = (await db.execute(select(Venue).where(Venue.id == data.venue_id))).scalar_one_or_none()
+        if not venue:
+            raise HTTPException(status_code=404, detail="Заведение не найдено")
+        # Resolve the guest within the venue's own network — the same Telegram
+        # account can have a separate Guest row per network, so a bare
+        # telegram_id lookup would be ambiguous (and could match a guest of an
+        # unrelated network) without this scope.
+        guest = (await db.execute(
+            select(Guest).where(Guest.telegram_id == telegram_id, Guest.network_id == venue.network_id)
+        )).scalar_one_or_none()
         if not guest:
             raise HTTPException(status_code=404, detail="Гость не найден")
-        # Verify venue belongs to guest's network to prevent cross-network order injection
-        venue = (await db.execute(
-            select(Venue).where(Venue.id == data.venue_id, Venue.network_id == guest.network_id)
-        )).scalar_one_or_none()
-        if not venue:
-            raise HTTPException(status_code=403, detail="Заведение недоступно")
         order = await create_order(data, guest, db)
         return order
     except HTTPException:
@@ -204,11 +209,18 @@ async def guest_cancel_order(
 ):
     """Public endpoint — guest self-cancel within 10 min."""
     try:
-        guest = (await db.execute(select(Guest).where(Guest.telegram_id == telegram_id))).scalar_one_or_none()
-        if not guest:
-            raise HTTPException(status_code=404, detail="Гость не найден")
+        # Match the order's actual guest by telegram_id directly (a standalone
+        # Guest lookup by telegram_id alone is ambiguous now that the same
+        # Telegram account can have a separate Guest row per network).
+        guest_id = (await db.execute(
+            select(Guest.id)
+            .join(Order, Order.guest_id == Guest.id)
+            .where(Order.id == order_id, Guest.telegram_id == telegram_id)
+        )).scalar_one_or_none()
+        if not guest_id:
+            raise HTTPException(status_code=404, detail="Заказ не найден")
         # Pass guest_id into cancel_order so ownership is checked atomically — no TOCTOU
-        order = await cancel_order(order_id, db, changed_by=f"guest:{telegram_id}", allow_always=False, guest_id=guest.id)
+        order = await cancel_order(order_id, db, changed_by=f"guest:{telegram_id}", allow_always=False, guest_id=guest_id)
         return order
     except HTTPException:
         raise

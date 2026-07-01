@@ -45,7 +45,7 @@ async def show_history(callback: CallbackQuery, guest: dict | None, api_url: str
         async with bot_client() as client:
             resp = await client.get(
                 f"{api_url}/api/orders/guest/history",
-                params={"telegram_id": guest["telegram_id"], "limit": 10},
+                params={"telegram_id": guest["telegram_id"], "network_id": guest["network_id"], "limit": 10},
                 timeout=5.0,
             )
             if resp.status_code != 200:
@@ -81,7 +81,7 @@ async def show_favorites(callback: CallbackQuery, guest: dict | None, api_url: s
         async with bot_client() as client:
             resp = await client.get(
                 f"{api_url}/api/orders/guest/history",
-                params={"telegram_id": guest["telegram_id"], "limit": 50},
+                params={"telegram_id": guest["telegram_id"], "network_id": guest["network_id"], "limit": 50},
                 timeout=5.0,
             )
             if resp.status_code != 200:
