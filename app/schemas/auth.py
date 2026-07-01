@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 import uuid
 
 
@@ -6,7 +6,7 @@ class NetworkCreate(BaseModel):
     name: str
     slug: str
     email: EmailStr
-    password: str
+    password: str = Field(..., min_length=8)
 
 
 class LoginRequest(BaseModel):

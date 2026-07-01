@@ -17,6 +17,10 @@ from app.services.auth_service import (
 router = APIRouter(prefix="/auth", tags=["auth"])
 logger = logging.getLogger(__name__)
 
+# Only mark cookies Secure once PUBLIC_URL is actually https — otherwise local/
+# staging http deployments would silently stop sending the auth cookie at all.
+_COOKIE_SECURE = settings.PUBLIC_URL.startswith("https://")
+
 
 
 @router.get("/login", response_class=HTMLResponse)
@@ -45,6 +49,7 @@ async def register(data: NetworkCreate, response: Response, db: AsyncSession = D
         value=refresh_token,
         httponly=True,
         samesite="lax",
+        secure=_COOKIE_SECURE,
         max_age=60 * 60 * 24 * 30,
     )
     response.set_cookie(
@@ -52,6 +57,7 @@ async def register(data: NetworkCreate, response: Response, db: AsyncSession = D
         value=access_token,
         httponly=True,
         samesite="lax",
+        secure=_COOKIE_SECURE,
         max_age=60 * settings.ACCESS_TOKEN_EXPIRE_MINUTES,
     )
     return TokenResponse(access_token=access_token)
@@ -71,6 +77,7 @@ async def login(data: LoginRequest, response: Response, db: AsyncSession = Depen
         value=refresh_token,
         httponly=True,
         samesite="lax",
+        secure=_COOKIE_SECURE,
         max_age=60 * 60 * 24 * 30,
     )
     response.set_cookie(
@@ -78,6 +85,7 @@ async def login(data: LoginRequest, response: Response, db: AsyncSession = Depen
         value=access_token,
         httponly=True,
         samesite="lax",
+        secure=_COOKIE_SECURE,
         max_age=60 * settings.ACCESS_TOKEN_EXPIRE_MINUTES,
     )
     return TokenResponse(access_token=access_token)

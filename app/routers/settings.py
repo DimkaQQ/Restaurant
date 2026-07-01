@@ -94,6 +94,8 @@ async def create_user(
 
         if not email or not password:
             raise HTTPException(status_code=400, detail="Email и пароль обязательны")
+        if len(password) < 8:
+            raise HTTPException(status_code=400, detail="Пароль должен быть не короче 8 символов")
         if role not in ("manager", "cashier", "administrator"):
             raise HTTPException(status_code=400, detail="Некорректная роль")
 
