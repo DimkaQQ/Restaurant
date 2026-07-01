@@ -1,33 +1,50 @@
 """Browser-driven E2E tests: a real uvicorn server + real Chromium, so these
 catch what backend-only tests can't — broken templates, JS errors, elements
 that never render, forms that don't actually submit."""
+import asyncio
 import os
 import socket
 import subprocess
 import time
+from concurrent.futures import ThreadPoolExecutor
 
+import asyncpg
 import pytest
 from playwright.sync_api import sync_playwright
-
-PSQL_DSN = "postgresql://restos_test:test@localhost/restos_test"
-
-
-@pytest.fixture(autouse=True)
-def _clean_db():
-    subprocess.run(
-        ["psql", PSQL_DSN, "-q", "-c",
-         "DO $$ DECLARE t text; BEGIN "
-         "FOR t IN SELECT tablename FROM pg_tables WHERE schemaname='public' AND tablename != 'alembic_version' LOOP "
-         "EXECUTE 'TRUNCATE ' || quote_ident(t) || ' RESTART IDENTITY CASCADE'; END LOOP; END $$;"],
-        check=True, capture_output=True,
-    )
-    yield
 
 # Same DB the async backend suite uses (see tests/conftest.py) — the server
 # subprocess and the test process both talk to the same Postgres instance.
 TEST_DATABASE_URL = os.environ.get(
     "TEST_DATABASE_URL", "postgresql+asyncpg://restos_test:test@localhost/restos_test"
 )
+# asyncpg wants a plain postgres:// DSN, not SQLAlchemy's postgresql+asyncpg:// one.
+_ASYNCPG_DSN = TEST_DATABASE_URL.replace("postgresql+asyncpg://", "postgresql://")
+
+
+async def _truncate_all_tables():
+    conn = await asyncpg.connect(_ASYNCPG_DSN)
+    try:
+        rows = await conn.fetch(
+            "SELECT tablename FROM pg_tables WHERE schemaname='public' AND tablename != 'alembic_version'"
+        )
+        if rows:
+            names = ", ".join(r["tablename"] for r in rows)
+            await conn.execute(f"TRUNCATE {names} RESTART IDENTITY CASCADE")
+    finally:
+        await conn.close()
+
+
+@pytest.fixture(autouse=True)
+def _clean_db():
+    # pytest-asyncio (asyncio_mode=auto, configured repo-wide in pytest.ini)
+    # keeps a session event loop running even in this all-sync test file, so
+    # asyncio.run() here would hit "cannot be called from a running event
+    # loop" — run it on its own thread instead, which has no such loop.
+    with ThreadPoolExecutor(max_workers=1) as executor:
+        executor.submit(asyncio.run, _truncate_all_tables()).result()
+    yield
+
+
 def _resolve_chromium_path() -> str | None:
     """Explicit env var wins; otherwise fall back to this sandbox's
     pre-provisioned Chromium if present, else None (Playwright resolves its
