@@ -10,6 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.config import settings
 from app.models.network import Network
 from app.models.user import User
+from app.models.subscription import Subscription
 
 logger = logging.getLogger(__name__)
 
@@ -67,9 +68,19 @@ async def register_network(name: str, slug: str, email: str, password: str, db: 
         role="owner",
     )
     db.add(user)
+
+    subscription = Subscription(
+        id=uuid.uuid4(),
+        network_id=network.id,
+        plan="starter",
+        status="trial",
+        trial_ends_at=datetime.now(timezone.utc) + timedelta(days=14),
+    )
+    db.add(subscription)
+
     await db.commit()
     await db.refresh(user)
-    logger.info("Registered network %s with owner %s", slug, email)
+    logger.info("Registered network %s with owner %s (14-day trial)", slug, email)
     return user
 
 

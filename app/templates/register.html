@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RestOS — Вход</title>
+  <title>RestOS — Регистрация</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/css/main.css?v=7">
@@ -14,36 +14,49 @@
       <div class="auth-logo">
         <span class="logo-serif">Rest</span><span class="logo-mono">OS</span>
       </div>
-      <p class="auth-subtitle">Панель управления сетью ресторанов</p>
+      <p class="auth-subtitle">14 дней бесплатно, без карты. Начните за 2 минуты.</p>
 
       <div id="error-msg" class="error-banner" style="display:none"></div>
 
-      <form id="login-form" class="auth-form">
+      <form id="register-form" class="auth-form">
+        <div class="form-group">
+          <label>Название сети / ресторана</label>
+          <input type="text" id="name" name="name" placeholder="Мой ресторан" autocomplete="organization" required>
+        </div>
         <div class="form-group">
           <label>Email</label>
           <input type="email" id="email" name="email" placeholder="owner@restaurant.kz" autocomplete="email" required>
         </div>
         <div class="form-group">
           <label>Пароль</label>
-          <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="current-password" required>
+          <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="new-password" minlength="8" required>
         </div>
-        <button type="submit" class="btn-primary btn-full">Войти</button>
+        <button type="submit" class="btn-primary btn-full">Создать аккаунт</button>
       </form>
       <p class="auth-subtitle" style="margin-top:1rem">
-        Нет аккаунта? <a href="/auth/register" style="color:var(--gold)">Создать</a>
+        Уже есть аккаунт? <a href="/auth/login" style="color:var(--gold)">Войти</a>
       </p>
     </div>
   </div>
 
   <script>
-    document.getElementById('login-form').addEventListener('submit', async (e) => {
+    function slugify(name) {
+      const translit = {а:'a',б:'b',в:'v',г:'g',д:'d',е:'e',ё:'e',ж:'zh',з:'z',и:'i',й:'y',к:'k',л:'l',м:'m',н:'n',о:'o',п:'p',р:'r',с:'s',т:'t',у:'u',ф:'f',х:'h',ц:'ts',ч:'ch',ш:'sh',щ:'sch',ъ:'',ы:'y',ь:'',э:'e',ю:'yu',я:'ya'};
+      const base = name.toLowerCase().split('').map(ch => translit[ch] ?? ch).join('');
+      return base.replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'network';
+    }
+
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const err = document.getElementById('error-msg');
       err.style.display = 'none';
-      const res = await fetch('/auth/login', {
+      const name = document.getElementById('name').value.trim();
+      const res = await fetch('/auth/register', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
+          name,
+          slug: slugify(name) + '-' + Date.now().toString(36),
           email: document.getElementById('email').value,
           password: document.getElementById('password').value,
         }),
@@ -52,9 +65,9 @@
       if (res.ok) {
         const data = await res.json();
         localStorage.setItem('access_token', data.access_token);
-        location.href = '/dashboard';
+        location.href = '/onboarding';
       } else {
-        let msg = 'Ошибка входа';
+        let msg = 'Ошибка регистрации';
         try {
           const data = await res.json();
           msg = data.detail || msg;

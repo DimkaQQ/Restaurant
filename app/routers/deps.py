@@ -1,15 +1,44 @@
+from datetime import datetime, timezone
+
 from fastapi import Depends, HTTPException, status, Request
 from fastapi.responses import RedirectResponse
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
 from app.models.user import User
+from app.models.subscription import Subscription
 from app.services.auth_service import get_current_user
+
+# Paths reachable even when a subscription is expired/suspended, so the
+# owner can always get to the billing page (and log out) to fix it.
+_BILLING_EXEMPT_PREFIXES = ("/billing", "/auth")
 
 
 def _wants_html(request: Request) -> bool:
     accept = request.headers.get("accept", "")
     return "text/html" in accept
+
+
+async def _check_subscription(user: User, request: Request, db: AsyncSession) -> None:
+    if any(request.url.path.startswith(p) for p in _BILLING_EXEMPT_PREFIXES):
+        return
+
+    sub = (await db.execute(
+        select(Subscription).where(Subscription.network_id == user.network_id)
+    )).scalar_one_or_none()
+
+    if not sub:
+        return  # no subscription row yet (e.g. legacy/manually-created network) — don't lock anyone out
+
+    blocked = sub.status in ("suspended", "cancelled")
+    if sub.status == "trial" and sub.trial_ends_at and datetime.now(timezone.utc) > sub.trial_ends_at:
+        blocked = True
+
+    if blocked:
+        if _wants_html(request):
+            raise HTTPException(status_code=status.HTTP_307_TEMPORARY_REDIRECT, headers={"Location": "/billing"})
+        raise HTTPException(status_code=status.HTTP_402_PAYMENT_REQUIRED, detail="Подписка неактивна")
 
 
 async def get_current_user_dep(
@@ -33,6 +62,8 @@ async def get_current_user_dep(
         if _wants_html(request):
             raise HTTPException(status_code=status.HTTP_307_TEMPORARY_REDIRECT, headers={"Location": "/auth/login"})
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Недействительный токен")
+
+    await _check_subscription(user, request, db)
     return user
 
 

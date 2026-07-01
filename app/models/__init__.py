@@ -12,6 +12,7 @@ from app.models.finance import Expense
 from app.models.shift import Shift
 from app.models.broadcast import Broadcast
 from app.models.onboarding import OnboardingModule, OnboardingQuestion, OnboardingProgress
+from app.models.subscription import Subscription
 
 __all__ = [
     "Network", "Venue", "User", "Guest",
@@ -22,4 +23,5 @@ __all__ = [
     "Shift",
     "Broadcast",
     "OnboardingModule", "OnboardingQuestion", "OnboardingProgress",
+    "Subscription",
 ]

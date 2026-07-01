@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Подписка — RestOS{% endblock %}
+
+{% block head %}
+<style>
+.bill-header { margin-bottom: 1.5rem; }
+.bill-header h1 { font-family:'Instrument Serif',serif; font-size:1.6rem; font-weight:400; }
+.bill-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:1.5rem; max-width:520px; margin-bottom:1.5rem; }
+.bill-status { display:inline-flex; align-items:center; gap:.4rem; font-size:.8rem; font-weight:600; padding:.3rem .7rem; border-radius:20px; margin-bottom:1rem; }
+.bill-status.trial { background:rgba(200,168,75,.15); color:var(--gold); }
+.bill-status.active { background:rgba(74,222,128,.15); color:#4ade80; }
+.bill-status.blocked { background:rgba(239,68,68,.15); color:#f87171; }
+.bill-plan { font-size:1.3rem; font-weight:700; margin-bottom:.35rem; text-transform:capitalize; }
+.bill-meta { font-size:.85rem; color:var(--muted); margin-bottom:1.25rem; }
+.bill-cta { display:flex; gap:.75rem; flex-wrap:wrap; }
+.plans-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1rem; max-width:760px; }
+.plan-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:1.25rem; }
+.plan-card.current { border-color:var(--gold); }
+.plan-name { font-size:1.05rem; font-weight:700; margin-bottom:.4rem; }
+.plan-price { font-size:1.5rem; font-weight:700; color:var(--gold); margin-bottom:.75rem; }
+.plan-price span { font-size:.8rem; color:var(--muted); font-weight:400; }
+.plan-features { list-style:none; padding:0; margin:0 0 1rem; font-size:.82rem; color:var(--muted); display:flex; flex-direction:column; gap:.35rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="bill-header"><h1>Подписка</h1></div>
+
+<div class="bill-card">
+  {% if subscription %}
+    {% if subscription.status == 'trial' %}
+      <div class="bill-status trial">Пробный период</div>
+    {% elif subscription.status == 'active' %}
+      <div class="bill-status active">Активна</div>
+    {% else %}
+      <div class="bill-status blocked">Приостановлена</div>
+    {% endif %}
+    <div class="bill-plan">{{ subscription.plan }}</div>
+    {% if subscription.status == 'trial' %}
+      <div class="bill-meta">
+        {% if days_left is not none and days_left > 0 %}
+          Осталось дней пробного периода: {{ days_left }}
+        {% else %}
+          Пробный период закончился
+        {% endif %}
+      </div>
+    {% elif subscription.status == 'active' %}
+      <div class="bill-meta">Продление: {{ subscription.current_period_end.strftime('%d.%m.%Y') if subscription.current_period_end else '—' }}</div>
+    {% else %}
+      <div class="bill-meta">Доступ ограничен до продления подписки</div>
+    {% endif %}
+    <div class="bill-cta">
+      <a href="https://t.me/" target="_blank" class="btn-primary">Написать в поддержку</a>
+    </div>
+  {% else %}
+    <p style="color:var(--muted)">Подписка не найдена. Свяжитесь с поддержкой.</p>
+  {% endif %}
+</div>
+
+<div class="plans-grid">
+  <div class="plan-card {% if subscription and subscription.plan == 'starter' %}current{% endif %}">
+    <div class="plan-name">Starter</div>
+    <div class="plan-price">$30 <span>/ мес</span></div>
+    <ul class="plan-features">
+      <li>1 заведение</li>
+      <li>До 3 сотрудников</li>
+      <li>Заказы, склад, смены</li>
+    </ul>
+  </div>
+  <div class="plan-card {% if subscription and subscription.plan == 'pro' %}current{% endif %}">
+    <div class="plan-name">Pro</div>
+    <div class="plan-price">$60 <span>/ мес</span></div>
+    <ul class="plan-features">
+      <li>До 5 заведений</li>
+      <li>Безлимит сотрудников</li>
+      <li>Финансы P&amp;L, аналитика</li>
+    </ul>
+  </div>
+  <div class="plan-card {% if subscription and subscription.plan == 'enterprise' %}current{% endif %}">
+    <div class="plan-name">Enterprise</div>
+    <div class="plan-price">$150 <span>/ мес</span></div>
+    <ul class="plan-features">
+      <li>Безлимит заведений</li>
+      <li>White-label</li>
+      <li>Приоритетная поддержка</li>
+    </ul>
+  </div>
+</div>
+{% endblock %}

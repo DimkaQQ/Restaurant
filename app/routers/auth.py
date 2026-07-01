@@ -24,14 +24,37 @@ async def login_page(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
 
 
+@router.get("/register", response_class=HTMLResponse)
+async def register_page(request: Request):
+    return templates.TemplateResponse("register.html", {"request": request})
+
+
 @router.post("/register")
-async def register(data: NetworkCreate, db: AsyncSession = Depends(get_db)):
+async def register(data: NetworkCreate, response: Response, db: AsyncSession = Depends(get_db)):
     try:
         user = await register_network(data.name, data.slug, data.email, data.password, db)
-        return {"message": "Сеть создана", "user_id": str(user.id)}
     except Exception as e:
         logger.error("Registration error: %s", e)
         raise HTTPException(status_code=400, detail=str(e))
+
+    access_token = create_access_token({"sub": str(user.id)})
+    refresh_token = create_refresh_token({"sub": str(user.id)})
+
+    response.set_cookie(
+        key="refresh_token",
+        value=refresh_token,
+        httponly=True,
+        samesite="lax",
+        max_age=60 * 60 * 24 * 30,
+    )
+    response.set_cookie(
+        key="access_token",
+        value=access_token,
+        httponly=True,
+        samesite="lax",
+        max_age=60 * settings.ACCESS_TOKEN_EXPIRE_MINUTES,
+    )
+    return TokenResponse(access_token=access_token)
 
 
 @router.post("/login")

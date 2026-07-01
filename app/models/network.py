@@ -17,3 +17,6 @@ class Network(Base):
     users: Mapped[list["User"]] = relationship("User", back_populates="network")
     guests: Mapped[list["Guest"]] = relationship("Guest", back_populates="network")
     staff: Mapped[list["Staff"]] = relationship("Staff", back_populates="network")
+    subscription: Mapped["Subscription | None"] = relationship(
+        "Subscription", back_populates="network", uselist=False
+    )
