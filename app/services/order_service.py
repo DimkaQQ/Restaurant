@@ -141,8 +141,10 @@ async def _deduct_inventory_for_order(order: Order, db: AsyncSession) -> None:
     if not needed:
         return
 
+    # Lock the ingredient rows so two orders completing concurrently with a
+    # shared ingredient serialize instead of one deduction clobbering the other.
     ingredients = (await db.execute(
-        select(Ingredient).where(Ingredient.id.in_(needed.keys()))
+        select(Ingredient).where(Ingredient.id.in_(needed.keys())).with_for_update()
     )).scalars().all()
 
     for ingredient in ingredients:
@@ -163,8 +165,14 @@ async def update_order_status(
     db: AsyncSession,
     changed_by: str = "staff",
 ) -> Order:
+    # Lock the order row for the duration of the transition so two concurrent
+    # requests (double-click, racing clients) can't both pass the
+    # VALID_TRANSITIONS check and both trigger inventory deduction on "done".
     result = await db.execute(
-        select(Order).options(selectinload(Order.items), selectinload(Order.guest)).where(Order.id == order_id)
+        select(Order)
+        .options(selectinload(Order.items), selectinload(Order.guest))
+        .where(Order.id == order_id)
+        .with_for_update()
     )
     order = result.scalar_one_or_none()
     if not order:

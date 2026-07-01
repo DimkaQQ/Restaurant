@@ -12,6 +12,7 @@ from app.models.user import User
 from app.routers.deps import get_current_user_dep
 from app.schemas.guest import GuestCreate, GuestOut
 from app.services.ai_service import get_guest_recommendation
+from app.services.order_service import WALKIN_MARKER
 
 router = APIRouter(prefix="/api/guests", tags=["guests"])
 logger = logging.getLogger(__name__)
@@ -27,7 +28,7 @@ async def list_guests(
     try:
         stmt = (
             select(Guest)
-            .where(Guest.network_id == current_user.network_id)
+            .where(Guest.network_id == current_user.network_id, Guest.phone != WALKIN_MARKER)
             .order_by(Guest.total_visits.desc())
             .limit(limit)
         )

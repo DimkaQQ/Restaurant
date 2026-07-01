@@ -7,7 +7,11 @@ from bot.http_client import bot_client
 
 logger = logging.getLogger(__name__)
 
-REPORT_HOUR_UTC = 6  # ~09:00 in Asia/Almaty (UTC+3)
+# Asia/Almaty is UTC+5 (not UTC+3) — 4:00 UTC lands at ~09:00 local.
+# The report's day-boundary (in bot_api.get_daily_report) is still computed in
+# UTC, so "yesterday" can be off by a few hours for venues far from UTC+5;
+# fixing that needs a per-venue timezone setting, which doesn't exist yet.
+REPORT_HOUR_UTC = 4
 
 
 async def daily_report_loop(bot: Bot, api_url: str, network_id: str):

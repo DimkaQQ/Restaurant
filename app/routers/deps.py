@@ -31,7 +31,9 @@ async def _check_subscription(user: User, request: Request, db: AsyncSession) ->
     if not sub:
         return  # no subscription row yet (e.g. legacy/manually-created network) — don't lock anyone out
 
-    blocked = sub.status in ("suspended", "cancelled")
+    # past_due is shown as blocked in billing.html, so it must actually be
+    # blocked here too — otherwise a failed card charge never cuts off access.
+    blocked = sub.status in ("past_due", "suspended", "cancelled")
     if sub.status == "trial" and sub.trial_ends_at and datetime.now(timezone.utc) > sub.trial_ends_at:
         blocked = True
 
@@ -41,16 +43,27 @@ async def _check_subscription(user: User, request: Request, db: AsyncSession) ->
         raise HTTPException(status_code=status.HTTP_402_PAYMENT_REQUIRED, detail="Подписка неактивна")
 
 
+def _extract_token(request: Request) -> str | None:
+    auth_header = request.headers.get("Authorization")
+    if auth_header and auth_header.startswith("Bearer "):
+        return auth_header[7:]
+    return request.cookies.get("access_token")
+
+
+async def get_user_from_request(request: Request, db: AsyncSession) -> User | None:
+    """Auth without the subscription gate — for billing/admin pages that must
+    stay reachable even when a subscription is expired/suspended."""
+    token = _extract_token(request)
+    if not token:
+        return None
+    return await get_current_user(token, db)
+
+
 async def get_current_user_dep(
     request: Request,
     db: AsyncSession = Depends(get_db),
 ) -> User:
-    token = None
-    auth_header = request.headers.get("Authorization")
-    if auth_header and auth_header.startswith("Bearer "):
-        token = auth_header[7:]
-    if not token:
-        token = request.cookies.get("access_token")
+    token = _extract_token(request)
 
     if not token:
         if _wants_html(request):

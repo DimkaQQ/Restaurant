@@ -16,7 +16,7 @@ from app.models.order import Order, OrderItem
 from app.models.user import User
 from app.models.venue import Venue
 from app.routers.deps import get_current_user_dep, get_current_user_optional, get_accessible_venue_ids
-from app.services.order_service import update_order_status
+from app.services.order_service import update_order_status, WALKIN_MARKER
 
 router = APIRouter(tags=["dashboard"])
 logger = logging.getLogger(__name__)
@@ -56,7 +56,11 @@ async def dashboard(
 
         new_guests = (await db.execute(
             select(func.count(Guest.id))
-            .where(Guest.network_id == current_user.network_id, Guest.created_at >= today_start)
+            .where(
+                Guest.network_id == current_user.network_id,
+                Guest.phone != WALKIN_MARKER,
+                Guest.created_at >= today_start,
+            )
         )).scalar() or 0
 
         orders = (await db.execute(
@@ -198,7 +202,7 @@ async def guests_partial(
     try:
         stmt = (
             select(Guest)
-            .where(Guest.network_id == current_user.network_id)
+            .where(Guest.network_id == current_user.network_id, Guest.phone != WALKIN_MARKER)
             .order_by(Guest.total_visits.desc())
             .limit(100)
         )

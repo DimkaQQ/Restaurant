@@ -164,12 +164,14 @@ async def set_recipe(
         raise HTTPException(status_code=404, detail="Позиция не найдена")
     await _check_venue_owner(item.venue_id, current_user, db)
 
+    ingredients_by_id: dict[uuid.UUID, Ingredient] = {}
     ingredient_ids = [line.ingredient_id for line in lines]
     if ingredient_ids:
-        valid_count = (await db.execute(
-            select(Ingredient.id).where(Ingredient.id.in_(ingredient_ids), Ingredient.venue_id == item.venue_id)
-        )).all()
-        if len(valid_count) != len(set(ingredient_ids)):
+        found = (await db.execute(
+            select(Ingredient).where(Ingredient.id.in_(ingredient_ids), Ingredient.venue_id == item.venue_id)
+        )).scalars().all()
+        ingredients_by_id = {i.id: i for i in found}
+        if len(ingredients_by_id) != len(set(ingredient_ids)):
             raise HTTPException(status_code=400, detail="Один или несколько ингредиентов не принадлежат этому заведению")
 
     existing = (await db.execute(select(Recipe).where(Recipe.menu_item_id == item_id))).scalars().all()
@@ -181,7 +183,15 @@ async def set_recipe(
         db.add(Recipe(id=uuid.uuid4(), menu_item_id=item_id, ingredient_id=line.ingredient_id, quantity=line.quantity))
 
     await db.commit()
-    return await get_recipe(item_id, current_user, db)
+    return [
+        RecipeLineOut(
+            ingredient_id=line.ingredient_id,
+            ingredient_name=ingredients_by_id[line.ingredient_id].name,
+            unit=ingredients_by_id[line.ingredient_id].unit,
+            quantity=line.quantity,
+        )
+        for line in lines
+    ]
 
 
 @router.post("/{item_id}/photo", response_model=MenuItemOut)

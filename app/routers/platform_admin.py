@@ -14,20 +14,20 @@ from app.models.network import Network
 from app.models.subscription import Subscription
 from app.models.user import User
 from app.models.venue import Venue
-from app.services.auth_service import get_current_user
+from app.routers.deps import get_user_from_request
 
 router = APIRouter(prefix="/platform/admin", tags=["platform-admin"])
 logger = logging.getLogger(__name__)
+
+_VALID_PLANS = ("starter", "pro", "enterprise")
+_VALID_STATUSES = ("trial", "active", "past_due", "suspended", "cancelled")
+_PLAN_PRICE_USD = {"starter": 30, "pro": 60, "enterprise": 150}
 
 
 async def _require_platform_admin(request: Request, db: AsyncSession) -> User:
     if not settings.PLATFORM_ADMIN_EMAIL:
         raise HTTPException(status_code=404)
-    token = request.cookies.get("access_token")
-    auth_header = request.headers.get("Authorization")
-    if auth_header and auth_header.startswith("Bearer "):
-        token = auth_header[7:]
-    user = await get_current_user(token, db) if token else None
+    user = await get_user_from_request(request, db)
     if not user or user.email.lower() != settings.PLATFORM_ADMIN_EMAIL.lower():
         raise HTTPException(status_code=404)
     return user
@@ -38,27 +38,28 @@ async def admin_dashboard(request: Request, db: AsyncSession = Depends(get_db)):
     await _require_platform_admin(request, db)
 
     networks = (await db.execute(
-        select(Network)
-        .options(selectinload(Network.subscription), selectinload(Network.users))
+        select(Network).options(selectinload(Network.subscription))
     )).scalars().all()
 
     venue_counts = dict((await db.execute(
         select(Venue.network_id, func.count(Venue.id)).group_by(Venue.network_id)
     )).all())
 
+    owner_emails = dict((await db.execute(
+        select(User.network_id, User.email).where(User.role == "owner")
+    )).all())
+
     rows = []
-    plan_price = {"starter": 30, "pro": 60, "enterprise": 150}
     mrr = 0
     for net in networks:
         sub = net.subscription
-        owner = next((u for u in net.users if u.role == "owner"), None)
         if sub and sub.status == "active":
-            mrr += plan_price.get(sub.plan, 0)
+            mrr += _PLAN_PRICE_USD.get(sub.plan, 0)
         rows.append({
             "id": net.id,
             "name": net.name,
             "slug": net.slug,
-            "owner_email": owner.email if owner else "—",
+            "owner_email": owner_emails.get(net.id, "—"),
             "venue_count": venue_counts.get(net.id, 0),
             "plan": sub.plan if sub else "—",
             "status": sub.status if sub else "нет подписки",
@@ -86,6 +87,9 @@ async def update_subscription(
     db: AsyncSession = Depends(get_db),
 ):
     await _require_platform_admin(request, db)
+
+    if plan not in _VALID_PLANS or status not in _VALID_STATUSES:
+        raise HTTPException(status_code=400, detail="Неверный план или статус")
 
     sub = (await db.execute(
         select(Subscription).where(Subscription.network_id == network_id)
