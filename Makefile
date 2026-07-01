@@ -1,4 +1,4 @@
-.PHONY: help up down logs setup seed reseed bot reset
+.PHONY: help up down logs setup seed reseed bot reset test
 
 # Цвета
 GREEN  := \033[0;32m
@@ -15,6 +15,7 @@ help:
 	@echo "  $(GREEN)make down$(NC)   — остановить всё"
 	@echo "  $(GREEN)make logs$(NC)   — смотреть логи API"
 	@echo "  $(GREEN)make reset$(NC)  — удалить БД и начать заново"
+	@echo "  $(GREEN)make test$(NC)   — прогнать тесты (см. tests/README.md для первого запуска)"
 	@echo ""
 
 ## Запуск API (БД + миграции + сервер)
@@ -58,3 +59,7 @@ down:
 reset:
 	docker compose --profile bot down -v
 	@echo "$(YELLOW)БД удалена.$(NC) Запусти: make up && make setup"
+
+## Прогнать тесты против локального Postgres (см. tests/README.md)
+test:
+	python -m pytest tests/ -v

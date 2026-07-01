@@ -140,8 +140,14 @@ async def create_order(data: OrderCreate, guest: Guest, db: AsyncSession, change
         await _sync_table_status(table.id, db)
 
     await db.commit()
-    await db.refresh(order)
-    return order
+    # Plain db.refresh() only reloads the order's own columns; OrderOut also
+    # serializes .items/.guest, which are lazy-loaded relationships that can't
+    # be touched implicitly once we're back in FastAPI's response-serialization
+    # code (raises MissingGreenlet) — so eagerly reload them here instead.
+    result = await db.execute(
+        select(Order).options(selectinload(Order.items), selectinload(Order.guest)).where(Order.id == order.id)
+    )
+    return result.scalar_one()
 
 
 async def _deduct_inventory_for_order(order: Order, db: AsyncSession) -> None:
@@ -301,8 +307,13 @@ async def cancel_order(
         await _sync_table_status(order.table_id, db)
 
     await db.commit()
-    await db.refresh(order)
-    return order
+    # db.refresh() expires the eagerly-loaded items/guest relationships too;
+    # reload with selectinload so OrderOut can serialize them without an
+    # implicit lazy-load outside the request's greenlet context.
+    result = await db.execute(
+        select(Order).options(selectinload(Order.items), selectinload(Order.guest)).where(Order.id == order_id)
+    )
+    return result.scalar_one()
 
 
 async def get_order_with_items(order_id: uuid.UUID, db: AsyncSession) -> Order | None:
