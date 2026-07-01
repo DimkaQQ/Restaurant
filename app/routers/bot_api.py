@@ -390,6 +390,67 @@ async def get_guest_telegram_ids(network_id: uuid.UUID, db: AsyncSession = Depen
     return [row[0] for row in result.all()]
 
 
+# ── Daily report ─────────────────────────────────────────────────────────────
+
+@router.get("/daily-report")
+async def get_daily_report(network_id: uuid.UUID, db: AsyncSession = Depends(get_db)) -> dict[str, Any]:
+    """Yesterday's revenue/orders summary for the network owner, sent by the bot once a day."""
+    from sqlalchemy import func
+
+    owner = (await db.execute(
+        select(User).where(User.network_id == network_id, User.role == "owner", User.telegram_id != None)
+    )).scalar_one_or_none()
+    if not owner:
+        return {"owner_telegram_id": None}
+
+    now = datetime.now(timezone.utc)
+    day_start = (now - timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
+    day_end = day_start + timedelta(days=1)
+
+    venue_ids = [row[0] for row in (await db.execute(
+        select(Venue.id).where(Venue.network_id == network_id)
+    )).all()]
+
+    revenue = (await db.execute(
+        select(func.coalesce(func.sum(Order.total_amount), 0)).where(
+            Order.venue_id.in_(venue_ids), Order.status == "done",
+            Order.created_at >= day_start, Order.created_at < day_end,
+        )
+    )).scalar()
+
+    orders_count = (await db.execute(
+        select(func.count(Order.id)).where(
+            Order.venue_id.in_(venue_ids), Order.status == "done",
+            Order.created_at >= day_start, Order.created_at < day_end,
+        )
+    )).scalar()
+
+    new_guests = (await db.execute(
+        select(func.count(Guest.id)).where(
+            Guest.network_id == network_id,
+            Guest.created_at >= day_start, Guest.created_at < day_end,
+        )
+    )).scalar()
+
+    top_item_row = (await db.execute(
+        select(OrderItem.name, func.sum(OrderItem.quantity).label("qty"))
+        .join(Order)
+        .where(Order.venue_id.in_(venue_ids), Order.created_at >= day_start, Order.created_at < day_end)
+        .group_by(OrderItem.name)
+        .order_by(func.sum(OrderItem.quantity).desc())
+        .limit(1)
+    )).first()
+
+    return {
+        "owner_telegram_id": owner.telegram_id,
+        "date": day_start.strftime("%d.%m.%Y"),
+        "revenue": float(revenue or 0),
+        "orders_count": int(orders_count or 0),
+        "new_guests": int(new_guests or 0),
+        "top_item": top_item_row[0] if top_item_row else None,
+    }
+
+
 # ── Reviews ──────────────────────────────────────────────────────────────────
 
 class ReviewCreate(BaseModel):

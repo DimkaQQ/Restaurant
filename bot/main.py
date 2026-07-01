@@ -11,6 +11,7 @@ from aiogram.fsm.storage.memory import MemoryStorage
 
 from bot.handlers import start, menu, order, profile
 from bot.handlers import settings_handler, broadcast, review, staff as staff_handler
+from bot.handlers import daily_report
 from bot.middlewares.guest_middleware import GuestMiddleware
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
@@ -65,6 +66,7 @@ async def main():
 
     asyncio.create_task(broadcast.broadcast_loop(bot, API_URL, NETWORK_ID))
     asyncio.create_task(broadcast.review_loop(bot, API_URL, NETWORK_ID))
+    asyncio.create_task(daily_report.daily_report_loop(bot, API_URL, NETWORK_ID))
 
     logger.info("Bot starting for venue %s", VENUE_ID)
     await bot.delete_webhook(drop_pending_updates=True)
