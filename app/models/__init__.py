@@ -12,7 +12,6 @@ from app.models.inventory import Ingredient, WriteOff
 from app.models.finance import Expense
 from app.models.shift import Shift
 from app.models.broadcast import Broadcast
-from app.models.onboarding import OnboardingModule, OnboardingQuestion, OnboardingProgress
 from app.models.subscription import Subscription
 from app.models.recipe import Recipe
 
@@ -24,7 +23,6 @@ __all__ = [
     "Expense",
     "Shift",
     "Broadcast",
-    "OnboardingModule", "OnboardingQuestion", "OnboardingProgress",
     "Subscription",
     "Recipe",
 ]

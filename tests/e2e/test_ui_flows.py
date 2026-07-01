@@ -25,15 +25,15 @@ def test_register_page_renders(page: Page, live_server: str):
     expect(page.get_by_placeholder("owner@restaurant.kz")).to_be_visible()
 
 
-def test_full_registration_flow_reaches_onboarding(page: Page, live_server: str):
+def test_full_registration_flow_reaches_dashboard(page: Page, live_server: str):
     page.goto(f"{live_server}/auth/register", wait_until="domcontentloaded")
     page.fill("#name", "Playwright Test Restaurant")
     page.fill("#email", _unique_email())
     page.fill("#password", "supersecret123")
     page.click("button[type=submit]")
 
-    page.wait_for_url("**/onboarding**", wait_until="domcontentloaded", timeout=15000)
-    assert "/onboarding" in page.url
+    page.wait_for_url("**/dashboard**", wait_until="domcontentloaded", timeout=15000)
+    assert "/dashboard" in page.url
 
 
 def test_login_with_wrong_password_shows_error(page: Page, live_server: str):

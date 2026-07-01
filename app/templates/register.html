@@ -65,7 +65,7 @@
       if (res.ok) {
         const data = await res.json();
         localStorage.setItem('access_token', data.access_token);
-        location.href = '/onboarding';
+        location.href = '/dashboard';
       } else {
         let msg = 'Ошибка регистрации';
         try {

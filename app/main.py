@@ -10,7 +10,7 @@ from sqlalchemy import text
 from app.config import settings
 from app.database import engine
 from app.models import *  # noqa: F401,F403 — registers all models with Base
-from app.routers import auth, dashboard, venues, menu, orders, guests, analytics, staff, settings as settings_router, inventory, finance, shifts, bot_api, online_order, onboarding, billing, platform_admin, pos
+from app.routers import auth, dashboard, venues, menu, orders, guests, analytics, staff, settings as settings_router, inventory, finance, shifts, bot_api, online_order, billing, platform_admin, pos
 from app.services.cleanup_service import stale_order_cleanup_loop
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
@@ -50,7 +50,6 @@ app.include_router(finance.router)
 app.include_router(shifts.router)
 app.include_router(bot_api.router)
 app.include_router(online_order.router)
-app.include_router(onboarding.router)
 app.include_router(billing.router)
 app.include_router(platform_admin.router)
 app.include_router(pos.router)

@@ -29,6 +29,13 @@
   font-size: 0.85rem;
 }
 .menu-img-placeholder:hover { border-color: var(--gold); color: var(--gold); }
+.menu-recipe-btn {
+  display: flex; align-items: center; justify-content: center; gap: .4rem;
+  width: 100%; margin-top: .6rem; padding: .5rem; min-height: 36px;
+  background: rgba(200,168,75,0.08); border: 1px solid var(--border); border-radius: 8px;
+  color: var(--muted); font-size: .8rem; cursor: pointer; transition: all .15s;
+}
+.menu-recipe-btn:hover { border-color: var(--gold); color: var(--gold); background: rgba(200,168,75,0.14); }
 </style>
 {% endblock %}
 
@@ -121,9 +128,11 @@
               <span class="toggle-track"></span>
               <span class="toggle-label">${item.is_available ? 'Доступно' : 'Скрыто'}</span>
             </label>
-            <button onclick="openRecipeModal('${esc(item.id)}', '${esc(item.name)}')" class="btn-icon" title="Техкарта / рецепт">🧾</button>
             <button onclick="deleteItem('${esc(item.id)}')" class="btn-icon-danger">✕</button>
           </div>
+          <button onclick="openRecipeModal('${esc(item.id)}', '${esc(item.name)}')" class="menu-recipe-btn">
+            🧾 Техкарта
+          </button>
         </div>
       </div>
     `).join('');

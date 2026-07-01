@@ -30,7 +30,7 @@ def test_menu_page_add_item_and_open_recipe_modal(page: Page, live_server: str):
     expect(menu_card).to_be_visible(timeout=8000)
 
     # Open the recipe ("Техкарта") modal for the item we just created.
-    menu_card.locator("button[title='Техкарта / рецепт']").click()
+    menu_card.get_by_role("button", name="Техкарта").click()
     expect(page.locator("#recipe-modal")).to_be_visible()
     expect(page.locator("#recipe-item-name")).to_have_text("Плов")
 
