@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+{% block title %}Касса — RestOS{% endblock %}
+
+{% block head %}
+<style>
+.pos-layout { display:grid; grid-template-columns:1fr 340px; gap:1.5rem; align-items:start; }
+@media(max-width:900px){ .pos-layout{grid-template-columns:1fr;} }
+.pos-cats { display:flex; gap:.5rem; flex-wrap:wrap; margin-bottom:1rem; }
+.pos-cat-chip { padding:.4rem .9rem; min-height:36px; border-radius:20px; border:1px solid var(--border); color:var(--muted); background:none; cursor:pointer; font-size:.82rem; }
+.pos-cat-chip.active { background:rgba(200,168,75,.15); border-color:var(--gold); color:var(--gold); }
+.pos-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:.75rem; }
+.pos-item { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:.9rem; cursor:pointer; transition:border-color .15s; }
+.pos-item:hover { border-color:var(--gold); }
+.pos-item-name { font-size:.9rem; font-weight:600; margin-bottom:.3rem; }
+.pos-item-price { font-size:.85rem; color:var(--gold); font-weight:700; }
+.pos-cart { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:1.25rem; position:sticky; top:1rem; }
+.pos-cart h2 { font-size:1rem; margin-bottom:1rem; }
+.pos-cart-line { display:flex; align-items:center; justify-content:space-between; gap:.5rem; padding:.4rem 0; border-bottom:1px solid rgba(255,255,255,.05); font-size:.85rem; }
+.pos-cart-qty { display:flex; align-items:center; gap:.4rem; }
+.pos-cart-qty button { width:24px; height:24px; border-radius:6px; border:1px solid var(--border); background:none; color:var(--white); cursor:pointer; }
+.pos-total { display:flex; justify-content:space-between; font-size:1.1rem; font-weight:700; margin:1rem 0; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">Касса</h1>
+</div>
+
+<div class="filters">
+  <select id="venue-select" onchange="loadMenu()" class="select-input">
+    <option value="">Выберите заведение</option>
+    {% for v in venues %}
+    <option value="{{ v.id }}">{{ v.name }}</option>
+    {% endfor %}
+  </select>
+</div>
+
+<div class="pos-layout">
+  <div>
+    <div class="pos-cats" id="pos-cats"></div>
+    <div class="pos-grid" id="pos-grid"><p class="empty-state">Выберите заведение</p></div>
+  </div>
+
+  <div class="pos-cart">
+    <h2>Заказ</h2>
+    <div class="form-group">
+      <label style="font-size:.8rem;color:var(--muted)">Стол / номер заказа</label>
+      <input type="text" id="table-number" placeholder="Например, 5">
+    </div>
+    <div id="cart-lines"><p class="empty-state" style="padding:.5rem 0">Корзина пуста</p></div>
+    <div class="pos-total"><span>Итого</span><span id="cart-total">0 ₸</span></div>
+    <button onclick="submitOrder()" class="btn-primary" style="width:100%" id="submit-btn" disabled>Оформить заказ</button>
+  </div>
+</div>
+
+<script>
+  const token = () => localStorage.getItem('access_token');
+  let _menuItems = [];
+  let _cart = {}; // menu_item_id -> {item, qty}
+
+  function esc(s) {
+    return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  async function loadMenu() {
+    const venueId = document.getElementById('venue-select').value;
+    _cart = {};
+    renderCart();
+    if (!venueId) { document.getElementById('pos-grid').innerHTML = '<p class="empty-state">Выберите заведение</p>'; return; }
+    const res = await fetch('/api/menu/' + venueId, { credentials: 'include' });
+    if (res.status === 401) { location.href = '/auth/login'; return; }
+    _menuItems = (await res.json()).filter(i => i.is_available);
+    renderCats();
+    renderGrid(null);
+  }
+
+  function renderCats() {
+    const cats = [...new Set(_menuItems.map(i => i.category).filter(Boolean))];
+    const el = document.getElementById('pos-cats');
+    el.innerHTML = `<button class="pos-cat-chip active" onclick="renderGrid(null, this)">Все</button>` +
+      cats.map(c => `<button class="pos-cat-chip" onclick="renderGrid('${esc(c)}', this)">${esc(c)}</button>`).join('');
+  }
+
+  function renderGrid(category, btn) {
+    if (btn) {
+      document.querySelectorAll('.pos-cat-chip').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+    }
+    const items = category ? _menuItems.filter(i => i.category === category) : _menuItems;
+    const grid = document.getElementById('pos-grid');
+    if (!items.length) { grid.innerHTML = '<p class="empty-state">Меню пусто</p>'; return; }
+    grid.innerHTML = items.map(i => `
+      <div class="pos-item" onclick="addToCart('${esc(i.id)}')">
+        <div class="pos-item-name">${esc(i.name)}</div>
+        <div class="pos-item-price">${parseFloat(i.price).toLocaleString('ru-RU')} ₸</div>
+      </div>
+    `).join('');
+  }
+
+  function addToCart(itemId) {
+    const item = _menuItems.find(i => i.id === itemId);
+    if (!item) return;
+    if (_cart[itemId]) _cart[itemId].qty += 1;
+    else _cart[itemId] = { item, qty: 1 };
+    renderCart();
+  }
+
+  function changeQty(itemId, delta) {
+    if (!_cart[itemId]) return;
+    _cart[itemId].qty += delta;
+    if (_cart[itemId].qty <= 0) delete _cart[itemId];
+    renderCart();
+  }
+
+  function renderCart() {
+    const lines = Object.entries(_cart);
+    const linesEl = document.getElementById('cart-lines');
+    const submitBtn = document.getElementById('submit-btn');
+    if (!lines.length) {
+      linesEl.innerHTML = '<p class="empty-state" style="padding:.5rem 0">Корзина пуста</p>';
+      document.getElementById('cart-total').textContent = '0 ₸';
+      submitBtn.disabled = true;
+      return;
+    }
+    let total = 0;
+    linesEl.innerHTML = lines.map(([id, { item, qty }]) => {
+      total += parseFloat(item.price) * qty;
+      return `
+        <div class="pos-cart-line">
+          <span>${esc(item.name)}</span>
+          <div class="pos-cart-qty">
+            <button type="button" onclick="changeQty('${esc(id)}', -1)">−</button>
+            <span>${qty}</span>
+            <button type="button" onclick="changeQty('${esc(id)}', 1)">+</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+    document.getElementById('cart-total').textContent = total.toLocaleString('ru-RU') + ' ₸';
+    submitBtn.disabled = false;
+  }
+
+  async function submitOrder() {
+    const venueId = document.getElementById('venue-select').value;
+    const items = Object.values(_cart).map(({ item, qty }) => ({ menu_item_id: item.id, quantity: qty }));
+    if (!items.length) return;
+    const submitBtn = document.getElementById('submit-btn');
+    submitBtn.disabled = true;
+    try {
+      const res = await fetch('/api/pos/order', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {'Content-Type':'application/json','Authorization':'Bearer '+token()},
+        body: JSON.stringify({
+          venue_id: venueId,
+          items,
+          table_number: document.getElementById('table-number').value || null,
+        }),
+      });
+      if (res.status === 401) { location.href = '/auth/login'; return; }
+      if (res.ok) {
+        _cart = {};
+        document.getElementById('table-number').value = '';
+        renderCart();
+        alert('Заказ отправлен на кухню');
+      } else {
+        const err = await res.json().catch(() => ({}));
+        alert(err.detail || 'Ошибка оформления заказа');
+      }
+    } finally {
+      submitBtn.disabled = Object.keys(_cart).length === 0;
+    }
+  }
+</script>
+{% endblock %}

@@ -21,7 +21,7 @@
   {% if order.table_number or order.source == 'online' %}
   <div style="font-size:.78rem;color:var(--muted);margin-bottom:.5rem">
     {% if order.table_number %}📍 Стол {{ order.table_number }}{% endif %}
-    {% if order.source == 'online' %} · 🌐 Онлайн{% elif order.source == 'staff' %} · 👨‍💼 Официант{% endif %}
+    {% if order.source == 'online' %} · 🌐 Онлайн{% elif order.source == 'staff' %} · 👨‍💼 Официант{% elif order.source == 'pos' %} · 💳 Касса{% endif %}
   </div>
   {% endif %}
   <div class="kds-items">

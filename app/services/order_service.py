@@ -28,6 +28,30 @@ VALID_TRANSITIONS = {
 }
 
 
+WALKIN_MARKER = "__walkin__"
+
+
+async def get_or_create_walkin_guest(network_id: uuid.UUID, db: AsyncSession) -> Guest:
+    """Anonymous guest bucket for POS orders placed by staff without a real customer
+    (walk-ins, takeaway at the counter) — keeps Order.guest_id NOT NULL without
+    forcing every in-house sale through the Telegram loyalty flow."""
+    existing = (await db.execute(
+        select(Guest).where(Guest.network_id == network_id, Guest.phone == WALKIN_MARKER)
+    )).scalar_one_or_none()
+    if existing:
+        return existing
+
+    guest = Guest(
+        id=uuid.uuid4(),
+        network_id=network_id,
+        name="Гость (касса)",
+        phone=WALKIN_MARKER,
+    )
+    db.add(guest)
+    await db.flush()
+    return guest
+
+
 async def create_order(data: OrderCreate, guest: Guest, db: AsyncSession, changed_by: str = "bot") -> Order:
     item_ids = [i.menu_item_id for i in data.items]
     result = await db.execute(
@@ -54,7 +78,8 @@ async def create_order(data: OrderCreate, guest: Guest, db: AsyncSession, change
             )
         )
 
-    points = calculate_points_earned(total)
+    is_walkin = guest.phone == WALKIN_MARKER
+    points = 0 if is_walkin else calculate_points_earned(total)
     order = Order(
         id=uuid.uuid4(),
         venue_id=data.venue_id,
@@ -78,11 +103,14 @@ async def create_order(data: OrderCreate, guest: Guest, db: AsyncSession, change
         changed_by=changed_by,
     ))
 
-    visit = Visit(id=uuid.uuid4(), guest_id=guest.id, venue_id=data.venue_id, order_id=order.id)
-    db.add(visit)
-    guest.total_visits += 1
+    # The shared walk-in guest bucket doesn't earn loyalty visits/points —
+    # those only make sense for real, identifiable customers.
+    if not is_walkin:
+        visit = Visit(id=uuid.uuid4(), guest_id=guest.id, venue_id=data.venue_id, order_id=order.id)
+        db.add(visit)
+        guest.total_visits += 1
+        await add_points(guest, data.venue_id, points, f"Заказ #{order.id}", db)
 
-    await add_points(guest, data.venue_id, points, f"Заказ #{order.id}", db)
     await db.commit()
     await db.refresh(order)
     return order
