@@ -26,6 +26,7 @@ class Settings(BaseSettings):
     STRIPE_PRICE_ENTERPRISE: str = ""
     PUBLIC_URL: str = "http://localhost:8000"
     PLATFORM_ADMIN_EMAIL: str = ""
+    SENTRY_DSN: str = ""
 
     class Config:
         env_file = ".env"
