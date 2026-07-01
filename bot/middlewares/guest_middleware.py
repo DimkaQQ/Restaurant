@@ -32,7 +32,9 @@ class GuestMiddleware(BaseMiddleware):
             try:
                 async with httpx.AsyncClient(timeout=5.0, headers=self._headers) as client:
                     # Fetch guest (read-only — creation happens only in registration flow)
-                    guest_resp = await client.get(f"{self.api_url}/api/bot/guest/{tg_id}")
+                    guest_resp = await client.get(
+                        f"{self.api_url}/api/bot/guest/{tg_id}", params={"network_id": self.network_id}
+                    )
                     if guest_resp.status_code == 200:
                         guest = guest_resp.json()
                         data["guest"] = guest
@@ -42,7 +44,9 @@ class GuestMiddleware(BaseMiddleware):
                         data["lang"] = "ru"
 
                     # Check if this Telegram account belongs to a staff user
-                    staff_resp = await client.get(f"{self.api_url}/api/bot/staff/{tg_id}")
+                    staff_resp = await client.get(
+                        f"{self.api_url}/api/bot/staff/{tg_id}", params={"network_id": self.network_id}
+                    )
                     data["staff_user"] = staff_resp.json() if staff_resp.status_code == 200 else None
 
             except Exception as e:

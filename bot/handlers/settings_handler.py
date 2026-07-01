@@ -34,6 +34,7 @@ async def change_language(
             async with bot_client() as client:
                 await client.patch(
                     f"{api_url}/api/bot/guest/{guest['telegram_id']}",
+                    params={"network_id": guest["network_id"]},
                     json={"language": new_lang},
                     timeout=5.0,
                 )
@@ -141,6 +142,7 @@ async def set_preferred_venue(
 
             await client.patch(
                 f"{api_url}/api/bot/guest/{guest['telegram_id']}",
+                params={"network_id": network_id},
                 json={"preferred_venue_id": venue_id},
                 timeout=5.0,
             )

@@ -1,16 +1,19 @@
 import uuid
 from datetime import datetime
-from sqlalchemy import String, BigInteger, Integer, DateTime, ForeignKey, func
+from sqlalchemy import String, BigInteger, Integer, DateTime, ForeignKey, UniqueConstraint, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.database import Base
 
 
 class Guest(Base):
     __tablename__ = "guests"
+    # A Telegram account can be a guest of multiple unrelated restaurant
+    # networks — uniqueness is per-network, not global (see migration 012).
+    __table_args__ = (UniqueConstraint("network_id", "telegram_id", name="uq_guests_network_telegram"),)
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
     network_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("networks.id"))
-    telegram_id: Mapped[int | None] = mapped_column(BigInteger, unique=True)
+    telegram_id: Mapped[int | None] = mapped_column(BigInteger)
     name: Mapped[str | None] = mapped_column(String(255))
     phone: Mapped[str | None] = mapped_column(String(50))
     total_points: Mapped[int] = mapped_column(Integer, default=0)

@@ -41,8 +41,14 @@ logger = logging.getLogger(__name__)
 # ── Guest endpoints ──────────────────────────────────────────────────────────
 
 @router.get("/guest/{telegram_id}")
-async def get_bot_guest(telegram_id: int, db: AsyncSession = Depends(get_db)) -> dict[str, Any]:
-    guest = (await db.execute(select(Guest).where(Guest.telegram_id == telegram_id))).scalar_one_or_none()
+async def get_bot_guest(
+    telegram_id: int,
+    network_id: uuid.UUID = Query(...),
+    db: AsyncSession = Depends(get_db),
+) -> dict[str, Any]:
+    guest = (await db.execute(
+        select(Guest).where(Guest.telegram_id == telegram_id, Guest.network_id == network_id)
+    )).scalar_one_or_none()
     if not guest:
         raise HTTPException(status_code=404, detail="Гость не найден")
     return {
@@ -68,7 +74,9 @@ class GuestCreate(BaseModel):
 
 @router.post("/guest")
 async def create_bot_guest(data: GuestCreate, db: AsyncSession = Depends(get_db)) -> dict[str, Any]:
-    existing = (await db.execute(select(Guest).where(Guest.telegram_id == data.telegram_id))).scalar_one_or_none()
+    existing = (await db.execute(
+        select(Guest).where(Guest.telegram_id == data.telegram_id, Guest.network_id == data.network_id)
+    )).scalar_one_or_none()
     if existing:
         # Update language if provided
         if data.language and data.language != existing.language:
@@ -112,8 +120,15 @@ class GuestPatch(BaseModel):
 
 
 @router.patch("/guest/{telegram_id}")
-async def bot_update_guest(telegram_id: int, data: GuestPatch, db: AsyncSession = Depends(get_db)):
-    guest = (await db.execute(select(Guest).where(Guest.telegram_id == telegram_id))).scalar_one_or_none()
+async def bot_update_guest(
+    telegram_id: int,
+    data: GuestPatch,
+    network_id: uuid.UUID = Query(...),
+    db: AsyncSession = Depends(get_db),
+):
+    guest = (await db.execute(
+        select(Guest).where(Guest.telegram_id == telegram_id, Guest.network_id == network_id)
+    )).scalar_one_or_none()
     if not guest:
         raise HTTPException(status_code=404, detail="Гость не найден")
     if data.language is not None:
@@ -183,8 +198,14 @@ async def bot_menu(venue_id: uuid.UUID, db: AsyncSession = Depends(get_db)) -> l
 # ── Staff endpoints ──────────────────────────────────────────────────────────
 
 @router.get("/staff/{telegram_id}")
-async def get_bot_staff(telegram_id: int, db: AsyncSession = Depends(get_db)) -> dict[str, Any]:
-    user = (await db.execute(select(User).where(User.telegram_id == telegram_id))).scalar_one_or_none()
+async def get_bot_staff(
+    telegram_id: int,
+    network_id: uuid.UUID = Query(...),
+    db: AsyncSession = Depends(get_db),
+) -> dict[str, Any]:
+    user = (await db.execute(
+        select(User).where(User.telegram_id == telegram_id, User.network_id == network_id)
+    )).scalar_one_or_none()
     if not user:
         raise HTTPException(status_code=404, detail="Сотрудник не найден")
     return {
