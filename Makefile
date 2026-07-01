@@ -1,4 +1,4 @@
-.PHONY: help up down logs setup seed reseed bot reset test
+.PHONY: help up down logs setup seed reseed bot reset test test-e2e
 
 # Цвета
 GREEN  := \033[0;32m
@@ -15,7 +15,8 @@ help:
 	@echo "  $(GREEN)make down$(NC)   — остановить всё"
 	@echo "  $(GREEN)make logs$(NC)   — смотреть логи API"
 	@echo "  $(GREEN)make reset$(NC)  — удалить БД и начать заново"
-	@echo "  $(GREEN)make test$(NC)   — прогнать тесты (см. tests/README.md для первого запуска)"
+	@echo "  $(GREEN)make test$(NC)   — прогнать backend-тесты (см. tests/README.md для первого запуска)"
+	@echo "  $(GREEN)make test-e2e$(NC) — прогнать браузерные тесты (реальный Chromium + реальный сервер)"
 	@echo ""
 
 ## Запуск API (БД + миграции + сервер)
@@ -60,6 +61,12 @@ reset:
 	docker compose --profile bot down -v
 	@echo "$(YELLOW)БД удалена.$(NC) Запусти: make up && make setup"
 
-## Прогнать тесты против локального Postgres (см. tests/README.md)
+## Прогнать backend-тесты против локального Postgres (см. tests/README.md)
 test:
 	python -m pytest tests/ -v
+
+## Прогнать браузерные (визуальные) тесты — отдельный процесс: browser tests
+## use a different event-loop model than the async backend suite and can't
+## share one pytest run with it.
+test-e2e:
+	python -m pytest tests/e2e/ -v
