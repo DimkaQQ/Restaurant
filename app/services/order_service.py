@@ -8,9 +8,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from app.models.guest import Guest
+from app.models.inventory import Ingredient, WriteOff
 from app.models.menu import MenuItem
 from app.models.order import Order, OrderItem, OrderStatusLog, Visit
 from app.models.points import PointsTransaction
+from app.models.recipe import Recipe
 from app.schemas.order import OrderCreate
 from app.services.points_service import add_points, calculate_points_earned
 
@@ -86,6 +88,47 @@ async def create_order(data: OrderCreate, guest: Guest, db: AsyncSession, change
     return order
 
 
+async def _deduct_inventory_for_order(order: Order, db: AsyncSession) -> None:
+    """Auto-deduct ingredient stock per the tech card (Recipe) when an order completes.
+    Best-effort: goes negative rather than blocking order completion on missing stock."""
+    menu_item_ids = [i.menu_item_id for i in order.items if i.menu_item_id]
+    if not menu_item_ids:
+        return
+
+    recipes = (await db.execute(
+        select(Recipe).where(Recipe.menu_item_id.in_(menu_item_ids))
+    )).scalars().all()
+    if not recipes:
+        return
+
+    recipes_by_item: dict[uuid.UUID, list[Recipe]] = {}
+    for r in recipes:
+        recipes_by_item.setdefault(r.menu_item_id, []).append(r)
+
+    needed: dict[uuid.UUID, Decimal] = {}
+    for item in order.items:
+        for recipe in recipes_by_item.get(item.menu_item_id, []):
+            needed[recipe.ingredient_id] = needed.get(recipe.ingredient_id, Decimal("0")) + recipe.quantity * item.quantity
+
+    if not needed:
+        return
+
+    ingredients = (await db.execute(
+        select(Ingredient).where(Ingredient.id.in_(needed.keys()))
+    )).scalars().all()
+
+    for ingredient in ingredients:
+        amount = needed[ingredient.id]
+        ingredient.quantity = (ingredient.quantity or Decimal("0")) - amount
+        db.add(WriteOff(
+            id=uuid.uuid4(),
+            ingredient_id=ingredient.id,
+            quantity=amount,
+            reason="usage",
+            note=f"Автосписание по заказу #{str(order.id)[:8].upper()}",
+        ))
+
+
 async def update_order_status(
     order_id: uuid.UUID,
     new_status: str,
@@ -110,6 +153,9 @@ async def update_order_status(
         new_status=new_status,
         changed_by=changed_by,
     ))
+
+    if new_status == "done":
+        await _deduct_inventory_for_order(order, db)
 
     await db.commit()
     result = await db.execute(

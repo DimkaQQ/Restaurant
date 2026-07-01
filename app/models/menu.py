@@ -19,3 +19,4 @@ class MenuItem(Base):
 
     venue: Mapped["Venue"] = relationship("Venue", back_populates="menu_items")
     order_items: Mapped[list["OrderItem"]] = relationship("OrderItem", back_populates="menu_item")
+    recipes: Mapped[list["Recipe"]] = relationship("Recipe", back_populates="menu_item", cascade="all, delete-orphan")

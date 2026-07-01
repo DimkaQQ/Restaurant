@@ -32,3 +32,15 @@ class MenuItemOut(BaseModel):
     image_url: str | None
 
     model_config = {"from_attributes": True}
+
+
+class RecipeLineIn(BaseModel):
+    ingredient_id: uuid.UUID
+    quantity: Decimal = Field(..., gt=0)
+
+
+class RecipeLineOut(BaseModel):
+    ingredient_id: uuid.UUID
+    ingredient_name: str
+    unit: str
+    quantity: Decimal

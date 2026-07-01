@@ -13,6 +13,7 @@ from app.models.shift import Shift
 from app.models.broadcast import Broadcast
 from app.models.onboarding import OnboardingModule, OnboardingQuestion, OnboardingProgress
 from app.models.subscription import Subscription
+from app.models.recipe import Recipe
 
 __all__ = [
     "Network", "Venue", "User", "Guest",
@@ -24,4 +25,5 @@ __all__ = [
     "Broadcast",
     "OnboardingModule", "OnboardingQuestion", "OnboardingProgress",
     "Subscription",
+    "Recipe",
 ]

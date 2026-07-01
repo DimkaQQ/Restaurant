@@ -46,6 +46,24 @@ class WriteOffCreate(BaseModel):
     note: str | None = None
 
 
+@router.get("/api/inventory/list")
+async def list_ingredients_json(
+    venue_id: uuid.UUID = Query(...),
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    accessible_ids = await get_accessible_venue_ids(current_user, db)
+    if venue_id not in accessible_ids:
+        raise HTTPException(status_code=403, detail="Нет доступа к этому заведению")
+    result = await db.execute(
+        select(Ingredient).where(Ingredient.venue_id == venue_id).order_by(Ingredient.name)
+    )
+    return [
+        {"id": str(i.id), "name": i.name, "unit": i.unit}
+        for i in result.scalars().all()
+    ]
+
+
 @router.get("/inventory", response_class=HTMLResponse)
 async def inventory_page(
     request: Request,

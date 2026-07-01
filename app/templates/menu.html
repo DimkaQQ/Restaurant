@@ -68,6 +68,20 @@
   </div>
 </div>
 
+<div id="recipe-modal" class="modal" style="display:none">
+  <div class="modal-overlay" onclick="closeRecipeModal()"></div>
+  <div class="modal-content">
+    <h2 class="modal-title">Техкарта: <span id="recipe-item-name"></span></h2>
+    <p style="color:var(--muted);font-size:.8rem;margin-bottom:.75rem">Сколько ингредиента списывается со склада при продаже 1 шт. этой позиции. При завершении заказа склад списывается автоматически.</p>
+    <div id="recipe-lines"></div>
+    <button type="button" onclick="addRecipeLine()" class="btn-secondary" style="margin:.5rem 0">+ Ингредиент</button>
+    <div class="form-row">
+      <button type="button" onclick="saveRecipe()" class="btn-primary">Сохранить</button>
+      <button type="button" onclick="closeRecipeModal()" class="btn-secondary">Отмена</button>
+    </div>
+  </div>
+</div>
+
 <script>
   const token = () => localStorage.getItem('access_token');
 
@@ -107,6 +121,7 @@
               <span class="toggle-track"></span>
               <span class="toggle-label">${item.is_available ? 'Доступно' : 'Скрыто'}</span>
             </label>
+            <button onclick="openRecipeModal('${esc(item.id)}', '${esc(item.name)}')" class="btn-icon" title="Техкарта / рецепт">🧾</button>
             <button onclick="deleteItem('${esc(item.id)}')" class="btn-icon-danger">✕</button>
           </div>
         </div>
@@ -153,6 +168,72 @@
     });
     if (res.status === 401) { location.href = '/auth/login'; return; }
     loadMenu();
+  }
+
+  let _recipeItemId = null;
+  let _venueIngredients = [];
+
+  async function openRecipeModal(itemId, itemName) {
+    _recipeItemId = itemId;
+    document.getElementById('recipe-item-name').textContent = itemName;
+    const venueId = document.getElementById('venue-select').value;
+
+    const [ingRes, recipeRes] = await Promise.all([
+      fetch('/api/inventory/list?venue_id=' + venueId, { credentials: 'include' }),
+      fetch('/api/menu/' + itemId + '/recipe', { credentials: 'include' }),
+    ]);
+    _venueIngredients = ingRes.ok ? await ingRes.json() : [];
+    const recipe = recipeRes.ok ? await recipeRes.json() : [];
+
+    const linesEl = document.getElementById('recipe-lines');
+    linesEl.innerHTML = '';
+    if (recipe.length) {
+      recipe.forEach(line => addRecipeLine(line.ingredient_id, line.quantity));
+    } else if (!_venueIngredients.length) {
+      linesEl.innerHTML = '<p class="empty-state" style="padding:.5rem 0">Сначала добавьте ингредиенты на складе</p>';
+    }
+    document.getElementById('recipe-modal').style.display = 'flex';
+  }
+
+  function addRecipeLine(selectedIngredientId, quantity) {
+    if (!_venueIngredients.length) return;
+    const linesEl = document.getElementById('recipe-lines');
+    const row = document.createElement('div');
+    row.className = 'form-row recipe-line';
+    row.style.cssText = 'gap:.5rem;margin-bottom:.5rem;align-items:center';
+    const options = _venueIngredients.map(i =>
+      `<option value="${esc(i.id)}" ${i.id === selectedIngredientId ? 'selected' : ''}>${esc(i.name)} (${esc(i.unit)})</option>`
+    ).join('');
+    row.innerHTML = `
+      <select class="recipe-ingredient" style="flex:2">${options}</select>
+      <input type="number" class="recipe-qty" step="0.001" min="0.001" placeholder="Кол-во" value="${quantity ?? ''}" style="flex:1">
+      <button type="button" onclick="this.closest('.recipe-line').remove()" class="btn-icon-danger">✕</button>
+    `;
+    linesEl.appendChild(row);
+  }
+
+  async function saveRecipe() {
+    const lines = [...document.querySelectorAll('.recipe-line')].map(row => ({
+      ingredient_id: row.querySelector('.recipe-ingredient').value,
+      quantity: parseFloat(row.querySelector('.recipe-qty').value),
+    })).filter(l => l.ingredient_id && l.quantity > 0);
+
+    const res = await fetch('/api/menu/' + _recipeItemId + '/recipe', {
+      method: 'PUT',
+      credentials: 'include',
+      headers: {'Content-Type':'application/json','Authorization':'Bearer '+token()},
+      body: JSON.stringify(lines),
+    });
+    if (res.ok) { closeRecipeModal(); }
+    else if (res.status === 401) { location.href = '/auth/login'; }
+    else {
+      const err = await res.json().catch(() => ({}));
+      alert(err.detail || 'Ошибка сохранения техкарты');
+    }
+  }
+
+  function closeRecipeModal() {
+    document.getElementById('recipe-modal').style.display = 'none';
   }
 
   function openAddModal() {
