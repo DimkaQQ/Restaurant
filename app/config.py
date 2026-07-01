@@ -19,6 +19,13 @@ class Settings(BaseSettings):
     API_URL: str = ""
     BOT_NAME: str = ""
     BOT_API_SECRET: str = ""
+    STRIPE_SECRET_KEY: str = ""
+    STRIPE_WEBHOOK_SECRET: str = ""
+    STRIPE_PRICE_STARTER: str = ""
+    STRIPE_PRICE_PRO: str = ""
+    STRIPE_PRICE_ENTERPRISE: str = ""
+    PUBLIC_URL: str = "http://localhost:8000"
+    PLATFORM_ADMIN_EMAIL: str = ""
 
     class Config:
         env_file = ".env"

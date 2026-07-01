@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Platform Admin — RestOS</title>
+  <link rel="stylesheet" href="/static/css/main.css?v=7">
+  <style>
+    body { background:var(--black); padding:2rem; font-family:'Inter',sans-serif; }
+    h1 { font-family:'Instrument Serif',serif; font-weight:400; font-size:1.8rem; margin-bottom:1.5rem; }
+    .kpis { display:flex; gap:1rem; margin-bottom:2rem; flex-wrap:wrap; }
+    .kpi { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:1rem 1.5rem; }
+    .kpi-label { font-size:.72rem; text-transform:uppercase; color:var(--muted); margin-bottom:.3rem; }
+    .kpi-value { font-size:1.6rem; font-weight:700; color:var(--gold); }
+    table { width:100%; border-collapse:collapse; background:var(--card); border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+    th, td { text-align:left; padding:.6rem .9rem; font-size:.85rem; border-bottom:1px solid var(--border); }
+    th { color:var(--muted); text-transform:uppercase; font-size:.7rem; letter-spacing:.04em; }
+    tr:last-child td { border-bottom:none; }
+    .status-pill { padding:.15rem .55rem; border-radius:12px; font-size:.72rem; font-weight:600; }
+    .status-trial { background:rgba(200,168,75,.15); color:var(--gold); }
+    .status-active { background:rgba(74,222,128,.15); color:#4ade80; }
+    .status-past_due, .status-suspended, .status-cancelled { background:rgba(239,68,68,.15); color:#f87171; }
+    .edit-form { display:flex; gap:.35rem; align-items:center; }
+    .edit-form select { background:var(--black); border:1px solid var(--border); color:var(--white); padding:.25rem .4rem; border-radius:6px; font-size:.75rem; }
+    .edit-form button { background:none; border:1px solid var(--border); color:var(--gold); border-radius:6px; padding:.25rem .6rem; font-size:.75rem; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <h1>RestOS · Platform Admin</h1>
+
+  <div class="kpis">
+    <div class="kpi"><div class="kpi-label">MRR</div><div class="kpi-value">${{ mrr }}</div></div>
+    <div class="kpi"><div class="kpi-label">Сетей всего</div><div class="kpi-value">{{ total_networks }}</div></div>
+    <div class="kpi"><div class="kpi-label">Активных</div><div class="kpi-value">{{ active_count }}</div></div>
+    <div class="kpi"><div class="kpi-label">На триале</div><div class="kpi-value">{{ trial_count }}</div></div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Сеть</th><th>Владелец</th><th>Заведений</th><th>Тариф</th><th>Статус</th><th>Создана</th><th>Изменить</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in rows %}
+      <tr>
+        <td>{{ r.name }}<br><span style="color:var(--muted);font-size:.72rem">{{ r.slug }}</span></td>
+        <td>{{ r.owner_email }}</td>
+        <td>{{ r.venue_count }}</td>
+        <td style="text-transform:capitalize">{{ r.plan }}</td>
+        <td>
+          <span class="status-pill status-{{ r.status }}">{{ r.status }}</span>
+          {% if r.status == 'trial' and r.trial_ends_at %}
+          <div style="font-size:.7rem;color:var(--muted);margin-top:.2rem">до {{ r.trial_ends_at.strftime('%d.%m.%Y') }}</div>
+          {% endif %}
+        </td>
+        <td>{{ r.created_at.strftime('%d.%m.%Y') }}</td>
+        <td>
+          <form class="edit-form" method="post" action="/platform/admin/subscription/{{ r.id }}">
+            <select name="plan">
+              {% for p in ['starter','pro','enterprise'] %}
+              <option value="{{ p }}" {% if r.plan == p %}selected{% endif %}>{{ p }}</option>
+              {% endfor %}
+            </select>
+            <select name="status">
+              {% for s in ['trial','active','past_due','suspended','cancelled'] %}
+              <option value="{{ s }}" {% if r.status == s %}selected{% endif %}>{{ s }}</option>
+              {% endfor %}
+            </select>
+            <button type="submit">Сохранить</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</body>
+</html>

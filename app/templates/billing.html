@@ -50,7 +50,10 @@
       <div class="bill-meta">Доступ ограничен до продления подписки</div>
     {% endif %}
     <div class="bill-cta">
-      <a href="https://t.me/" target="_blank" class="btn-primary">Написать в поддержку</a>
+      {% if stripe_enabled and subscription and subscription.stripe_customer_id %}
+      <form method="post" action="/billing/portal"><button type="submit" class="btn-primary">Управлять оплатой</button></form>
+      {% endif %}
+      <a href="https://t.me/" target="_blank" class="btn-primary" style="{% if stripe_enabled and subscription and subscription.stripe_customer_id %}background:none;border:1px solid var(--border);color:var(--white){% endif %}">Написать в поддержку</a>
     </div>
   {% else %}
     <p style="color:var(--muted)">Подписка не найдена. Свяжитесь с поддержкой.</p>
@@ -66,6 +69,13 @@
       <li>До 3 сотрудников</li>
       <li>Заказы, склад, смены</li>
     </ul>
+    {% if stripe_enabled %}
+    <form method="post" action="/billing/checkout/starter">
+      <button type="submit" class="btn-primary" style="width:100%" {% if subscription and subscription.plan == 'starter' and subscription.status == 'active' %}disabled{% endif %}>
+        {% if subscription and subscription.plan == 'starter' and subscription.status == 'active' %}Текущий тариф{% else %}Оформить{% endif %}
+      </button>
+    </form>
+    {% endif %}
   </div>
   <div class="plan-card {% if subscription and subscription.plan == 'pro' %}current{% endif %}">
     <div class="plan-name">Pro</div>
@@ -75,6 +85,13 @@
       <li>Безлимит сотрудников</li>
       <li>Финансы P&amp;L, аналитика</li>
     </ul>
+    {% if stripe_enabled %}
+    <form method="post" action="/billing/checkout/pro">
+      <button type="submit" class="btn-primary" style="width:100%" {% if subscription and subscription.plan == 'pro' and subscription.status == 'active' %}disabled{% endif %}>
+        {% if subscription and subscription.plan == 'pro' and subscription.status == 'active' %}Текущий тариф{% else %}Оформить{% endif %}
+      </button>
+    </form>
+    {% endif %}
   </div>
   <div class="plan-card {% if subscription and subscription.plan == 'enterprise' %}current{% endif %}">
     <div class="plan-name">Enterprise</div>
@@ -84,6 +101,16 @@
       <li>White-label</li>
       <li>Приоритетная поддержка</li>
     </ul>
+    {% if stripe_enabled %}
+    <form method="post" action="/billing/checkout/enterprise">
+      <button type="submit" class="btn-primary" style="width:100%" {% if subscription and subscription.plan == 'enterprise' and subscription.status == 'active' %}disabled{% endif %}>
+        {% if subscription and subscription.plan == 'enterprise' and subscription.status == 'active' %}Текущий тариф{% else %}Оформить{% endif %}
+      </button>
+    </form>
+    {% endif %}
   </div>
 </div>
+{% if not stripe_enabled %}
+<p style="color:var(--muted);font-size:.8rem;margin-top:1rem">Онлайн-оплата пока не подключена — свяжитесь с поддержкой для активации тарифа.</p>
+{% endif %}
 {% endblock %}
