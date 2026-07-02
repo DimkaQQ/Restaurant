@@ -9,11 +9,11 @@
 .settings-tab.active { color: var(--gold); border-bottom-color: var(--gold); font-weight: 600; }
 </style>
 <div class="settings-tabs">
-  <a href="/settings/venues" class="settings-tab {% if request.url.path == '/settings/venues' %}active{% endif %}">Заведения</a>
-  <a href="/settings/tables" class="settings-tab {% if request.url.path == '/settings/tables' %}active{% endif %}">Столы</a>
-  <a href="/settings/users" class="settings-tab {% if request.url.path == '/settings/users' %}active{% endif %}">Пользователи</a>
-  <a href="/settings/broadcasts" class="settings-tab {% if request.url.path == '/settings/broadcasts' %}active{% endif %}">Рассылки</a>
+  <a href="/settings/venues" class="settings-tab {% if request.url.path == '/settings/venues' %}active{% endif %}">{{ _("Заведения") }}</a>
+  <a href="/settings/tables" class="settings-tab {% if request.url.path == '/settings/tables' %}active{% endif %}">{{ _("Столы") }}</a>
+  <a href="/settings/users" class="settings-tab {% if request.url.path == '/settings/users' %}active{% endif %}">{{ _("Пользователи") }}</a>
+  <a href="/settings/broadcasts" class="settings-tab {% if request.url.path == '/settings/broadcasts' %}active{% endif %}">{{ _("Рассылки") }}</a>
   {% if user.role == 'owner' %}
-  <a href="/billing" class="settings-tab {% if request.url.path == '/billing' %}active{% endif %}">Подписка</a>
+  <a href="/billing" class="settings-tab {% if request.url.path == '/billing' %}active{% endif %}">{{ _("Подписка") }}</a>
   {% endif %}
 </div>

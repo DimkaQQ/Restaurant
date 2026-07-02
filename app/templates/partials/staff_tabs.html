@@ -9,6 +9,6 @@
 .staff-tab.active { color: var(--gold); border-bottom-color: var(--gold); font-weight: 600; }
 </style>
 <div class="staff-tabs">
-  <a href="/staff" class="staff-tab {% if '/staff' in request.url.path %}active{% endif %}">Сотрудники</a>
-  <a href="/shifts" class="staff-tab {% if request.url.path == '/shifts' %}active{% endif %}">Смены</a>
+  <a href="/staff" class="staff-tab {% if '/staff' in request.url.path %}active{% endif %}">{{ _("Сотрудники") }}</a>
+  <a href="/shifts" class="staff-tab {% if request.url.path == '/shifts' %}active{% endif %}">{{ _("Смены") }}</a>
 </div>

@@ -9,7 +9,7 @@
 .analytics-tab.active { color: var(--gold); border-bottom-color: var(--gold); font-weight: 600; }
 </style>
 <div class="analytics-tabs">
-  <a href="/analytics/" class="analytics-tab {% if request.url.path == '/analytics/' %}active{% endif %}">Обзор</a>
+  <a href="/analytics/" class="analytics-tab {% if request.url.path == '/analytics/' %}active{% endif %}">{{ _("Обзор") }}</a>
   <a href="/analytics/nps" class="analytics-tab {% if request.url.path == '/analytics/nps' %}active{% endif %}">NPS</a>
-  <a href="/finance" class="analytics-tab {% if request.url.path == '/finance' %}active{% endif %}">Финансы</a>
+  <a href="/finance" class="analytics-tab {% if request.url.path == '/finance' %}active{% endif %}">{{ _("Финансы") }}</a>
 </div>

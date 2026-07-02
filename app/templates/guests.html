@@ -1,16 +1,16 @@
 {% extends "base.html" %}
-{% block title %}Гости — RestOS{% endblock %}
+{% block title %}{{ _("Гости") }} — RestOS{% endblock %}
 
 {% block content %}
 <div class="page-header">
-  <h1 class="page-title">Гости</h1>
-  <span class="muted">{{ guests|length }} в базе</span>
+  <h1 class="page-title">{{ _("Гости") }}</h1>
+  <span class="muted">{{ guests|length }} {{ _("в базе") }}</span>
 </div>
 
 <div class="filters">
   <input
     type="search"
-    placeholder="Поиск по имени или телефону..."
+    placeholder="{{ _('Поиск по имени или телефону...') }}"
     class="search-input"
     hx-get="/partials/guests"
     hx-trigger="keyup changed delay:400ms"
@@ -24,11 +24,11 @@
   <table class="data-table">
     <thead>
       <tr>
-        <th>Гость</th>
-        <th>Телефон</th>
-        <th>Баллы</th>
-        <th>Визиты</th>
-        <th>С нами с</th>
+        <th>{{ _("Гость") }}</th>
+        <th>{{ _("Телефон") }}</th>
+        <th>{{ _("Баллы") }}</th>
+        <th>{{ _("Визиты") }}</th>
+        <th>{{ _("С нами с") }}</th>
       </tr>
     </thead>
     <tbody id="guests-table-body">
@@ -44,7 +44,7 @@
         <td>{{ g.created_at.strftime('%d.%m.%Y') if g.created_at else '—' }}</td>
       </tr>
       {% else %}
-      <tr><td colspan="5" class="empty-state">Нет гостей</td></tr>
+      <tr><td colspan="5" class="empty-state">{{ _("Нет гостей") }}</td></tr>
       {% endfor %}
     </tbody>
   </table>

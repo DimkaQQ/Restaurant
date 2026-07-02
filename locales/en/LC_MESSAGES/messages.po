@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-02 06:36+0000\n"
+"POT-Creation-Date: 2026-07-02 06:38+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -118,6 +118,9 @@ msgstr ""
 "RestOS — order taking, kitchen display, inventory, staff shifts, loyalty "
 "program, and receipt fiscalization in one dashboard. 14 days free."
 
+msgid "Активна"
+msgstr "Active"
+
 msgid "Активно"
 msgstr "Active"
 
@@ -132,6 +135,9 @@ msgstr "Active venues"
 
 msgid "Аналитика"
 msgstr "Analytics"
+
+msgid "Баллы"
+msgstr "Points"
 
 msgid "Без карты. Отменить можно в любой момент."
 msgstr "No card required. Cancel anytime."
@@ -151,6 +157,9 @@ msgstr ""
 
 msgid "Вернуть назад"
 msgstr "Move back"
+
+msgid "Визиты"
+msgstr "Visits"
 
 msgid "Возможности"
 msgstr "Features"
@@ -313,6 +322,9 @@ msgstr "Up to 5 venues"
 msgid "Добавить"
 msgstr "Add"
 
+msgid "Доступ ограничен до продления подписки"
+msgstr "Access is limited until the subscription is renewed"
+
 msgid "Доступно"
 msgstr "Available"
 
@@ -423,6 +435,9 @@ msgstr "Name"
 msgid "Название сети / ресторана"
 msgstr "Restaurant / network name"
 
+msgid "Написать в поддержку"
+msgstr "Contact support"
+
 msgid "Например, 5"
 msgstr "e.g. 5"
 
@@ -448,11 +463,17 @@ msgstr "Don't have an account?"
 msgid "Нет активных заказов"
 msgstr "No active orders"
 
+msgid "Нет гостей"
+msgstr "No guests"
+
 msgid "Нет заказов в работе"
 msgstr "No orders in progress"
 
 msgid "Нет новых заказов"
 msgstr "No new orders"
+
+msgid "Ничего не найдено"
+msgstr "Nothing found"
 
 msgid "Новая позиция"
 msgstr "New item"
@@ -482,14 +503,25 @@ msgstr "New"
 msgid "Новых гостей сегодня"
 msgstr "New guests today"
 
+msgid "Обзор"
+msgstr "Overview"
+
 msgid "Обновлено:"
 msgstr "Last updated:"
 
 msgid "Онлайн"
 msgstr "Online"
 
+msgid ""
+"Онлайн-оплата пока не подключена — свяжитесь с поддержкой для активации "
+"тарифа."
+msgstr "Online payment is not connected yet — contact support to activate a plan."
+
 msgid "Описание"
 msgstr "Description"
+
+msgid "Осталось дней пробного периода:"
+msgstr "Trial days left:"
 
 msgid "Отмена"
 msgstr "Cancel"
@@ -524,6 +556,9 @@ msgid ""
 msgstr ""
 "Waiter, kitchen, and register see the order in real time. Tables, "
 "statuses, item comments."
+
+msgid "Оформить"
+msgstr "Subscribe"
 
 msgid "Оформить заказ"
 msgstr "Place order"
@@ -599,6 +634,12 @@ msgstr ""
 "For questions about these terms, contact the address listed in your "
 "platform account, or via the support section."
 
+msgid "Подписка"
+msgstr "Subscription"
+
+msgid "Подписка не найдена. Свяжитесь с поддержкой."
+msgstr "Subscription not found. Contact support."
+
 msgid "Подтвердите email"
 msgstr "Verify your email"
 
@@ -611,6 +652,9 @@ msgstr "Confirmed"
 msgid "Подтверждён"
 msgstr "Confirmed"
 
+msgid "Поиск по имени или телефону..."
+msgstr "Search by name or phone..."
+
 msgid "Политика конфиденциальности"
 msgstr "Privacy Policy"
 
@@ -619,6 +663,9 @@ msgstr "Privacy Policy — RestOS"
 
 msgid "Политика конфиденциальности →"
 msgstr "Privacy Policy →"
+
+msgid "Пользователи"
+msgstr "Users"
 
 msgid "Попробовать 14 дней бесплатно"
 msgstr "Try 14 days free"
@@ -632,6 +679,9 @@ msgstr "Accept"
 msgid "Приоритетная поддержка"
 msgstr "Priority support"
 
+msgid "Приостановлена"
+msgstr "Suspended"
+
 msgid "Приём заказов и касса"
 msgstr "Order taking and register"
 
@@ -644,14 +694,26 @@ msgstr ""
 "recipe, staff shifts, guest loyalty program, and receipt fiscalization — "
 "no Excel, no dozen different apps."
 
+msgid "Пробный период"
+msgstr "Trial"
+
+msgid "Пробный период закончился"
+msgstr "Trial period has ended"
+
 msgid "Программа лояльности"
 msgstr "Loyalty program"
+
+msgid "Продление:"
+msgstr "Renews:"
 
 msgid "Прозрачные цены"
 msgstr "Transparent pricing"
 
 msgid "Пусто"
 msgstr "Empty"
+
+msgid "Рассылки"
+msgstr "Broadcasts"
 
 msgid ""
 "Регистрируясь, вы подтверждаете, что представляете юридическое лицо или "
@@ -663,6 +725,9 @@ msgstr ""
 "proprietor entitled to enter into contracts for food service. You are "
 "responsible for safeguarding your credentials and for actions taken under"
 " your account."
+
+msgid "С нами с"
+msgstr "Customer since"
 
 msgid ""
 "Сервис предоставляется «как есть». RestOS не несёт ответственности за "
@@ -690,6 +755,9 @@ msgstr ""
 msgid "Скрыто"
 msgstr "Hidden"
 
+msgid "Смены"
+msgstr "Shifts"
+
 msgid "Смены и персонал"
 msgstr "Shifts and staff"
 
@@ -707,6 +775,9 @@ msgstr "Sign up"
 
 msgid "Создать аккаунт"
 msgstr "Create account"
+
+msgid "Сотрудники"
+msgstr "Staff"
 
 msgid "Сохранить"
 msgstr "Save"
@@ -729,6 +800,15 @@ msgstr "Table"
 
 msgid "Стол / номер заказа"
 msgstr "Table / order number"
+
+msgid "Столы"
+msgstr "Tables"
+
+msgid "Текущий тариф"
+msgstr "Current plan"
+
+msgid "Телефон"
+msgstr "Phone"
 
 msgid "Техкарта"
 msgstr "Recipe"
@@ -758,11 +838,17 @@ msgstr "Manage multiple venues from one account, each with its own separate data
 msgid "Управляйте рестораном"
 msgstr "Run your restaurant"
 
+msgid "Управлять оплатой"
+msgstr "Manage billing"
+
 msgid "Условия использования"
 msgstr "Terms of Service"
 
 msgid "Условия использования — RestOS"
 msgstr "Terms of Service — RestOS"
+
+msgid "Финансы"
+msgstr "Finance"
 
 msgid "Финансы P&L, аналитика"
 msgstr "P&L finance, analytics"
@@ -794,6 +880,9 @@ msgstr ""
 
 msgid "Экран кухни ↗"
 msgstr "Kitchen screen ↗"
+
+msgid "в базе"
+msgstr "in the database"
 
 msgid "и"
 msgstr "and"
