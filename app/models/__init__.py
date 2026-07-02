@@ -14,6 +14,7 @@ from app.models.shift import Shift
 from app.models.broadcast import Broadcast
 from app.models.subscription import Subscription
 from app.models.recipe import Recipe
+from app.models.audit_log import AdminAuditLog
 
 __all__ = [
     "Network", "Venue", "User", "Guest",
@@ -25,4 +26,5 @@ __all__ = [
     "Broadcast",
     "Subscription",
     "Recipe",
+    "AdminAuditLog",
 ]

@@ -20,13 +20,19 @@
     .status-trial { background:rgba(200,168,75,.15); color:var(--gold); }
     .status-active { background:rgba(74,222,128,.15); color:#4ade80; }
     .status-past_due, .status-suspended, .status-cancelled { background:rgba(239,68,68,.15); color:#f87171; }
-    .edit-form { display:flex; gap:.35rem; align-items:center; }
-    .edit-form select { background:var(--black); border:1px solid var(--border); color:var(--white); padding:.25rem .4rem; border-radius:6px; font-size:.75rem; }
+    .edit-form { display:flex; gap:.35rem; align-items:center; flex-wrap:wrap; }
+    .edit-form select, .edit-form input { background:var(--black); border:1px solid var(--border); color:var(--white); padding:.25rem .4rem; border-radius:6px; font-size:.75rem; }
+    .edit-form input[type=text] { width:110px; }
     .edit-form button { background:none; border:1px solid var(--border); color:var(--gold); border-radius:6px; padding:.25rem .6rem; font-size:.75rem; cursor:pointer; }
+    .impersonate-btn { background:none; border:1px solid var(--border); color:var(--muted); border-radius:6px; padding:.25rem .6rem; font-size:.72rem; cursor:pointer; margin-top:.35rem; }
+    .top-nav { margin-bottom:1.5rem; }
+    .top-nav a { color:var(--muted); font-size:.82rem; text-decoration:none; }
+    .top-nav a:hover { color:var(--gold); }
   </style>
 </head>
 <body>
   <h1>RestOS · Platform Admin</h1>
+  <div class="top-nav"><a href="/platform/admin/audit">📋 Журнал действий администратора →</a></div>
 
   <div class="kpis">
     <div class="kpi"><div class="kpi-label">MRR</div><div class="kpi-value">${{ mrr }}</div></div>
@@ -67,7 +73,11 @@
               <option value="{{ s }}" {% if r.status == s %}selected{% endif %}>{{ s }}</option>
               {% endfor %}
             </select>
+            <input type="text" name="reason" placeholder="причина (необязательно)">
             <button type="submit">Сохранить</button>
+          </form>
+          <form method="post" action="/platform/admin/impersonate/{{ r.id }}" onsubmit="return confirm('Войти как владелец сети «{{ r.name }}»? Действие будет записано в журнал.')">
+            <button type="submit" class="impersonate-btn">👤 Войти как владелец</button>
           </form>
         </td>
       </tr>
