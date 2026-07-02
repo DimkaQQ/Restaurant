@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Финансы P&L — RestOS{% endblock %}
+{% block title %}{{ _("Финансы") }} P&L — RestOS{% endblock %}
 
 {% block head %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -46,16 +46,16 @@
 {% block content %}
 {% include "partials/analytics_tabs.html" %}
 <div class="fin-header">
-  <h1>Финансы · P&amp;L</h1>
+  <h1>{{ _("Финансы") }} · P&amp;L</h1>
   <div class="fin-controls">
     <select class="select-input" onchange="changeVenue(this.value)">
-      <option value="">Все заведения</option>
+      <option value="">{{ _("Все заведения") }}</option>
       {% for v in venues %}
       <option value="{{ v.id }}" {% if selected_venue_id == v.id|string %}selected{% endif %}>{{ v.name }}</option>
       {% endfor %}
     </select>
     <div class="period-tabs">
-      {% for p, label in [('week','Неделя'),('month','Месяц'),('quarter','Квартал'),('year','Год')] %}
+      {% for p, label in [('week', _('Неделя')), ('month', _('Месяц')), ('quarter', _('Квартал')), ('year', _('Год'))] %}
       <button class="period-tab {% if period == p %}active{% endif %}" onclick="changePeriod('{{ p }}')">{{ label }}</button>
       {% endfor %}
     </div>
@@ -64,19 +64,19 @@
 
 <div class="fin-kpis">
   <div class="fin-kpi">
-    <div class="fin-kpi-label">Выручка</div>
+    <div class="fin-kpi-label">{{ _("Выручка") }}</div>
     <div class="fin-kpi-value">{{ "{:,.0f}".format(revenue) }} ₸</div>
   </div>
   <div class="fin-kpi">
-    <div class="fin-kpi-label">Расходы</div>
+    <div class="fin-kpi-label">{{ _("Расходы") }}</div>
     <div class="fin-kpi-value" style="color:#f87171">{{ "{:,.0f}".format(expenses_total) }} ₸</div>
   </div>
   <div class="fin-kpi profit">
-    <div class="fin-kpi-label">Прибыль</div>
+    <div class="fin-kpi-label">{{ _("Прибыль") }}</div>
     <div class="fin-kpi-value">{{ "{:,.0f}".format(profit) }} ₸</div>
   </div>
   <div class="fin-kpi margin">
-    <div class="fin-kpi-label">Маржа</div>
+    <div class="fin-kpi-label">{{ _("Маржа") }}</div>
     <div class="fin-kpi-value">{{ margin }}%</div>
   </div>
 </div>
@@ -84,12 +84,12 @@
 <div class="fin-layout">
   <div>
     <div class="fin-card" style="margin-bottom:1rem">
-      <h2>Выручка vs Расходы (6 мес.)</h2>
+      <h2>{{ _("Выручка vs Расходы (6 мес.)") }}</h2>
       <div style="position:relative;height:200px"><canvas id="pl-chart"></canvas></div>
     </div>
 
     <div class="fin-card" style="margin-bottom:1rem">
-      <h2>Расходы по категориям</h2>
+      <h2>{{ _("Расходы по категориям") }}</h2>
       {% if by_category %}
         {% set max_amt = by_category[0].amount %}
         {% for cat in by_category %}
@@ -102,12 +102,12 @@
         </div>
         {% endfor %}
       {% else %}
-        <p style="color:var(--muted);font-size:.875rem">Нет расходов за период</p>
+        <p style="color:var(--muted);font-size:.875rem">{{ _("Нет расходов за период") }}</p>
       {% endif %}
     </div>
 
     <div class="fin-card">
-      <h2>Последние расходы</h2>
+      <h2>{{ _("Последние расходы") }}</h2>
       <div class="expense-list">
         {% for exp in recent_expenses %}
         <div class="expense-row" id="exp-{{ exp.id }}">
@@ -119,7 +119,7 @@
           <button class="btn-del-expense" onclick="deleteExpense('{{ exp.id }}')">✕</button>
         </div>
         {% else %}
-        <p style="color:var(--muted);font-size:.875rem;padding:.5rem 0">Нет расходов</p>
+        <p style="color:var(--muted);font-size:.875rem;padding:.5rem 0">{{ _("Нет расходов") }}</p>
         {% endfor %}
       </div>
     </div>
@@ -127,20 +127,20 @@
 
   <div class="add-expense-panel">
     <div class="fin-card">
-      <h2 style="margin-bottom:1rem;text-transform:none;letter-spacing:0;font-size:1rem;color:var(--white)">Добавить расход</h2>
+      <h2 style="margin-bottom:1rem;text-transform:none;letter-spacing:0;font-size:1rem;color:var(--white)">{{ _("Добавить расход") }}</h2>
       <div id="exp-error" style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#fca5a5;padding:.5rem .75rem;border-radius:6px;font-size:.8rem;margin-bottom:.75rem;display:none"></div>
       <form id="add-expense-form">
         <div class="form-group">
-          <label>Заведение</label>
+          <label>{{ _("Заведение") }}</label>
           <select name="venue_id" required>
-            <option value="">Выбрать...</option>
+            <option value="">{{ _("Выбрать...") }}</option>
             {% for v in venues %}
             <option value="{{ v.id }}" {% if selected_venue_id == v.id|string %}selected{% endif %}>{{ v.name }}</option>
             {% endfor %}
           </select>
         </div>
         <div class="form-group">
-          <label>Категория</label>
+          <label>{{ _("Категория") }}</label>
           <select name="category">
             {% for key, label in expense_categories.items() %}
             <option value="{{ key }}">{{ label }}</option>
@@ -148,20 +148,20 @@
           </select>
         </div>
         <div class="form-group">
-          <label>Сумма (₸)</label>
+          <label>{{ _("Сумма (₸)") }}</label>
           <input type="text" id="amount-display" inputmode="numeric" required placeholder="0" autocomplete="off"
             oninput="formatAmountInput(this)">
           <input type="hidden" name="amount" id="amount-raw">
         </div>
         <div class="form-group">
-          <label>Дата</label>
+          <label>{{ _("Дата") }}</label>
           <input type="date" name="expense_date" required value="{{ now.strftime('%Y-%m-%d') if now else '' }}">
         </div>
         <div class="form-group">
-          <label>Описание (необязательно)</label>
-          <input type="text" name="description" placeholder="Оплата аренды за июнь">
+          <label>{{ _("Описание (необязательно)") }}</label>
+          <input type="text" name="description" placeholder="{{ _('Оплата аренды за июнь') }}">
         </div>
-        <button type="submit" class="btn-primary" style="width:100%">Добавить расход</button>
+        <button type="submit" class="btn-primary" style="width:100%">{{ _("Добавить расход") }}</button>
       </form>
     </div>
   </div>
@@ -170,6 +170,16 @@
 
 {% block scripts %}
 <script>
+const T = {
+  expenses: {{ _("Расходы") | tojson }},
+  profit: {{ _("Прибыль") | tojson }},
+  revenue: {{ _("Выручка") | tojson }},
+  million: {{ _("млн") | tojson }},
+  deleteConfirm: {{ _("Удалить расход?") | tojson }},
+  deleteError: {{ _("Ошибка удаления") | tojson }},
+  error: {{ _("Ошибка") | tojson }},
+};
+const LOCALE = {{ ('en-US' if locale == 'en' else 'ru-RU') | tojson }};
 const chartData = {{ chart_data | tojson }};
 
 const ctx = document.getElementById('pl-chart').getContext('2d');
@@ -179,7 +189,7 @@ new Chart(ctx, {
     labels: chartData.map(d => d.label),
     datasets: [
       {
-        label: 'Расходы',
+        label: T.expenses,
         data: chartData.map(d => d.expenses),
         backgroundColor: 'rgba(239,68,68,0.75)',
         stack: 'pl',
@@ -187,7 +197,7 @@ new Chart(ctx, {
         order: 2,
       },
       {
-        label: 'Прибыль',
+        label: T.profit,
         data: chartData.map(d => Math.max(0, d.revenue - d.expenses)),
         backgroundColor: 'rgba(74,222,128,0.45)',
         stack: 'pl',
@@ -204,17 +214,17 @@ new Chart(ctx, {
       legend: { labels: { color: '#9ca3af', font: { size: 11 } } },
       tooltip: {
         callbacks: {
-          label: item => `${item.dataset.label}: ${(item.parsed.y/1_000_000).toFixed(2)} млн ₸`,
+          label: item => `${item.dataset.label}: ${(item.parsed.y/1_000_000).toFixed(2)} ${T.million} ₸`,
           footer: items => {
             const total = items.reduce((s, i) => s + i.parsed.y, 0);
-            return `Выручка: ${(total/1_000_000).toFixed(2)} млн ₸`;
+            return `${T.revenue}: ${(total/1_000_000).toFixed(2)} ${T.million} ₸`;
           }
         }
       }
     },
     scales: {
       x: { stacked: true, ticks: { color: '#6b7280' }, grid: { color: 'rgba(255,255,255,0.04)' } },
-      y: { stacked: true, ticks: { color: '#6b7280', callback: v => (v/1_000_000).toFixed(1)+' млн' }, grid: { color: 'rgba(255,255,255,0.04)' } },
+      y: { stacked: true, ticks: { color: '#6b7280', callback: v => (v/1_000_000).toFixed(1)+' '+T.million }, grid: { color: 'rgba(255,255,255,0.04)' } },
     }
   }
 });
@@ -231,13 +241,13 @@ function changePeriod(p) {
 }
 
 async function deleteExpense(id) {
-  if (!confirm('Удалить расход?')) return;
+  if (!confirm(T.deleteConfirm)) return;
   const res = await fetch('/api/expenses/'+id, {
     method:'DELETE', credentials:'include',
     headers:{'Authorization':'Bearer '+localStorage.getItem('access_token')},
   });
   if (res.ok) document.getElementById('exp-'+id)?.remove();
-  else alert('Ошибка удаления');
+  else alert(T.deleteError);
 }
 
 document.getElementById('add-expense-form').addEventListener('submit', async (e) => {
@@ -254,13 +264,13 @@ document.getElementById('add-expense-form').addEventListener('submit', async (e)
     body: JSON.stringify(body),
   });
   if (res.ok) location.reload();
-  else { const d = await res.json().catch(()=>({})); errEl.textContent=d.detail||'Ошибка'; errEl.style.display='block'; }
+  else { const d = await res.json().catch(()=>({})); errEl.textContent=d.detail||T.error; errEl.style.display='block'; }
 });
 
 function formatAmountInput(el) {
   const raw = el.value.replace(/\D/g, '');
   document.getElementById('amount-raw').value = raw;
-  el.value = raw ? Number(raw).toLocaleString('ru-RU') : '';
+  el.value = raw ? Number(raw).toLocaleString(LOCALE) : '';
 }
 </script>
 {% endblock %}

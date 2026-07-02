@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-02 06:47+0000\n"
+"POT-Creation-Date: 2026-07-02 06:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -282,11 +282,32 @@ msgstr "Log out"
 msgid "Выполненных заказов сегодня ещё нет"
 msgstr "No completed orders yet today"
 
+msgid "Выручка"
+msgstr "Revenue"
+
+msgid "Выручка vs Расходы (6 мес.)"
+msgstr "Revenue vs Expenses (6 mo.)"
+
+msgid "Выручка за 30 дней"
+msgstr "Revenue (30 days)"
+
+msgid "Выручка по дням"
+msgstr "Revenue by day"
+
+msgid "Выручка по заведениям"
+msgstr "Revenue by venue"
+
 msgid "Выручка сегодня"
 msgstr "Today's revenue"
 
+msgid "Выручка ₸"
+msgstr "Revenue ₸"
+
 msgid "Генерируем..."
 msgstr "Generating..."
+
+msgid "Год"
+msgstr "Year"
 
 msgid "Гости"
 msgstr "Guests"
@@ -376,6 +397,9 @@ msgstr "Add item"
 msgid "Добавить пользователя"
 msgstr "Add user"
 
+msgid "Добавить расход"
+msgstr "Add expense"
+
 msgid "Добавить смену"
 msgstr "Add shift"
 
@@ -411,6 +435,9 @@ msgstr "Venues"
 
 msgid "Заведения не найдены."
 msgstr "No venues found."
+
+msgid "Завершённых заказов"
+msgstr "Completed orders"
 
 msgid "Загрузка заказов..."
 msgstr "Loading orders..."
@@ -476,6 +503,9 @@ msgstr "Cashier"
 msgid "Категория"
 msgstr "Category"
 
+msgid "Квартал"
+msgstr "Quarter"
+
 msgid "Кол-во"
 msgstr "Qty"
 
@@ -512,6 +542,9 @@ msgstr "Kassa login"
 msgid "Мало"
 msgstr "Low"
 
+msgid "Маржа"
+msgstr "Margin"
+
 msgid "Менеджер"
 msgstr "Manager"
 
@@ -523,6 +556,9 @@ msgstr "Menu is empty"
 
 msgid "Мест"
 msgstr "Seats"
+
+msgid "Месяц"
+msgstr "Month"
 
 msgid "Мин. остаток"
 msgstr "Min stock"
@@ -601,6 +637,9 @@ msgstr "Start free"
 msgid "Не подключено"
 msgstr "Not connected"
 
+msgid "Неделя"
+msgstr "Week"
+
 msgid "Недостача"
 msgstr "Shortage"
 
@@ -619,6 +658,9 @@ msgstr "No active orders"
 msgid "Нет гостей"
 msgstr "No guests"
 
+msgid "Нет данных"
+msgstr "No data"
+
 msgid "Нет заказов в работе"
 msgstr "No orders in progress"
 
@@ -630,6 +672,12 @@ msgstr "No reviews"
 
 msgid "Нет позиций на складе"
 msgstr "No items in stock"
+
+msgid "Нет расходов"
+msgstr "No expenses"
+
+msgid "Нет расходов за период"
+msgstr "No expenses for this period"
 
 msgid "Низкий остаток"
 msgstr "Low stock"
@@ -690,6 +738,12 @@ msgstr "Operation"
 
 msgid "Описание"
 msgstr "Description"
+
+msgid "Описание (необязательно)"
+msgstr "Description (optional)"
+
+msgid "Оплата аренды за июнь"
+msgstr "June rent payment"
 
 msgid "Оставьте пустым — отправим приглашение на email"
 msgstr "Leave blank — we'll send an email invite"
@@ -901,14 +955,26 @@ msgstr "Users"
 msgid "Попробовать 14 дней бесплатно"
 msgstr "Try 14 days free"
 
+msgid "Популярные позиции"
+msgstr "Popular items"
+
 msgid "Порча"
 msgstr "Spoilage"
 
 msgid "Порча / просрочка"
 msgstr "Spoilage / expired"
 
+msgid "Последние 30 дней"
+msgstr "Last 30 days"
+
+msgid "Последние расходы"
+msgstr "Recent expenses"
+
 msgid "Посмотреть цены"
 msgstr "See pricing"
+
+msgid "Прибыль"
+msgstr "Profit"
 
 msgid "Привязать Telegram (для официантов)"
 msgstr "Link Telegram (for waitstaff)"
@@ -973,6 +1039,12 @@ msgstr "Empty"
 msgid "Рассылки"
 msgstr "Broadcasts"
 
+msgid "Расходы"
+msgstr "Expenses"
+
+msgid "Расходы по категориям"
+msgstr "Expenses by category"
+
 msgid ""
 "Регистрируясь, вы подтверждаете, что представляете юридическое лицо или "
 "ИП, имеющее право заключать договоры на оказание услуг общественного "
@@ -996,8 +1068,14 @@ msgstr "Role"
 msgid "С нами с"
 msgstr "Customer since"
 
+msgid "Самые лояльные гости"
+msgstr "Most loyal guests"
+
 msgid "Сб"
 msgstr "Sat"
+
+msgid "Сбросить"
+msgstr "Reset"
 
 msgid "Свободен"
 msgstr "Free"
@@ -1113,6 +1191,9 @@ msgstr "Write-off:"
 msgid "Ср"
 msgstr "Wed"
 
+msgid "Средний чек"
+msgstr "Average check"
+
 msgid "Ссылка 2GIS"
 msgstr "2GIS link"
 
@@ -1139,6 +1220,9 @@ msgstr "No tables yet"
 
 msgid "Столы"
 msgstr "Tables"
+
+msgid "Сумма (₸)"
+msgstr "Amount (₸)"
 
 msgid "Текущий тариф"
 msgstr "Current plan"
@@ -1168,6 +1252,9 @@ msgstr "Delete this item?"
 
 msgid "Удалить пользователя?"
 msgstr "Delete this user?"
+
+msgid "Удалить расход?"
+msgstr "Delete this expense?"
 
 msgid "Удалить смену?"
 msgstr "Delete this shift?"
@@ -1282,6 +1369,9 @@ msgstr "min:"
 
 msgid "мл"
 msgstr "ml"
+
+msgid "млн"
+msgstr "M"
 
 msgid "отзывов"
 msgstr "reviews"
