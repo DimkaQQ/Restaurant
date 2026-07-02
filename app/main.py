@@ -5,6 +5,7 @@ from urllib.parse import urlsplit
 
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
+from starlette.exceptions import HTTPException as StarletteHTTPException
 from fastapi.staticfiles import StaticFiles
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
@@ -16,6 +17,7 @@ from app.database import engine
 from app.models import *  # noqa: F401,F403 — registers all models with Base
 from app.routers import auth, dashboard, venues, menu, orders, guests, analytics, staff, settings as settings_router, inventory, finance, shifts, bot_api, online_order, billing, platform_admin, pos, legal
 from app.services.cleanup_service import stale_order_cleanup_loop
+from app.templates_env import templates
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 logger = logging.getLogger(__name__)
@@ -126,6 +128,32 @@ app.include_router(billing.router)
 app.include_router(platform_admin.router)
 app.include_router(pos.router)
 app.include_router(legal.router)
+
+
+def _wants_html(request: Request) -> bool:
+    return "text/html" in request.headers.get("accept", "")
+
+
+@app.exception_handler(StarletteHTTPException)
+async def http_exception_handler(request: Request, exc: StarletteHTTPException):
+    # FastAPI's own HTTPException raises from routers already carry a
+    # translated `detail` and correct status — this only intercepts the
+    # ones nothing handled explicitly (chiefly 404s hitting an unknown
+    # path) so a browser gets the branded page instead of raw JSON.
+    if exc.status_code == 404 and _wants_html(request):
+        return templates.TemplateResponse("error_404.html", {"request": request}, status_code=404)
+    return JSONResponse(status_code=exc.status_code, content={"detail": exc.detail}, headers=exc.headers)
+
+
+@app.exception_handler(Exception)
+async def unhandled_exception_handler(request: Request, exc: Exception):
+    logger.error("Unhandled exception on %s %s", request.method, request.url.path, exc_info=exc)
+    if settings.SENTRY_DSN:
+        import sentry_sdk
+        sentry_sdk.capture_exception(exc)
+    if _wants_html(request):
+        return templates.TemplateResponse("error_500.html", {"request": request}, status_code=500)
+    return JSONResponse(status_code=500, content={"detail": "Внутренняя ошибка сервера"})
 
 
 @app.get("/health")

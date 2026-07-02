@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="{{ locale }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ _("Что-то пошло не так") }} — RestOS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/main.css?v=7">
+  <style>
+    .error-code { font-family: 'Instrument Serif', serif; font-size: 4rem; color: #f87171; line-height: 1; margin-bottom: .5rem; }
+  </style>
+</head>
+<body class="auth-body">
+  <div class="auth-container">
+    <div class="auth-card" style="text-align:center">
+      <div class="auth-logo">
+        <span class="logo-serif">Rest</span><span class="logo-mono">OS</span>
+      </div>
+      <div class="error-code" style="margin-top:1.5rem">😕</div>
+      <p class="auth-subtitle">{{ _("Что-то пошло не так на нашей стороне. Мы уже знаем об этом и разбираемся.") }}</p>
+      <a href="/dashboard" class="btn-primary btn-full" style="display:block; text-align:center; text-decoration:none; margin-top:1.5rem">{{ _("В панель управления") }}</a>
+      <a href="javascript:location.reload()" style="display:block; margin-top:.75rem; font-size:.85rem; color:var(--muted)">{{ _("Обновить страницу") }}</a>
+    </div>
+  </div>
+</body>
+</html>

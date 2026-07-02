@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="{{ locale }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ _("Страница не найдена") }} — RestOS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/main.css?v=7">
+  <style>
+    .error-code { font-family: 'Instrument Serif', serif; font-size: 4rem; color: var(--gold); line-height: 1; margin-bottom: .5rem; }
+  </style>
+</head>
+<body class="auth-body">
+  <div class="auth-container">
+    <div class="auth-card" style="text-align:center">
+      <div class="auth-logo">
+        <span class="logo-serif">Rest</span><span class="logo-mono">OS</span>
+      </div>
+      <div class="error-code" style="margin-top:1.5rem">404</div>
+      <p class="auth-subtitle">{{ _("Такой страницы не существует или она была перемещена.") }}</p>
+      <a href="/dashboard" class="btn-primary btn-full" style="display:block; text-align:center; text-decoration:none; margin-top:1.5rem">{{ _("В панель управления") }}</a>
+    </div>
+  </div>
+</body>
+</html>
