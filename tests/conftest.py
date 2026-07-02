@@ -11,6 +11,9 @@ os.environ["DATABASE_URL"] = os.environ.get(
 # Set like production would (see .env.example) so bot-secret-gated endpoints
 # actually enforce the check instead of silently no-op'ing for "local dev".
 os.environ.setdefault("BOT_API_SECRET", "test-bot-secret")
+# Tests register/log in dozens of times per run from the same client "IP" —
+# real per-IP rate limiting on auth endpoints would make the suite flaky.
+os.environ["RATE_LIMIT_ENABLED"] = "false"
 
 import pytest
 import pytest_asyncio

@@ -27,6 +27,12 @@ class Settings(BaseSettings):
     PUBLIC_URL: str = "http://localhost:8000"
     PLATFORM_ADMIN_EMAIL: str = ""
     SENTRY_DSN: str = ""
+    SMTP_HOST: str = ""
+    SMTP_PORT: int = 587
+    SMTP_USER: str = ""
+    SMTP_PASSWORD: str = ""
+    SMTP_FROM: str = "RestOS <no-reply@restos.app>"
+    RATE_LIMIT_ENABLED: bool = True
 
     class Config:
         env_file = ".env"

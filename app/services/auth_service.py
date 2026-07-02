@@ -90,3 +90,30 @@ async def authenticate_user(email: str, password: str, db: AsyncSession) -> User
     if not user or not verify_password(password, user.hashed_password):
         return None
     return user
+
+
+def create_password_reset_token(user: User) -> str:
+    # Bind the token to the current password hash so it's invalidated the
+    # moment it's used (or the password is changed some other way) — a
+    # stateless JWT alone would stay valid and replayable until it expires.
+    payload = {
+        "sub": str(user.id),
+        "purpose": "password_reset",
+        "pw": user.hashed_password[-16:],
+        "exp": datetime.now(timezone.utc) + timedelta(minutes=30),
+    }
+    return jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
+
+
+async def verify_password_reset_token(token: str, db: AsyncSession) -> User | None:
+    payload = decode_token(token)
+    if not payload or payload.get("purpose") != "password_reset":
+        return None
+    user_id = payload.get("sub")
+    if not user_id:
+        return None
+    result = await db.execute(select(User).where(User.id == uuid.UUID(user_id)))
+    user = result.scalar_one_or_none()
+    if not user or user.hashed_password[-16:] != payload.get("pw"):
+        return None
+    return user

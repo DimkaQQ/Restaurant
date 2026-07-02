@@ -2,9 +2,12 @@ import asyncio
 import logging
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from slowapi.util import get_remote_address
 from sqlalchemy import text
 
 from app.config import settings
@@ -33,6 +36,34 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="RestOS", version="1.0.0", lifespan=lifespan)
+
+limiter = Limiter(key_func=get_remote_address, enabled=settings.RATE_LIMIT_ENABLED)
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+
+@app.middleware("http")
+async def security_headers(request: Request, call_next):
+    response = await call_next(request)
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    response.headers["Permissions-Policy"] = "geolocation=(), camera=(), microphone=()"
+    # Inline <script>/<style> are used throughout the Jinja templates (HTMX
+    # attributes, small page scripts), so 'unsafe-inline' stays until those
+    # are extracted — CSP here is still worth it for locking down external
+    # sources (script/frame injection, data exfil) even without nonces.
+    response.headers["Content-Security-Policy"] = (
+        "default-src 'self'; "
+        "script-src 'self' 'unsafe-inline'; "
+        "style-src 'self' 'unsafe-inline'; "
+        "img-src 'self' data: https:; "
+        "frame-ancestors 'none'"
+    )
+    if settings.PUBLIC_URL.startswith("https://"):
+        response.headers["Strict-Transport-Security"] = "max-age=63072000; includeSubDomains"
+    return response
+
 
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
