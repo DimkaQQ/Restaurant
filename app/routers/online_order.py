@@ -13,6 +13,7 @@ from app.models.guest import Guest
 from app.models.menu import MenuItem
 from app.models.venue import Venue
 from app.schemas.order import OrderCreate, OrderItemCreate
+from app.services.online_order_i18n import get_guest_lang, t
 from app.services.order_service import create_order
 from app.templates_env import templates
 
@@ -25,6 +26,7 @@ async def online_menu_page(
     request: Request,
     venue_id: uuid.UUID,
     table: str | None = None,
+    lang: str | None = None,
     db: AsyncSession = Depends(get_db),
 ):
     venue = (await db.execute(
@@ -32,6 +34,9 @@ async def online_menu_page(
     )).scalar_one_or_none()
     if not venue:
         raise HTTPException(status_code=404, detail="Заведение не найдено")
+
+    guest_lang = get_guest_lang(lang, request.cookies.get("guest_lang"), request.headers.get("accept-language"))
+    strings = t(guest_lang)
 
     items_result = await db.execute(
         select(MenuItem)
@@ -42,7 +47,7 @@ async def online_menu_page(
 
     categories: dict[str, list] = {}
     for item in menu_items:
-        cat = item.category or "Прочее"
+        cat = item.category or strings["other_category"]
         categories.setdefault(cat, []).append({
             "id": str(item.id),
             "name": item.name,
@@ -51,12 +56,17 @@ async def online_menu_page(
             "image_url": item.image_url or "",
         })
 
-    return templates.TemplateResponse("online_order.html", {
+    response = templates.TemplateResponse("online_order.html", {
         "request": request,
         "venue": venue,
         "categories": categories,
         "table": table or "",
+        "guest_lang": guest_lang,
+        "t": strings,
     })
+    if lang:
+        response.set_cookie("guest_lang", guest_lang, max_age=60 * 60 * 24 * 365)
+    return response
 
 
 class OnlineOrderItem(BaseModel):
@@ -71,6 +81,7 @@ class OnlineOrderSubmit(BaseModel):
     guest_phone: str | None = None
     table_number: str | None = None
     notes: str | None = None
+    guest_lang: str | None = None
 
 
 @router.post("/order/{venue_id}/submit")
@@ -88,7 +99,12 @@ async def submit_online_order(
     if not data.items:
         raise HTTPException(status_code=400, detail="Корзина пуста")
 
-    # Find or create guest
+    lang = data.guest_lang if data.guest_lang in ("ru", "kz", "en") else None
+    strings = t(lang or "ru")
+
+    # Find or create guest — the page's language selection is written back
+    # to Guest.language so it's remembered for future bot broadcasts/orders,
+    # since this page has no login to read an existing preference from.
     guest = None
     if data.guest_phone:
         phone_clean = data.guest_phone.strip()
@@ -99,17 +115,21 @@ async def submit_online_order(
             guest = Guest(
                 id=uuid.uuid4(),
                 network_id=venue.network_id,
-                name=data.guest_name or "Гость",
+                name=data.guest_name or strings["guest"],
                 phone=phone_clean,
+                language=lang or "ru",
             )
             db.add(guest)
             await db.flush()
+        elif lang:
+            guest.language = lang
     else:
         guest = Guest(
             id=uuid.uuid4(),
             network_id=venue.network_id,
-            name=data.guest_name or "Онлайн-гость",
+            name=data.guest_name or strings["online_guest"],
             phone=None,
+            language=lang or "ru",
         )
         db.add(guest)
         await db.flush()
