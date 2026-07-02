@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-02 20:46+0000\n"
+"POT-Creation-Date: 2026-07-02 22:18+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -21,6 +21,9 @@ msgstr ""
 
 msgid "(скопируйте и передайте сотруднику для ввода /staff)"
 msgstr "(copy and give it to the staff member to enter with /staff)"
+
+msgid "+ Группа (например, «Размер»)"
+msgstr "+ Group (e.g. \"Size\")"
 
 msgid "+ Добавить заведение"
 msgstr "+ Add venue"
@@ -45,6 +48,12 @@ msgstr "+ Restock"
 
 msgid "+ Фото"
 msgstr "+ Photo"
+
+msgid "+ вариант"
+msgstr "+ option"
+
+msgid "+₸"
+msgstr "+₸"
 
 msgid "1 заведение"
 msgstr "1 venue"
@@ -209,11 +218,17 @@ msgstr "Reserved"
 msgid "Быстрый старт"
 msgstr "Quick start"
 
+msgid "В корзину"
+msgstr "Add to cart"
+
 msgid "В очереди офлайн:"
 msgstr "Queued offline:"
 
 msgid "В панель управления"
 msgstr "Go to dashboard"
+
+msgid "Вариант"
+msgstr "Option"
 
 msgid "Введите количество"
 msgstr "Enter a quantity"
@@ -306,6 +321,10 @@ msgstr ""
 "(e.g. Webkassa) use your own credentials obtained directly from those "
 "providers."
 
+#, python-brace-format
+msgid "Выберите «{g}»"
+msgstr "Choose \"{g}\""
+
 msgid "Выберите заведение"
 msgstr "Select a venue"
 
@@ -394,6 +413,13 @@ msgid ""
 msgstr ""
 "Shift schedules, waiter/cook/cashier/manager roles, staff ratings from "
 "guest reviews."
+
+msgid ""
+"Группы вариантов для позиции: размер, молоко, сиропы. Цена меняется на "
+"указанную надбавку."
+msgstr ""
+"Option groups for this item: size, milk, syrups. The price changes by the"
+" given surcharge."
 
 msgid ""
 "Данные гостей: имя, телефон/Telegram ID, история заказов, баллы "
@@ -688,6 +714,12 @@ msgstr "Min stock"
 msgid "Моб. платёж"
 msgstr "Mobile payment"
 
+msgid "Модификаторы"
+msgstr "Modifiers"
+
+msgid "Модификаторы:"
+msgstr "Modifiers:"
+
 msgid "Мой ресторан"
 msgstr "My Restaurant"
 
@@ -724,6 +756,9 @@ msgstr "Back to sign in"
 
 msgid "Название"
 msgstr "Name"
+
+msgid "Название группы"
+msgstr "Group name"
 
 msgid "Название сети / ресторана"
 msgstr "Restaurant / network name"
@@ -1064,6 +1099,9 @@ msgstr "Connection error"
 
 msgid "Ошибка создания пользователя"
 msgstr "Failed to create user"
+
+msgid "Ошибка сохранения модификаторов"
+msgstr "Failed to save modifiers"
 
 msgid "Ошибка сохранения техкарты"
 msgstr "Failed to save the recipe"
@@ -1733,11 +1771,17 @@ msgstr "ml"
 msgid "млн"
 msgstr "M"
 
+msgid "можно несколько"
+msgstr "multiple allowed"
+
 msgid "не оплачен"
 msgstr "unpaid"
 
 msgid "необязательно"
 msgstr "optional"
+
+msgid "обязательный выбор"
+msgstr "required choice"
 
 msgid "отзывов"
 msgstr "reviews"

@@ -68,6 +68,7 @@
         <span class="item-name">{{ item.name }} <span class="item-qty">×{{ item.quantity }}</span></span>
         <span class="item-price">{{ "{:,.0f}".format(item.price * item.quantity) }}</span>
       </div>
+      {% if item.modifiers %}<div class="item-comment">{{ item.modifiers }}</div>{% endif %}
       {% if item.comment %}<div class="item-comment">— {{ item.comment }}</div>{% endif %}
       {% endfor %}
     </div>

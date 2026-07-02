@@ -39,8 +39,11 @@ async def online_menu_page(
     guest_lang = get_guest_lang(lang, request.cookies.get("guest_lang"), request.headers.get("accept-language"))
     strings = t(guest_lang)
 
+    from sqlalchemy.orm import selectinload
+    from app.models.menu import ModifierGroup
     items_result = await db.execute(
         select(MenuItem)
+        .options(selectinload(MenuItem.modifier_groups).selectinload(ModifierGroup.options))
         .where(MenuItem.venue_id == venue_id, MenuItem.is_available == True)
         .order_by(MenuItem.category, MenuItem.name)
     )
@@ -55,6 +58,16 @@ async def online_menu_page(
             "description": item.description or "",
             "price": float(item.price),
             "image_url": item.image_url or "",
+            "modifier_groups": [
+                {
+                    "id": str(g.id), "name": g.name, "required": g.required, "multi": g.multi,
+                    "options": [
+                        {"id": str(o.id), "name": o.name, "price_delta": float(o.price_delta)}
+                        for o in g.options
+                    ],
+                }
+                for g in item.modifier_groups
+            ],
         })
 
     response = templates.TemplateResponse("online_order.html", {
@@ -74,6 +87,7 @@ class OnlineOrderItem(BaseModel):
     menu_item_id: uuid.UUID
     quantity: int = Field(1, ge=1)
     comment: str | None = None
+    modifier_option_ids: list[uuid.UUID] = []
 
 
 class OnlineOrderSubmit(BaseModel):
@@ -139,7 +153,13 @@ async def submit_online_order(
 
     order_data = OrderCreate(
         venue_id=venue_id,
-        items=[OrderItemCreate(menu_item_id=i.menu_item_id, quantity=i.quantity, comment=i.comment) for i in data.items],
+        items=[
+            OrderItemCreate(
+                menu_item_id=i.menu_item_id, quantity=i.quantity, comment=i.comment,
+                modifier_option_ids=i.modifier_option_ids,
+            )
+            for i in data.items
+        ],
         notes=data.notes,
         table_number=data.table_number,
         source="online",

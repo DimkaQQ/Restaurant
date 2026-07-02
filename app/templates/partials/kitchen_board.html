@@ -32,6 +32,9 @@
       <span class="kds-item-name">{{ item.name }}</span>
       <span class="kds-item-qty">×{{ item.quantity }}</span>
     </div>
+    {% if item.modifiers %}
+    <div style="font-size:.78rem;color:var(--gold);padding-left:.5rem;margin-top:-.25rem">{{ item.modifiers }}</div>
+    {% endif %}
     {% if item.comment %}
     <div style="font-size:.75rem;color:var(--muted);padding-left:.5rem;margin-top:-.25rem">💬 {{ item.comment }}</div>
     {% endif %}

@@ -21,6 +21,36 @@ class MenuItemUpdate(BaseModel):
     image_url: str | None = None
 
 
+class ModifierOptionOut(BaseModel):
+    id: uuid.UUID
+    name: str
+    price_delta: Decimal
+
+    model_config = {"from_attributes": True}
+
+
+class ModifierGroupOut(BaseModel):
+    id: uuid.UUID
+    name: str
+    required: bool
+    multi: bool
+    options: list[ModifierOptionOut] = []
+
+    model_config = {"from_attributes": True}
+
+
+class ModifierOptionIn(BaseModel):
+    name: str
+    price_delta: Decimal = 0
+
+
+class ModifierGroupIn(BaseModel):
+    name: str
+    required: bool = False
+    multi: bool = False
+    options: list[ModifierOptionIn] = Field(..., min_length=1)
+
+
 class MenuItemOut(BaseModel):
     id: uuid.UUID
     venue_id: uuid.UUID
@@ -30,6 +60,7 @@ class MenuItemOut(BaseModel):
     category: str | None
     is_available: bool
     image_url: str | None
+    modifier_groups: list[ModifierGroupOut] = []
 
     model_config = {"from_attributes": True}
 

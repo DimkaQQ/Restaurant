@@ -18,7 +18,7 @@
     <div class="order-guest">{{ order.guest.name if order.guest and order.guest.name else _("Гость") }}</div>
     <div class="order-items">
       {% for item in order.items %}
-      <span class="order-item">{{ item.name }} × {{ item.quantity }}</span>
+      <span class="order-item">{{ item.name }}{% if item.modifiers %} ({{ item.modifiers }}){% endif %} × {{ item.quantity }}</span>
       {% endfor %}
     </div>
     {% if order.fiscal_status %}

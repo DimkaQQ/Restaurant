@@ -194,6 +194,12 @@
       padding: 1.25rem; width: 100%;
     }
     .comment-box h3 { font-size: 1rem; margin-bottom: 0.75rem; }
+    .opt-chip {
+      padding: .5rem .8rem; min-height: 40px; border-radius: 10px;
+      border: 1px solid var(--border); background: none; color: var(--white);
+      font-size: .85rem; cursor: pointer;
+    }
+    .opt-chip.active { background: rgba(200,168,75,.18); border-color: var(--gold); color: var(--gold); font-weight: 600; }
 
     /* Order done screen */
     .order-done {
@@ -253,7 +259,7 @@
         <div class="item-price">{{ item.price | int }} ₸</div>
       </div>
       <div id="ctrl-{{ item.id }}">
-        <button class="item-add-btn" onclick="event.stopPropagation(); addItem('{{ item.id }}', {{ item.name | tojson }}, {{ item.price }})">+</button>
+        <button class="item-add-btn" onclick="event.stopPropagation(); addItem('{{ item.id }}')">+</button>
       </div>
     </div>
     {% endfor %}
@@ -299,6 +305,16 @@
   </div>
 </div>
 
+<!-- Option picker modal -->
+<div class="comment-modal" id="optPickerModal">
+  <div class="comment-box">
+    <h3 id="optPickerName"></h3>
+    <div id="optPickerGroups" style="margin:.75rem 0"></div>
+    <button class="btn-primary" onclick="confirmPickerOptions()">{{ t.add_to_cart }}</button>
+    <button class="btn-secondary" onclick="closeOptPicker()">{{ t.skip }}</button>
+  </div>
+</div>
+
 <!-- Comment modal -->
 <div class="comment-modal" id="commentModal">
   <div class="comment-box">
@@ -327,6 +343,10 @@
 const VENUE_ID = '{{ venue.id }}';
 const TABLE = '{{ table }}';
 const GUEST_LANG = {{ guest_lang | tojson }};
+// Full menu (with modifier groups) for the option picker
+const MENU_CATS = {{ categories | tojson }};
+const ITEM_MAP = {};
+Object.values(MENU_CATS).forEach(items => items.forEach(i => { ITEM_MAP[i.id] = i; }));
 const T = {
   cartEmpty: {{ t.cart_empty | tojson }},
   placingOrder: {{ t.placing_order | tojson }},
@@ -337,15 +357,19 @@ const T = {
   pointsEarned: {{ t.points_earned | tojson }},
 };
 
-// Cart state: [{id, name, price, qty, comment}]
+// Cart state: [{key, id, name, price(unit incl. options), qty, comment, optionIds, optionNames}]
+// key = itemId|sortedOptionIds — the same dish with different options is a separate line.
 let cart = JSON.parse(localStorage.getItem('cart_' + VENUE_ID) || '[]');
-let pendingCommentItemId = null;
+// migrate carts saved before modifiers existed
+cart = cart.map(l => ({ optionIds: [], optionNames: [], key: l.id + '|', ...l }));
+let pendingCommentKey = null;
 
 function saveCart() {
   localStorage.setItem('cart_' + VENUE_ID, JSON.stringify(cart));
 }
 
-function getItem(id) { return cart.find(i => i.id === id); }
+function getLine(key) { return cart.find(i => i.key === key); }
+function linesFor(id) { return cart.filter(i => i.id === id); }
 
 function showCat(cat) {
   document.querySelectorAll('.menu-section').forEach(s => s.classList.remove('visible'));
@@ -359,14 +383,30 @@ function handleCardClick(id) {
   // no-op (add button handles it)
 }
 
-function addItem(id, name, price) {
-  const existing = getItem(id);
+function addItem(id) {
+  const item = ITEM_MAP[id];
+  if (!item) return;
+  if (item.modifier_groups && item.modifier_groups.length) {
+    openOptionPicker(item);
+    return;
+  }
+  addLine(item, [], []);
+}
+
+function addLine(item, optionIds, optionNames) {
+  const key = item.id + '|' + optionIds.slice().sort().join(',');
+  const existing = getLine(key);
   if (existing) {
     existing.qty += 1;
   } else {
-    cart.push({ id, name, price: parseFloat(price), qty: 1, comment: null });
-    // Ask for comment
-    pendingCommentItemId = id;
+    let unit = item.price;
+    const allOpts = (item.modifier_groups || []).flatMap(g => g.options);
+    optionIds.forEach(oid => {
+      const o = allOpts.find(x => x.id === oid);
+      if (o) unit += o.price_delta;
+    });
+    cart.push({ key, id: item.id, name: item.name, price: unit, qty: 1, comment: null, optionIds, optionNames });
+    pendingCommentKey = key;
     document.getElementById('commentInput').value = '';
     document.getElementById('commentModal').classList.add('visible');
   }
@@ -374,23 +414,89 @@ function addItem(id, name, price) {
   updateCartUI();
 }
 
-function removeItem(id) {
-  const existing = getItem(id);
+// ── Option picker ──
+let pickerItem = null;
+function openOptionPicker(item) {
+  pickerItem = item;
+  document.getElementById('optPickerName').textContent = item.name;
+  const body = document.getElementById('optPickerGroups');
+  body.innerHTML = item.modifier_groups.map((g, gi) => `
+    <div style="margin-bottom:.75rem">
+      <div style="font-size:.8rem;color:var(--muted);margin-bottom:.4rem">${escapeHtml(g.name)}${g.required ? ' *' : ''}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:.4rem">
+        ${g.options.map(o => `
+          <button type="button" class="opt-chip" data-gi="${gi}" data-oid="${o.id}"
+            onclick="qToggleOpt(this, ${g.multi ? 'true' : 'false'})">
+            ${escapeHtml(o.name)}${o.price_delta ? ' +' + o.price_delta.toFixed(0) : ''}
+          </button>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+  item.modifier_groups.forEach((g, gi) => {
+    if (g.required && !g.multi) {
+      const first = body.querySelector(`.opt-chip[data-gi="${gi}"]`);
+      if (first) first.classList.add('active');
+    }
+  });
+  document.getElementById('optPickerModal').classList.add('visible');
+}
+
+function qToggleOpt(btn, multi) {
+  if (multi) { btn.classList.toggle('active'); return; }
+  const gi = btn.dataset.gi;
+  const group = pickerItem.modifier_groups[gi];
+  const wasActive = btn.classList.contains('active');
+  document.querySelectorAll(`#optPickerGroups .opt-chip[data-gi="${gi}"]`).forEach(b => b.classList.remove('active'));
+  if (!wasActive || group.required) btn.classList.add('active');
+}
+
+function confirmPickerOptions() {
+  const chosen = [...document.querySelectorAll('#optPickerGroups .opt-chip.active')];
+  for (let gi = 0; gi < pickerItem.modifier_groups.length; gi++) {
+    const g = pickerItem.modifier_groups[gi];
+    if (g.required && !chosen.some(b => b.dataset.gi == gi)) return; // required not picked — keep modal open
+  }
+  const ids = chosen.map(b => b.dataset.oid);
+  const names = chosen.map(b => {
+    const g = pickerItem.modifier_groups[b.dataset.gi];
+    return g.options.find(o => o.id === b.dataset.oid).name;
+  });
+  closeOptPicker();
+  addLine(pickerItem, ids, names);
+}
+
+function closeOptPicker() {
+  document.getElementById('optPickerModal').classList.remove('visible');
+}
+
+function escapeHtml(s) {
+  return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function removeLine(key) {
+  const existing = getLine(key);
   if (!existing) return;
   if (existing.qty > 1) {
     existing.qty -= 1;
   } else {
-    cart = cart.filter(i => i.id !== id);
+    cart = cart.filter(i => i.key !== key);
   }
   saveCart();
   updateCartUI();
 }
 
+// Card "−": decrement the most recently added line of this dish
+function removeItem(id) {
+  const lines = linesFor(id);
+  if (lines.length) removeLine(lines[lines.length - 1].key);
+}
+
 function saveComment() {
   const text = document.getElementById('commentInput').value.trim();
-  if (pendingCommentItemId) {
-    const item = getItem(pendingCommentItemId);
-    if (item) item.comment = text || null;
+  if (pendingCommentKey) {
+    const line = getLine(pendingCommentKey);
+    if (line) line.comment = text || null;
     saveCart();
   }
   closeComment();
@@ -398,7 +504,7 @@ function saveComment() {
 
 function closeComment() {
   document.getElementById('commentModal').classList.remove('visible');
-  pendingCommentItemId = null;
+  pendingCommentKey = null;
 }
 
 function updateCartUI() {
@@ -412,15 +518,23 @@ function updateCartUI() {
   const bar = document.getElementById('cartBar');
   if (count > 0) { bar.classList.add('visible'); } else { bar.classList.remove('visible'); }
 
-  // Update per-item controls
-  cart.forEach(entry => {
-    const ctrl = document.getElementById('ctrl-' + entry.id);
+  // Per-card controls: sum across all lines of the dish; "+" re-opens the
+  // option picker for items with modifiers, "−" removes the newest line.
+  const qtyById = {};
+  cart.forEach(l => { qtyById[l.id] = (qtyById[l.id] || 0) + l.qty; });
+  Object.keys(ITEM_MAP).forEach(id => {
+    const ctrl = document.getElementById('ctrl-' + id);
     if (!ctrl) return;
-    ctrl.innerHTML = `<div class="item-in-cart">
-      <button class="qty-btn" onclick="event.stopPropagation();removeItem('${entry.id}')">−</button>
-      <span class="qty-num">${entry.qty}</span>
-      <button class="qty-btn" onclick="event.stopPropagation();addItem('${entry.id}','${entry.name}',${entry.price})">+</button>
-    </div>`;
+    const qty = qtyById[id] || 0;
+    if (qty > 0) {
+      ctrl.innerHTML = `<div class="item-in-cart">
+        <button class="qty-btn" onclick="event.stopPropagation();removeItem('${id}')">−</button>
+        <span class="qty-num">${qty}</span>
+        <button class="qty-btn" onclick="event.stopPropagation();addItem('${id}')">+</button>
+      </div>`;
+    } else {
+      ctrl.innerHTML = `<button class="item-add-btn" onclick="event.stopPropagation(); addItem('${id}')">+</button>`;
+    }
   });
 
   // Render sheet items
@@ -434,21 +548,22 @@ function updateCartUI() {
     <div class="cart-item">
       <div class="cart-item-name">
         ${esc(i.name)}
+        ${i.optionNames && i.optionNames.length ? `<span class="cart-item-comment">${esc(i.optionNames.join(' · '))}</span>` : ''}
         ${i.comment ? `<span class="cart-item-comment">💬 ${esc(i.comment)}</span>` : ''}
       </div>
       <div class="cart-item-qty">
-        <button class="qty-btn" onclick="removeItem('${esc(i.id)}');renderCartSheet()">−</button>
+        <button class="qty-btn" onclick="removeLine('${esc(i.key)}')">−</button>
         <span class="qty-num">${i.qty}</span>
-        <button class="qty-btn" onclick="addItemSheet('${esc(i.id)}')">+</button>
+        <button class="qty-btn" onclick="addLineSheet('${esc(i.key)}')">+</button>
       </div>
       <div class="cart-item-price">${(i.price * i.qty).toFixed(0)} ₸</div>
     </div>
   `).join('');
 }
 
-function addItemSheet(id) {
-  const item = getItem(id);
-  if (item) { item.qty += 1; saveCart(); updateCartUI(); }
+function addLineSheet(key) {
+  const line = getLine(key);
+  if (line) { line.qty += 1; saveCart(); updateCartUI(); }
 }
 
 function renderCartSheet() { updateCartUI(); }
@@ -472,7 +587,10 @@ async function placeOrder() {
 
   const body = {
     venue_id: VENUE_ID,
-    items: cart.map(i => ({ menu_item_id: i.id, quantity: i.qty, comment: i.comment || null })),
+    items: cart.map(i => ({
+      menu_item_id: i.id, quantity: i.qty, comment: i.comment || null,
+      modifier_option_ids: i.optionIds || [],
+    })),
     guest_name: document.getElementById('guestName').value.trim() || null,
     guest_phone: document.getElementById('guestPhone').value.trim() || null,
     notes: document.getElementById('orderNotes').value.trim() || null,

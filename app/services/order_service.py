@@ -84,22 +84,45 @@ async def create_order(data: OrderCreate, guest: Guest, db: AsyncSession, change
     )
     menu_items = {m.id: m for m in result.scalars().all()}
 
+    # Resolve all chosen modifier options in one query, then validate each
+    # against its item — never trust client-supplied price deltas.
+    all_option_ids = [oid for i in data.items for oid in getattr(i, 'modifier_option_ids', [])]
+    options_by_id = {}
+    if all_option_ids:
+        from app.models.menu import ModifierOption, ModifierGroup
+        rows = (await db.execute(
+            select(ModifierOption, ModifierGroup.menu_item_id)
+            .join(ModifierGroup, ModifierOption.group_id == ModifierGroup.id)
+            .where(ModifierOption.id.in_(all_option_ids))
+        )).all()
+        options_by_id = {opt.id: (opt, mi_id) for opt, mi_id in rows}
+
     total = Decimal("0")
     order_items = []
     for item_data in data.items:
         menu_item = menu_items.get(item_data.menu_item_id)
         if not menu_item or not menu_item.is_available:
             raise ValueError(f"Позиция {item_data.menu_item_id} недоступна")
-        subtotal = menu_item.price * item_data.quantity
+        line_price = menu_item.price
+        chosen_names = []
+        for oid in getattr(item_data, 'modifier_option_ids', []):
+            resolved = options_by_id.get(oid)
+            if not resolved or resolved[1] != menu_item.id:
+                raise ValueError(f"Модификатор не относится к позиции «{menu_item.name}»")
+            opt = resolved[0]
+            line_price += opt.price_delta
+            chosen_names.append(opt.name)
+        subtotal = line_price * item_data.quantity
         total += subtotal
         order_items.append(
             OrderItem(
                 id=uuid.uuid4(),
                 menu_item_id=menu_item.id,
                 quantity=item_data.quantity,
-                price=menu_item.price,
+                price=line_price,
                 name=menu_item.name,
                 comment=getattr(item_data, 'comment', None),
+                modifiers=" · ".join(chosen_names) if chosen_names else None,
             )
         )
 

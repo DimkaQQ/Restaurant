@@ -8,6 +8,9 @@ class OrderItemCreate(BaseModel):
     menu_item_id: uuid.UUID
     quantity: int = Field(..., ge=1)
     comment: str | None = None
+    # Chosen modifier option ids — validated server-side against the item's
+    # groups; their price deltas are added to the line price.
+    modifier_option_ids: list[uuid.UUID] = []
 
 
 class OrderCreate(BaseModel):
@@ -31,6 +34,7 @@ class OrderItemOut(BaseModel):
     price: Decimal
     name: str
     comment: str | None = None
+    modifiers: str | None = None
 
     model_config = {"from_attributes": True}
 

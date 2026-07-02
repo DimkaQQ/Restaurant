@@ -6,15 +6,19 @@ import os
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
 from app.database import get_db
 from app.models.inventory import Ingredient
-from app.models.menu import MenuItem
+from app.models.menu import MenuItem, ModifierGroup, ModifierOption
 from app.models.recipe import Recipe
 from app.models.user import User
 from app.models.venue import Venue
 from app.routers.deps import get_current_user_dep
-from app.schemas.menu import MenuItemCreate, MenuItemOut, MenuItemUpdate, RecipeLineIn, RecipeLineOut
+from app.schemas.menu import (
+    MenuItemCreate, MenuItemOut, MenuItemUpdate, RecipeLineIn, RecipeLineOut,
+    ModifierGroupIn, ModifierGroupOut,
+)
 
 UPLOAD_DIR = "app/static/uploads/menu"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
@@ -27,6 +31,16 @@ def _write_file(path: str, content: bytes) -> None:
 
 router = APIRouter(prefix="/api/menu", tags=["menu"])
 logger = logging.getLogger(__name__)
+
+
+async def _load_item_with_modifiers(item_id: uuid.UUID, db: AsyncSession) -> MenuItem:
+    """MenuItemOut serializes modifier_groups — they must be eager-loaded or
+    pydantic triggers an async lazy load outside the request scope (500)."""
+    return (await db.execute(
+        select(MenuItem)
+        .options(selectinload(MenuItem.modifier_groups).selectinload(ModifierGroup.options))
+        .where(MenuItem.id == item_id)
+    )).scalar_one()
 
 
 async def _check_venue_owner(venue_id: uuid.UUID, user: User, db: AsyncSession) -> Venue:
@@ -47,7 +61,11 @@ async def list_menu(
     db: AsyncSession = Depends(get_db),
 ):
     try:
-        result = await db.execute(select(MenuItem).where(MenuItem.venue_id == venue_id))
+        result = await db.execute(
+            select(MenuItem)
+            .options(selectinload(MenuItem.modifier_groups).selectinload(ModifierGroup.options))
+            .where(MenuItem.venue_id == venue_id)
+        )
         return result.scalars().all()
     except Exception as e:
         logger.error("List menu error: %s", e)
@@ -66,8 +84,7 @@ async def create_item(
         item = MenuItem(id=uuid.uuid4(), venue_id=venue_id, **data.model_dump())
         db.add(item)
         await db.commit()
-        await db.refresh(item)
-        return item
+        return await _load_item_with_modifiers(item.id, db)
     except HTTPException:
         raise
     except Exception as e:
@@ -91,8 +108,7 @@ async def update_item(
         for field, value in data.model_dump(exclude_none=True).items():
             setattr(item, field, value)
         await db.commit()
-        await db.refresh(item)
-        return item
+        return await _load_item_with_modifiers(item.id, db)
     except HTTPException:
         raise
     except Exception as e:
@@ -193,6 +209,66 @@ async def set_recipe(
     ]
 
 
+@router.get("/{item_id}/modifiers", response_model=list[ModifierGroupOut])
+async def get_modifiers(
+    item_id: uuid.UUID,
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    item = (await db.execute(select(MenuItem).where(MenuItem.id == item_id))).scalar_one_or_none()
+    if not item:
+        raise HTTPException(status_code=404, detail="Позиция не найдена")
+    await _check_venue_owner(item.venue_id, current_user, db)
+    groups = (await db.execute(
+        select(ModifierGroup)
+        .options(selectinload(ModifierGroup.options))
+        .where(ModifierGroup.menu_item_id == item_id)
+        .order_by(ModifierGroup.sort)
+    )).scalars().all()
+    return groups
+
+
+@router.put("/{item_id}/modifiers", response_model=list[ModifierGroupOut])
+async def set_modifiers(
+    item_id: uuid.UUID,
+    groups: list[ModifierGroupIn],
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    """Replace-all semantics, mirroring the recipe editor."""
+    item = (await db.execute(select(MenuItem).where(MenuItem.id == item_id))).scalar_one_or_none()
+    if not item:
+        raise HTTPException(status_code=404, detail="Позиция не найдена")
+    await _check_venue_owner(item.venue_id, current_user, db)
+
+    existing = (await db.execute(
+        select(ModifierGroup).where(ModifierGroup.menu_item_id == item_id)
+    )).scalars().all()
+    for g in existing:
+        await db.delete(g)
+    await db.flush()
+
+    for gi, group_in in enumerate(groups):
+        group = ModifierGroup(
+            id=uuid.uuid4(), menu_item_id=item_id, name=group_in.name.strip(),
+            required=group_in.required, multi=group_in.multi, sort=gi,
+        )
+        db.add(group)
+        for oi, opt_in in enumerate(group_in.options):
+            db.add(ModifierOption(
+                id=uuid.uuid4(), group_id=group.id, name=opt_in.name.strip(),
+                price_delta=opt_in.price_delta, sort=oi,
+            ))
+    await db.commit()
+
+    return (await db.execute(
+        select(ModifierGroup)
+        .options(selectinload(ModifierGroup.options))
+        .where(ModifierGroup.menu_item_id == item_id)
+        .order_by(ModifierGroup.sort)
+    )).scalars().all()
+
+
 @router.post("/{item_id}/photo", response_model=MenuItemOut)
 async def upload_photo(
     item_id: uuid.UUID,
@@ -219,8 +295,7 @@ async def upload_photo(
 
         item.image_url = f"/static/uploads/menu/{filename}"
         await db.commit()
-        await db.refresh(item)
-        return item
+        return await _load_item_with_modifiers(item.id, db)
     except HTTPException:
         raise
     except Exception as e:

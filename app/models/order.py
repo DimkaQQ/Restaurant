@@ -60,6 +60,9 @@ class OrderItem(Base):
     price: Mapped[Decimal] = mapped_column(Numeric(10, 2))
     name: Mapped[str] = mapped_column(String(255))
     comment: Mapped[str | None] = mapped_column(Text, nullable=True)
+    # Chosen modifier options, human-readable ("L · Овсяное молоко") — price
+    # already includes their deltas; the text is for KDS/receipt display.
+    modifiers: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     order: Mapped["Order"] = relationship("Order", back_populates="items")
     menu_item: Mapped["MenuItem | None"] = relationship("MenuItem", back_populates="order_items")

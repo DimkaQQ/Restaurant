@@ -32,6 +32,12 @@
   font-size:.8rem; cursor:pointer; transition:all .15s; white-space:nowrap;
 }
 .pos-pay-opt.active { background:rgba(200,168,75,.15); border-color:var(--gold); color:var(--gold); font-weight:600; }
+.pos-opt-chip {
+  padding:.5rem .8rem; min-height:38px; border-radius:8px;
+  border:1px solid var(--border); background:none; color:var(--white);
+  font-size:.85rem; cursor:pointer; transition:all .15s;
+}
+.pos-opt-chip.active { background:rgba(200,168,75,.18); border-color:var(--gold); color:var(--gold); font-weight:600; }
 </style>
 {% endblock %}
 
@@ -83,6 +89,18 @@
   </div>
 </div>
 
+<div id="opt-modal" class="modal" style="display:none">
+  <div class="modal-overlay" onclick="closeOptModal()"></div>
+  <div class="modal-content" style="max-width:460px">
+    <h2 class="modal-title" id="opt-item-name"></h2>
+    <div id="opt-groups"></div>
+    <div class="form-row" style="margin-top:1rem">
+      <button type="button" onclick="confirmOptions()" class="btn-primary">{{ _("В корзину") }}</button>
+      <button type="button" onclick="closeOptModal()" class="btn-secondary">{{ _("Отмена") }}</button>
+    </div>
+  </div>
+</div>
+
 <script>
   const token = () => localStorage.getItem('access_token');
   const LOCALE = {{ ('en-US' if locale == 'en' else 'ru-RU') | tojson }};
@@ -100,6 +118,7 @@
     queueSynced: {{ _("Связь восстановлена: отправлено заказов — {n}") | tojson }},
     offlineMenu: {{ _("Офлайн-режим: меню из локальной копии") | tojson }},
     offlineNoCache: {{ _("Нет связи и нет локальной копии меню. Подключитесь к интернету один раз.") | tojson }},
+    optRequired: {{ _("Выберите «{g}»") | tojson }},
   };
   let _menuItems = [];
   let _cart = {}; // menu_item_id -> {item, qty}
@@ -192,15 +211,96 @@
   function addToCart(itemId) {
     const item = _menuItems.find(i => i.id === itemId);
     if (!item) return;
-    if (_cart[itemId]) _cart[itemId].qty += 1;
-    else _cart[itemId] = { item, qty: 1 };
+    if (item.modifier_groups && item.modifier_groups.length) {
+      openOptionPicker(item);
+      return;
+    }
+    _addCartLine(item, [], []);
+  }
+
+  // Same item with different options = separate cart lines.
+  function _addCartLine(item, optionIds, optionNames) {
+    const key = item.id + '|' + optionIds.slice().sort().join(',');
+    if (_cart[key]) _cart[key].qty += 1;
+    else {
+      let unitPrice = parseFloat(item.price);
+      const allOpts = (item.modifier_groups || []).flatMap(g => g.options);
+      optionIds.forEach(oid => {
+        const o = allOpts.find(x => x.id === oid);
+        if (o) unitPrice += parseFloat(o.price_delta);
+      });
+      _cart[key] = { item, qty: 1, optionIds, optionNames, unitPrice };
+    }
     renderCart();
   }
 
-  function changeQty(itemId, delta) {
-    if (!_cart[itemId]) return;
-    _cart[itemId].qty += delta;
-    if (_cart[itemId].qty <= 0) delete _cart[itemId];
+  // ── Option picker (size / milk / syrups) ──
+  let _pickerItem = null;
+  function openOptionPicker(item) {
+    _pickerItem = item;
+    document.getElementById('opt-item-name').textContent = item.name;
+    const body = document.getElementById('opt-groups');
+    body.innerHTML = item.modifier_groups.map((g, gi) => `
+      <div class="opt-group" data-gi="${gi}">
+        <div style="font-size:.8rem;color:var(--muted);margin:.6rem 0 .35rem">${esc(g.name)}${g.required ? ' *' : ''}</div>
+        <div style="display:flex;flex-wrap:wrap;gap:.4rem">
+          ${g.options.map((o, oi) => `
+            <button type="button"
+              class="pos-opt-chip"
+              data-gi="${gi}" data-oid="${esc(o.id)}"
+              onclick="toggleOpt(this, ${g.multi ? 'true' : 'false'})"
+            >${esc(o.name)}${parseFloat(o.price_delta) ? ' +' + parseFloat(o.price_delta).toLocaleString(LOCALE) : ''}</button>
+          `).join('')}
+        </div>
+      </div>
+    `).join('');
+    // Preselect the first option of required single-choice groups
+    item.modifier_groups.forEach((g, gi) => {
+      if (g.required && !g.multi) {
+        const first = body.querySelector(`.pos-opt-chip[data-gi="${gi}"]`);
+        if (first) first.classList.add('active');
+      }
+    });
+    document.getElementById('opt-modal').style.display = 'flex';
+  }
+
+  function toggleOpt(btn, multi) {
+    if (multi) { btn.classList.toggle('active'); return; }
+    const gi = btn.dataset.gi;
+    const group = _pickerItem.modifier_groups[gi];
+    const wasActive = btn.classList.contains('active');
+    document.querySelectorAll(`.pos-opt-chip[data-gi="${gi}"]`).forEach(b => b.classList.remove('active'));
+    // required groups can't be deselected; optional single-choice can
+    if (!wasActive || group.required) btn.classList.add('active');
+  }
+
+  function confirmOptions() {
+    const chosen = [...document.querySelectorAll('.pos-opt-chip.active')];
+    // enforce required groups
+    for (let gi = 0; gi < _pickerItem.modifier_groups.length; gi++) {
+      const g = _pickerItem.modifier_groups[gi];
+      if (g.required && !chosen.some(b => b.dataset.gi == gi)) {
+        notify.error(T.optRequired.replace('{g}', g.name));
+        return;
+      }
+    }
+    const ids = chosen.map(b => b.dataset.oid);
+    const names = chosen.map(b => {
+      const g = _pickerItem.modifier_groups[b.dataset.gi];
+      return g.options.find(o => o.id === b.dataset.oid).name;
+    });
+    closeOptModal();
+    _addCartLine(_pickerItem, ids, names);
+  }
+
+  function closeOptModal() {
+    document.getElementById('opt-modal').style.display = 'none';
+  }
+
+  function changeQty(key, delta) {
+    if (!_cart[key]) return;
+    _cart[key].qty += delta;
+    if (_cart[key].qty <= 0) delete _cart[key];
     renderCart();
   }
 
@@ -215,11 +315,11 @@
       return;
     }
     let total = 0;
-    linesEl.innerHTML = lines.map(([id, { item, qty }]) => {
-      total += parseFloat(item.price) * qty;
+    linesEl.innerHTML = lines.map(([id, { item, qty, optionNames, unitPrice }]) => {
+      total += unitPrice * qty;
       return `
         <div class="pos-cart-line">
-          <span>${esc(item.name)}</span>
+          <span>${esc(item.name)}${optionNames && optionNames.length ? `<br><small style="color:var(--muted)">${esc(optionNames.join(' · '))}</small>` : ''}</span>
           <div class="pos-cart-qty">
             <button type="button" onclick="changeQty('${esc(id)}', -1)">−</button>
             <span>${qty}</span>
@@ -304,7 +404,9 @@
 
   async function submitOrder() {
     const venueId = document.getElementById('venue-select').value;
-    const items = Object.values(_cart).map(({ item, qty }) => ({ menu_item_id: item.id, quantity: qty }));
+    const items = Object.values(_cart).map(({ item, qty, optionIds }) => ({
+      menu_item_id: item.id, quantity: qty, modifier_option_ids: optionIds || [],
+    }));
     if (!items.length) return;
     const submitBtn = document.getElementById('submit-btn');
     submitBtn.disabled = true;
