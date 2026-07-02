@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-02 15:21+0000\n"
+"POT-Creation-Date: 2026-07-02 17:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -21,6 +21,9 @@ msgstr ""
 
 msgid "(скопируйте и передайте сотруднику для ввода /staff)"
 msgstr "(copy and give it to the staff member to enter with /staff)"
+
+msgid "+ Добавить заведение"
+msgstr "+ Add venue"
 
 msgid "+ Добавить позицию"
 msgstr "+ Add item"
@@ -145,6 +148,9 @@ msgstr "Manager Telegram ID"
 msgid "Администратор"
 msgstr "Administrator"
 
+msgid "Адрес"
+msgstr "Address"
+
 msgid "Активна"
 msgstr "Active"
 
@@ -193,6 +199,9 @@ msgstr "Go to dashboard"
 
 msgid "Введите количество"
 msgstr "Enter a quantity"
+
+msgid "Введите название заведения"
+msgstr "Enter venue name"
 
 msgid "Введите текст выше..."
 msgstr "Type the text above..."
@@ -463,9 +472,6 @@ msgstr "Venue (optional)"
 msgid "Заведения"
 msgstr "Venues"
 
-msgid "Заведения не найдены."
-msgstr "No venues found."
-
 msgid "Завершённых заказов"
 msgstr "Completed orders"
 
@@ -657,6 +663,9 @@ msgstr "Contact support"
 msgid "Например, 5"
 msgstr "e.g. 5"
 
+msgid "Например, Кофейня на Абая"
+msgstr "e.g. Coffee shop on Abay St."
+
 msgid ""
 "Настоящие условия регулируют использование платформы RestOS (далее — "
 "«Сервис»), предоставляемой для управления ресторанами: приём заказов, "
@@ -781,6 +790,9 @@ msgstr "Needs improvement"
 
 msgid "Обзор"
 msgstr "Overview"
+
+msgid "Обновить страницу"
+msgstr "Reload page"
 
 msgid "Обновлено:"
 msgstr "Last updated:"
@@ -1259,6 +1271,9 @@ msgstr "Sign up"
 msgid "Создать аккаунт"
 msgstr "Create account"
 
+msgid "Создать заведение"
+msgstr "Create venue"
+
 msgid "Создать рассылку →"
 msgstr "Create broadcast →"
 
@@ -1344,8 +1359,14 @@ msgstr "No tables yet"
 msgid "Столы"
 msgstr "Tables"
 
+msgid "Страница не найдена"
+msgstr "Page not found"
+
 msgid "Сумма (₸)"
 msgstr "Amount (₸)"
+
+msgid "Такой страницы не существует или она была перемещена."
+msgstr "This page doesn't exist or has been moved."
 
 msgid "Текст сообщения"
 msgstr "Message text"
@@ -1373,6 +1394,13 @@ msgstr ""
 msgid "Токен:"
 msgstr "Token:"
 
+msgid ""
+"У вас пока нет ни одного заведения. Добавьте первое — это займёт меньше "
+"минуты."
+msgstr ""
+"You don't have any venues yet. Add your first one — it takes less than a "
+"minute."
+
 msgid "Удалить"
 msgstr "Delete"
 
@@ -1396,6 +1424,9 @@ msgstr "Delete this table?"
 
 msgid "Уже есть аккаунт?"
 msgstr "Already have an account?"
+
+msgid "Улица, дом"
+msgstr "Street, building"
 
 msgid ""
 "Управляйте несколькими заведениями из одного аккаунта с отдельными "
@@ -1455,6 +1486,14 @@ msgstr "Receipt issued"
 
 msgid "Чт"
 msgstr "Thu"
+
+msgid "Что-то пошло не так"
+msgstr "Something went wrong"
+
+msgid "Что-то пошло не так на нашей стороне. Мы уже знаем об этом и разбираемся."
+msgstr ""
+"Something went wrong on our end. We already know about it and are looking"
+" into it."
 
 msgid ""
 "Экран для кухни на любом планшете — очередь заказов по колонкам, таймеры "
@@ -1519,6 +1558,9 @@ msgstr "ml"
 
 msgid "млн"
 msgstr "M"
+
+msgid "необязательно"
+msgstr "optional"
 
 msgid "отзывов"
 msgstr "reviews"

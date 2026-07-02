@@ -49,6 +49,26 @@
   </div>
 </div>
 
+{% if not venues %}
+<div class="card" style="text-align:center; padding:2.5rem; color:var(--muted); margin-bottom:1.5rem">
+  {{ _("У вас пока нет ни одного заведения. Добавьте первое — это займёт меньше минуты.") }}
+</div>
+{% endif %}
+
+<div class="venue-settings-card" style="max-width:420px; margin-bottom:2rem">
+  <div class="venue-settings-name">{{ _("+ Добавить заведение") }}</div>
+  <div class="form-row">
+    <label>{{ _("Название") }}</label>
+    <input type="text" id="new-venue-name" class="input-field" placeholder="{{ _('Например, Кофейня на Абая') }}">
+  </div>
+  <div class="form-row">
+    <label>{{ _("Адрес") }} ({{ _("необязательно") }})</label>
+    <input type="text" id="new-venue-address" class="input-field" placeholder="{{ _('Улица, дом') }}">
+  </div>
+  <button class="btn-primary save-btn" onclick="createVenue()">{{ _("Создать заведение") }}</button>
+  <div class="save-result" id="new-venue-result"></div>
+</div>
+
 {% if venues %}
 <div class="venue-settings-grid">
   {% for venue in venues %}
@@ -114,10 +134,6 @@
   </div>
   {% endfor %}
 </div>
-{% else %}
-<div class="card" style="text-align:center; padding:2.5rem; color:var(--muted)">
-  {{ _("Заведения не найдены.") }}
-</div>
 {% endif %}
 {% endblock %}
 
@@ -127,7 +143,41 @@ const T = {
   saved: {{ _("Сохранено") | tojson }},
   error: {{ _("Ошибка") | tojson }},
   connectionError: {{ _("Ошибка соединения") | tojson }},
+  nameRequired: {{ _("Введите название заведения") | tojson }},
 };
+
+async function createVenue() {
+  const name = document.getElementById('new-venue-name').value.trim();
+  const address = document.getElementById('new-venue-address').value.trim();
+  const resEl = document.getElementById('new-venue-result');
+  if (!name) {
+    resEl.textContent = '❌ ' + T.nameRequired;
+    resEl.className = 'save-result err';
+    return;
+  }
+  try {
+    const token = document.cookie.split(';').find(c => c.trim().startsWith('access_token='));
+    const headers = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = 'Bearer ' + token.split('=')[1];
+
+    const resp = await fetch('/api/venues/', {
+      method: 'POST',
+      headers,
+      credentials: 'include',
+      body: JSON.stringify({ name, address: address || null }),
+    });
+    if (resp.ok) {
+      location.reload();
+    } else {
+      const err = await resp.json().catch(() => ({}));
+      resEl.textContent = '❌ ' + (err.detail || T.error);
+      resEl.className = 'save-result err';
+    }
+  } catch (e) {
+    resEl.textContent = '❌ ' + T.connectionError;
+    resEl.className = 'save-result err';
+  }
+}
 
 async function saveVenue(venueId) {
   const gisUrl = document.getElementById('gis_' + venueId).value.trim();
