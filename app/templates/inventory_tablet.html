@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="{{ locale }}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Склад — {{ "Все заведения" }}</title>
+  <title>{{ _("Склад") }} — {{ _("Все заведения") }}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
@@ -112,16 +112,16 @@
 
 <div class="tb-header">
   <div>
-    <div class="tb-brand">RestOS · Склад</div>
-    <div class="tb-subtitle">Режим планшета</div>
+    <div class="tb-brand">RestOS · {{ _("Склад") }}</div>
+    <div class="tb-subtitle">{{ _("Режим планшета") }}</div>
   </div>
-  <a href="/inventory" style="color:var(--muted);font-size:.85rem;text-decoration:none;">Полный вид →</a>
+  <a href="/inventory" style="color:var(--muted);font-size:.85rem;text-decoration:none;">{{ _("Полный вид →") }}</a>
 </div>
 
 <div class="tb-controls">
-  <input type="text" class="tb-search" id="search" placeholder="Поиск по названию..." oninput="filterCards()">
+  <input type="text" class="tb-search" id="search" placeholder="{{ _('Поиск по названию...') }}" oninput="filterCards()">
   <select class="tb-venue" onchange="changeVenue(this.value)">
-    <option value="">Все заведения</option>
+    <option value="">{{ _("Все заведения") }}</option>
     {% for v in venues %}
     <option value="{{ v.id }}" {% if selected_venue_id == v.id|string %}selected{% endif %}>{{ v.name }}</option>
     {% endfor %}
@@ -131,7 +131,7 @@
 {% set categories = ingredients | map(attribute='category') | select | unique | sort | list %}
 {% if categories %}
 <div class="tb-cat-bar" id="cat-bar">
-  <button class="tb-chip active" onclick="filterCat('', this)">Все</button>
+  <button class="tb-chip active" onclick="filterCat('', this)">{{ _("Все") }}</button>
   {% for cat in categories %}
   <button class="tb-chip" onclick="filterCat('{{ cat }}', this)">{{ cat }}</button>
   {% endfor %}
@@ -151,7 +151,7 @@
         <span class="tb-qty" id="qty-{{ item.id }}">{{ "%.1f"|format(item.quantity|float) }}</span>
         <span class="tb-unit">{{ item.unit }}</span>
         {% if item.min_quantity > 0 %}
-        <span class="tb-min">мин: {{ "%.1f"|format(item.min_quantity|float) }}</span>
+        <span class="tb-min">{{ _("мин:") }} {{ "%.1f"|format(item.min_quantity|float) }}</span>
         {% endif %}
       </div>
       {% if item.min_quantity > 0 %}
@@ -161,33 +161,33 @@
       {% endif %}
     </div>
     <div class="tb-actions">
-      <button class="tb-btn tb-btn-add" onclick="openModal('{{ item.id }}','{{ item.name }}','restock','{{ item.unit }}')">+ Приход</button>
-      <button class="tb-btn tb-btn-sub" onclick="openModal('{{ item.id }}','{{ item.name }}','writeoff','{{ item.unit }}')">− Списание</button>
+      <button class="tb-btn tb-btn-add" onclick="openModal('{{ item.id }}','{{ item.name }}','restock','{{ item.unit }}')">{{ _("+ Приход") }}</button>
+      <button class="tb-btn tb-btn-sub" onclick="openModal('{{ item.id }}','{{ item.name }}','writeoff','{{ item.unit }}')">{{ _("− Списание") }}</button>
     </div>
   </div>
   {% else %}
-  <p style="color:var(--muted);padding:2rem;grid-column:1/-1;text-align:center;">Нет позиций на складе</p>
+  <p style="color:var(--muted);padding:2rem;grid-column:1/-1;text-align:center;">{{ _("Нет позиций на складе") }}</p>
   {% endfor %}
 </div>
 
 <!-- Modal -->
 <div class="tb-modal" id="modal">
   <div class="tb-modal-box">
-    <div class="tb-modal-title" id="modal-title">Операция</div>
-    <label class="tb-modal-label" id="modal-label">Количество</label>
+    <div class="tb-modal-title" id="modal-title">{{ _("Операция") }}</div>
+    <label class="tb-modal-label" id="modal-label">{{ _("Количество") }}</label>
     <input type="number" class="tb-modal-input" id="modal-qty" inputmode="decimal" step="0.1" min="0.1" placeholder="0.0">
     <div id="modal-reason-wrap" style="display:none">
-      <label class="tb-modal-label">Причина</label>
+      <label class="tb-modal-label">{{ _("Причина") }}</label>
       <select class="tb-modal-select" id="modal-reason">
-        <option value="usage">Использование на кухне</option>
-        <option value="spoilage">Порча / просрочка</option>
-        <option value="damage">Повреждение</option>
-        <option value="inventory">Инвентаризация</option>
+        <option value="usage">{{ _("Использование на кухне") }}</option>
+        <option value="spoilage">{{ _("Порча / просрочка") }}</option>
+        <option value="damage">{{ _("Повреждение") }}</option>
+        <option value="inventory">{{ _("Инвентаризация") }}</option>
       </select>
     </div>
     <div class="tb-modal-actions">
-      <button class="tb-modal-confirm" id="modal-confirm">Подтвердить</button>
-      <button class="tb-modal-cancel" onclick="closeModal()">Отмена</button>
+      <button class="tb-modal-confirm" id="modal-confirm">{{ _("Подтвердить") }}</button>
+      <button class="tb-modal-cancel" onclick="closeModal()">{{ _("Отмена") }}</button>
     </div>
   </div>
 </div>
@@ -195,14 +195,23 @@
 <div class="tb-toast" id="toast"></div>
 
 <script>
+const T = {
+  restock: {{ _("Приход:") | tojson }},
+  writeoff: {{ _("Списание:") | tojson }},
+  qtyLabel: {{ _("Количество") | tojson }},
+  enterQty: {{ _("Введите количество") | tojson }},
+  restockDone: {{ _("✓ Приход записан") | tojson }},
+  writeoffDone: {{ _("✓ Списание записано") | tojson }},
+  error: {{ _("Ошибка") | tojson }},
+};
 let _itemId = null, _action = null;
 
 function openModal(id, name, action, unit) {
   _itemId = id; _action = action;
   document.getElementById('modal-title').textContent =
-    action === 'restock' ? `Приход: ${name}` : `Списание: ${name}`;
+    action === 'restock' ? `${T.restock} ${name}` : `${T.writeoff} ${name}`;
   document.getElementById('modal-label').textContent =
-    `Количество (${unit})`;
+    `${T.qtyLabel} (${unit})`;
   document.getElementById('modal-reason-wrap').style.display =
     action === 'writeoff' ? 'block' : 'none';
   document.getElementById('modal-qty').value = '';
@@ -213,7 +222,7 @@ function closeModal() { document.getElementById('modal').classList.remove('open'
 
 document.getElementById('modal-confirm').addEventListener('click', async () => {
   const qty = parseFloat(document.getElementById('modal-qty').value);
-  if (!qty || qty <= 0) { showToast('Введите количество'); return; }
+  if (!qty || qty <= 0) { showToast(T.enterQty); return; }
   const body = { quantity: qty };
   if (_action === 'writeoff') {
     body.reason = document.getElementById('modal-reason').value;
@@ -242,10 +251,10 @@ document.getElementById('modal-confirm').addEventListener('click', async () => {
       }
     }
     closeModal();
-    showToast(_action === 'restock' ? `✓ Приход записан` : `✓ Списание записано`);
+    showToast(_action === 'restock' ? T.restockDone : T.writeoffDone);
   } else {
     const e = await res.json().catch(() => ({}));
-    showToast(e.detail || 'Ошибка');
+    showToast(e.detail || T.error);
   }
 });
 

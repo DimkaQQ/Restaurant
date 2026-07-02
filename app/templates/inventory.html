@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Склад — RestOS{% endblock %}
+{% block title %}{{ _("Склад") }} — RestOS{% endblock %}
 
 {% block head %}
 <style>
@@ -54,29 +54,29 @@
 
 {% block content %}
 <div class="inv-header">
-  <h1>Склад</h1>
+  <h1>{{ _("Склад") }}</h1>
   <div style="display:flex;gap:.75rem;align-items:center;">
     <select class="select-input" onchange="this.value ? location.href='/inventory?venue_id='+this.value : location.href='/inventory'">
-      <option value="">Все заведения</option>
+      <option value="">{{ _("Все заведения") }}</option>
       {% for v in venues %}
       <option value="{{ v.id }}" {% if selected_venue_id == v.id|string %}selected{% endif %}>{{ v.name }}</option>
       {% endfor %}
     </select>
-    <a href="/inventory/tablet" target="_blank" style="color:var(--muted);font-size:.85rem;text-decoration:none;white-space:nowrap;">Режим планшета ↗</a>
+    <a href="/inventory/tablet" target="_blank" style="color:var(--muted);font-size:.85rem;text-decoration:none;white-space:nowrap;">{{ _("Режим планшета ↗") }}</a>
   </div>
 </div>
 
 <div class="inv-kpis">
   <div class="inv-kpi">
-    <div class="inv-kpi-label">Позиций на складе</div>
+    <div class="inv-kpi-label">{{ _("Позиций на складе") }}</div>
     <div class="inv-kpi-value">{{ ingredients|length }}</div>
   </div>
   <div class="inv-kpi">
-    <div class="inv-kpi-label">Стоимость запасов</div>
+    <div class="inv-kpi-label">{{ _("Стоимость запасов") }}</div>
     <div class="inv-kpi-value">{{ "{:,.0f}".format(total_value) }} ₸</div>
   </div>
   <div class="inv-kpi">
-    <div class="inv-kpi-label">Низкий остаток</div>
+    <div class="inv-kpi-label">{{ _("Низкий остаток") }}</div>
     <div class="inv-kpi-value {% if low_stock_count > 0 %}alert{% endif %}">{{ low_stock_count }}</div>
   </div>
 </div>
@@ -84,7 +84,7 @@
 <div class="inv-layout">
   <div class="inv-table-wrap">
     <div class="inv-filters">
-      <span class="category-chip active" onclick="filterCategory('')">Все</span>
+      <span class="category-chip active" onclick="filterCategory('')">{{ _("Все") }}</span>
       {% for cat in categories %}
       <span class="category-chip" onclick="filterCategory('{{ cat }}')">{{ cat }}</span>
       {% endfor %}
@@ -93,12 +93,12 @@
     <table class="inv-table" id="inv-table">
       <thead>
         <tr>
-          <th>Наименование</th>
-          <th>Категория</th>
-          <th>Остаток</th>
-          <th>Ед.</th>
-          <th>Цена/ед.</th>
-          <th>Статус</th>
+          <th>{{ _("Наименование") }}</th>
+          <th>{{ _("Категория") }}</th>
+          <th>{{ _("Остаток") }}</th>
+          <th>{{ _("Ед.") }}</th>
+          <th>{{ _("Цена/ед.") }}</th>
+          <th>{{ _("Статус") }}</th>
           <th></th>
         </tr>
       </thead>
@@ -121,14 +121,14 @@
           <td>{{ "{:,.0f}".format(item.cost_per_unit|float) }} ₸</td>
           <td>
             {% if item.stock_status == 'ok' %}<span class="status-badge status-ok">OK</span>
-            {% elif item.stock_status == 'warning' %}<span class="status-badge status-warning">Мало</span>
-            {% elif item.stock_status == 'low' %}<span class="status-badge status-low">Критично</span>
-            {% else %}<span class="status-badge status-empty">Нет</span>{% endif %}
+            {% elif item.stock_status == 'warning' %}<span class="status-badge status-warning">{{ _("Мало") }}</span>
+            {% elif item.stock_status == 'low' %}<span class="status-badge status-low">{{ _("Критично") }}</span>
+            {% else %}<span class="status-badge status-empty">{{ _("Нет") }}</span>{% endif %}
           </td>
           <td>
             <div class="qty-controls">
-              <button class="btn-add" onclick="openQtyModal('{{ item.id }}', '{{ item.name }}', 'restock')">+ Приход</button>
-              <button class="btn-rem" onclick="openQtyModal('{{ item.id }}', '{{ item.name }}', 'writeoff')">− Списать</button>
+              <button class="btn-add" onclick="openQtyModal('{{ item.id }}', '{{ item.name }}', 'restock')">{{ _("+ Приход") }}</button>
+              <button class="btn-rem" onclick="openQtyModal('{{ item.id }}', '{{ item.name }}', 'writeoff')">{{ _("− Списать") }}</button>
               <button class="btn-icon" onclick="deleteIngredient('{{ item.id }}')">✕</button>
             </div>
           </td>
@@ -137,54 +137,54 @@
       </tbody>
     </table>
     {% else %}
-    <div style="padding:3rem;text-align:center;color:var(--muted);">Нет позиций на складе</div>
+    <div style="padding:3rem;text-align:center;color:var(--muted);">{{ _("Нет позиций на складе") }}</div>
     {% endif %}
   </div>
 
   <div class="inv-add-panel">
-    <h2>Добавить позицию</h2>
+    <h2>{{ _("Добавить позицию") }}</h2>
     <div id="add-error" class="error-msg" style="display:none"></div>
     <form id="add-form">
       <div class="form-group">
-        <label>Заведение</label>
+        <label>{{ _("Заведение") }}</label>
         <select name="venue_id" required>
-          <option value="">Выбрать...</option>
+          <option value="">{{ _("Выбрать...") }}</option>
           {% for v in venues %}
           <option value="{{ v.id }}" {% if selected_venue_id == v.id|string %}selected{% endif %}>{{ v.name }}</option>
           {% endfor %}
         </select>
       </div>
       <div class="form-group">
-        <label>Наименование</label>
-        <input type="text" name="name" required placeholder="Мясо говядина">
+        <label>{{ _("Наименование") }}</label>
+        <input type="text" name="name" required placeholder="{{ _('Мясо говядина') }}">
       </div>
       <div class="form-row-2">
         <div class="form-group">
-          <label>Единица</label>
+          <label>{{ _("Единица") }}</label>
           <select name="unit">
-            <option>кг</option><option>г</option><option>л</option><option>мл</option><option>шт</option>
+            <option>{{ _("кг") }}</option><option>{{ _("г") }}</option><option>{{ _("л") }}</option><option>{{ _("мл") }}</option><option>{{ _("шт") }}</option>
           </select>
         </div>
         <div class="form-group">
-          <label>Категория</label>
-          <input type="text" name="category" placeholder="Мясо">
+          <label>{{ _("Категория") }}</label>
+          <input type="text" name="category" placeholder="{{ _('Мясо') }}">
         </div>
       </div>
       <div class="form-row-2">
         <div class="form-group">
-          <label>Остаток</label>
+          <label>{{ _("Остаток") }}</label>
           <input type="number" name="quantity" step="0.001" min="0" value="0">
         </div>
         <div class="form-group">
-          <label>Мин. остаток</label>
+          <label>{{ _("Мин. остаток") }}</label>
           <input type="number" name="min_quantity" step="0.001" min="0" value="0">
         </div>
       </div>
       <div class="form-group">
-        <label>Цена за ед. (₸)</label>
+        <label>{{ _("Цена за ед. (₸)") }}</label>
         <input type="number" name="cost_per_unit" step="1" min="0" value="0">
       </div>
-      <button type="submit" class="btn-primary" style="width:100%">Добавить</button>
+      <button type="submit" class="btn-primary" style="width:100%">{{ _("Добавить") }}</button>
     </form>
   </div>
 </div>
@@ -193,29 +193,29 @@
 <div id="qty-modal" class="modal" style="display:none">
   <div class="modal-overlay" onclick="closeQtyModal()"></div>
   <div class="modal-content" style="max-width:320px">
-    <h2 class="modal-title" id="qty-modal-title">Операция</h2>
+    <h2 class="modal-title" id="qty-modal-title">{{ _("Операция") }}</h2>
     <div class="form-group">
-      <label id="qty-label">Количество</label>
+      <label id="qty-label">{{ _("Количество") }}</label>
       <input type="number" id="qty-input" step="0.001" min="0.001" placeholder="0.000">
     </div>
     <div id="writeoff-extra" style="display:none">
       <div class="form-group">
-        <label>Причина</label>
+        <label>{{ _("Причина") }}</label>
         <select id="writeoff-reason">
-          <option value="usage">Использование</option>
-          <option value="spoilage">Порча</option>
-          <option value="theft">Недостача</option>
-          <option value="other">Прочее</option>
+          <option value="usage">{{ _("Использование") }}</option>
+          <option value="spoilage">{{ _("Порча") }}</option>
+          <option value="theft">{{ _("Недостача") }}</option>
+          <option value="other">{{ _("Прочее") }}</option>
         </select>
       </div>
       <div class="form-group">
-        <label>Примечание</label>
-        <input type="text" id="writeoff-note" placeholder="Необязательно">
+        <label>{{ _("Примечание") }}</label>
+        <input type="text" id="writeoff-note" placeholder="{{ _('Необязательно') }}">
       </div>
     </div>
     <div class="form-row" style="margin-top:1rem">
-      <button id="qty-confirm-btn" class="btn-primary">Подтвердить</button>
-      <button onclick="closeQtyModal()" class="btn-secondary">Отмена</button>
+      <button id="qty-confirm-btn" class="btn-primary">{{ _("Подтвердить") }}</button>
+      <button onclick="closeQtyModal()" class="btn-secondary">{{ _("Отмена") }}</button>
     </div>
   </div>
 </div>
@@ -223,6 +223,15 @@
 
 {% block scripts %}
 <script>
+const T = {
+  restock: {{ _("Приход:") | tojson }},
+  writeoff: {{ _("Списание:") | tojson }},
+  restockQty: {{ _("Количество прихода") | tojson }},
+  writeoffQty: {{ _("Количество списания") | tojson }},
+  enterQty: {{ _("Введите количество") | tojson }},
+  error: {{ _("Ошибка") | tojson }},
+  deleteConfirm: {{ _("Удалить позицию?") | tojson }},
+};
 let currentItemId = null, currentAction = null;
 
 function filterCategory(cat) {
@@ -235,8 +244,8 @@ function filterCategory(cat) {
 
 function openQtyModal(id, name, action) {
   currentItemId = id; currentAction = action;
-  document.getElementById('qty-modal-title').textContent = action === 'restock' ? `Приход: ${name}` : `Списание: ${name}`;
-  document.getElementById('qty-label').textContent = action === 'restock' ? 'Количество прихода' : 'Количество списания';
+  document.getElementById('qty-modal-title').textContent = action === 'restock' ? `${T.restock} ${name}` : `${T.writeoff} ${name}`;
+  document.getElementById('qty-label').textContent = action === 'restock' ? T.restockQty : T.writeoffQty;
   document.getElementById('writeoff-extra').style.display = action === 'writeoff' ? 'block' : 'none';
   document.getElementById('qty-input').value = '';
   document.getElementById('qty-modal').style.display = 'flex';
@@ -247,7 +256,7 @@ function closeQtyModal() { document.getElementById('qty-modal').style.display = 
 
 document.getElementById('qty-confirm-btn').addEventListener('click', async () => {
   const qty = parseFloat(document.getElementById('qty-input').value);
-  if (!qty || qty <= 0) { alert('Введите количество'); return; }
+  if (!qty || qty <= 0) { alert(T.enterQty); return; }
   const body = { quantity: qty };
   if (currentAction === 'writeoff') {
     body.reason = document.getElementById('writeoff-reason').value;
@@ -260,17 +269,17 @@ document.getElementById('qty-confirm-btn').addEventListener('click', async () =>
     body: JSON.stringify(body),
   });
   if (res.ok) { closeQtyModal(); location.reload(); }
-  else { const d = await res.json().catch(()=>({})); alert(d.detail || 'Ошибка'); }
+  else { const d = await res.json().catch(()=>({})); alert(d.detail || T.error); }
 });
 
 async function deleteIngredient(id) {
-  if (!confirm('Удалить позицию?')) return;
+  if (!confirm(T.deleteConfirm)) return;
   const res = await fetch('/api/inventory/'+id, {
     method:'DELETE', credentials:'include',
     headers:{'Authorization':'Bearer '+localStorage.getItem('access_token')},
   });
   if (res.ok) { document.getElementById('row-'+id)?.remove(); }
-  else { const d = await res.json().catch(()=>({})); alert(d.detail||'Ошибка'); }
+  else { const d = await res.json().catch(()=>({})); alert(d.detail||T.error); }
 }
 
 document.getElementById('add-form').addEventListener('submit', async (e) => {
@@ -289,7 +298,7 @@ document.getElementById('add-form').addEventListener('submit', async (e) => {
     body: JSON.stringify(body),
   });
   if (res.ok) { location.reload(); }
-  else { const d = await res.json().catch(()=>({})); errEl.textContent=d.detail||'Ошибка'; errEl.style.display='block'; }
+  else { const d = await res.json().catch(()=>({})); errEl.textContent=d.detail||T.error; errEl.style.display='block'; }
 });
 </script>
 {% endblock %}

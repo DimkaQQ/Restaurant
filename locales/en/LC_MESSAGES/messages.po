@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-02 06:44+0000\n"
+"POT-Creation-Date: 2026-07-02 06:47+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -36,6 +36,9 @@ msgstr "+ Ingredient"
 
 msgid "+ Новый заказ"
 msgstr "+ New order"
+
+msgid "+ Приход"
+msgstr "+ Restock"
 
 msgid "+ Фото"
 msgstr "+ Photo"
@@ -178,6 +181,9 @@ msgstr ""
 
 msgid "Бронь"
 msgstr "Reserved"
+
+msgid "Введите количество"
+msgstr "Enter a quantity"
 
 msgid "Вернуть назад"
 msgstr "Move back"
@@ -364,6 +370,9 @@ msgstr "Up to 5 venues"
 msgid "Добавить"
 msgstr "Add"
 
+msgid "Добавить позицию"
+msgstr "Add item"
+
 msgid "Добавить пользователя"
 msgstr "Add user"
 
@@ -376,8 +385,14 @@ msgstr "Access is limited until the subscription is renewed"
 msgid "Доступно"
 msgstr "Available"
 
+msgid "Ед."
+msgstr "Unit"
+
 msgid "Еда:"
 msgstr "Food:"
+
+msgid "Единица"
+msgstr "Unit"
 
 msgid "Если такой email зарегистрирован, мы отправили ссылку для сброса пароля."
 msgstr "If that email is registered, we sent a password reset link."
@@ -427,12 +442,21 @@ msgstr "Occupied"
 msgid "Запуск"
 msgstr "Launching"
 
+msgid "Инвентаризация"
+msgstr "Inventory count"
+
 msgid ""
 "Интеграция с Webkassa (Казахстан) — чек пробивается автоматически при "
 "закрытии заказа."
 msgstr ""
 "Integration with Webkassa (Kazakhstan) — the receipt is fiscalized "
 "automatically when an order closes."
+
+msgid "Использование"
+msgstr "Usage"
+
+msgid "Использование на кухне"
+msgstr "Kitchen usage"
 
 msgid "История сегодня"
 msgstr "Today's history"
@@ -455,6 +479,15 @@ msgstr "Category"
 msgid "Кол-во"
 msgstr "Qty"
 
+msgid "Количество"
+msgstr "Quantity"
+
+msgid "Количество прихода"
+msgstr "Restock quantity"
+
+msgid "Количество списания"
+msgstr "Write-off quantity"
+
 msgid "Конец"
 msgstr "End"
 
@@ -464,6 +497,9 @@ msgstr "Privacy"
 msgid "Корзина пуста"
 msgstr "Cart is empty"
 
+msgid "Критично"
+msgstr "Critical"
+
 msgid "Кухня"
 msgstr "Kitchen"
 
@@ -472,6 +508,9 @@ msgstr "Kitchen display (KDS)"
 
 msgid "Логин кассы"
 msgstr "Kassa login"
+
+msgid "Мало"
+msgstr "Low"
 
 msgid "Менеджер"
 msgstr "Manager"
@@ -484,6 +523,9 @@ msgstr "Menu is empty"
 
 msgid "Мест"
 msgstr "Seats"
+
+msgid "Мин. остаток"
+msgstr "Min stock"
 
 msgid "Мой ресторан"
 msgstr "My Restaurant"
@@ -510,6 +552,12 @@ msgstr ""
 "Webkassa) using your own credentials, and our email delivery provider. We"
 " do not sell personal data to third parties."
 
+msgid "Мясо"
+msgstr "Meat"
+
+msgid "Мясо говядина"
+msgstr "Beef"
+
 msgid "Назад ко входу"
 msgstr "Back to sign in"
 
@@ -518,6 +566,9 @@ msgstr "Name"
 
 msgid "Название сети / ресторана"
 msgstr "Restaurant / network name"
+
+msgid "Наименование"
+msgstr "Name"
 
 msgid "Написать в поддержку"
 msgstr "Contact support"
@@ -550,8 +601,14 @@ msgstr "Start free"
 msgid "Не подключено"
 msgstr "Not connected"
 
+msgid "Недостача"
+msgstr "Shortage"
+
 msgid "Необязательно"
 msgstr "Optional"
+
+msgid "Нет"
+msgstr "None"
 
 msgid "Нет аккаунта?"
 msgstr "Don't have an account?"
@@ -570,6 +627,12 @@ msgstr "No new orders"
 
 msgid "Нет отзывов"
 msgstr "No reviews"
+
+msgid "Нет позиций на складе"
+msgstr "No items in stock"
+
+msgid "Низкий остаток"
+msgstr "Low stock"
 
 msgid "Ничего не найдено"
 msgstr "Nothing found"
@@ -622,6 +685,9 @@ msgid ""
 "тарифа."
 msgstr "Online payment is not connected yet — contact support to activate a plan."
 
+msgid "Операция"
+msgstr "Operation"
+
 msgid "Описание"
 msgstr "Description"
 
@@ -630,6 +696,9 @@ msgstr "Leave blank — we'll send an email invite"
 
 msgid "Осталось дней пробного периода:"
 msgstr "Trial days left:"
+
+msgid "Остаток"
+msgstr "In stock"
 
 msgid "Отзывов пока нет"
 msgstr "No reviews yet"
@@ -781,6 +850,9 @@ msgstr ""
 "For questions about these terms, contact the address listed in your "
 "platform account, or via the support section."
 
+msgid "Повреждение"
+msgstr "Damage"
+
 msgid "Подписка"
 msgstr "Subscription"
 
@@ -799,8 +871,14 @@ msgstr "Confirmed"
 msgid "Подтверждён"
 msgstr "Confirmed"
 
+msgid "Позиций на складе"
+msgstr "Items in stock"
+
 msgid "Поиск по имени или телефону..."
 msgstr "Search by name or phone..."
+
+msgid "Поиск по названию..."
+msgstr "Search by name..."
 
 msgid "Политика конфиденциальности"
 msgstr "Privacy Policy"
@@ -811,6 +889,9 @@ msgstr "Privacy Policy — RestOS"
 msgid "Политика конфиденциальности →"
 msgstr "Privacy Policy →"
 
+msgid "Полный вид →"
+msgstr "Full view →"
+
 msgid "Пользователей нет"
 msgstr "No users"
 
@@ -819,6 +900,12 @@ msgstr "Users"
 
 msgid "Попробовать 14 дней бесплатно"
 msgstr "Try 14 days free"
+
+msgid "Порча"
+msgstr "Spoilage"
+
+msgid "Порча / просрочка"
+msgstr "Spoilage / expired"
 
 msgid "Посмотреть цены"
 msgstr "See pricing"
@@ -837,6 +924,12 @@ msgstr "Priority support"
 
 msgid "Приостановлена"
 msgstr "Suspended"
+
+msgid "Приход:"
+msgstr "Restock:"
+
+msgid "Причина"
+msgstr "Reason"
 
 msgid "Приём заказов и касса"
 msgstr "Order taking and register"
@@ -868,6 +961,9 @@ msgstr "Renews:"
 msgid "Прозрачные цены"
 msgstr "Transparent pricing"
 
+msgid "Прочее"
+msgstr "Other"
+
 msgid "Пт"
 msgstr "Fri"
 
@@ -887,6 +983,12 @@ msgstr ""
 "proprietor entitled to enter into contracts for food service. You are "
 "responsible for safeguarding your credentials and for actions taken under"
 " your account."
+
+msgid "Режим планшета"
+msgstr "Tablet mode"
+
+msgid "Режим планшета ↗"
+msgstr "Tablet mode ↗"
 
 msgid "Роль"
 msgstr "Role"
@@ -1005,6 +1107,9 @@ msgstr ""
 "Ingredients are deducted automatically when an order closes, based on the"
 " dish recipe — stock levels stay accurate."
 
+msgid "Списание:"
+msgstr "Write-off:"
+
 msgid "Ср"
 msgstr "Wed"
 
@@ -1016,6 +1121,12 @@ msgstr "Sign-in link (one-time use):"
 
 msgid "Ссылка недействительна или устарела"
 msgstr "The link is invalid or has expired"
+
+msgid "Статус"
+msgstr "Status"
+
+msgid "Стоимость запасов"
+msgstr "Inventory value"
 
 msgid "Стол"
 msgstr "Table"
@@ -1105,6 +1216,12 @@ msgstr "Fiscalizing…"
 msgid "Цена (₸)"
 msgstr "Price (₸)"
 
+msgid "Цена за ед. (₸)"
+msgstr "Price per unit (₸)"
+
+msgid "Цена/ед."
+msgstr "Price/unit"
+
 msgid "Цены"
 msgstr "Pricing"
 
@@ -1127,6 +1244,9 @@ msgstr "Kitchen screen ↗"
 msgid "в базе"
 msgstr "in the database"
 
+msgid "г"
+msgstr "g"
+
 msgid "и"
 msgstr "and"
 
@@ -1135,6 +1255,12 @@ msgstr "from your Webkassa dashboard"
 
 msgid "из одной панели"
 msgstr "from one dashboard"
+
+msgid "кг"
+msgstr "kg"
+
+msgid "л"
+msgstr "l"
 
 msgid "логин"
 msgstr "login"
@@ -1150,6 +1276,12 @@ msgstr "min"
 
 msgid "мин на кухне"
 msgstr "min in the kitchen"
+
+msgid "мин:"
+msgstr "min:"
+
+msgid "мл"
+msgstr "ml"
 
 msgid "отзывов"
 msgstr "reviews"
@@ -1178,6 +1310,21 @@ msgstr "h"
 msgid "чтобы обезопасить аккаунт."
 msgstr "to secure your account."
 
+msgid "шт"
+msgstr "pcs"
+
 msgid "← Условия использования"
 msgstr "← Terms of Service"
+
+msgid "− Списание"
+msgstr "− Write off"
+
+msgid "− Списать"
+msgstr "− Write off"
+
+msgid "✓ Приход записан"
+msgstr "✓ Restock recorded"
+
+msgid "✓ Списание записано"
+msgstr "✓ Write-off recorded"
 
