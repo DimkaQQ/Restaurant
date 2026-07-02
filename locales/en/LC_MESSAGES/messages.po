@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-02 19:10+0000\n"
+"POT-Creation-Date: 2026-07-02 19:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -306,11 +306,20 @@ msgstr "Served today"
 msgid "Выдать"
 msgstr "Serve"
 
+msgid "Выдать · Карта"
+msgstr "Serve · Card"
+
+msgid "Выдать · Наличные"
+msgstr "Serve · Cash"
+
 msgid "Выдать — оплата картой"
 msgstr "Serve — paid by card"
 
 msgid "Выдать — оплата наличными"
 msgstr "Serve — paid by cash"
+
+msgid "Выдать:"
+msgstr "Serve:"
 
 msgid "Выйти"
 msgstr "Log out"
@@ -347,6 +356,13 @@ msgstr "Year"
 
 msgid "Гостей в базе"
 msgstr "Guests in database"
+
+msgid ""
+"Гостей пока нет. Они появятся автоматически, когда сделают заказ через "
+"QR-меню или Telegram-бот."
+msgstr ""
+"No guests yet. They will appear automatically once they order via the QR "
+"menu or the Telegram bot."
 
 msgid "Гости"
 msgstr "Guests"
@@ -545,6 +561,9 @@ msgstr "Total"
 msgid "Казахстан"
 msgstr "Kazakhstan"
 
+msgid "Карта"
+msgstr "Card"
+
 msgid "Картой"
 msgstr "Card"
 
@@ -726,9 +745,6 @@ msgstr "Don't have an account?"
 
 msgid "Нет активных заказов"
 msgstr "No active orders"
-
-msgid "Нет гостей"
-msgstr "No guests"
 
 msgid "Нет данных"
 msgstr "No data"
@@ -1292,6 +1308,9 @@ msgstr "Sign up"
 msgid "Создать аккаунт"
 msgstr "Create account"
 
+msgid "Создать аккаунты и ссылки для привязки →"
+msgstr "Create accounts and linking links →"
+
 msgid "Создать заведение"
 msgstr "Create venue"
 
@@ -1316,8 +1335,11 @@ msgstr ""
 msgid "Сотрудники"
 msgstr "Staff"
 
-msgid "Сотрудники не найдены"
-msgstr "No staff found"
+msgid "Сотрудники появляются здесь после привязки Telegram-аккаунта."
+msgstr "Staff members appear here once they link their Telegram account."
+
+msgid "Сотрудников пока нет."
+msgstr "No staff members yet."
 
 msgid "Сохранено"
 msgstr "Saved"

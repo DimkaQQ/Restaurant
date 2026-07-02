@@ -438,7 +438,7 @@ async def guests_page(
     try:
         guests = (await db.execute(
             select(Guest)
-            .where(Guest.network_id == current_user.network_id)
+            .where(Guest.network_id == current_user.network_id, Guest.phone != WALKIN_MARKER)
             .order_by(Guest.total_visits.desc())
             .limit(100)
         )).scalars().all()

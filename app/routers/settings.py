@@ -437,6 +437,11 @@ async def create_table(
         raise HTTPException(status_code=404, detail="Заведение не найдено")
     if not data.label.strip():
         raise HTTPException(status_code=400, detail="Название стола обязательно")
+    duplicate = (await db.execute(
+        select(Table).where(Table.venue_id == data.venue_id, Table.label == data.label.strip())
+    )).scalar_one_or_none()
+    if duplicate:
+        raise HTTPException(status_code=400, detail="Стол с таким названием уже есть в этом заведении")
 
     table = Table(id=uuid.uuid4(), venue_id=data.venue_id, label=data.label.strip(), seats=max(1, data.seats))
     db.add(table)

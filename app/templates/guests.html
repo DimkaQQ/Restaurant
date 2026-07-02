@@ -44,7 +44,9 @@
         <td>{{ g.created_at.strftime('%d.%m.%Y') if g.created_at else '—' }}</td>
       </tr>
       {% else %}
-      <tr><td colspan="5" class="empty-state">{{ _("Нет гостей") }}</td></tr>
+      <tr><td colspan="5" class="empty-state" style="padding:2rem 1rem">
+        {{ _("Гостей пока нет. Они появятся автоматически, когда сделают заказ через QR-меню или Telegram-бот.") }}
+      </td></tr>
       {% endfor %}
     </tbody>
   </table>

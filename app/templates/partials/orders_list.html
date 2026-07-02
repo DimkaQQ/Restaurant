@@ -30,6 +30,7 @@
     <div class="order-footer">
       <span class="order-total">{{ "{:,.0f}".format(order.total_amount) }} ₸</span>
       {% if order.status == 'ready' %}
+      <span style="font-size:.75rem;color:var(--muted);align-self:center">{{ _("Выдать:") }}</span>
       <button
         hx-patch="/api/orders/{{ order.id }}/status"
         hx-vals='{"status": "done", "payment_method": "cash"}'
@@ -37,7 +38,7 @@
         hx-swap="outerHTML"
         class="btn-status"
         title="{{ _('Выдать — оплата наличными') }}"
-      >💵 {{ _("Выдать") }}</button>
+      >💵 {{ _("Наличные") }}</button>
       <button
         hx-patch="/api/orders/{{ order.id }}/status"
         hx-vals='{"status": "done", "payment_method": "card"}'
@@ -45,7 +46,7 @@
         hx-swap="outerHTML"
         class="btn-status"
         title="{{ _('Выдать — оплата картой') }}"
-      >💳 {{ _("Выдать") }}</button>
+      >💳 {{ _("Карта") }}</button>
       {% elif next_status.get(order.status) %}
       <button
         hx-patch="/api/orders/{{ order.id }}/status"

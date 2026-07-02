@@ -2,7 +2,7 @@
 {% block title %}{{ _("Финансы") }} P&L — RestOS{% endblock %}
 
 {% block head %}
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="/static/vendor/chart-4.4.3.umd.min.js"></script>
 <style>
 .fin-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem; flex-wrap:wrap; gap:1rem; }
 .fin-header h1 { font-family:'Instrument Serif',serif; font-size:1.6rem; font-weight:400; }
@@ -51,7 +51,7 @@
     <select class="select-input" onchange="changeVenue(this.value)">
       <option value="">{{ _("Все заведения") }}</option>
       {% for v in venues %}
-      <option value="{{ v.id }}" {% if selected_venue_id == v.id|string %}selected{% endif %}>{{ v.name }}</option>
+      <option value="{{ v.id }}" {% if selected_venue_id == v.id|string or venues|length == 1 %}selected{% endif %}>{{ v.name }}</option>
       {% endfor %}
     </select>
     <div class="period-tabs">
@@ -135,7 +135,7 @@
           <select name="venue_id" required>
             <option value="">{{ _("Выбрать...") }}</option>
             {% for v in venues %}
-            <option value="{{ v.id }}" {% if selected_venue_id == v.id|string %}selected{% endif %}>{{ v.name }}</option>
+            <option value="{{ v.id }}" {% if selected_venue_id == v.id|string or venues|length == 1 %}selected{% endif %}>{{ v.name }}</option>
             {% endfor %}
           </select>
         </div>

@@ -45,12 +45,12 @@
       class="kds-btn kds-btn-advance"
       onclick="advanceOrder('{{ order.id }}', 'done', 'cash')"
       title="{{ _('Выдать — оплата наличными') }}"
-    >💵 {{ _("Выдать") }}</button>
+    >💵 {{ _("Выдать · Наличные") }}</button>
     <button
       class="kds-btn kds-btn-advance"
       onclick="advanceOrder('{{ order.id }}', 'done', 'card')"
       title="{{ _('Выдать — оплата картой') }}"
-    >💳 {{ _("Выдать") }}</button>
+    >💳 {{ _("Выдать · Карта") }}</button>
     {% elif next_status.get(order.status) %}
     <button
       class="kds-btn kds-btn-advance"

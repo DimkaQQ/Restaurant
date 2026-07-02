@@ -37,7 +37,7 @@
   <select id="venue-select" onchange="loadMenu()" class="select-input">
     <option value="">{{ _("Выберите заведение") }}</option>
     {% for v in venues %}
-    <option value="{{ v.id }}">{{ v.name }}</option>
+    <option value="{{ v.id }}" {% if venues|length == 1 %}selected{% endif %}>{{ v.name }}</option>
     {% endfor %}
   </select>
 </div>
@@ -221,5 +221,8 @@
       submitBtn.disabled = Object.keys(_cart).length === 0;
     }
   }
+
+  // Single-venue networks: the venue is pre-selected server-side — load it right away.
+  if (document.getElementById('venue-select').value) loadMenu();
 </script>
 {% endblock %}
