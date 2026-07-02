@@ -1,71 +1,71 @@
 {% extends "base.html" %}
-{% block title %}Дашборд — RestOS{% endblock %}
+{% block title %}{{ _("Дашборд") }} — RestOS{% endblock %}
 
 {% block content %}
 <div class="page-header">
-  <h1 class="page-title">Дашборд</h1>
+  <h1 class="page-title">{{ _("Дашборд") }}</h1>
   <span class="page-date" id="current-date"></span>
 </div>
 
 <div class="stats-grid">
   <div class="stat-card">
-    <span class="stat-label">Выручка сегодня</span>
+    <span class="stat-label">{{ _("Выручка сегодня") }}</span>
     <span class="stat-value gold">{{ today_revenue | money }} ₸</span>
   </div>
   <div class="stat-card">
-    <span class="stat-label">Всего выручки</span>
+    <span class="stat-label">{{ _("Всего выручки") }}</span>
     <span class="stat-value">{{ total_revenue | money }} ₸</span>
   </div>
   <div class="stat-card">
-    <span class="stat-label">Заказов сегодня</span>
+    <span class="stat-label">{{ _("Заказов сегодня") }}</span>
     <span class="stat-value">{{ orders_today }}</span>
   </div>
   <div class="stat-card">
-    <span class="stat-label">Новых гостей сегодня</span>
+    <span class="stat-label">{{ _("Новых гостей сегодня") }}</span>
     <span class="stat-value">{{ new_guests }}</span>
   </div>
   <div class="stat-card">
-    <span class="stat-label">Активных заведений</span>
+    <span class="stat-label">{{ _("Активных заведений") }}</span>
     <span class="stat-value">{{ venues|length }}</span>
   </div>
 </div>
 
 <div class="panel" style="margin-bottom:1.5rem">
   <div class="panel-header">
-    <h2 class="panel-title">Активные заказы</h2>
+    <h2 class="panel-title">{{ _("Активные заказы") }}</h2>
     <div style="display:flex;gap:0.75rem;align-items:center;flex-wrap:wrap">
       <span class="live-badge">● LIVE</span>
-      <a href="/kitchen" class="btn-secondary" style="font-size:0.75rem;padding:0.5rem 0.75rem;text-decoration:none">🍳 Кухня</a>
-      <a href="/orders" class="btn-secondary" style="font-size:0.75rem;padding:0.5rem 0.75rem;text-decoration:none">Все заказы →</a>
+      <a href="/kitchen" class="btn-secondary" style="font-size:0.75rem;padding:0.5rem 0.75rem;text-decoration:none">🍳 {{ _("Кухня") }}</a>
+      <a href="/orders" class="btn-secondary" style="font-size:0.75rem;padding:0.5rem 0.75rem;text-decoration:none">{{ _("Все заказы →") }}</a>
     </div>
   </div>
   <div class="order-status-summary">
     <div class="oss-item oss-new">
       <span class="oss-count">{{ orders_status.new }}</span>
-      <span class="oss-label">Новых</span>
+      <span class="oss-label">{{ _("Новых") }}</span>
     </div>
     <div class="oss-item oss-confirmed">
       <span class="oss-count">{{ orders_status.confirmed }}</span>
-      <span class="oss-label">Подтверждено</span>
+      <span class="oss-label">{{ _("Подтверждено") }}</span>
     </div>
     <div class="oss-item oss-preparing">
       <span class="oss-count">{{ orders_status.preparing }}</span>
-      <span class="oss-label">Готовится</span>
+      <span class="oss-label">{{ _("Готовится") }}</span>
     </div>
     <div class="oss-item oss-ready">
       <span class="oss-count">{{ orders_status.ready }}</span>
-      <span class="oss-label">Готово</span>
+      <span class="oss-label">{{ _("Готово") }}</span>
     </div>
     <div class="oss-item oss-done">
       <span class="oss-count">{{ orders_status.done }}</span>
-      <span class="oss-label">Выдано сегодня</span>
+      <span class="oss-label">{{ _("Выдано сегодня") }}</span>
     </div>
   </div>
 </div>
 
 <div class="panel">
   <div class="panel-header">
-    <h2 class="panel-title">Заведения</h2>
+    <h2 class="panel-title">{{ _("Заведения") }}</h2>
   </div>
   <div class="venues-list">
     {% for venue in venues %}
@@ -75,7 +75,7 @@
         <span class="venue-addr">{{ venue.address or '' }}</span>
       </div>
       <span class="badge {% if venue.is_active %}badge-active{% else %}badge-launch{% endif %}">
-        {% if venue.is_active %}Активно{% else %}Запуск{% endif %}
+        {% if venue.is_active %}{{ _("Активно") }}{% else %}{{ _("Запуск") }}{% endif %}
       </span>
     </a>
     {% endfor %}
@@ -83,6 +83,6 @@
 </div>
 
 <script>
-  document.getElementById('current-date').textContent = new Date().toLocaleDateString('ru-RU', {weekday:'long', day:'numeric', month:'long'});
+  document.getElementById('current-date').textContent = new Date().toLocaleDateString({{ ('en-US' if locale == 'en' else 'ru-RU') | tojson }}, {weekday:'long', day:'numeric', month:'long'});
 </script>
 {% endblock %}

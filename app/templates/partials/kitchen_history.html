@@ -19,11 +19,11 @@
     </div>
     <div style="display:flex;justify-content:space-between;align-items:center;font-size:.78rem;color:var(--muted);border-top:1px solid rgba(255,255,255,.05);padding-top:.5rem;margin-top:.25rem;">
       <span>{{ "{:,.0f}".format(o.total_amount | float) }} ₸</span>
-      <span>{{ wait_mins }} мин на кухне</span>
+      <span>{{ wait_mins }} {{ _("мин на кухне") }}</span>
     </div>
   </div>
   {% endfor %}
 </div>
 {% else %}
-<p class="kds-empty">Выполненных заказов сегодня ещё нет</p>
+<p class="kds-empty">{{ _("Выполненных заказов сегодня ещё нет") }}</p>
 {% endif %}

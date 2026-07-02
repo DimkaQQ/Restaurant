@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="{{ locale }}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Кухня — {{ current_venue.name if current_venue else 'Все заведения' }}</title>
+  <title>{{ _("Кухня") }} — {{ current_venue.name if current_venue else _('Все заведения') }}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
@@ -118,15 +118,15 @@
 <body>
   <div class="kds-header">
     <div>
-      <div class="kds-brand">RestOS · Кухня</div>
-      <div class="kds-venue-name">{{ current_venue.name if current_venue else 'Все заведения' }}</div>
+      <div class="kds-brand">RestOS · {{ _("Кухня") }}</div>
+      <div class="kds-venue-name">{{ current_venue.name if current_venue else _('Все заведения') }}</div>
     </div>
     <div class="kds-clock" id="clock">--:--</div>
   </div>
 
   <div class="kds-filter">
     <select onchange="changeVenue(this.value)" style="background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--white);padding:0.5rem 0.75rem;border-radius:8px;font-size:0.875rem;">
-      <option value="">Все заведения</option>
+      <option value="">{{ _("Все заведения") }}</option>
       {% for v in venues %}
       <option value="{{ v.id }}" {% if current_venue and v.id == current_venue.id %}selected{% endif %}>{{ v.name }}</option>
       {% endfor %}
@@ -135,10 +135,10 @@
 
   <div class="kds-tabs">
     <button class="kds-tab active" id="tab-btn-active" onclick="switchTab('active')">
-      Активные <span class="kds-tab-count" id="active-count">—</span>
+      {{ _("Активные") }} <span class="kds-tab-count" id="active-count">—</span>
     </button>
     <button class="kds-tab" id="tab-btn-history" onclick="switchTab('history')">
-      История сегодня
+      {{ _("История сегодня") }}
     </button>
   </div>
 
@@ -176,7 +176,7 @@
 
     function tick() {
       document.getElementById('clock').textContent =
-        new Date().toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+        new Date().toLocaleTimeString({{ ('en-US' if locale == 'en' else 'ru-RU') | tojson }}, {hour:'2-digit', minute:'2-digit', second:'2-digit'});
     }
     tick();
     setInterval(tick, 1000);
@@ -198,7 +198,7 @@
         if (res.status === 401 || res.status === 307) { location.href = '/auth/login'; return; }
         if (!res.ok) {
           const d = await res.json().catch(() => ({}));
-          alert(d.detail || 'Ошибка обновления статуса');
+          alert(d.detail || {{ _("Ошибка обновления статуса") | tojson }});
           return;
         }
         htmx.trigger(document.getElementById('tab-active-panel'), 'refresh');
@@ -206,7 +206,7 @@
     }
 
     async function cancelOrder(orderId) {
-      if (!confirm('Отменить заказ?')) return;
+      if (!confirm({{ _("Отменить заказ?") | tojson }})) return;
       try {
         const res = await fetch('/api/orders/' + orderId + '/cancel', {
           method: 'POST',
@@ -215,7 +215,7 @@
         if (res.status === 401 || res.status === 307) { location.href = '/auth/login'; return; }
         if (!res.ok) {
           const d = await res.json().catch(() => ({}));
-          alert(d.detail || 'Ошибка отмены');
+          alert(d.detail || {{ _("Ошибка отмены") | tojson }});
           return;
         }
         htmx.trigger(document.getElementById('tab-active-panel'), 'refresh');

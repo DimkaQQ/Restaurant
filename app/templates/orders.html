@@ -1,19 +1,19 @@
 {% extends "base.html" %}
-{% block title %}Заказы — RestOS{% endblock %}
+{% block title %}{{ _("Заказы") }} — RestOS{% endblock %}
 
 {% block content %}
 <div class="page-header">
-  <h1 class="page-title">Заказы</h1>
+  <h1 class="page-title">{{ _("Заказы") }}</h1>
   <div style="display:flex;gap:1rem;align-items:center;">
     <span class="live-badge">● LIVE</span>
-    <a href="/kitchen" target="_blank" style="color:var(--muted);font-size:.85rem;text-decoration:none;white-space:nowrap;">Экран кухни ↗</a>
-    <a href="/pos" class="btn-primary" style="text-decoration:none;">+ Новый заказ</a>
+    <a href="/kitchen" target="_blank" style="color:var(--muted);font-size:.85rem;text-decoration:none;white-space:nowrap;">{{ _("Экран кухни ↗") }}</a>
+    <a href="/pos" class="btn-primary" style="text-decoration:none;">{{ _("+ Новый заказ") }}</a>
   </div>
 </div>
 
 <div class="filters">
   <select id="venue-filter" onchange="reloadOrders()" class="select-input">
-    <option value="">Все заведения</option>
+    <option value="">{{ _("Все заведения") }}</option>
     {% for v in venues %}
     <option value="{{ v.id }}">{{ v.name }}</option>
     {% endfor %}
@@ -21,7 +21,7 @@
 </div>
 
 <div id="orders-board" class="orders-board">
-  <div class="loading">Загрузка заказов...</div>
+  <div class="loading">{{ _("Загрузка заказов...") }}</div>
 </div>
 
 <script>

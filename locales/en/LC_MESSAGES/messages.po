@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-02 05:57+0000\n"
+"POT-Creation-Date: 2026-07-02 06:32+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -18,6 +18,9 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
+
+msgid "+ Новый заказ"
+msgstr "+ New order"
 
 msgid "1 заведение"
 msgstr "1 venue"
@@ -106,6 +109,21 @@ msgstr ""
 "RestOS — order taking, kitchen display, inventory, staff shifts, loyalty "
 "program, and receipt fiscalization in one dashboard. 14 days free."
 
+msgid "Активно"
+msgstr "Active"
+
+msgid "Активные"
+msgstr "Active"
+
+msgid "Активные заказы"
+msgstr "Active orders"
+
+msgid "Активных заведений"
+msgstr "Active venues"
+
+msgid "Аналитика"
+msgstr "Analytics"
+
 msgid "Без карты. Отменить можно в любой момент."
 msgstr "No card required. Cancel anytime."
 
@@ -122,6 +140,9 @@ msgstr ""
 "Bonus points, visit history, and a Telegram bot for guests — no third-"
 "party CRM needed."
 
+msgid "Вернуть назад"
+msgstr "Move back"
+
 msgid "Возможности"
 msgstr "Features"
 
@@ -130,6 +151,15 @@ msgstr "Sign in"
 
 msgid "Восстановление пароля"
 msgstr "Password recovery"
+
+msgid "Все заведения"
+msgstr "All venues"
+
+msgid "Все заказы →"
+msgstr "All orders →"
+
+msgid "Всего выручки"
+msgstr "Total revenue"
 
 msgid "Всё, что нужно ресторану"
 msgstr "Everything a restaurant needs"
@@ -164,6 +194,48 @@ msgstr ""
 "fiscal laws of your jurisdiction. Integrations with fiscal providers "
 "(e.g. Webkassa) use your own credentials obtained directly from those "
 "providers."
+
+msgid "Выдан"
+msgstr "Served"
+
+msgid "Выдано сегодня"
+msgstr "Served today"
+
+msgid "Выдать"
+msgstr "Serve"
+
+msgid "Выдать — оплата картой"
+msgstr "Serve — paid by card"
+
+msgid "Выдать — оплата наличными"
+msgstr "Serve — paid by cash"
+
+msgid "Выйти"
+msgstr "Log out"
+
+msgid "Выполненных заказов сегодня ещё нет"
+msgstr "No completed orders yet today"
+
+msgid "Выручка сегодня"
+msgstr "Today's revenue"
+
+msgid "Гости"
+msgstr "Guests"
+
+msgid "Гость"
+msgstr "Guest"
+
+msgid "Готовится"
+msgstr "Preparing"
+
+msgid "Готовить"
+msgstr "Start cooking"
+
+msgid "Готово"
+msgstr "Ready"
+
+msgid "Готово!"
+msgstr "Ready!"
 
 msgid "Готовы попробовать?"
 msgstr "Ready to try it?"
@@ -204,6 +276,9 @@ msgstr ""
 "contacting support — the request will be handled within a reasonable "
 "time, subject to tax and accounting record-retention requirements."
 
+msgid "Дашборд"
+msgstr "Dashboard"
+
 msgid ""
 "Для предоставления функций Сервиса (приём заказов, кухонный дисплей, "
 "лояльность, аналитика, фискализация чеков), обеспечения безопасности "
@@ -226,11 +301,26 @@ msgstr "If that email is registered, we sent a password reset link."
 msgid "Забыли пароль?"
 msgstr "Forgot password?"
 
+msgid "Заведения"
+msgstr "Venues"
+
+msgid "Загрузка заказов..."
+msgstr "Loading orders..."
+
 msgid "Задайте новый пароль"
 msgstr "Set a new password"
 
+msgid "Заказов сегодня"
+msgstr "Orders today"
+
+msgid "Заказы"
+msgstr "Orders"
+
 msgid "Заказы, склад, смены"
 msgstr "Orders, inventory, shifts"
+
+msgid "Запуск"
+msgstr "Launching"
 
 msgid ""
 "Интеграция с Webkassa (Казахстан) — чек пробивается автоматически при "
@@ -239,11 +329,23 @@ msgstr ""
 "Integration with Webkassa (Kazakhstan) — the receipt is fiscalized "
 "automatically when an order closes."
 
+msgid "История сегодня"
+msgstr "Today's history"
+
+msgid "Касса"
+msgstr "Register"
+
 msgid "Конфиденциальность"
 msgstr "Privacy"
 
+msgid "Кухня"
+msgstr "Kitchen"
+
 msgid "Кухонный дисплей (KDS)"
 msgstr "Kitchen display (KDS)"
+
+msgid "Меню"
+msgstr "Menu"
 
 msgid "Мой ресторан"
 msgstr "My Restaurant"
@@ -286,11 +388,29 @@ msgstr ""
 "provided for restaurant management: order taking, guest loyalty, "
 "inventory, staff shifts, analytics, and receipt fiscalization."
 
+msgid "Настройки"
+msgstr "Settings"
+
 msgid "Начать бесплатно"
 msgstr "Start free"
 
 msgid "Нет аккаунта?"
 msgstr "Don't have an account?"
+
+msgid "Нет активных заказов"
+msgstr "No active orders"
+
+msgid "Нет заказов в работе"
+msgstr "No orders in progress"
+
+msgid "Нет новых заказов"
+msgstr "No new orders"
+
+msgid "Новые"
+msgstr "New"
+
+msgid "Новый"
+msgstr "New"
 
 msgid "Новый пароль"
 msgstr "New password"
@@ -305,11 +425,44 @@ msgstr ""
 "the Service requires an active paid subscription. Payments are processed "
 "via Stripe; RestOS does not store your card details."
 
+msgid "Новых"
+msgstr "New"
+
+msgid "Новых гостей сегодня"
+msgstr "New guests today"
+
 msgid "Обновлено:"
 msgstr "Last updated:"
 
+msgid "Онлайн"
+msgstr "Online"
+
+msgid "Отмена"
+msgstr "Cancel"
+
+msgid "Отменить заказ"
+msgstr "Cancel order"
+
+msgid "Отменить заказ?"
+msgstr "Cancel this order?"
+
+msgid "Отменён"
+msgstr "Cancelled"
+
+msgid "Отправить письмо повторно"
+msgstr "Resend email"
+
 msgid "Отправить ссылку для сброса"
 msgstr "Send reset link"
+
+msgid "Отправлено ✓"
+msgstr "Sent ✓"
+
+msgid "Отправляем…"
+msgstr "Sending…"
+
+msgid "Официант"
+msgstr "Waiter"
 
 msgid ""
 "Официант, кухня и касса видят заказ в реальном времени. Столы, статусы, "
@@ -321,11 +474,23 @@ msgstr ""
 msgid "Ошибка входа"
 msgstr "Sign-in error"
 
+msgid "Ошибка обновления статуса"
+msgstr "Failed to update status"
+
+msgid "Ошибка отмены"
+msgstr "Failed to cancel"
+
 msgid "Ошибка отправки. Попробуйте позже."
 msgstr "Failed to send. Please try again later."
 
 msgid "Ошибка регистрации"
 msgstr "Registration error"
+
+msgid "Ошибка фискализации"
+msgstr "Fiscalization error"
+
+msgid "Ошибка, попробуйте позже"
+msgstr "Error, please try again later"
 
 msgid "Панель управления сетью ресторанов"
 msgstr "Restaurant network management dashboard"
@@ -342,6 +507,15 @@ msgstr ""
 msgid "Пароль"
 msgstr "Password"
 
+msgid "Персонал"
+msgstr "Staff"
+
+msgid "Печать талона"
+msgstr "Print ticket"
+
+msgid "Печать чека"
+msgstr "Print receipt"
+
 msgid ""
 "Платёжные данные обрабатываются напрямую Stripe; RestOS не хранит номера "
 "карт."
@@ -355,6 +529,18 @@ msgid ""
 msgstr ""
 "For questions about these terms, contact the address listed in your "
 "platform account, or via the support section."
+
+msgid "Подтвердите email"
+msgstr "Verify your email"
+
+msgid "Подтвердить"
+msgstr "Confirm"
+
+msgid "Подтверждено"
+msgstr "Confirmed"
+
+msgid "Подтверждён"
+msgstr "Confirmed"
 
 msgid "Политика конфиденциальности"
 msgstr "Privacy Policy"
@@ -370,6 +556,9 @@ msgstr "Try 14 days free"
 
 msgid "Посмотреть цены"
 msgstr "See pricing"
+
+msgid "Принять"
+msgstr "Accept"
 
 msgid "Приоритетная поддержка"
 msgstr "Priority support"
@@ -392,6 +581,9 @@ msgstr "Loyalty program"
 msgid "Прозрачные цены"
 msgstr "Transparent pricing"
 
+msgid "Пусто"
+msgstr "Empty"
+
 msgid ""
 "Регистрируясь, вы подтверждаете, что представляете юридическое лицо или "
 "ИП, имеющее право заключать договоры на оказание услуг общественного "
@@ -412,6 +604,9 @@ msgstr ""
 "The Service is provided \"as is\". RestOS is not liable for indirect "
 "losses, lost profits, or data loss arising from the use or inability to "
 "use the Service, to the extent permitted by applicable law."
+
+msgid "Склад"
+msgstr "Inventory"
 
 msgid "Склад и техкарты"
 msgstr "Inventory and recipes"
@@ -440,6 +635,9 @@ msgstr ""
 
 msgid "Ссылка недействительна или устарела"
 msgstr "The link is invalid or has expired"
+
+msgid "Стол"
+msgstr "Table"
 
 msgid ""
 "Технические данные: IP-адрес, тип браузера — для безопасности и "
@@ -475,8 +673,14 @@ msgstr "Finance and analytics"
 msgid "Фискализация чеков"
 msgstr "Receipt fiscalization"
 
+msgid "Фискализация…"
+msgstr "Fiscalizing…"
+
 msgid "Цены"
 msgstr "Pricing"
+
+msgid "Чек пробит"
+msgstr "Receipt issued"
 
 msgid ""
 "Экран для кухни на любом планшете — очередь заказов по колонкам, таймеры "
@@ -484,6 +688,9 @@ msgid ""
 msgstr ""
 "A kitchen screen on any tablet — orders queued by column, cook timers, no"
 " paper tickets."
+
+msgid "Экран кухни ↗"
+msgstr "Kitchen screen ↗"
 
 msgid "и"
 msgstr "and"
@@ -494,11 +701,23 @@ msgstr "from one dashboard"
 msgid "мес"
 msgstr "mo"
 
+msgid "мин"
+msgstr "min"
+
+msgid "мин на кухне"
+msgstr "min in the kitchen"
+
 msgid "политикой конфиденциальности"
 msgstr "Privacy Policy"
 
+msgid "ссылка"
+msgstr "link"
+
 msgid "условиями использования"
 msgstr "Terms of Service"
+
+msgid "чтобы обезопасить аккаунт."
+msgstr "to secure your account."
 
 msgid "← Условия использования"
 msgstr "← Terms of Service"

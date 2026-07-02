@@ -1,6 +1,6 @@
-{% set status_labels = {"new": "Новый", "confirmed": "Подтверждён", "preparing": "Готовится", "ready": "Готово!", "done": "Выдан", "cancelled": "Отменён"} %}
+{% set status_labels = {"new": _("Новый"), "confirmed": _("Подтверждён"), "preparing": _("Готовится"), "ready": _("Готово!"), "done": _("Выдан"), "cancelled": _("Отменён")} %}
 {% set next_status = {"new": "confirmed", "confirmed": "preparing", "preparing": "ready", "ready": "done"} %}
-{% set next_label = {"new": "Подтвердить", "confirmed": "Готовить", "preparing": "Готово", "ready": "Выдать"} %}
+{% set next_label = {"new": _("Подтвердить"), "confirmed": _("Готовить"), "preparing": _("Готово"), "ready": _("Выдать")} %}
 
 {% if orders %}
   {% for order in orders %}
@@ -10,7 +10,7 @@
       <span class="order-status">{{ status_labels.get(order.status, order.status) }}</span>
       <span class="order-time">{{ order.created_at.strftime('%H:%M') }}</span>
     </div>
-    <div class="order-guest">{{ order.guest.name if order.guest and order.guest.name else 'Гость' }}</div>
+    <div class="order-guest">{{ order.guest.name if order.guest and order.guest.name else _("Гость") }}</div>
     <div class="order-items">
       {% for item in order.items %}
       <span class="order-item">{{ item.name }} × {{ item.quantity }}</span>
@@ -19,11 +19,11 @@
     {% if order.fiscal_status %}
     <div class="order-fiscal">
       {% if order.fiscal_status == 'issued' %}
-        <span style="color:#4ade80">🧾 Чек пробит {% if order.fiscal_ticket_url %}(<a href="{{ order.fiscal_ticket_url }}" target="_blank" rel="noopener">ссылка</a>){% endif %}</span>
+        <span style="color:#4ade80">🧾 {{ _("Чек пробит") }} {% if order.fiscal_ticket_url %}(<a href="{{ order.fiscal_ticket_url }}" target="_blank" rel="noopener">{{ _("ссылка") }}</a>){% endif %}</span>
       {% elif order.fiscal_status == 'pending' %}
-        <span style="color:var(--muted)">🧾 Фискализация…</span>
+        <span style="color:var(--muted)">🧾 {{ _("Фискализация…") }}</span>
       {% elif order.fiscal_status == 'failed' %}
-        <span style="color:#f87171" title="{{ order.fiscal_error }}">🧾 Ошибка фискализации</span>
+        <span style="color:#f87171" title="{{ order.fiscal_error }}">🧾 {{ _("Ошибка фискализации") }}</span>
       {% endif %}
     </div>
     {% endif %}
@@ -36,16 +36,16 @@
         hx-target="closest .order-card"
         hx-swap="outerHTML"
         class="btn-status"
-        title="Выдать — оплата наличными"
-      >💵 Выдать</button>
+        title="{{ _('Выдать — оплата наличными') }}"
+      >💵 {{ _("Выдать") }}</button>
       <button
         hx-patch="/api/orders/{{ order.id }}/status"
         hx-vals='{"status": "done", "payment_method": "card"}'
         hx-target="closest .order-card"
         hx-swap="outerHTML"
         class="btn-status"
-        title="Выдать — оплата картой"
-      >💳 Выдать</button>
+        title="{{ _('Выдать — оплата картой') }}"
+      >💳 {{ _("Выдать") }}</button>
       {% elif next_status.get(order.status) %}
       <button
         hx-patch="/api/orders/{{ order.id }}/status"
@@ -62,12 +62,12 @@
         hx-target="closest .order-card"
         hx-swap="outerHTML"
         class="btn-cancel"
-      >Отмена</button>
+      >{{ _("Отмена") }}</button>
       {% endif %}
-      <a href="/orders/{{ order.id }}/receipt" target="_blank" class="btn-status" title="Печать чека" style="text-decoration:none">🖨</a>
+      <a href="/orders/{{ order.id }}/receipt" target="_blank" class="btn-status" title="{{ _('Печать чека') }}" style="text-decoration:none">🖨</a>
     </div>
   </div>
   {% endfor %}
 {% else %}
-  <p class="empty-state">Нет активных заказов</p>
+  <p class="empty-state">{{ _("Нет активных заказов") }}</p>
 {% endif %}

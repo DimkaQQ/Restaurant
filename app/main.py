@@ -72,6 +72,18 @@ async def csrf_origin_check(request: Request, call_next):
 
 
 @app.middleware("http")
+async def lang_cookie(request: Request, call_next):
+    """A `?lang=en`/`?lang=ru` on any page persists the choice for every
+    subsequent request — lets the language switcher live once in the sidebar
+    (base.html) instead of every route setting its own cookie."""
+    response = await call_next(request)
+    lang = request.query_params.get("lang")
+    if lang in ("ru", "en"):
+        response.set_cookie("lang", lang, max_age=60 * 60 * 24 * 365)
+    return response
+
+
+@app.middleware("http")
 async def security_headers(request: Request, call_next):
     response = await call_next(request)
     response.headers["X-Frame-Options"] = "DENY"

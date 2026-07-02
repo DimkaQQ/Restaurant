@@ -1,6 +1,14 @@
 from fastapi.templating import Jinja2Templates
 
-templates = Jinja2Templates(directory="app/templates")
+from app.i18n import get_translator
+
+
+def _i18n_context(request):
+    gettext_fn, locale = get_translator(request)
+    return {"_": gettext_fn, "locale": locale}
+
+
+templates = Jinja2Templates(directory="app/templates", context_processors=[_i18n_context])
 
 
 def _money(value) -> str:
