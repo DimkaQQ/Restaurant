@@ -21,6 +21,7 @@ from app.models.user import User
 from app.models.venue import Venue
 from app.routers.deps import get_current_user_dep
 from app.services.auth_service import hash_password
+from app.services.plan_limits import check_staff_limit
 
 _BOT_NAME = _os.getenv("BOT_NAME", "")
 
@@ -85,6 +86,7 @@ async def create_user(
 ):
     try:
         _require_owner(current_user)
+        await check_staff_limit(current_user.network_id, db)
 
         body = await request.json()
         email = body.get("email", "").strip()

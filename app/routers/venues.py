@@ -10,6 +10,7 @@ from app.models.user import User
 from app.models.venue import Venue
 from app.routers.deps import get_current_user_dep
 from app.schemas.venue import VenueCreate, VenueOut, VenueUpdate
+from app.services.plan_limits import check_venue_limit
 
 router = APIRouter(prefix="/api/venues", tags=["venues"])
 logger = logging.getLogger(__name__)
@@ -37,6 +38,7 @@ async def create_venue(
     try:
         if current_user.role != "owner":
             raise HTTPException(status_code=403, detail="Доступ запрещён: только для владельца")
+        await check_venue_limit(current_user.network_id, db)
         venue = Venue(id=uuid.uuid4(), network_id=current_user.network_id, **data.model_dump())
         db.add(venue)
         await db.commit()
