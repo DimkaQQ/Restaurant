@@ -27,7 +27,14 @@ logger = logging.getLogger(__name__)
 async def root(request: Request, current_user: User | None = Depends(get_current_user_optional)):
     if current_user:
         return RedirectResponse(url="/dashboard")
-    return templates.TemplateResponse("landing.html", {"request": request, "year": datetime.now(timezone.utc).year})
+    from app.i18n import get_translator
+    gettext_fn, locale = get_translator(request)
+    response = templates.TemplateResponse("landing.html", {
+        "request": request, "year": datetime.now(timezone.utc).year, "_": gettext_fn, "locale": locale,
+    })
+    if request.query_params.get("lang") in ("ru", "en"):
+        response.set_cookie("lang", request.query_params["lang"], max_age=60 * 60 * 24 * 365)
+    return response
 
 
 @router.get("/dashboard", response_class=HTMLResponse)

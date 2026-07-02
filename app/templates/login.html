@@ -1,20 +1,27 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="{{ locale }}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RestOS — Вход</title>
+  <title>{{ _("RestOS — Вход") }}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/css/main.css?v=7">
+  <style>.lang-switch { text-align:center; font-size:.78rem; margin-bottom:.75rem; }
+    .lang-switch a { color:var(--muted); text-decoration:none; padding:.1rem .25rem; }
+    .lang-switch a.active { color:var(--gold); font-weight:600; }</style>
 </head>
 <body class="auth-body">
   <div class="auth-container">
+    <div class="lang-switch">
+      <a href="?lang=ru" class="{% if locale == 'ru' %}active{% endif %}">RU</a> /
+      <a href="?lang=en" class="{% if locale == 'en' %}active{% endif %}">EN</a>
+    </div>
     <div class="auth-card">
       <div class="auth-logo">
         <span class="logo-serif">Rest</span><span class="logo-mono">OS</span>
       </div>
-      <p class="auth-subtitle">Панель управления сетью ресторанов</p>
+      <p class="auth-subtitle">{{ _("Панель управления сетью ресторанов") }}</p>
 
       <div id="error-msg" class="error-banner" style="display:none"></div>
 
@@ -24,16 +31,16 @@
           <input type="email" id="email" name="email" placeholder="owner@restaurant.kz" autocomplete="email" required>
         </div>
         <div class="form-group">
-          <label>Пароль</label>
+          <label>{{ _("Пароль") }}</label>
           <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="current-password" required>
         </div>
-        <button type="submit" class="btn-primary btn-full">Войти</button>
+        <button type="submit" class="btn-primary btn-full">{{ _("Войти") }}</button>
       </form>
       <p class="auth-subtitle" style="margin-top:1rem">
-        <a href="/auth/forgot-password" style="color:var(--gold)">Забыли пароль?</a>
+        <a href="/auth/forgot-password" style="color:var(--gold)">{{ _("Забыли пароль?") }}</a>
       </p>
       <p class="auth-subtitle" style="margin-top:.25rem">
-        Нет аккаунта? <a href="/auth/register" style="color:var(--gold)">Создать</a>
+        {{ _("Нет аккаунта?") }} <a href="/auth/register" style="color:var(--gold)">{{ _("Создать") }}</a>
       </p>
     </div>
   </div>
@@ -57,7 +64,7 @@
         localStorage.setItem('access_token', data.access_token);
         location.href = '/dashboard';
       } else {
-        let msg = 'Ошибка входа';
+        let msg = {{ _("Ошибка входа") | tojson }};
         try {
           const data = await res.json();
           msg = data.detail || msg;

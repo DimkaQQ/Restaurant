@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="{{ locale }}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RestOS — Платформа управления рестораном</title>
-  <meta name="description" content="RestOS — приём заказов, кухонный дисплей, склад, смены персонала, программа лояльности и фискализация чеков в одной панели. 14 дней бесплатно.">
+  <title>{{ _("RestOS — Платформа управления рестораном") }}</title>
+  <meta name="description" content="{{ _('RestOS — приём заказов, кухонный дисплей, склад, смены персонала, программа лояльности и фискализация чеков в одной панели. 14 дней бесплатно.') }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/css/main.css?v=7">
@@ -72,6 +72,9 @@
     }
     .lnd-footer a { color: var(--muted); text-decoration: none; font-size: .82rem; margin-right: 1.25rem; }
     .lnd-footer a:hover { color: var(--white); }
+    .lnd-lang { font-size: .78rem; }
+    .lnd-lang a { color: var(--muted); text-decoration: none; padding: .1rem .25rem; }
+    .lnd-lang a.active { color: var(--gold); font-weight: 600; }
   </style>
 </head>
 <body class="landing-body">
@@ -81,113 +84,114 @@
       <span class="logo-serif">Rest</span><span class="logo-mono">OS</span>
     </div>
     <div class="lnd-nav-links">
-      <a href="#features">Возможности</a>
-      <a href="#pricing">Цены</a>
-      <a href="/auth/login">Войти</a>
-      <a href="/auth/register" class="btn-primary">Начать бесплатно</a>
+      <a href="#features">{{ _("Возможности") }}</a>
+      <a href="#pricing">{{ _("Цены") }}</a>
+      <span class="lnd-lang">
+        <a href="?lang=ru" class="{% if locale == 'ru' %}active{% endif %}">RU</a> /
+        <a href="?lang=en" class="{% if locale == 'en' %}active{% endif %}">EN</a>
+      </span>
+      <a href="/auth/login">{{ _("Войти") }}</a>
+      <a href="/auth/register" class="btn-primary">{{ _("Начать бесплатно") }}</a>
     </div>
   </nav>
 
   <section class="lnd-hero">
-    <h1>Управляйте рестораном <em>из одной панели</em></h1>
-    <p>
-      Приём заказов, кухонный дисплей, склад с автосписанием по техкартам, смены персонала,
-      программа лояльности гостей и фискализация чеков — без Excel и десятка разных приложений.
-    </p>
+    <h1>{{ _("Управляйте рестораном") }} <em>{{ _("из одной панели") }}</em></h1>
+    <p>{{ _("Приём заказов, кухонный дисплей, склад с автосписанием по техкартам, смены персонала, программа лояльности гостей и фискализация чеков — без Excel и десятка разных приложений.") }}</p>
     <div class="lnd-hero-ctas">
-      <a href="/auth/register" class="btn-primary">Попробовать 14 дней бесплатно</a>
-      <a href="#pricing" class="btn-ghost">Посмотреть цены</a>
+      <a href="/auth/register" class="btn-primary">{{ _("Попробовать 14 дней бесплатно") }}</a>
+      <a href="#pricing" class="btn-ghost">{{ _("Посмотреть цены") }}</a>
     </div>
-    <p class="lnd-hero-note">Без карты. Отменить можно в любой момент.</p>
+    <p class="lnd-hero-note">{{ _("Без карты. Отменить можно в любой момент.") }}</p>
   </section>
 
   <section class="lnd-section" id="features">
-    <h2>Всё, что нужно ресторану</h2>
+    <h2>{{ _("Всё, что нужно ресторану") }}</h2>
     <div class="lnd-features">
       <div class="lnd-feature">
         <div class="icon">🍽️</div>
-        <h3>Приём заказов и касса</h3>
-        <p>Официант, кухня и касса видят заказ в реальном времени. Столы, статусы, комментарии к позициям.</p>
+        <h3>{{ _("Приём заказов и касса") }}</h3>
+        <p>{{ _("Официант, кухня и касса видят заказ в реальном времени. Столы, статусы, комментарии к позициям.") }}</p>
       </div>
       <div class="lnd-feature">
         <div class="icon">🔥</div>
-        <h3>Кухонный дисплей (KDS)</h3>
-        <p>Экран для кухни на любом планшете — очередь заказов по колонкам, таймеры готовки, без бумажных чеков.</p>
+        <h3>{{ _("Кухонный дисплей (KDS)") }}</h3>
+        <p>{{ _("Экран для кухни на любом планшете — очередь заказов по колонкам, таймеры готовки, без бумажных чеков.") }}</p>
       </div>
       <div class="lnd-feature">
         <div class="icon">📦</div>
-        <h3>Склад и техкарты</h3>
-        <p>Списание ингредиентов автоматически при закрытии заказа по рецептуре блюда — остатки всегда актуальны.</p>
+        <h3>{{ _("Склад и техкарты") }}</h3>
+        <p>{{ _("Списание ингредиентов автоматически при закрытии заказа по рецептуре блюда — остатки всегда актуальны.") }}</p>
       </div>
       <div class="lnd-feature">
         <div class="icon">👥</div>
-        <h3>Смены и персонал</h3>
-        <p>График смен, роли официант/повар/кассир/менеджер, рейтинг сотрудников по отзывам гостей.</p>
+        <h3>{{ _("Смены и персонал") }}</h3>
+        <p>{{ _("График смен, роли официант/повар/кассир/менеджер, рейтинг сотрудников по отзывам гостей.") }}</p>
       </div>
       <div class="lnd-feature">
         <div class="icon">🎁</div>
-        <h3>Программа лояльности</h3>
-        <p>Бонусные баллы, история визитов и Telegram-бот для гостей — без сторонних CRM.</p>
+        <h3>{{ _("Программа лояльности") }}</h3>
+        <p>{{ _("Бонусные баллы, история визитов и Telegram-бот для гостей — без сторонних CRM.") }}</p>
       </div>
       <div class="lnd-feature">
         <div class="icon">🧾</div>
-        <h3>Фискализация чеков</h3>
-        <p>Интеграция с Webkassa (Казахстан) — чек пробивается автоматически при закрытии заказа.</p>
+        <h3>{{ _("Фискализация чеков") }}</h3>
+        <p>{{ _("Интеграция с Webkassa (Казахстан) — чек пробивается автоматически при закрытии заказа.") }}</p>
       </div>
       <div class="lnd-feature">
         <div class="icon">📊</div>
-        <h3>Финансы и аналитика</h3>
-        <p>P&amp;L, расходы, выручка по заведениям, NPS гостей — вся картина бизнеса в одном месте.</p>
+        <h3>{{ _("Финансы и аналитика") }}</h3>
+        <p>{{ _("P&L, расходы, выручка по заведениям, NPS гостей — вся картина бизнеса в одном месте.") }}</p>
       </div>
       <div class="lnd-feature">
         <div class="icon">🏢</div>
-        <h3>Мультисеть</h3>
-        <p>Управляйте несколькими заведениями из одного аккаунта с отдельными данными по каждому.</p>
+        <h3>{{ _("Мультисеть") }}</h3>
+        <p>{{ _("Управляйте несколькими заведениями из одного аккаунта с отдельными данными по каждому.") }}</p>
       </div>
     </div>
   </section>
 
   <section class="lnd-section" id="pricing">
-    <h2>Прозрачные цены</h2>
+    <h2>{{ _("Прозрачные цены") }}</h2>
     <div class="lnd-plans">
       <div class="lnd-plan">
         <div class="plan-name">Starter</div>
-        <div class="plan-price">$30 <span>/ мес</span></div>
+        <div class="plan-price">$30 <span>/ {{ _("мес") }}</span></div>
         <ul>
-          <li>1 заведение</li>
-          <li>До 3 сотрудников</li>
-          <li>Заказы, склад, смены</li>
+          <li>{{ _("1 заведение") }}</li>
+          <li>{{ _("До 3 сотрудников") }}</li>
+          <li>{{ _("Заказы, склад, смены") }}</li>
         </ul>
-        <a href="/auth/register" class="btn-ghost">Начать бесплатно</a>
+        <a href="/auth/register" class="btn-ghost">{{ _("Начать бесплатно") }}</a>
       </div>
       <div class="lnd-plan featured">
         <div class="plan-name">Pro</div>
-        <div class="plan-price">$60 <span>/ мес</span></div>
+        <div class="plan-price">$60 <span>/ {{ _("мес") }}</span></div>
         <ul>
-          <li>До 5 заведений</li>
-          <li>Безлимит сотрудников</li>
-          <li>Финансы P&amp;L, аналитика</li>
-          <li>Фискализация чеков</li>
+          <li>{{ _("До 5 заведений") }}</li>
+          <li>{{ _("Безлимит сотрудников") }}</li>
+          <li>{{ _("Финансы P&L, аналитика") }}</li>
+          <li>{{ _("Фискализация чеков") }}</li>
         </ul>
-        <a href="/auth/register" class="btn-primary">Начать бесплатно</a>
+        <a href="/auth/register" class="btn-primary">{{ _("Начать бесплатно") }}</a>
       </div>
       <div class="lnd-plan">
         <div class="plan-name">Enterprise</div>
-        <div class="plan-price">$150 <span>/ мес</span></div>
+        <div class="plan-price">$150 <span>/ {{ _("мес") }}</span></div>
         <ul>
-          <li>Безлимит заведений</li>
+          <li>{{ _("Безлимит заведений") }}</li>
           <li>White-label</li>
-          <li>Приоритетная поддержка</li>
+          <li>{{ _("Приоритетная поддержка") }}</li>
         </ul>
-        <a href="/auth/register" class="btn-ghost">Начать бесплатно</a>
+        <a href="/auth/register" class="btn-ghost">{{ _("Начать бесплатно") }}</a>
       </div>
     </div>
   </section>
 
   <section class="lnd-cta">
-    <h2>Готовы попробовать?</h2>
-    <p>14 дней бесплатно, без карты. Настройка занимает пару минут.</p>
-    <a href="/auth/register" class="btn-primary" style="padding:.85rem 2rem; font-size:1rem; color:var(--black); text-decoration:none; border-radius:6px">Создать аккаунт</a>
+    <h2>{{ _("Готовы попробовать?") }}</h2>
+    <p>{{ _("14 дней бесплатно, без карты. Настройка занимает пару минут.") }}</p>
+    <a href="/auth/register" class="btn-primary" style="padding:.85rem 2rem; font-size:1rem; color:var(--black); text-decoration:none; border-radius:6px">{{ _("Создать аккаунт") }}</a>
   </section>
 
   <footer class="lnd-footer">
@@ -195,9 +199,9 @@
       <span style="color:var(--muted); font-size:.82rem">© {{ year }} RestOS</span>
     </div>
     <div>
-      <a href="/legal/terms">Условия использования</a>
-      <a href="/legal/privacy">Конфиденциальность</a>
-      <a href="/auth/login">Вход</a>
+      <a href="/legal/terms">{{ _("Условия использования") }}</a>
+      <a href="/legal/privacy">{{ _("Конфиденциальность") }}</a>
+      <a href="/auth/login">{{ _("Вход") }}</a>
     </div>
   </footer>
 

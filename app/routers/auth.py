@@ -13,6 +13,7 @@ from sqlalchemy import select
 
 from app.config import settings
 from app.database import get_db
+from app.i18n import get_translator
 from app.models.user import User
 from app.routers.deps import get_current_user_dep
 from app.schemas.auth import NetworkCreate, LoginRequest, TokenResponse, PasswordResetRequest, PasswordResetConfirm
@@ -44,14 +45,25 @@ _COOKIE_SECURE = settings.PUBLIC_URL.startswith("https://")
 
 
 
+def _i18n_response(request: Request, template: str, extra: dict | None = None):
+    gettext_fn, locale = get_translator(request)
+    context = {"request": request, "_": gettext_fn, "locale": locale}
+    if extra:
+        context.update(extra)
+    response = templates.TemplateResponse(template, context)
+    if request.query_params.get("lang") in ("ru", "en"):
+        response.set_cookie("lang", request.query_params["lang"], max_age=60 * 60 * 24 * 365)
+    return response
+
+
 @router.get("/login", response_class=HTMLResponse)
 async def login_page(request: Request):
-    return templates.TemplateResponse("login.html", {"request": request})
+    return _i18n_response(request, "login.html")
 
 
 @router.get("/register", response_class=HTMLResponse)
 async def register_page(request: Request):
-    return templates.TemplateResponse("register.html", {"request": request})
+    return _i18n_response(request, "register.html")
 
 
 @router.post("/register")
@@ -125,7 +137,7 @@ async def logout(response: Response):
 
 @router.get("/forgot-password", response_class=HTMLResponse)
 async def forgot_password_page(request: Request):
-    return templates.TemplateResponse("forgot_password.html", {"request": request})
+    return _i18n_response(request, "forgot_password.html")
 
 
 @router.post("/forgot-password")
@@ -149,7 +161,7 @@ async def forgot_password(request: Request, data: PasswordResetRequest, db: Asyn
 
 @router.get("/reset-password", response_class=HTMLResponse)
 async def reset_password_page(request: Request, token: str = ""):
-    return templates.TemplateResponse("reset_password.html", {"request": request, "token": token})
+    return _i18n_response(request, "reset_password.html", {"token": token})
 
 
 @router.post("/reset-password")
