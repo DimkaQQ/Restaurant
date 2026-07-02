@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Столы — RestOS{% endblock %}
+{% block title %}{{ _("Столы") }} — RestOS{% endblock %}
 
 {% block head %}
 <style>
@@ -23,7 +23,7 @@
 {% block content %}
 {% include "partials/settings_tabs.html" %}
 <div class="page-header">
-  <h1 class="page-title">Столы</h1>
+  <h1 class="page-title">{{ _("Столы") }}</h1>
 </div>
 
 {% if venues %}
@@ -35,30 +35,36 @@
     <div class="table-card {{ t.status }}" id="table-{{ t.id }}">
       <button class="table-del" onclick="deleteTable('{{ t.id }}')">✕</button>
       <div class="table-label">{{ t.label }}</div>
-      <div class="table-seats">{{ t.seats }} мест</div>
+      <div class="table-seats">{{ t.seats }} {{ _("мест") }}</div>
       <select class="table-status-select" onchange="setStatus('{{ t.id }}', this.value)">
-        <option value="free" {% if t.status == 'free' %}selected{% endif %}>Свободен</option>
-        <option value="occupied" {% if t.status == 'occupied' %}selected{% endif %}>Занят</option>
-        <option value="reserved" {% if t.status == 'reserved' %}selected{% endif %}>Бронь</option>
+        <option value="free" {% if t.status == 'free' %}selected{% endif %}>{{ _("Свободен") }}</option>
+        <option value="occupied" {% if t.status == 'occupied' %}selected{% endif %}>{{ _("Занят") }}</option>
+        <option value="reserved" {% if t.status == 'reserved' %}selected{% endif %}>{{ _("Бронь") }}</option>
       </select>
     </div>
     {% else %}
-    <p class="empty-state">Столов пока нет</p>
+    <p class="empty-state">{{ _("Столов пока нет") }}</p>
     {% endfor %}
   </div>
   <form class="add-table-form" onsubmit="addTable(event, '{{ v.id }}')">
-    <input type="text" placeholder="Номер стола" required class="table-label-input">
-    <input type="number" placeholder="Мест" value="4" min="1" class="table-seats-input">
-    <button type="submit" class="btn-primary">+ Добавить стол</button>
+    <input type="text" placeholder="{{ _('Номер стола') }}" required class="table-label-input">
+    <input type="number" placeholder="{{ _('Мест') }}" value="4" min="1" class="table-seats-input">
+    <button type="submit" class="btn-primary">{{ _("+ Добавить стол") }}</button>
   </form>
 </div>
 {% endfor %}
 {% else %}
-<p class="empty-state">Сначала добавьте заведение</p>
+<p class="empty-state">{{ _("Сначала добавьте заведение") }}</p>
 {% endif %}
 
 <script>
   const token = () => localStorage.getItem('access_token');
+  const T = {
+    addError: {{ _("Ошибка добавления стола") | tojson }},
+    statusError: {{ _("Ошибка обновления статуса") | tojson }},
+    deleteConfirm: {{ _("Удалить стол?") | tojson }},
+    deleteError: {{ _("Ошибка удаления стола") | tojson }},
+  };
 
   async function addTable(e, venueId) {
     e.preventDefault();
@@ -72,7 +78,7 @@
       body: JSON.stringify({venue_id: venueId, label, seats}),
     });
     if (res.ok) location.reload();
-    else { const d = await res.json().catch(()=>({})); alert(d.detail || 'Ошибка добавления стола'); }
+    else { const d = await res.json().catch(()=>({})); alert(d.detail || T.addError); }
   }
 
   async function setStatus(tableId, status) {
@@ -84,17 +90,17 @@
     if (res.ok) {
       const card = document.getElementById('table-' + tableId);
       card.className = 'table-card ' + status;
-    } else { alert('Ошибка обновления статуса'); }
+    } else { alert(T.statusError); }
   }
 
   async function deleteTable(tableId) {
-    if (!confirm('Удалить стол?')) return;
+    if (!confirm(T.deleteConfirm)) return;
     const res = await fetch('/settings/api/tables/' + tableId, {
       method: 'DELETE', credentials: 'include',
       headers: {'Authorization':'Bearer '+token()},
     });
     if (res.ok) location.reload();
-    else alert('Ошибка удаления стола');
+    else alert(T.deleteError);
   }
 </script>
 {% endblock %}

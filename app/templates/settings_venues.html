@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Заведения — RestOS{% endblock %}
+{% block title %}{{ _("Заведения") }} — RestOS{% endblock %}
 
 {% block head %}
 <style>
@@ -42,8 +42,8 @@
 {% block content %}
 {% include "partials/settings_tabs.html" %}
 <div class="page-header">
-  <h1 class="page-title">Настройки заведений</h1>
-  <span class="muted">2GIS ссылки и Telegram менеджеров</span>
+  <h1 class="page-title">{{ _("Настройки заведений") }}</h1>
+  <span class="muted">{{ _("2GIS ссылки и Telegram менеджеров") }}</span>
 </div>
 
 {% if venues %}
@@ -56,7 +56,7 @@
     {% endif %}
 
     <div class="form-row">
-      <label>Ссылка 2GIS</label>
+      <label>{{ _("Ссылка 2GIS") }}</label>
       <input
         type="url"
         id="gis_{{ venue.id }}"
@@ -66,7 +66,7 @@
       >
     </div>
     <div class="form-row">
-      <label>Telegram ID менеджера</label>
+      <label>{{ _("Telegram ID менеджера") }}</label>
       <input
         type="number"
         id="mgr_{{ venue.id }}"
@@ -75,51 +75,57 @@
         value="{{ venue.manager_telegram_id or '' }}"
       >
     </div>
-    <button class="btn-primary save-btn" onclick="saveVenue('{{ venue.id }}')">Сохранить</button>
+    <button class="btn-primary save-btn" onclick="saveVenue('{{ venue.id }}')">{{ _("Сохранить") }}</button>
     <div class="save-result" id="res_{{ venue.id }}"></div>
 
     <hr style="border-color:var(--border); margin:1.25rem 0">
     <div class="venue-settings-name" style="font-size:0.95rem">
-      🧾 Фискализация (ОФД)
-      {% if venue.fiscal_provider %}<span style="color:#4ade80; font-size:0.75rem; font-weight:400">— подключено ({{ venue.fiscal_provider }})</span>{% endif %}
+      🧾 {{ _("Фискализация (ОФД)") }}
+      {% if venue.fiscal_provider %}<span style="color:#4ade80; font-size:0.75rem; font-weight:400">— {{ _("подключено") }} ({{ venue.fiscal_provider }})</span>{% endif %}
     </div>
     <div class="form-row">
-      <label>Провайдер</label>
+      <label>{{ _("Провайдер") }}</label>
       <select id="fp_{{ venue.id }}" class="input-field">
-        <option value="" {% if not venue.fiscal_provider %}selected{% endif %}>Не подключено</option>
-        <option value="webkassa" {% if venue.fiscal_provider == 'webkassa' %}selected{% endif %}>Webkassa (Казахстан)</option>
+        <option value="" {% if not venue.fiscal_provider %}selected{% endif %}>{{ _("Не подключено") }}</option>
+        <option value="webkassa" {% if venue.fiscal_provider == 'webkassa' %}selected{% endif %}>Webkassa ({{ _("Казахстан") }})</option>
       </select>
     </div>
     <div class="form-row">
-      <label>API-ключ (x-api-key)</label>
-      <input type="password" id="fak_{{ venue.id }}" class="input-field" placeholder="{{ '••••••••' if venue.fiscal_provider else 'из кабинета Webkassa' }}">
+      <label>{{ _("API-ключ (x-api-key)") }}</label>
+      <input type="password" id="fak_{{ venue.id }}" class="input-field" placeholder="{{ '••••••••' if venue.fiscal_provider else _('из кабинета Webkassa') }}">
     </div>
     <div class="form-row">
-      <label>Логин кассы</label>
-      <input type="text" id="flg_{{ venue.id }}" class="input-field" placeholder="{{ '••••••••' if venue.fiscal_provider else 'логин' }}">
+      <label>{{ _("Логин кассы") }}</label>
+      <input type="text" id="flg_{{ venue.id }}" class="input-field" placeholder="{{ '••••••••' if venue.fiscal_provider else _('логин') }}">
     </div>
     <div class="form-row">
-      <label>Пароль кассы</label>
-      <input type="password" id="fpw_{{ venue.id }}" class="input-field" placeholder="{{ '••••••••' if venue.fiscal_provider else 'пароль' }}">
+      <label>{{ _("Пароль кассы") }}</label>
+      <input type="password" id="fpw_{{ venue.id }}" class="input-field" placeholder="{{ '••••••••' if venue.fiscal_provider else _('пароль') }}">
     </div>
     <div class="form-row">
-      <label>Номер кассы (CashboxUniqueNumber)</label>
-      <input type="text" id="fcb_{{ venue.id }}" class="input-field" value="{{ venue.fiscal_cashbox_number or '' }}" placeholder="уникальный номер ККМ">
+      <label>{{ _("Номер кассы (CashboxUniqueNumber)") }}</label>
+      <input type="text" id="fcb_{{ venue.id }}" class="input-field" value="{{ venue.fiscal_cashbox_number or '' }}" placeholder="{{ _('уникальный номер ККМ') }}">
     </div>
-    <button class="btn-primary save-btn" onclick="saveFiscal('{{ venue.id }}')">Сохранить фискализацию</button>
+    <button class="btn-primary save-btn" onclick="saveFiscal('{{ venue.id }}')">{{ _("Сохранить фискализацию") }}</button>
     <div class="save-result" id="fres_{{ venue.id }}"></div>
   </div>
   {% endfor %}
 </div>
 {% else %}
 <div class="card" style="text-align:center; padding:2.5rem; color:var(--muted)">
-  Заведения не найдены.
+  {{ _("Заведения не найдены.") }}
 </div>
 {% endif %}
 {% endblock %}
 
 {% block scripts %}
 <script>
+const T = {
+  saved: {{ _("Сохранено") | tojson }},
+  error: {{ _("Ошибка") | tojson }},
+  connectionError: {{ _("Ошибка соединения") | tojson }},
+};
+
 async function saveVenue(venueId) {
   const gisUrl = document.getElementById('gis_' + venueId).value.trim();
   const mgrRaw = document.getElementById('mgr_' + venueId).value.trim();
@@ -138,15 +144,15 @@ async function saveVenue(venueId) {
       body: JSON.stringify({ gis_url: gisUrl || null, manager_telegram_id: mgrId }),
     });
     if (resp.ok) {
-      resEl.textContent = '✅ Сохранено';
+      resEl.textContent = '✅ ' + T.saved;
       resEl.className = 'save-result ok';
     } else {
       const err = await resp.json().catch(() => ({}));
-      resEl.textContent = '❌ ' + (err.detail || 'Ошибка');
+      resEl.textContent = '❌ ' + (err.detail || T.error);
       resEl.className = 'save-result err';
     }
   } catch (e) {
-    resEl.textContent = '❌ Ошибка соединения';
+    resEl.textContent = '❌ ' + T.connectionError;
     resEl.className = 'save-result err';
   }
   setTimeout(() => { resEl.textContent = ''; }, 4000);
@@ -178,16 +184,16 @@ async function saveFiscal(venueId) {
       body: JSON.stringify(body),
     });
     if (resp.ok) {
-      resEl.textContent = '✅ Сохранено';
+      resEl.textContent = '✅ ' + T.saved;
       resEl.className = 'save-result ok';
       setTimeout(() => location.reload(), 800);
     } else {
       const err = await resp.json().catch(() => ({}));
-      resEl.textContent = '❌ ' + (err.detail || 'Ошибка');
+      resEl.textContent = '❌ ' + (err.detail || T.error);
       resEl.className = 'save-result err';
     }
   } catch (e) {
-    resEl.textContent = '❌ Ошибка соединения';
+    resEl.textContent = '❌ ' + T.connectionError;
     resEl.className = 'save-result err';
   }
 }

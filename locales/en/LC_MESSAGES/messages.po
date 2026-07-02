@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-02 06:38+0000\n"
+"POT-Creation-Date: 2026-07-02 06:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -19,8 +19,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
+msgid "(скопируйте и передайте сотруднику для ввода /staff)"
+msgstr "(copy and give it to the staff member to enter with /staff)"
+
 msgid "+ Добавить позицию"
 msgstr "+ Add item"
+
+msgid "+ Добавить стол"
+msgstr "+ Add table"
 
 msgid "+ Ингредиент"
 msgstr "+ Ingredient"
@@ -52,6 +58,9 @@ msgstr "2. What the data is used for"
 msgid "2. Пробный период и оплата"
 msgstr "2. Trial period and billing"
 
+msgid "2GIS ссылки и Telegram менеджеров"
+msgstr "2GIS links and manager Telegram IDs"
+
 msgid "3. Данные и фискализация"
 msgstr "3. Data and fiscalization"
 
@@ -78,6 +87,9 @@ msgstr "6. Changes to these terms"
 
 msgid "7. Контакты"
 msgstr "7. Contact"
+
+msgid "API-ключ (x-api-key)"
+msgstr "API key (x-api-key)"
 
 msgid ""
 "P&L, расходы, выручка по заведениям, NPS гостей — вся картина бизнеса в "
@@ -118,6 +130,12 @@ msgstr ""
 "RestOS — order taking, kitchen display, inventory, staff shifts, loyalty "
 "program, and receipt fiscalization in one dashboard. 14 days free."
 
+msgid "Telegram ID менеджера"
+msgstr "Manager Telegram ID"
+
+msgid "Администратор"
+msgstr "Administrator"
+
 msgid "Активна"
 msgstr "Active"
 
@@ -155,11 +173,17 @@ msgstr ""
 "Bonus points, visit history, and a Telegram bot for guests — no third-"
 "party CRM needed."
 
+msgid "Бронь"
+msgstr "Reserved"
+
 msgid "Вернуть назад"
 msgstr "Move back"
 
 msgid "Визиты"
 msgstr "Visits"
+
+msgid "Владелец"
+msgstr "Owner"
 
 msgid "Возможности"
 msgstr "Features"
@@ -243,6 +267,9 @@ msgstr "No completed orders yet today"
 msgid "Выручка сегодня"
 msgstr "Today's revenue"
 
+msgid "Генерируем..."
+msgstr "Generating..."
+
 msgid "Гости"
 msgstr "Guests"
 
@@ -322,6 +349,9 @@ msgstr "Up to 5 venues"
 msgid "Добавить"
 msgstr "Add"
 
+msgid "Добавить пользователя"
+msgstr "Add user"
+
 msgid "Доступ ограничен до продления подписки"
 msgstr "Access is limited until the subscription is renewed"
 
@@ -334,8 +364,14 @@ msgstr "If that email is registered, we sent a password reset link."
 msgid "Забыли пароль?"
 msgstr "Forgot password?"
 
+msgid "Заведение (необязательно)"
+msgstr "Venue (optional)"
+
 msgid "Заведения"
 msgstr "Venues"
+
+msgid "Заведения не найдены."
+msgstr "No venues found."
 
 msgid "Загрузка заказов..."
 msgstr "Loading orders..."
@@ -358,6 +394,9 @@ msgstr "Orders"
 msgid "Заказы, склад, смены"
 msgstr "Orders, inventory, shifts"
 
+msgid "Занят"
+msgstr "Occupied"
+
 msgid "Запуск"
 msgstr "Launching"
 
@@ -374,8 +413,14 @@ msgstr "Today's history"
 msgid "Итого"
 msgstr "Total"
 
+msgid "Казахстан"
+msgstr "Kazakhstan"
+
 msgid "Касса"
 msgstr "Register"
+
+msgid "Кассир"
+msgstr "Cashier"
 
 msgid "Категория"
 msgstr "Category"
@@ -395,11 +440,20 @@ msgstr "Kitchen"
 msgid "Кухонный дисплей (KDS)"
 msgstr "Kitchen display (KDS)"
 
+msgid "Логин кассы"
+msgstr "Kassa login"
+
+msgid "Менеджер"
+msgstr "Manager"
+
 msgid "Меню"
 msgstr "Menu"
 
 msgid "Меню пусто"
 msgstr "Menu is empty"
+
+msgid "Мест"
+msgstr "Seats"
 
 msgid "Мой ресторан"
 msgstr "My Restaurant"
@@ -454,8 +508,14 @@ msgstr ""
 msgid "Настройки"
 msgstr "Settings"
 
+msgid "Настройки заведений"
+msgstr "Venue settings"
+
 msgid "Начать бесплатно"
 msgstr "Start free"
+
+msgid "Не подключено"
+msgstr "Not connected"
 
 msgid "Нет аккаунта?"
 msgstr "Don't have an account?"
@@ -503,6 +563,12 @@ msgstr "New"
 msgid "Новых гостей сегодня"
 msgstr "New guests today"
 
+msgid "Номер кассы (CashboxUniqueNumber)"
+msgstr "Kassa number (CashboxUniqueNumber)"
+
+msgid "Номер стола"
+msgstr "Table number"
+
 msgid "Обзор"
 msgstr "Overview"
 
@@ -519,6 +585,9 @@ msgstr "Online payment is not connected yet — contact support to activate a pl
 
 msgid "Описание"
 msgstr "Description"
+
+msgid "Оставьте пустым — отправим приглашение на email"
+msgstr "Leave blank — we'll send an email invite"
 
 msgid "Осталось дней пробного периода:"
 msgstr "Trial days left:"
@@ -563,11 +632,20 @@ msgstr "Subscribe"
 msgid "Оформить заказ"
 msgstr "Place order"
 
+msgid "Ошибка"
+msgstr "Error"
+
 msgid "Ошибка входа"
 msgstr "Sign-in error"
 
+msgid "Ошибка генерации токена"
+msgstr "Failed to generate token"
+
 msgid "Ошибка добавления позиции"
 msgstr "Failed to add item"
+
+msgid "Ошибка добавления стола"
+msgstr "Failed to add table"
 
 msgid "Ошибка загрузки фото"
 msgstr "Failed to upload photo"
@@ -587,8 +665,20 @@ msgstr "Failed to place order"
 msgid "Ошибка регистрации"
 msgstr "Registration error"
 
+msgid "Ошибка соединения"
+msgstr "Connection error"
+
+msgid "Ошибка создания пользователя"
+msgstr "Failed to create user"
+
 msgid "Ошибка сохранения техкарты"
 msgstr "Failed to save the recipe"
+
+msgid "Ошибка удаления"
+msgstr "Failed to delete"
+
+msgid "Ошибка удаления стола"
+msgstr "Failed to delete table"
 
 msgid "Ошибка фискализации"
 msgstr "Fiscalization error"
@@ -610,6 +700,12 @@ msgstr ""
 
 msgid "Пароль"
 msgstr "Password"
+
+msgid "Пароль (необязательно)"
+msgstr "Password (optional)"
+
+msgid "Пароль кассы"
+msgstr "Kassa password"
 
 msgid "Персонал"
 msgstr "Staff"
@@ -664,6 +760,9 @@ msgstr "Privacy Policy — RestOS"
 msgid "Политика конфиденциальности →"
 msgstr "Privacy Policy →"
 
+msgid "Пользователей нет"
+msgstr "No users"
+
 msgid "Пользователи"
 msgstr "Users"
 
@@ -672,6 +771,9 @@ msgstr "Try 14 days free"
 
 msgid "Посмотреть цены"
 msgstr "See pricing"
+
+msgid "Привязать Telegram (для официантов)"
+msgstr "Link Telegram (for waitstaff)"
 
 msgid "Принять"
 msgstr "Accept"
@@ -700,6 +802,9 @@ msgstr "Trial"
 msgid "Пробный период закончился"
 msgstr "Trial period has ended"
 
+msgid "Провайдер"
+msgstr "Provider"
+
 msgid "Программа лояльности"
 msgstr "Loyalty program"
 
@@ -726,8 +831,17 @@ msgstr ""
 "responsible for safeguarding your credentials and for actions taken under"
 " your account."
 
+msgid "Роль"
+msgstr "Role"
+
 msgid "С нами с"
 msgstr "Customer since"
+
+msgid "Свободен"
+msgstr "Free"
+
+msgid "Сгенерировать ссылку"
+msgstr "Generate link"
 
 msgid ""
 "Сервис предоставляется «как есть». RestOS не несёт ответственности за "
@@ -752,6 +866,12 @@ msgstr ""
 "How much of the ingredient is deducted from stock when selling 1 unit of "
 "this item. Stock is deducted automatically when an order is completed."
 
+msgid "Скопировано!"
+msgstr "Copied!"
+
+msgid "Скопировать"
+msgstr "Copy"
+
 msgid "Скрыто"
 msgstr "Hidden"
 
@@ -763,6 +883,9 @@ msgstr "Shifts and staff"
 
 msgid "Сначала выберите заведение"
 msgstr "Select a venue first"
+
+msgid "Сначала добавьте заведение"
+msgstr "Add a venue first"
 
 msgid "Сначала добавьте ингредиенты на складе"
 msgstr "Add ingredients to inventory first"
@@ -776,8 +899,20 @@ msgstr "Sign up"
 msgid "Создать аккаунт"
 msgstr "Create account"
 
+msgid ""
+"Сотрудник может принимать заказы прямо из Telegram-бота. Сгенерируйте "
+"ссылку и передайте её сотруднику — он перейдёт по ней и его аккаунт "
+"привяжется автоматически."
+msgstr ""
+"Staff can take orders directly from the Telegram bot. Generate a link and"
+" give it to the staff member — opening it links their account "
+"automatically."
+
 msgid "Сотрудники"
 msgstr "Staff"
+
+msgid "Сохранено"
+msgstr "Saved"
 
 msgid "Сохранить"
 msgstr "Save"
@@ -785,12 +920,21 @@ msgstr "Save"
 msgid "Сохранить пароль"
 msgstr "Save password"
 
+msgid "Сохранить фискализацию"
+msgstr "Save fiscalization settings"
+
 msgid ""
 "Списание ингредиентов автоматически при закрытии заказа по рецептуре "
 "блюда — остатки всегда актуальны."
 msgstr ""
 "Ingredients are deducted automatically when an order closes, based on the"
 " dish recipe — stock levels stay accurate."
+
+msgid "Ссылка 2GIS"
+msgstr "2GIS link"
+
+msgid "Ссылка для входа (действует 1 раз):"
+msgstr "Sign-in link (one-time use):"
 
 msgid "Ссылка недействительна или устарела"
 msgstr "The link is invalid or has expired"
@@ -800,6 +944,9 @@ msgstr "Table"
 
 msgid "Стол / номер заказа"
 msgstr "Table / order number"
+
+msgid "Столов пока нет"
+msgstr "No tables yet"
 
 msgid "Столы"
 msgstr "Tables"
@@ -824,8 +971,17 @@ msgstr ""
 "Technical data: IP address, browser type — for security and abuse "
 "prevention (e.g. rate limiting on sign-in)."
 
+msgid "Токен:"
+msgstr "Token:"
+
 msgid "Удалить позицию?"
 msgstr "Delete this item?"
+
+msgid "Удалить пользователя?"
+msgstr "Delete this user?"
+
+msgid "Удалить стол?"
+msgstr "Delete this table?"
 
 msgid "Уже есть аккаунт?"
 msgstr "Already have an account?"
@@ -855,6 +1011,9 @@ msgstr "P&L finance, analytics"
 
 msgid "Финансы и аналитика"
 msgstr "Finance and analytics"
+
+msgid "Фискализация (ОФД)"
+msgstr "Fiscalization (tax authority)"
 
 msgid "Фискализация чеков"
 msgstr "Receipt fiscalization"
@@ -887,11 +1046,20 @@ msgstr "in the database"
 msgid "и"
 msgstr "and"
 
+msgid "из кабинета Webkassa"
+msgstr "from your Webkassa dashboard"
+
 msgid "из одной панели"
 msgstr "from one dashboard"
 
+msgid "логин"
+msgstr "login"
+
 msgid "мес"
 msgstr "mo"
+
+msgid "мест"
+msgstr "seats"
 
 msgid "мин"
 msgstr "min"
@@ -899,11 +1067,20 @@ msgstr "min"
 msgid "мин на кухне"
 msgstr "min in the kitchen"
 
+msgid "пароль"
+msgstr "password"
+
+msgid "подключено"
+msgstr "connected"
+
 msgid "политикой конфиденциальности"
 msgstr "Privacy Policy"
 
 msgid "ссылка"
 msgstr "link"
+
+msgid "уникальный номер ККМ"
+msgstr "unique kassa number"
 
 msgid "условиями использования"
 msgstr "Terms of Service"
