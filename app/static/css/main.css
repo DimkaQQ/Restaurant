@@ -643,6 +643,17 @@ select option { background: var(--card); }
   z-index: 150;
 }
 
+/* ── Tablet range: cheap Android tablets / iPad in portrait or landscape.
+   Sidebar stays visible (unlike phones) but narrower, so POS/kitchen/menu
+   grids get real breathing room instead of losing 220px to nav text. ── */
+@media (min-width: 769px) and (max-width: 1024px) {
+  :root { --sidebar-w: 180px; }
+  .sidebar-logo { padding: 1.25rem 1rem; }
+  .nav-link { padding: 0.7rem 1rem; font-size: 0.88rem; gap: 0.6rem; }
+  .nav-link svg { width: 18px; height: 18px; flex-shrink: 0; }
+  .main-content { padding: 1.25rem 1.5rem; }
+}
+
 @media (max-width: 768px) {
   /* Show top bar */
   .mobile-topbar { display: flex; }

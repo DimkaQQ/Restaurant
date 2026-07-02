@@ -17,6 +17,7 @@ from app.models.user import User
 from app.models.venue import Venue
 from app.routers.deps import get_current_user_dep, get_current_user_optional, get_accessible_venue_ids
 from app.services.order_service import update_order_status, WALKIN_MARKER
+from app.config import settings
 
 router = APIRouter(tags=["dashboard"])
 logger = logging.getLogger(__name__)
@@ -31,6 +32,7 @@ async def root(request: Request, current_user: User | None = Depends(get_current
     gettext_fn, locale = get_translator(request)
     response = templates.TemplateResponse("landing.html", {
         "request": request, "year": datetime.now(timezone.utc).year, "_": gettext_fn, "locale": locale,
+        "public_url": settings.PUBLIC_URL,
     })
     if request.query_params.get("lang") in ("ru", "en"):
         response.set_cookie("lang", request.query_params["lang"], max_age=60 * 60 * 24 * 365)
