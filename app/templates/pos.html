@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Касса — RestOS{% endblock %}
+{% block title %}{{ _("Касса") }} — RestOS{% endblock %}
 
 {% block head %}
 <style>
@@ -30,12 +30,12 @@
 
 {% block content %}
 <div class="page-header">
-  <h1 class="page-title">Касса</h1>
+  <h1 class="page-title">{{ _("Касса") }}</h1>
 </div>
 
 <div class="filters">
   <select id="venue-select" onchange="loadMenu()" class="select-input">
-    <option value="">Выберите заведение</option>
+    <option value="">{{ _("Выберите заведение") }}</option>
     {% for v in venues %}
     <option value="{{ v.id }}">{{ v.name }}</option>
     {% endfor %}
@@ -45,27 +45,36 @@
 <div class="pos-layout">
   <div>
     <div class="pos-cats" id="pos-cats"></div>
-    <div class="pos-grid" id="pos-grid"><p class="empty-state">Выберите заведение</p></div>
+    <div class="pos-grid" id="pos-grid"><p class="empty-state">{{ _("Выберите заведение") }}</p></div>
   </div>
 
   <div class="pos-cart">
-    <h2>Заказ</h2>
+    <h2>{{ _("Заказ") }}</h2>
     <div class="form-group" id="table-picker-wrap" style="display:none">
-      <label style="font-size:.8rem;color:var(--muted)">Стол</label>
+      <label style="font-size:.8rem;color:var(--muted)">{{ _("Стол") }}</label>
       <div class="pos-tables" id="pos-tables"></div>
     </div>
     <div class="form-group" id="table-fallback-wrap">
-      <label style="font-size:.8rem;color:var(--muted)">Стол / номер заказа</label>
-      <input type="text" id="table-number" placeholder="Например, 5">
+      <label style="font-size:.8rem;color:var(--muted)">{{ _("Стол / номер заказа") }}</label>
+      <input type="text" id="table-number" placeholder="{{ _('Например, 5') }}">
     </div>
-    <div id="cart-lines"><p class="empty-state" style="padding:.5rem 0">Корзина пуста</p></div>
-    <div class="pos-total"><span>Итого</span><span id="cart-total">0 ₸</span></div>
-    <button onclick="submitOrder()" class="btn-primary" style="width:100%" id="submit-btn" disabled>Оформить заказ</button>
+    <div id="cart-lines"><p class="empty-state" style="padding:.5rem 0">{{ _("Корзина пуста") }}</p></div>
+    <div class="pos-total"><span>{{ _("Итого") }}</span><span id="cart-total">0 ₸</span></div>
+    <button onclick="submitOrder()" class="btn-primary" style="width:100%" id="submit-btn" disabled>{{ _("Оформить заказ") }}</button>
   </div>
 </div>
 
 <script>
   const token = () => localStorage.getItem('access_token');
+  const LOCALE = {{ ('en-US' if locale == 'en' else 'ru-RU') | tojson }};
+  const T = {
+    selectVenue: {{ _("Выберите заведение") | tojson }},
+    menuEmpty: {{ _("Меню пусто") | tojson }},
+    all: {{ _("Все") | tojson }},
+    cartEmpty: {{ _("Корзина пуста") | tojson }},
+    orderSent: {{ _("Заказ отправлен на кухню") | tojson }},
+    orderError: {{ _("Ошибка оформления заказа") | tojson }},
+  };
   let _menuItems = [];
   let _cart = {}; // menu_item_id -> {item, qty}
   let _selectedTableId = null;
@@ -79,7 +88,7 @@
     _cart = {};
     _selectedTableId = null;
     renderCart();
-    if (!venueId) { document.getElementById('pos-grid').innerHTML = '<p class="empty-state">Выберите заведение</p>'; return; }
+    if (!venueId) { document.getElementById('pos-grid').innerHTML = '<p class="empty-state">' + T.selectVenue + '</p>'; return; }
     const [menuRes, tablesRes] = await Promise.all([
       fetch('/api/menu/' + venueId, { credentials: 'include' }),
       fetch('/api/pos/tables?venue_id=' + venueId, { credentials: 'include' }),
@@ -116,7 +125,7 @@
   function renderCats() {
     const cats = [...new Set(_menuItems.map(i => i.category).filter(Boolean))];
     const el = document.getElementById('pos-cats');
-    el.innerHTML = `<button class="pos-cat-chip active" onclick="renderGrid(null, this)">Все</button>` +
+    el.innerHTML = `<button class="pos-cat-chip active" onclick="renderGrid(null, this)">${T.all}</button>` +
       cats.map(c => `<button class="pos-cat-chip" onclick="renderGrid('${esc(c)}', this)">${esc(c)}</button>`).join('');
   }
 
@@ -127,11 +136,11 @@
     }
     const items = category ? _menuItems.filter(i => i.category === category) : _menuItems;
     const grid = document.getElementById('pos-grid');
-    if (!items.length) { grid.innerHTML = '<p class="empty-state">Меню пусто</p>'; return; }
+    if (!items.length) { grid.innerHTML = '<p class="empty-state">' + T.menuEmpty + '</p>'; return; }
     grid.innerHTML = items.map(i => `
       <div class="pos-item" onclick="addToCart('${esc(i.id)}')">
         <div class="pos-item-name">${esc(i.name)}</div>
-        <div class="pos-item-price">${parseFloat(i.price).toLocaleString('ru-RU')} ₸</div>
+        <div class="pos-item-price">${parseFloat(i.price).toLocaleString(LOCALE)} ₸</div>
       </div>
     `).join('');
   }
@@ -156,7 +165,7 @@
     const linesEl = document.getElementById('cart-lines');
     const submitBtn = document.getElementById('submit-btn');
     if (!lines.length) {
-      linesEl.innerHTML = '<p class="empty-state" style="padding:.5rem 0">Корзина пуста</p>';
+      linesEl.innerHTML = '<p class="empty-state" style="padding:.5rem 0">' + T.cartEmpty + '</p>';
       document.getElementById('cart-total').textContent = '0 ₸';
       submitBtn.disabled = true;
       return;
@@ -175,7 +184,7 @@
         </div>
       `;
     }).join('');
-    document.getElementById('cart-total').textContent = total.toLocaleString('ru-RU') + ' ₸';
+    document.getElementById('cart-total').textContent = total.toLocaleString(LOCALE) + ' ₸';
     submitBtn.disabled = false;
   }
 
@@ -203,10 +212,10 @@
         document.getElementById('table-number').value = '';
         renderCart();
         loadMenu();
-        alert('Заказ отправлен на кухню');
+        alert(T.orderSent);
       } else {
         const err = await res.json().catch(() => ({}));
-        alert(err.detail || 'Ошибка оформления заказа');
+        alert(err.detail || T.orderError);
       }
     } finally {
       submitBtn.disabled = Object.keys(_cart).length === 0;

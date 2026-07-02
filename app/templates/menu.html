@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Меню — RestOS{% endblock %}
+{% block title %}{{ _("Меню") }} — RestOS{% endblock %}
 
 {% block head %}
 <style>
@@ -41,13 +41,13 @@
 
 {% block content %}
 <div class="page-header">
-  <h1 class="page-title">Меню</h1>
-  <button onclick="openAddModal()" class="btn-primary">+ Добавить позицию</button>
+  <h1 class="page-title">{{ _("Меню") }}</h1>
+  <button onclick="openAddModal()" class="btn-primary">{{ _("+ Добавить позицию") }}</button>
 </div>
 
 <div class="filters">
   <select id="venue-select" onchange="loadMenu()" class="select-input">
-    <option value="">Выберите заведение</option>
+    <option value="">{{ _("Выберите заведение") }}</option>
     {% for v in venues %}
     <option value="{{ v.id }}">{{ v.name }}</option>
     {% endfor %}
@@ -55,21 +55,21 @@
 </div>
 
 <div id="menu-grid" class="menu-grid">
-  <p class="empty-state">Выберите заведение</p>
+  <p class="empty-state">{{ _("Выберите заведение") }}</p>
 </div>
 
 <div id="add-modal" class="modal" style="display:none">
   <div class="modal-overlay" onclick="closeModal()"></div>
   <div class="modal-content">
-    <h2 class="modal-title">Новая позиция</h2>
+    <h2 class="modal-title">{{ _("Новая позиция") }}</h2>
     <form id="add-form">
-      <div class="form-group"><label>Название</label><input type="text" name="name" required></div>
-      <div class="form-group"><label>Описание</label><textarea name="description" rows="2"></textarea></div>
-      <div class="form-group"><label>Цена (₸)</label><input type="number" name="price" step="0.01" required></div>
-      <div class="form-group"><label>Категория</label><input type="text" name="category"></div>
+      <div class="form-group"><label>{{ _("Название") }}</label><input type="text" name="name" required></div>
+      <div class="form-group"><label>{{ _("Описание") }}</label><textarea name="description" rows="2"></textarea></div>
+      <div class="form-group"><label>{{ _("Цена (₸)") }}</label><input type="number" name="price" step="0.01" required></div>
+      <div class="form-group"><label>{{ _("Категория") }}</label><input type="text" name="category"></div>
       <div class="form-row">
-        <button type="submit" class="btn-primary">Добавить</button>
-        <button type="button" onclick="closeModal()" class="btn-secondary">Отмена</button>
+        <button type="submit" class="btn-primary">{{ _("Добавить") }}</button>
+        <button type="button" onclick="closeModal()" class="btn-secondary">{{ _("Отмена") }}</button>
       </div>
     </form>
   </div>
@@ -78,19 +78,34 @@
 <div id="recipe-modal" class="modal" style="display:none">
   <div class="modal-overlay" onclick="closeRecipeModal()"></div>
   <div class="modal-content">
-    <h2 class="modal-title">Техкарта: <span id="recipe-item-name"></span></h2>
-    <p style="color:var(--muted);font-size:.8rem;margin-bottom:.75rem">Сколько ингредиента списывается со склада при продаже 1 шт. этой позиции. При завершении заказа склад списывается автоматически.</p>
+    <h2 class="modal-title">{{ _("Техкарта:") }} <span id="recipe-item-name"></span></h2>
+    <p style="color:var(--muted);font-size:.8rem;margin-bottom:.75rem">{{ _("Сколько ингредиента списывается со склада при продаже 1 шт. этой позиции. При завершении заказа склад списывается автоматически.") }}</p>
     <div id="recipe-lines"></div>
-    <button type="button" onclick="addRecipeLine()" class="btn-secondary" style="margin:.5rem 0">+ Ингредиент</button>
+    <button type="button" onclick="addRecipeLine()" class="btn-secondary" style="margin:.5rem 0">{{ _("+ Ингредиент") }}</button>
     <div class="form-row">
-      <button type="button" onclick="saveRecipe()" class="btn-primary">Сохранить</button>
-      <button type="button" onclick="closeRecipeModal()" class="btn-secondary">Отмена</button>
+      <button type="button" onclick="saveRecipe()" class="btn-primary">{{ _("Сохранить") }}</button>
+      <button type="button" onclick="closeRecipeModal()" class="btn-secondary">{{ _("Отмена") }}</button>
     </div>
   </div>
 </div>
 
 <script>
   const token = () => localStorage.getItem('access_token');
+  const LOCALE = {{ ('en-US' if locale == 'en' else 'ru-RU') | tojson }};
+  const T = {
+    menuEmpty: {{ _("Меню пусто") | tojson }},
+    addPhoto: {{ _("+ Фото") | tojson }},
+    available: {{ _("Доступно") | tojson }},
+    hidden: {{ _("Скрыто") | tojson }},
+    recipeLabel: {{ _("Техкарта") | tojson }},
+    uploadError: {{ _("Ошибка загрузки фото") | tojson }},
+    confirmDelete: {{ _("Удалить позицию?") | tojson }},
+    recipeError: {{ _("Ошибка сохранения техкарты") | tojson }},
+    selectVenueFirst: {{ _("Сначала выберите заведение") | tojson }},
+    addItemError: {{ _("Ошибка добавления позиции") | tojson }},
+    noIngredients: {{ _("Сначала добавьте ингредиенты на складе") | tojson }},
+    qtyPlaceholder: {{ _("Кол-во") | tojson }},
+  };
 
   function esc(s) {
     return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -107,18 +122,18 @@
 
   function renderMenu(items, venueId) {
     const grid = document.getElementById('menu-grid');
-    if (!items.length) { grid.innerHTML = '<p class="empty-state">Меню пусто</p>'; return; }
+    if (!items.length) { grid.innerHTML = '<p class="empty-state">' + T.menuEmpty + '</p>'; return; }
     grid.innerHTML = items.map(item => `
       <div class="menu-card ${!item.is_available ? 'unavailable' : ''}">
         ${item.image_url
           ? `<div class="menu-img-wrap" onclick="triggerUpload('${esc(item.id)}')"><img src="${esc(item.image_url)}" class="menu-img" alt="${esc(item.name)}"><div class="menu-img-overlay">📷</div></div>`
-          : `<div class="menu-img-placeholder" onclick="triggerUpload('${esc(item.id)}')"><span>+ Фото</span></div>`
+          : `<div class="menu-img-placeholder" onclick="triggerUpload('${esc(item.id)}')"><span>${T.addPhoto}</span></div>`
         }
         <input type="file" id="file-${esc(item.id)}" accept="image/*" style="display:none" onchange="uploadPhoto('${esc(item.id)}', this)">
         <div class="menu-card-body">
           <div class="menu-card-header">
             <span class="menu-item-name">${esc(item.name)}</span>
-            <span class="menu-item-price">${parseFloat(item.price).toLocaleString('ru-RU')} ₸</span>
+            <span class="menu-item-price">${parseFloat(item.price).toLocaleString(LOCALE)} ₸</span>
           </div>
           ${item.category ? `<span class="menu-category">${esc(item.category)}</span>` : ''}
           ${item.description ? `<p class="menu-desc">${esc(item.description)}</p>` : ''}
@@ -126,12 +141,12 @@
             <label class="toggle">
               <input type="checkbox" ${item.is_available ? 'checked' : ''} onchange="toggleItem('${esc(item.id)}', this.checked)">
               <span class="toggle-track"></span>
-              <span class="toggle-label">${item.is_available ? 'Доступно' : 'Скрыто'}</span>
+              <span class="toggle-label">${item.is_available ? T.available : T.hidden}</span>
             </label>
             <button onclick="deleteItem('${esc(item.id)}')" class="btn-icon-danger">✕</button>
           </div>
           <button onclick="openRecipeModal('${esc(item.id)}', '${esc(item.name)}')" class="menu-recipe-btn">
-            🧾 Техкарта
+            🧾 ${T.recipeLabel}
           </button>
         </div>
       </div>
@@ -154,7 +169,7 @@
     });
     if (res.ok) { loadMenu(); }
     else if (res.status === 401) { location.href = '/auth/login'; }
-    else { alert('Ошибка загрузки фото'); }
+    else { alert(T.uploadError); }
   }
 
   async function toggleItem(itemId, available) {
@@ -169,7 +184,7 @@
   }
 
   async function deleteItem(itemId) {
-    if (!confirm('Удалить позицию?')) return;
+    if (!confirm(T.confirmDelete)) return;
     const res = await fetch('/api/menu/' + itemId, {
       method: 'DELETE',
       credentials: 'include',
@@ -199,7 +214,7 @@
     if (recipe.length) {
       recipe.forEach(line => addRecipeLine(line.ingredient_id, line.quantity));
     } else if (!_venueIngredients.length) {
-      linesEl.innerHTML = '<p class="empty-state" style="padding:.5rem 0">Сначала добавьте ингредиенты на складе</p>';
+      linesEl.innerHTML = '<p class="empty-state" style="padding:.5rem 0">' + T.noIngredients + '</p>';
     }
     document.getElementById('recipe-modal').style.display = 'flex';
   }
@@ -215,7 +230,7 @@
     ).join('');
     row.innerHTML = `
       <select class="recipe-ingredient" style="flex:2">${options}</select>
-      <input type="number" class="recipe-qty" step="0.001" min="0.001" placeholder="Кол-во" value="${quantity ?? ''}" style="flex:1">
+      <input type="number" class="recipe-qty" step="0.001" min="0.001" placeholder="${T.qtyPlaceholder}" value="${quantity ?? ''}" style="flex:1">
       <button type="button" onclick="this.closest('.recipe-line').remove()" class="btn-icon-danger">✕</button>
     `;
     linesEl.appendChild(row);
@@ -237,7 +252,7 @@
     else if (res.status === 401) { location.href = '/auth/login'; }
     else {
       const err = await res.json().catch(() => ({}));
-      alert(err.detail || 'Ошибка сохранения техкарты');
+      alert(err.detail || T.recipeError);
     }
   }
 
@@ -247,7 +262,7 @@
 
   function openAddModal() {
     const venueId = document.getElementById('venue-select').value;
-    if (!venueId) { alert('Сначала выберите заведение'); return; }
+    if (!venueId) { alert(T.selectVenueFirst); return; }
     document.getElementById('add-modal').style.display = 'flex';
   }
 
@@ -272,7 +287,7 @@
     else if (res.status === 401) { location.href = '/auth/login'; }
     else {
       const err = await res.json().catch(() => ({}));
-      alert(err.detail || 'Ошибка добавления позиции');
+      alert(err.detail || T.addItemError);
     }
   });
 </script>

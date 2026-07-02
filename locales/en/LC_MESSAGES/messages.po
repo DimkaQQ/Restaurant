@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-02 06:32+0000\n"
+"POT-Creation-Date: 2026-07-02 06:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -19,8 +19,17 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
+msgid "+ Добавить позицию"
+msgstr "+ Add item"
+
+msgid "+ Ингредиент"
+msgstr "+ Ingredient"
+
 msgid "+ Новый заказ"
 msgstr "+ New order"
+
+msgid "+ Фото"
+msgstr "+ Photo"
 
 msgid "1 заведение"
 msgstr "1 venue"
@@ -152,6 +161,9 @@ msgstr "Sign in"
 msgid "Восстановление пароля"
 msgstr "Password recovery"
 
+msgid "Все"
+msgstr "All"
+
 msgid "Все заведения"
 msgstr "All venues"
 
@@ -194,6 +206,9 @@ msgstr ""
 "fiscal laws of your jurisdiction. Integrations with fiscal providers "
 "(e.g. Webkassa) use your own credentials obtained directly from those "
 "providers."
+
+msgid "Выберите заведение"
+msgstr "Select a venue"
 
 msgid "Выдан"
 msgstr "Served"
@@ -295,6 +310,12 @@ msgstr "Up to 3 staff members"
 msgid "До 5 заведений"
 msgstr "Up to 5 venues"
 
+msgid "Добавить"
+msgstr "Add"
+
+msgid "Доступно"
+msgstr "Available"
+
 msgid "Если такой email зарегистрирован, мы отправили ссылку для сброса пароля."
 msgstr "If that email is registered, we sent a password reset link."
 
@@ -309,6 +330,12 @@ msgstr "Loading orders..."
 
 msgid "Задайте новый пароль"
 msgstr "Set a new password"
+
+msgid "Заказ"
+msgstr "Order"
+
+msgid "Заказ отправлен на кухню"
+msgstr "Order sent to the kitchen"
 
 msgid "Заказов сегодня"
 msgstr "Orders today"
@@ -332,11 +359,23 @@ msgstr ""
 msgid "История сегодня"
 msgstr "Today's history"
 
+msgid "Итого"
+msgstr "Total"
+
 msgid "Касса"
 msgstr "Register"
 
+msgid "Категория"
+msgstr "Category"
+
+msgid "Кол-во"
+msgstr "Qty"
+
 msgid "Конфиденциальность"
 msgstr "Privacy"
+
+msgid "Корзина пуста"
+msgstr "Cart is empty"
 
 msgid "Кухня"
 msgstr "Kitchen"
@@ -346,6 +385,9 @@ msgstr "Kitchen display (KDS)"
 
 msgid "Меню"
 msgstr "Menu"
+
+msgid "Меню пусто"
+msgstr "Menu is empty"
 
 msgid "Мой ресторан"
 msgstr "My Restaurant"
@@ -375,8 +417,14 @@ msgstr ""
 msgid "Назад ко входу"
 msgstr "Back to sign in"
 
+msgid "Название"
+msgstr "Name"
+
 msgid "Название сети / ресторана"
 msgstr "Restaurant / network name"
+
+msgid "Например, 5"
+msgstr "e.g. 5"
 
 msgid ""
 "Настоящие условия регулируют использование платформы RestOS (далее — "
@@ -405,6 +453,9 @@ msgstr "No orders in progress"
 
 msgid "Нет новых заказов"
 msgstr "No new orders"
+
+msgid "Новая позиция"
+msgstr "New item"
 
 msgid "Новые"
 msgstr "New"
@@ -436,6 +487,9 @@ msgstr "Last updated:"
 
 msgid "Онлайн"
 msgstr "Online"
+
+msgid "Описание"
+msgstr "Description"
 
 msgid "Отмена"
 msgstr "Cancel"
@@ -471,8 +525,17 @@ msgstr ""
 "Waiter, kitchen, and register see the order in real time. Tables, "
 "statuses, item comments."
 
+msgid "Оформить заказ"
+msgstr "Place order"
+
 msgid "Ошибка входа"
 msgstr "Sign-in error"
+
+msgid "Ошибка добавления позиции"
+msgstr "Failed to add item"
+
+msgid "Ошибка загрузки фото"
+msgstr "Failed to upload photo"
 
 msgid "Ошибка обновления статуса"
 msgstr "Failed to update status"
@@ -483,8 +546,14 @@ msgstr "Failed to cancel"
 msgid "Ошибка отправки. Попробуйте позже."
 msgstr "Failed to send. Please try again later."
 
+msgid "Ошибка оформления заказа"
+msgstr "Failed to place order"
+
 msgid "Ошибка регистрации"
 msgstr "Registration error"
+
+msgid "Ошибка сохранения техкарты"
+msgstr "Failed to save the recipe"
 
 msgid "Ошибка фискализации"
 msgstr "Fiscalization error"
@@ -611,8 +680,24 @@ msgstr "Inventory"
 msgid "Склад и техкарты"
 msgstr "Inventory and recipes"
 
+msgid ""
+"Сколько ингредиента списывается со склада при продаже 1 шт. этой позиции."
+" При завершении заказа склад списывается автоматически."
+msgstr ""
+"How much of the ingredient is deducted from stock when selling 1 unit of "
+"this item. Stock is deducted automatically when an order is completed."
+
+msgid "Скрыто"
+msgstr "Hidden"
+
 msgid "Смены и персонал"
 msgstr "Shifts and staff"
+
+msgid "Сначала выберите заведение"
+msgstr "Select a venue first"
+
+msgid "Сначала добавьте ингредиенты на складе"
+msgstr "Add ingredients to inventory first"
 
 msgid "Согласен с"
 msgstr "I agree to the"
@@ -622,6 +707,9 @@ msgstr "Sign up"
 
 msgid "Создать аккаунт"
 msgstr "Create account"
+
+msgid "Сохранить"
+msgstr "Save"
 
 msgid "Сохранить пароль"
 msgstr "Save password"
@@ -639,6 +727,15 @@ msgstr "The link is invalid or has expired"
 msgid "Стол"
 msgstr "Table"
 
+msgid "Стол / номер заказа"
+msgstr "Table / order number"
+
+msgid "Техкарта"
+msgstr "Recipe"
+
+msgid "Техкарта:"
+msgstr "Recipe:"
+
 msgid ""
 "Технические данные: IP-адрес, тип браузера — для безопасности и "
 "предотвращения злоупотреблений (например, ограничение частоты запросов "
@@ -646,6 +743,9 @@ msgid ""
 msgstr ""
 "Technical data: IP address, browser type — for security and abuse "
 "prevention (e.g. rate limiting on sign-in)."
+
+msgid "Удалить позицию?"
+msgstr "Delete this item?"
 
 msgid "Уже есть аккаунт?"
 msgstr "Already have an account?"
@@ -675,6 +775,9 @@ msgstr "Receipt fiscalization"
 
 msgid "Фискализация…"
 msgstr "Fiscalizing…"
+
+msgid "Цена (₸)"
+msgstr "Price (₸)"
 
 msgid "Цены"
 msgstr "Pricing"
