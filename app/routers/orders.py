@@ -14,7 +14,7 @@ from app.models.venue import Venue
 from app.routers.bot_api import _require_bot_secret
 from app.routers.deps import get_current_user_dep, get_accessible_venue_ids
 from app.schemas.order import OrderCreate, OrderOut
-from app.services.order_service import create_order, update_order_status, cancel_order, get_order_with_items
+from app.services.order_service import create_order, cancel_order
 
 router = APIRouter(prefix="/api/orders", tags=["orders"])
 logger = logging.getLogger(__name__)

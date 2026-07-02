@@ -30,15 +30,18 @@ def _load(locale: str) -> gettext.NullTranslations:
 
 
 def get_locale(request: Request) -> str:
+    # No Accept-Language auto-detection here (unlike the guest-facing
+    # online-order page in app/services/online_order_i18n.py) — the target
+    # market is Russian-speaking restaurant owners/staff, many of whom run
+    # an English-locale OS/browser but still expect a Russian dashboard by
+    # default. Only an explicit ?lang= or the persisted switcher cookie
+    # should change it.
     q = request.query_params.get("lang")
     if q in SUPPORTED_LOCALES:
         return q
     cookie = request.cookies.get("lang")
     if cookie in SUPPORTED_LOCALES:
         return cookie
-    accept = request.headers.get("accept-language", "")
-    if accept.lower().startswith("en"):
-        return "en"
     return DEFAULT_LOCALE
 
 

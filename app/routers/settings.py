@@ -19,7 +19,7 @@ from app.models.guest import Guest
 from app.models.inventory import Ingredient
 from app.models.menu import MenuItem
 from app.models.network import Network
-from app.models.order import Order, OrderItem
+from app.models.order import Order
 from app.models.staff import Staff
 from app.models.table import Table
 from app.models.user import User

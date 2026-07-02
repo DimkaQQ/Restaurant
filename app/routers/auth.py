@@ -1,9 +1,8 @@
 from app.templates_env import templates
 import logging
-from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, Response, Cookie, Request
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi import APIRouter, Depends, HTTPException, Response, Request
+from fastapi.responses import HTMLResponse
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 

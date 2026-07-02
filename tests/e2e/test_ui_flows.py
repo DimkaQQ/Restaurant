@@ -30,6 +30,7 @@ def test_full_registration_flow_reaches_dashboard(page: Page, live_server: str):
     page.fill("#name", "Playwright Test Restaurant")
     page.fill("#email", _unique_email())
     page.fill("#password", "supersecret123")
+    page.check("#agree")
     page.click("button[type=submit]")
 
     page.wait_for_url("**/dashboard**", wait_until="domcontentloaded", timeout=15000)
