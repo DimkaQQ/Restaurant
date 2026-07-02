@@ -169,7 +169,7 @@
     });
     if (res.ok) { loadMenu(); }
     else if (res.status === 401) { location.href = '/auth/login'; }
-    else { alert(T.uploadError); }
+    else { notify.error(T.uploadError); }
   }
 
   async function toggleItem(itemId, available) {
@@ -184,7 +184,7 @@
   }
 
   async function deleteItem(itemId) {
-    if (!confirm(T.confirmDelete)) return;
+    if (!(await notify.confirm(T.confirmDelete, {danger: true}))) return;
     const res = await fetch('/api/menu/' + itemId, {
       method: 'DELETE',
       credentials: 'include',
@@ -252,7 +252,7 @@
     else if (res.status === 401) { location.href = '/auth/login'; }
     else {
       const err = await res.json().catch(() => ({}));
-      alert(err.detail || T.recipeError);
+      notify.error(err.detail || T.recipeError);
     }
   }
 
@@ -262,7 +262,7 @@
 
   function openAddModal() {
     const venueId = document.getElementById('venue-select').value;
-    if (!venueId) { alert(T.selectVenueFirst); return; }
+    if (!venueId) { notify.error(T.selectVenueFirst); return; }
     document.getElementById('add-modal').style.display = 'flex';
   }
 
@@ -287,7 +287,7 @@
     else if (res.status === 401) { location.href = '/auth/login'; }
     else {
       const err = await res.json().catch(() => ({}));
-      alert(err.detail || T.addItemError);
+      notify.error(err.detail || T.addItemError);
     }
   });
 </script>

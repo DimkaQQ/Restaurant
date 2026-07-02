@@ -256,7 +256,7 @@ async function changeStatus(id, current) {
 }
 
 async function deleteShift(id) {
-  if (!confirm(T.deleteConfirm)) return;
+  if (!(await notify.confirm(T.deleteConfirm, {danger: true}))) return;
   const res = await fetch('/api/shifts/'+id, {
     method:'DELETE', credentials:'include',
     headers:{'Authorization':'Bearer '+localStorage.getItem('access_token')},

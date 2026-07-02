@@ -7,8 +7,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
-  <link rel="stylesheet" href="/static/css/main.css?v=7">
+  <link rel="stylesheet" href="/static/css/main.css?v=8">
   <script src="/static/vendor/htmx-1.9.12.min.js"></script>
+  <script src="/static/js/notify.js"></script>
   <style>
     * { box-sizing: border-box; }
     body { background: #0A0A0A; display: block; font-family: 'Inter', sans-serif; }
@@ -198,7 +199,7 @@
         if (res.status === 401 || res.status === 307) { location.href = '/auth/login'; return; }
         if (!res.ok) {
           const d = await res.json().catch(() => ({}));
-          alert(d.detail || {{ _("Ошибка обновления статуса") | tojson }});
+          notify.error(d.detail || {{ _("Ошибка обновления статуса") | tojson }});
           return;
         }
         htmx.trigger(document.getElementById('tab-active-panel'), 'refresh');
@@ -206,7 +207,7 @@
     }
 
     async function cancelOrder(orderId) {
-      if (!confirm({{ _("Отменить заказ?") | tojson }})) return;
+      if (!(await notify.confirm({{ _("Отменить заказ?") | tojson }}, {danger: true}))) return;
       try {
         const res = await fetch('/api/orders/' + orderId + '/cancel', {
           method: 'POST',
@@ -215,7 +216,7 @@
         if (res.status === 401 || res.status === 307) { location.href = '/auth/login'; return; }
         if (!res.ok) {
           const d = await res.json().catch(() => ({}));
-          alert(d.detail || {{ _("Ошибка отмены") | tojson }});
+          notify.error(d.detail || {{ _("Ошибка отмены") | tojson }});
           return;
         }
         htmx.trigger(document.getElementById('tab-active-panel'), 'refresh');

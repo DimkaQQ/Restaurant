@@ -256,7 +256,7 @@ function closeQtyModal() { document.getElementById('qty-modal').style.display = 
 
 document.getElementById('qty-confirm-btn').addEventListener('click', async () => {
   const qty = parseFloat(document.getElementById('qty-input').value);
-  if (!qty || qty <= 0) { alert(T.enterQty); return; }
+  if (!qty || qty <= 0) { notify.error(T.enterQty); return; }
   const body = { quantity: qty };
   if (currentAction === 'writeoff') {
     body.reason = document.getElementById('writeoff-reason').value;
@@ -269,17 +269,17 @@ document.getElementById('qty-confirm-btn').addEventListener('click', async () =>
     body: JSON.stringify(body),
   });
   if (res.ok) { closeQtyModal(); location.reload(); }
-  else { const d = await res.json().catch(()=>({})); alert(d.detail || T.error); }
+  else { const d = await res.json().catch(()=>({})); notify.error(d.detail || T.error); }
 });
 
 async function deleteIngredient(id) {
-  if (!confirm(T.deleteConfirm)) return;
+  if (!(await notify.confirm(T.deleteConfirm, {danger: true}))) return;
   const res = await fetch('/api/inventory/'+id, {
     method:'DELETE', credentials:'include',
     headers:{'Authorization':'Bearer '+localStorage.getItem('access_token')},
   });
   if (res.ok) { document.getElementById('row-'+id)?.remove(); }
-  else { const d = await res.json().catch(()=>({})); alert(d.detail||T.error); }
+  else { const d = await res.json().catch(()=>({})); notify.error(d.detail||T.error); }
 }
 
 document.getElementById('add-form').addEventListener('submit', async (e) => {

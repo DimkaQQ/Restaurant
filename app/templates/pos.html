@@ -212,10 +212,10 @@
         document.getElementById('table-number').value = '';
         renderCart();
         loadMenu();
-        alert(T.orderSent);
+        notify.success(T.orderSent);
       } else {
         const err = await res.json().catch(() => ({}));
-        alert(err.detail || T.orderError);
+        notify.error(err.detail || T.orderError);
       }
     } finally {
       submitBtn.disabled = Object.keys(_cart).length === 0;

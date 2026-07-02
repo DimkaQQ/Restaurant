@@ -272,7 +272,7 @@ const T = {
 };
 
 async function deleteUser(userId) {
-  if (!confirm(T.deleteConfirm)) return;
+  if (!(await notify.confirm(T.deleteConfirm, {danger: true}))) return;
   const res = await fetch('/settings/users/' + userId, {
     method: 'DELETE',
     credentials: 'include',
@@ -283,7 +283,7 @@ async function deleteUser(userId) {
     if (card) card.remove();
   } else {
     const data = await res.json().catch(() => ({}));
-    alert(data.detail || T.deleteError);
+    notify.error(data.detail || T.deleteError);
   }
 }
 
@@ -337,11 +337,11 @@ async function generateBotLink() {
     document.getElementById('bot-link-url').textContent = generatedLink;
     document.getElementById('bot-link-result').style.display = 'block';
   } else {
-    alert(T.tokenError);
+    notify.error(T.tokenError);
   }
 }
 function copyLink() {
-  navigator.clipboard.writeText(generatedLink).then(() => alert(T.copied));
+  navigator.clipboard.writeText(generatedLink).then(() => notify.success(T.copied));
 }
 </script>
 {% endblock %}

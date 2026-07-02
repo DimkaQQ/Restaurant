@@ -241,13 +241,13 @@ function changePeriod(p) {
 }
 
 async function deleteExpense(id) {
-  if (!confirm(T.deleteConfirm)) return;
+  if (!(await notify.confirm(T.deleteConfirm, {danger: true}))) return;
   const res = await fetch('/api/expenses/'+id, {
     method:'DELETE', credentials:'include',
     headers:{'Authorization':'Bearer '+localStorage.getItem('access_token')},
   });
   if (res.ok) document.getElementById('exp-'+id)?.remove();
-  else alert(T.deleteError);
+  else notify.error(T.deleteError);
 }
 
 document.getElementById('add-expense-form').addEventListener('submit', async (e) => {

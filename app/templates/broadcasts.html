@@ -176,7 +176,7 @@ async function sendBroadcast() {
 }
 
 async function deleteBroadcast(id) {
-  if (!confirm(T.deleteConfirm)) return;
+  if (!(await notify.confirm(T.deleteConfirm, {danger: true}))) return;
   const res = await fetch('/settings/api/broadcasts/' + id, {
     method: 'DELETE',
     credentials: 'include',

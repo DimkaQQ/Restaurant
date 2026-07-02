@@ -78,7 +78,7 @@
       body: JSON.stringify({venue_id: venueId, label, seats}),
     });
     if (res.ok) location.reload();
-    else { const d = await res.json().catch(()=>({})); alert(d.detail || T.addError); }
+    else { const d = await res.json().catch(()=>({})); notify.error(d.detail || T.addError); }
   }
 
   async function setStatus(tableId, status) {
@@ -90,17 +90,17 @@
     if (res.ok) {
       const card = document.getElementById('table-' + tableId);
       card.className = 'table-card ' + status;
-    } else { alert(T.statusError); }
+    } else { notify.error(T.statusError); }
   }
 
   async function deleteTable(tableId) {
-    if (!confirm(T.deleteConfirm)) return;
+    if (!(await notify.confirm(T.deleteConfirm, {danger: true}))) return;
     const res = await fetch('/settings/api/tables/' + tableId, {
       method: 'DELETE', credentials: 'include',
       headers: {'Authorization':'Bearer '+token()},
     });
     if (res.ok) location.reload();
-    else alert(T.deleteError);
+    else notify.error(T.deleteError);
   }
 </script>
 {% endblock %}
