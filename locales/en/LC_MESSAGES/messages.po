@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-02 19:44+0000\n"
+"POT-Creation-Date: 2026-07-02 19:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -61,6 +61,9 @@ msgstr "14 days free, no card required. Setup takes a couple of minutes."
 msgid "14 дней бесплатно, без карты. Начните за 2 минуты."
 msgstr "14 days free, no card required. Get started in 2 minutes."
 
+msgid "15 минут, сами"
+msgstr "15 minutes, on your own"
+
 msgid "2. Для чего используются данные"
 msgstr "2. What the data is used for"
 
@@ -99,6 +102,9 @@ msgstr "7. Contact"
 
 msgid "API-ключ (x-api-key)"
 msgstr "API key (x-api-key)"
+
+msgid "Email и название заведения — аккаунт готов за 2 минуты, карта не нужна."
+msgstr "Email and venue name — your account is ready in 2 minutes, no card needed."
 
 msgid "Email подтверждён"
 msgstr "Email verified"
@@ -145,6 +151,9 @@ msgstr ""
 msgid "Telegram ID менеджера"
 msgstr "Manager Telegram ID"
 
+msgid "Автоматически, в облаке"
+msgstr "Automatic, in the cloud"
+
 msgid "Администратор"
 msgstr "Administrator"
 
@@ -174,6 +183,9 @@ msgstr "Points"
 
 msgid "Без карты. Отменить можно в любой момент."
 msgstr "No card required. Cancel anytime."
+
+msgid "Без программистов и интеграторов"
+msgstr "No engineers or integrators"
 
 msgid "Безлимит заведений"
 msgstr "Unlimited venues"
@@ -321,6 +333,9 @@ msgstr "Serve — paid by cash"
 msgid "Выдать:"
 msgstr "Serve:"
 
+msgid "Выезд специалиста"
+msgstr "On-site technician visit"
+
 msgid "Выйти"
 msgstr "Log out"
 
@@ -427,6 +442,9 @@ msgstr "Date"
 msgid "Дашборд"
 msgstr "Dashboard"
 
+msgid "Десятки вкладок, нужны тренинги"
+msgstr "Dozens of tabs, training required"
+
 msgid "Динамика отзывов (30 дней)"
 msgstr "Review trend (30 days)"
 
@@ -439,6 +457,9 @@ msgstr ""
 "To provide the Service's features (order taking, kitchen display, "
 "loyalty, analytics, receipt fiscalization), to secure accounts, and, "
 "where consented, for email notifications (e.g. password recovery)."
+
+msgid "Дни или недели, платный интегратор"
+msgstr "Days or weeks, paid integrator"
 
 msgid "До 3 сотрудников"
 msgstr "Up to 3 staff members"
@@ -463,6 +484,9 @@ msgstr "Add expense"
 
 msgid "Добавить смену"
 msgstr "Add shift"
+
+msgid "Добавьте меню и столы"
+msgstr "Add your menu and tables"
 
 msgid "Добавьте позиции в меню"
 msgstr "Add menu items"
@@ -533,6 +557,12 @@ msgstr "Occupied"
 msgid "Запуск"
 msgstr "Launching"
 
+msgid "Запуск за 15 минут"
+msgstr "Launch in 15 minutes"
+
+msgid "Зарегистрируйтесь"
+msgstr "Sign up"
+
 msgid "Инвентаризация"
 msgstr "Inventory count"
 
@@ -542,6 +572,9 @@ msgid ""
 msgstr ""
 "Integration with Webkassa (Kazakhstan) — the receipt is fiscalized "
 "automatically when an order closes."
+
+msgid "Интуитивно — бариста разберётся за 10 минут"
+msgstr "Intuitive — a barista learns it in 10 minutes"
 
 msgid "Использование"
 msgstr "Usage"
@@ -561,6 +594,9 @@ msgstr "Total"
 msgid "Казахстан"
 msgstr "Kazakhstan"
 
+msgid "Как начать"
+msgstr "How to start"
+
 msgid "Карта"
 msgstr "Card"
 
@@ -570,6 +606,9 @@ msgstr "Card"
 msgid "Касса"
 msgstr "Register"
 
+msgid "Касса на планшете, кухонный экран, QR-меню для гостей — работает сразу."
+msgstr "POS on a tablet, kitchen display, QR menu for guests — it just works."
+
 msgid "Кассир"
 msgstr "Cashier"
 
@@ -578,6 +617,16 @@ msgstr "Category"
 
 msgid "Квартал"
 msgstr "Quarter"
+
+msgid "Классические ERP"
+msgstr "Legacy ERPs"
+
+msgid ""
+"Классические ресторанные системы создавались для крупных сетей. Маленькой"
+" кофейне они дают сложность, а не контроль."
+msgstr ""
+"Legacy restaurant systems were built for big chains. For a small coffee "
+"shop they add complexity, not control."
 
 msgid "Кол-во"
 msgstr "Qty"
@@ -612,8 +661,14 @@ msgstr "Kitchen"
 msgid "Кухонный дисплей (KDS)"
 msgstr "Kitchen display (KDS)"
 
+msgid "Лицензии + модули + внедрение"
+msgstr "Licenses + modules + implementation"
+
 msgid "Логин кассы"
 msgstr "Kassa login"
+
+msgid "Любой планшет, iPad или смартфон"
+msgstr "Any tablet, iPad, or smartphone"
 
 msgid "Мало"
 msgstr "Low"
@@ -822,8 +877,17 @@ msgstr "Overview"
 msgid "Обновить страницу"
 msgstr "Reload page"
 
+msgid "Обновления"
+msgstr "Updates"
+
 msgid "Обновлено:"
 msgstr "Last updated:"
+
+msgid "Оборудование"
+msgstr "Hardware"
+
+msgid "Обучение персонала"
+msgstr "Staff training"
 
 msgid "Общий NPS"
 msgstr "Overall NPS"
@@ -862,6 +926,9 @@ msgstr "Trial days left:"
 
 msgid "Остаток"
 msgstr "In stock"
+
+msgid "От $30/мес, всё включено"
+msgstr "From $30/mo, all inclusive"
 
 msgid "Отзывов"
 msgstr "Reviews"
@@ -983,6 +1050,13 @@ msgstr "Fiscalization error"
 
 msgid "Ошибка, попробуйте позже"
 msgstr "Error, please try again later"
+
+msgid ""
+"Панель сама подскажет шаги. Позиции меню, столы, сотрудники — всё за 10 "
+"минут."
+msgstr ""
+"The dashboard guides you through the steps. Menu items, tables, staff — "
+"all in 10 minutes."
 
 msgid "Панель управления сетью ресторанов"
 msgstr "Restaurant network management dashboard"
@@ -1112,6 +1186,9 @@ msgstr "Recent expenses"
 msgid "Посмотреть цены"
 msgstr "See pricing"
 
+msgid "Почему не тяжёлая ERP?"
+msgstr "Why not a heavyweight ERP?"
+
 msgid "Предпросмотр"
 msgstr "Preview"
 
@@ -1126,6 +1203,9 @@ msgstr "Invite a staff member"
 
 msgid "Примечание"
 msgstr "Note"
+
+msgid "Принимайте заказы"
+msgstr "Take orders"
 
 msgid "Принять"
 msgstr "Accept"
@@ -1180,6 +1260,9 @@ msgstr "Fri"
 
 msgid "Пусто"
 msgstr "Empty"
+
+msgid "Работает на любом планшете"
+msgstr "Runs on any tablet"
 
 msgid "Рассылки"
 msgstr "Broadcasts"
@@ -1356,6 +1439,9 @@ msgstr "Save fiscalization settings"
 msgid "Спасибо, ждём вас снова!"
 msgstr "Thank you, see you again!"
 
+msgid "Специальные Windows-терминалы"
+msgstr "Dedicated Windows terminals"
+
 msgid ""
 "Списание ингредиентов автоматически при закрытии заказа по рецептуре "
 "блюда — остатки всегда актуальны."
@@ -1511,6 +1597,9 @@ msgstr "Fiscalizing…"
 
 msgid "Фискальный чек №"
 msgstr "Fiscal receipt No."
+
+msgid "Цена"
+msgstr "Price"
 
 msgid "Цена (₸)"
 msgstr "Price (₸)"
