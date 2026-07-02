@@ -39,7 +39,18 @@
     {% endif %}
   </div>
   <div class="kds-action">
-    {% if next_status.get(order.status) %}
+    {% if order.status == 'ready' %}
+    <button
+      class="kds-btn kds-btn-advance"
+      onclick="advanceOrder('{{ order.id }}', 'done', 'cash')"
+      title="Выдать — оплата наличными"
+    >💵 Выдать</button>
+    <button
+      class="kds-btn kds-btn-advance"
+      onclick="advanceOrder('{{ order.id }}', 'done', 'card')"
+      title="Выдать — оплата картой"
+    >💳 Выдать</button>
+    {% elif next_status.get(order.status) %}
     <button
       class="kds-btn kds-btn-advance"
       onclick="advanceOrder('{{ order.id }}', '{{ next_status[order.status] }}')"

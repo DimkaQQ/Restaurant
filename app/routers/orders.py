@@ -165,7 +165,9 @@ async def change_order_status(
         )).scalar_one_or_none()
         if not check:
             raise HTTPException(status_code=404, detail="Заказ не найден")
-        order = await update_order_status(order_id, data.status, db, changed_by=current_user.email)
+        order = await update_order_status(
+            order_id, data.status, db, changed_by=current_user.email, payment_method=data.payment_method
+        )
         return order
     except HTTPException:
         raise

@@ -238,9 +238,17 @@ async def delete_broadcast_api(
     return {"ok": True}
 
 
+_VALID_FISCAL_PROVIDERS = ("webkassa",)
+
+
 class VenueSettingsPatch(BaseModel):
     gis_url: str | None = None
     manager_telegram_id: int | None = None
+    fiscal_provider: str | None = None
+    fiscal_api_key: str | None = None
+    fiscal_login: str | None = None
+    fiscal_password: str | None = None
+    fiscal_cashbox_number: str | None = None
 
 
 @router.get("/venues", response_class=HTMLResponse)
@@ -279,6 +287,22 @@ async def update_venue_settings(
         venue.gis_url = data.gis_url.strip() if data.gis_url else None
     if 'manager_telegram_id' in data.model_fields_set:
         venue.manager_telegram_id = data.manager_telegram_id  # None clears the field
+    if 'fiscal_provider' in data.model_fields_set:
+        provider = data.fiscal_provider.strip() if data.fiscal_provider else None
+        if provider and provider not in _VALID_FISCAL_PROVIDERS:
+            raise HTTPException(status_code=400, detail="Неизвестный провайдер фискализации")
+        venue.fiscal_provider = provider
+    # Credential fields are write-only (never sent back to the client), so the
+    # settings form always submits them blank unless the owner is actively
+    # changing one — treat blank as "leave unchanged", not "clear".
+    if data.fiscal_api_key:
+        venue.fiscal_api_key = data.fiscal_api_key.strip()
+    if data.fiscal_login:
+        venue.fiscal_login = data.fiscal_login.strip()
+    if data.fiscal_password:
+        venue.fiscal_password = data.fiscal_password.strip()
+    if data.fiscal_cashbox_number:
+        venue.fiscal_cashbox_number = data.fiscal_cashbox_number.strip()
     await db.commit()
     return {"ok": True, "id": str(venue.id)}
 

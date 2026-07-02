@@ -20,6 +20,11 @@ class VenueUpdate(BaseModel):
     city: str | None = None
     gis_url: str | None = None
     manager_telegram_id: int | None = None
+    fiscal_provider: str | None = None
+    fiscal_api_key: str | None = None
+    fiscal_login: str | None = None
+    fiscal_password: str | None = None
+    fiscal_cashbox_number: str | None = None
 
 
 class VenueOut(BaseModel):
@@ -32,5 +37,7 @@ class VenueOut(BaseModel):
     manager_telegram_id: int | None = None
     is_active: bool
     created_at: datetime
+    fiscal_provider: str | None = None
+    fiscal_cashbox_number: str | None = None
 
     model_config = {"from_attributes": True}

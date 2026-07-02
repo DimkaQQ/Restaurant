@@ -77,6 +77,37 @@
     </div>
     <button class="btn-primary save-btn" onclick="saveVenue('{{ venue.id }}')">Сохранить</button>
     <div class="save-result" id="res_{{ venue.id }}"></div>
+
+    <hr style="border-color:var(--border); margin:1.25rem 0">
+    <div class="venue-settings-name" style="font-size:0.95rem">
+      🧾 Фискализация (ОФД)
+      {% if venue.fiscal_provider %}<span style="color:#4ade80; font-size:0.75rem; font-weight:400">— подключено ({{ venue.fiscal_provider }})</span>{% endif %}
+    </div>
+    <div class="form-row">
+      <label>Провайдер</label>
+      <select id="fp_{{ venue.id }}" class="input-field">
+        <option value="" {% if not venue.fiscal_provider %}selected{% endif %}>Не подключено</option>
+        <option value="webkassa" {% if venue.fiscal_provider == 'webkassa' %}selected{% endif %}>Webkassa (Казахстан)</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label>API-ключ (x-api-key)</label>
+      <input type="password" id="fak_{{ venue.id }}" class="input-field" placeholder="{{ '••••••••' if venue.fiscal_provider else 'из кабинета Webkassa' }}">
+    </div>
+    <div class="form-row">
+      <label>Логин кассы</label>
+      <input type="text" id="flg_{{ venue.id }}" class="input-field" placeholder="{{ '••••••••' if venue.fiscal_provider else 'логин' }}">
+    </div>
+    <div class="form-row">
+      <label>Пароль кассы</label>
+      <input type="password" id="fpw_{{ venue.id }}" class="input-field" placeholder="{{ '••••••••' if venue.fiscal_provider else 'пароль' }}">
+    </div>
+    <div class="form-row">
+      <label>Номер кассы (CashboxUniqueNumber)</label>
+      <input type="text" id="fcb_{{ venue.id }}" class="input-field" value="{{ venue.fiscal_cashbox_number or '' }}" placeholder="уникальный номер ККМ">
+    </div>
+    <button class="btn-primary save-btn" onclick="saveFiscal('{{ venue.id }}')">Сохранить фискализацию</button>
+    <div class="save-result" id="fres_{{ venue.id }}"></div>
   </div>
   {% endfor %}
 </div>
@@ -119,6 +150,46 @@ async function saveVenue(venueId) {
     resEl.className = 'save-result err';
   }
   setTimeout(() => { resEl.textContent = ''; }, 4000);
+}
+
+async function saveFiscal(venueId) {
+  const provider = document.getElementById('fp_' + venueId).value;
+  const apiKey = document.getElementById('fak_' + venueId).value.trim();
+  const login = document.getElementById('flg_' + venueId).value.trim();
+  const password = document.getElementById('fpw_' + venueId).value.trim();
+  const cashbox = document.getElementById('fcb_' + venueId).value.trim();
+  const resEl = document.getElementById('fres_' + venueId);
+
+  const body = { fiscal_provider: provider || null };
+  if (apiKey) body.fiscal_api_key = apiKey;
+  if (login) body.fiscal_login = login;
+  if (password) body.fiscal_password = password;
+  if (cashbox) body.fiscal_cashbox_number = cashbox;
+
+  try {
+    const token = document.cookie.split(';').find(c => c.trim().startsWith('access_token='));
+    const headers = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = 'Bearer ' + token.split('=')[1];
+
+    const resp = await fetch('/settings/api/venues/' + venueId, {
+      method: 'PATCH',
+      headers,
+      credentials: 'include',
+      body: JSON.stringify(body),
+    });
+    if (resp.ok) {
+      resEl.textContent = '✅ Сохранено';
+      resEl.className = 'save-result ok';
+      setTimeout(() => location.reload(), 800);
+    } else {
+      const err = await resp.json().catch(() => ({}));
+      resEl.textContent = '❌ ' + (err.detail || 'Ошибка');
+      resEl.className = 'save-result err';
+    }
+  } catch (e) {
+    resEl.textContent = '❌ Ошибка соединения';
+    resEl.className = 'save-result err';
+  }
 }
 </script>
 {% endblock %}

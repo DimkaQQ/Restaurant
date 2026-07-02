@@ -19,6 +19,14 @@ class Venue(Base):
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
+    # Fiscal receipt integration (KZ online kassa providers, e.g. Webkassa) —
+    # each venue has its own registered kassa/ОФД, credentials are per-venue.
+    fiscal_provider: Mapped[str | None] = mapped_column(String(30), nullable=True)  # None, "webkassa"
+    fiscal_api_key: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    fiscal_login: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    fiscal_password: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    fiscal_cashbox_number: Mapped[str | None] = mapped_column(String(100), nullable=True)
+
     network: Mapped["Network"] = relationship("Network", back_populates="venues")
     menu_items: Mapped[list["MenuItem"]] = relationship("MenuItem", back_populates="venue")
     orders: Mapped[list["Order"]] = relationship("Order", back_populates="venue")

@@ -26,6 +26,14 @@ class Order(Base):
     )
     review_sent_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
+    # Fiscal receipt (KZ online kassa). payment_method is required to issue a
+    # check — cash/card/mobile — captured when staff closes the order.
+    payment_method: Mapped[str | None] = mapped_column(String(20), nullable=True)  # cash, card, mobile
+    fiscal_status: Mapped[str | None] = mapped_column(String(20), nullable=True)  # None, pending, issued, failed
+    fiscal_check_number: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    fiscal_ticket_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    fiscal_error: Mapped[str | None] = mapped_column(Text, nullable=True)
+
     venue: Mapped["Venue"] = relationship("Venue", back_populates="orders")
     guest: Mapped["Guest"] = relationship("Guest", back_populates="orders")
     staff: Mapped["Staff | None"] = relationship("Staff", back_populates="orders")

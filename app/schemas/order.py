@@ -51,6 +51,11 @@ class OrderOut(BaseModel):
     source: str | None = None
     created_at: datetime
     updated_at: datetime
+    payment_method: str | None = None
+    fiscal_status: str | None = None
+    fiscal_check_number: str | None = None
+    fiscal_ticket_url: str | None = None
+    fiscal_error: str | None = None
     items: list[OrderItemOut] = []
     guest: GuestShort | None = None
 
@@ -59,3 +64,4 @@ class OrderOut(BaseModel):
 
 class OrderStatusUpdate(BaseModel):
     status: str
+    payment_method: str | None = None

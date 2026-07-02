@@ -15,6 +15,7 @@ from app.models.points import PointsTransaction
 from app.models.recipe import Recipe
 from app.models.table import Table
 from app.schemas.order import OrderCreate
+from app.services.fiscal.service import issue_fiscal_check
 from app.services.points_service import add_points, calculate_points_earned
 
 ACTIVE_ORDER_STATUSES = ("new", "confirmed", "preparing", "ready")
@@ -198,13 +199,14 @@ async def update_order_status(
     new_status: str,
     db: AsyncSession,
     changed_by: str = "staff",
+    payment_method: str | None = None,
 ) -> Order:
     # Lock the order row for the duration of the transition so two concurrent
     # requests (double-click, racing clients) can't both pass the
     # VALID_TRANSITIONS check and both trigger inventory deduction on "done".
     result = await db.execute(
         select(Order)
-        .options(selectinload(Order.items), selectinload(Order.guest))
+        .options(selectinload(Order.items), selectinload(Order.guest), selectinload(Order.venue))
         .where(Order.id == order_id)
         .with_for_update()
     )
@@ -216,6 +218,8 @@ async def update_order_status(
 
     old_status = order.status
     order.status = new_status
+    if payment_method:
+        order.payment_method = payment_method
     db.add(OrderStatusLog(
         id=uuid.uuid4(),
         order_id=order.id,
@@ -226,6 +230,7 @@ async def update_order_status(
 
     if new_status == "done":
         await _deduct_inventory_for_order(order, db)
+        await issue_fiscal_check(order, order.venue)
 
     if order.table_id and new_status in ("done", "cancelled"):
         await _sync_table_status(order.table_id, db)

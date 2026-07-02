@@ -161,14 +161,21 @@ async def change_status_html(
     current_user: User = Depends(get_current_user_dep),
     db: AsyncSession = Depends(get_db),
 ):
+    # NOTE: app/routers/orders.py also declares PATCH /api/orders/{order_id}/status
+    # (registered under the same "/api/orders" path) — since this router is
+    # included first in main.py, THIS handler is the one that actually runs;
+    # the one in orders.py is unreachable. Fixing that route collision is a
+    # separate cleanup; for now this is the one real callers hit.
     try:
         content_type = request.headers.get("content-type", "")
         if "application/json" in content_type:
             body = await request.json()
             new_status = body.get("status")
+            payment_method = body.get("payment_method")
         else:
             form = await request.form()
             new_status = form.get("status")
+            payment_method = form.get("payment_method")
         if not new_status:
             return HTMLResponse("<p class='error-state'>Статус обязателен</p>", status_code=400)
         venue_ids = await get_accessible_venue_ids(current_user, db)
@@ -177,7 +184,9 @@ async def change_status_html(
         )).scalar_one_or_none()
         if not check:
             return HTMLResponse("<p class='error-state'>Заказ не найден</p>", status_code=404)
-        order = await update_order_status(order_id, new_status, db)
+        order = await update_order_status(
+            order_id, new_status, db, changed_by=current_user.email, payment_method=payment_method
+        )
 
         if order.status in ("done", "cancelled"):
             return HTMLResponse("", headers={"HX-Reswap": "delete"})
