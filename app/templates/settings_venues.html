@@ -43,7 +43,10 @@
 {% include "partials/settings_tabs.html" %}
 <div class="page-header">
   <h1 class="page-title">{{ _("Настройки заведений") }}</h1>
-  <span class="muted">{{ _("2GIS ссылки и Telegram менеджеров") }}</span>
+  <div style="display:flex;align-items:center;gap:1rem">
+    <span class="muted">{{ _("2GIS ссылки и Telegram менеджеров") }}</span>
+    <a href="/settings/api/export" style="color:var(--muted);font-size:.85rem;text-decoration:none;white-space:nowrap" title="{{ _('Скачать все данные сети в формате JSON') }}">⬇ {{ _("Экспорт данных") }}</a>
+  </div>
 </div>
 
 {% if venues %}

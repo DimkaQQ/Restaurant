@@ -4,7 +4,7 @@ import uuid
 
 from fastapi import APIRouter, Depends, Form, HTTPException, Request, Response
 from fastapi.responses import HTMLResponse, RedirectResponse
-from sqlalchemy import func, select
+from sqlalchemy import func, select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -156,3 +156,54 @@ async def audit_log_page(request: Request, db: AsyncSession = Depends(get_db)):
         select(AdminAuditLog).order_by(AdminAuditLog.created_at.desc()).limit(200)
     )).scalars().all()
     return templates.TemplateResponse("platform_admin_audit.html", {"request": request, "entries": entries})
+
+
+# Deletes every row scoped to a network, in FK-dependency order (children
+# before parents). recipes/tables/order_status_log cascade at the DB level
+# (ondelete=CASCADE on their FKs) so they're not listed explicitly here.
+_DELETE_NETWORK_STATEMENTS = [
+    "DELETE FROM order_items WHERE order_id IN (SELECT id FROM orders WHERE venue_id IN (SELECT id FROM venues WHERE network_id = :nid))",
+    "DELETE FROM reviews WHERE venue_id IN (SELECT id FROM venues WHERE network_id = :nid)",
+    "DELETE FROM visits WHERE venue_id IN (SELECT id FROM venues WHERE network_id = :nid)",
+    "DELETE FROM points_transactions WHERE venue_id IN (SELECT id FROM venues WHERE network_id = :nid)",
+    "DELETE FROM orders WHERE venue_id IN (SELECT id FROM venues WHERE network_id = :nid)",
+    "DELETE FROM writeoffs WHERE ingredient_id IN (SELECT id FROM ingredients WHERE network_id = :nid)",
+    "DELETE FROM ingredients WHERE network_id = :nid",
+    "DELETE FROM menu_items WHERE venue_id IN (SELECT id FROM venues WHERE network_id = :nid)",
+    "DELETE FROM expenses WHERE network_id = :nid",
+    "DELETE FROM shifts WHERE staff_id IN (SELECT id FROM staff WHERE network_id = :nid)",
+    "DELETE FROM staff WHERE network_id = :nid",
+    "DELETE FROM broadcasts WHERE network_id = :nid",
+    "DELETE FROM admin_audit_log WHERE network_id = :nid",
+    "DELETE FROM guests WHERE network_id = :nid",
+    "DELETE FROM users WHERE network_id = :nid",
+    "DELETE FROM subscriptions WHERE network_id = :nid",
+    "DELETE FROM venues WHERE network_id = :nid",
+]
+
+
+@router.post("/delete-network/{network_id}")
+async def delete_network(
+    network_id: uuid.UUID,
+    request: Request,
+    confirm_slug: str = Form(...),
+    db: AsyncSession = Depends(get_db),
+):
+    """Irreversibly erase a tenant's data — the fulfillment path for the
+    account-deletion request the privacy policy promises. Typed-confirmation
+    gated (must match the network's own slug) since there's no undo."""
+    admin = await _require_platform_admin(request, db)
+
+    network = (await db.execute(select(Network).where(Network.id == network_id))).scalar_one_or_none()
+    if not network:
+        raise HTTPException(status_code=404, detail="Сеть не найдена")
+    if confirm_slug != network.slug:
+        raise HTTPException(status_code=400, detail="Slug не совпадает — удаление отменено")
+
+    name, slug = network.name, network.slug
+    for stmt in _DELETE_NETWORK_STATEMENTS:
+        await db.execute(text(stmt), {"nid": network_id})
+    await db.execute(text("DELETE FROM networks WHERE id = :nid"), {"nid": network_id})
+
+    await _log_admin_action(admin, "delete_network", None, f"deleted network {name!r} (slug={slug}, id={network_id})", db)
+    return {"ok": True, "deleted": slug}

@@ -16,6 +16,11 @@ import os as _os
 from app.database import get_db
 from app.models.broadcast import Broadcast
 from app.models.guest import Guest
+from app.models.inventory import Ingredient
+from app.models.menu import MenuItem
+from app.models.network import Network
+from app.models.order import Order, OrderItem
+from app.models.staff import Staff
 from app.models.table import Table
 from app.models.user import User
 from app.models.venue import Venue
@@ -40,6 +45,59 @@ class BroadcastCreate(BaseModel):
 def _require_owner(current_user: User) -> None:
     if current_user.role != "owner":
         raise HTTPException(status_code=403, detail="Доступ запрещён: только для владельца")
+
+
+@router.get("/api/export")
+async def export_network_data(
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    """Self-service GDPR-style data export — the portability promise made in
+    the privacy policy. Owner-only; excludes credentials (password hashes,
+    fiscal API keys) and internal-only fields."""
+    _require_owner(current_user)
+    network_id = current_user.network_id
+
+    network = (await db.execute(select(Network).where(Network.id == network_id))).scalar_one()
+    venues = (await db.execute(select(Venue).where(Venue.network_id == network_id))).scalars().all()
+    venue_ids = [v.id for v in venues]
+
+    users = (await db.execute(select(User).where(User.network_id == network_id))).scalars().all()
+    staff = (await db.execute(select(Staff).where(Staff.network_id == network_id))).scalars().all()
+    guests = (await db.execute(select(Guest).where(Guest.network_id == network_id))).scalars().all()
+    ingredients = (await db.execute(select(Ingredient).where(Ingredient.network_id == network_id))).scalars().all()
+    menu_items = (await db.execute(select(MenuItem).where(MenuItem.venue_id.in_(venue_ids)))).scalars().all() if venue_ids else []
+    orders = (
+        await db.execute(
+            select(Order).options(selectinload(Order.items)).where(Order.venue_id.in_(venue_ids))
+        )
+    ).scalars().all() if venue_ids else []
+
+    from datetime import datetime, timezone
+    return {
+        "exported_at": datetime.now(timezone.utc).isoformat(),
+        "network": {"id": str(network.id), "name": network.name, "slug": network.slug, "created_at": str(network.created_at)},
+        "venues": [{"id": str(v.id), "name": v.name, "address": v.address, "city": v.city} for v in venues],
+        "users": [{"id": str(u.id), "email": u.email, "role": u.role, "created_at": str(u.created_at)} for u in users],
+        "staff": [{"id": str(s.id), "name": s.name, "role": s.role, "venue_id": str(s.venue_id)} for s in staff],
+        "guests": [
+            {
+                "id": str(g.id), "name": g.name, "phone": g.phone, "telegram_id": g.telegram_id,
+                "total_points": g.total_points, "total_visits": g.total_visits, "created_at": str(g.created_at),
+            }
+            for g in guests
+        ],
+        "menu_items": [{"id": str(m.id), "name": m.name, "price": str(m.price), "venue_id": str(m.venue_id)} for m in menu_items],
+        "ingredients": [{"id": str(i.id), "name": i.name, "quantity": str(i.quantity), "unit": i.unit} for i in ingredients],
+        "orders": [
+            {
+                "id": str(o.id), "venue_id": str(o.venue_id), "status": o.status,
+                "total_amount": str(o.total_amount), "created_at": str(o.created_at),
+                "items": [{"name": i.name, "quantity": i.quantity, "price": str(i.price)} for i in o.items],
+            }
+            for o in orders
+        ],
+    }
 
 
 @router.get("/users", response_class=HTMLResponse)

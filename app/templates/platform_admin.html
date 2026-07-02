@@ -79,10 +79,26 @@
           <form method="post" action="/platform/admin/impersonate/{{ r.id }}" onsubmit="return confirm('Войти как владелец сети «{{ r.name }}»? Действие будет записано в журнал.')">
             <button type="submit" class="impersonate-btn">👤 Войти как владелец</button>
           </form>
+          <form method="post" action="/platform/admin/delete-network/{{ r.id }}" onsubmit="return confirmDelete('{{ r.slug }}', this)">
+            <input type="hidden" name="confirm_slug" value="">
+            <button type="submit" class="impersonate-btn" style="color:#f87171;border-color:rgba(239,68,68,.4)">🗑 Удалить сеть</button>
+          </form>
         </td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
+
+  <script>
+    function confirmDelete(slug, form) {
+      const typed = prompt('Это НЕОБРАТИМО удалит все данные сети. Введите slug сети для подтверждения: ' + slug);
+      if (typed !== slug) {
+        if (typed !== null) alert('Slug не совпадает — удаление отменено');
+        return false;
+      }
+      form.querySelector('input[name=confirm_slug]').value = typed;
+      return true;
+    }
+  </script>
 </body>
 </html>

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-02 06:53+0000\n"
+"POT-Creation-Date: 2026-07-02 15:21+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -1210,6 +1210,9 @@ msgstr ""
 msgid "Сервис:"
 msgstr "Service:"
 
+msgid "Скачать все данные сети в формате JSON"
+msgstr "Download all network data as JSON"
+
 msgid "Склад"
 msgstr "Inventory"
 
@@ -1462,6 +1465,9 @@ msgstr ""
 
 msgid "Экран кухни ↗"
 msgstr "Kitchen screen ↗"
+
+msgid "Экспорт данных"
+msgstr "Export data"
 
 msgid "Язык получателей"
 msgstr "Recipient language"
