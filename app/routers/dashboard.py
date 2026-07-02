@@ -255,6 +255,36 @@ async def orders_page(
         raise HTTPException(status_code=500, detail="Ошибка загрузки страницы заказов")
 
 
+@router.get("/orders/{order_id}/receipt", response_class=HTMLResponse)
+async def order_receipt(
+    order_id: uuid.UUID,
+    request: Request,
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    """Print-friendly receipt / kitchen ticket — opened in a new tab and
+    printed via the browser (works with any thermal printer set as the
+    default system printer, no special driver integration needed)."""
+    try:
+        accessible_ids = await get_accessible_venue_ids(current_user, db)
+        order = (await db.execute(
+            select(Order)
+            .options(selectinload(Order.items), selectinload(Order.guest), selectinload(Order.venue))
+            .where(Order.id == order_id, Order.venue_id.in_(accessible_ids))
+        )).scalar_one_or_none()
+        if not order:
+            raise HTTPException(status_code=404, detail="Заказ не найден")
+        return templates.TemplateResponse("receipt.html", {
+            "request": request,
+            "order": order,
+        })
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error("Receipt page error: %s", e)
+        raise HTTPException(status_code=500, detail="Ошибка загрузки чека")
+
+
 @router.get("/menu", response_class=HTMLResponse)
 async def menu_page(
     request: Request,

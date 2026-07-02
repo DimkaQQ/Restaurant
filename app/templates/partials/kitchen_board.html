@@ -16,6 +16,7 @@
   <div class="kds-card-top">
     <span class="kds-order-id">#{{ order.id | string | truncate(8, True, '') }}</span>
     {% if order.venue %}<span class="kds-venue-tag">{{ order.venue.name.split('—')[-1].strip() }}</span>{% endif %}
+    <a href="/orders/{{ order.id }}/receipt" target="_blank" title="Печать талона" style="text-decoration:none">🖨</a>
     <span class="kds-elapsed {% if mins < 10 %}fast{% elif mins < 20 %}medium{% else %}slow{% endif %}">{{ mins }} мин</span>
   </div>
   {% if order.table_number or order.source == 'online' %}

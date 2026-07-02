@@ -64,6 +64,7 @@
         class="btn-cancel"
       >Отмена</button>
       {% endif %}
+      <a href="/orders/{{ order.id }}/receipt" target="_blank" class="btn-status" title="Печать чека" style="text-decoration:none">🖨</a>
     </div>
   </div>
   {% endfor %}

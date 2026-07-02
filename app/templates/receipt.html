@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Чек #{{ order.id | string | truncate(8, True, '') }}</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      color: #000;
+      background: #ccc;
+      display: flex;
+      justify-content: center;
+      padding: 1.5rem 0;
+    }
+    .receipt {
+      width: 300px;
+      background: #fff;
+      padding: 1rem 1.1rem;
+    }
+    .center { text-align: center; }
+    .venue-name { font-size: 15px; font-weight: 700; margin-bottom: .15rem; }
+    .venue-addr { font-size: 11px; margin-bottom: .75rem; }
+    .divider { border-top: 1px dashed #000; margin: .6rem 0; }
+    .meta-row { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: .15rem; }
+    .items { margin: .6rem 0; }
+    .item-row { display: flex; justify-content: space-between; gap: .5rem; margin-bottom: .3rem; }
+    .item-name { flex: 1; }
+    .item-qty { color: #333; }
+    .item-price { text-align: right; min-width: 60px; }
+    .item-comment { font-size: 10px; color: #444; padding-left: .5rem; margin-bottom: .3rem; }
+    .total-row { display: flex; justify-content: space-between; font-size: 15px; font-weight: 700; margin-top: .4rem; }
+    .fiscal { font-size: 10px; margin-top: .75rem; word-break: break-all; }
+    .footer { text-align: center; font-size: 11px; margin-top: 1rem; }
+    .no-print { text-align: center; margin-top: 1.25rem; }
+    .no-print button {
+      font-family: 'Inter', sans-serif; font-size: 14px; padding: .6rem 1.4rem;
+      background: #111; color: #fff; border: none; border-radius: 6px; cursor: pointer;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      .receipt { width: 100%; padding: 0; }
+      .no-print { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="receipt">
+    <div class="center">
+      <div class="venue-name">{{ order.venue.name if order.venue else 'RestOS' }}</div>
+      {% if order.venue and order.venue.address %}<div class="venue-addr">{{ order.venue.address }}</div>{% endif %}
+    </div>
+    <div class="divider"></div>
+    <div class="meta-row"><span>Заказ</span><span>#{{ order.id | string | truncate(8, True, '') }}</span></div>
+    <div class="meta-row"><span>Дата</span><span>{{ order.created_at.strftime('%d.%m.%Y %H:%M') }}</span></div>
+    {% if order.table_number %}<div class="meta-row"><span>Стол</span><span>{{ order.table_number }}</span></div>{% endif %}
+    {% if order.guest and order.guest.name %}<div class="meta-row"><span>Гость</span><span>{{ order.guest.name }}</span></div>{% endif %}
+    <div class="divider"></div>
+    <div class="items">
+      {% for item in order.items %}
+      <div class="item-row">
+        <span class="item-name">{{ item.name }} <span class="item-qty">×{{ item.quantity }}</span></span>
+        <span class="item-price">{{ "{:,.0f}".format(item.price * item.quantity) }}</span>
+      </div>
+      {% if item.comment %}<div class="item-comment">— {{ item.comment }}</div>{% endif %}
+      {% endfor %}
+    </div>
+    <div class="divider"></div>
+    <div class="total-row"><span>Итого</span><span>{{ "{:,.0f}".format(order.total_amount) }} ₸</span></div>
+    {% if order.payment_method %}
+    <div class="meta-row" style="margin-top:.3rem">
+      <span>Оплата</span>
+      <span>{{ {"cash": "Наличные", "card": "Картой", "mobile": "Моб. платёж"}.get(order.payment_method, order.payment_method) }}</span>
+    </div>
+    {% endif %}
+    {% if order.fiscal_check_number %}
+    <div class="fiscal">
+      Фискальный чек №{{ order.fiscal_check_number }}
+      {% if order.fiscal_ticket_url %}<br>{{ order.fiscal_ticket_url }}{% endif %}
+    </div>
+    {% endif %}
+    <div class="footer">Спасибо, ждём вас снова!</div>
+  </div>
+  <div class="no-print">
+    <button onclick="window.print()">🖨 Печать</button>
+  </div>
+</body>
+</html>
