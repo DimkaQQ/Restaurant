@@ -1,6 +1,7 @@
 import asyncio
 import logging
 from contextlib import asynccontextmanager
+from urllib.parse import urlsplit
 
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
@@ -40,6 +41,34 @@ app = FastAPI(title="RestOS", version="1.0.0", lifespan=lifespan)
 limiter = Limiter(key_func=get_remote_address, enabled=settings.RATE_LIMIT_ENABLED)
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+
+_EXPECTED_ORIGIN = urlsplit(settings.PUBLIC_URL).netloc
+# Server-to-server callbacks never carry our cookies and are authenticated
+# their own way (Stripe signs its webhook body; the bot uses a shared secret) —
+# an Origin/Referer check would just reject legitimate traffic from them.
+_CSRF_EXEMPT_PREFIXES = ("/billing/webhook", "/api/bot", "/health")
+
+
+@app.middleware("http")
+async def csrf_origin_check(request: Request, call_next):
+    # SameSite=Lax already blocks the cookie on cross-site POST/PUT/PATCH/DELETE
+    # in modern browsers, but this is cheap defense-in-depth for older/edge-case
+    # clients: any unsafe request authenticated purely by cookie (no Authorization
+    # header — that path can't be forged cross-site anyway, since a remote page
+    # can't read our httpOnly cookie or another origin's localStorage token) must
+    # present an Origin/Referer that matches this deployment.
+    if (
+        settings.CSRF_ENABLED
+        and request.method in ("POST", "PUT", "PATCH", "DELETE")
+        and not request.headers.get("authorization")
+        and request.cookies.get("access_token")
+        and not any(request.url.path.startswith(p) for p in _CSRF_EXEMPT_PREFIXES)
+    ):
+        origin = request.headers.get("origin") or request.headers.get("referer")
+        if not origin or urlsplit(origin).netloc != _EXPECTED_ORIGIN:
+            return JSONResponse(status_code=403, content={"detail": "Запрос отклонён (CSRF-проверка)"})
+    return await call_next(request)
 
 
 @app.middleware("http")

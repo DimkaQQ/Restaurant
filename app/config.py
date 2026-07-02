@@ -33,6 +33,7 @@ class Settings(BaseSettings):
     SMTP_PASSWORD: str = ""
     SMTP_FROM: str = "RestOS <no-reply@restos.app>"
     RATE_LIMIT_ENABLED: bool = True
+    CSRF_ENABLED: bool = True
 
     class Config:
         env_file = ".env"

@@ -14,6 +14,11 @@ os.environ.setdefault("BOT_API_SECRET", "test-bot-secret")
 # Tests register/log in dozens of times per run from the same client "IP" —
 # real per-IP rate limiting on auth endpoints would make the suite flaky.
 os.environ["RATE_LIMIT_ENABLED"] = "false"
+# The CSRF Origin/Referer check assumes a real browser (which always sends
+# Origin on unsafe cross-origin requests); httpx's test client doesn't
+# simulate that, so it's exercised in its own test module instead (see
+# tests/test_csrf.py) with the flag flipped back on for just that module.
+os.environ["CSRF_ENABLED"] = "false"
 
 import pytest
 import pytest_asyncio
