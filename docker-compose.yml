@@ -28,6 +28,13 @@ services:
   api:
     build: .
     command: uvicorn app.main:app --host 0.0.0.0 --port 8001 --workers 2
+    # Belt-and-suspenders: env_file forwards every var in .env automatically
+    # (so a future new setting can't silently go missing the way SMTP_*/
+    # RATE_LIMIT_ENABLED/CSRF_ENABLED did — those were only ever readable by
+    # the app if also hand-listed below). The explicit list below still
+    # documents what the app actually uses and provides defaults.
+    env_file:
+      - .env
     environment:
       DATABASE_URL: postgresql+asyncpg://restos:restos_secret@db/restos
       SECRET_KEY: ${SECRET_KEY:-dev-secret-change-in-prod}
@@ -41,6 +48,13 @@ services:
       STRIPE_PRICE_PRO: ${STRIPE_PRICE_PRO:-}
       STRIPE_PRICE_ENTERPRISE: ${STRIPE_PRICE_ENTERPRISE:-}
       SENTRY_DSN: ${SENTRY_DSN:-}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_FROM: ${SMTP_FROM:-RestOS <no-reply@restos.app>}
+      RATE_LIMIT_ENABLED: ${RATE_LIMIT_ENABLED:-true}
+      CSRF_ENABLED: ${CSRF_ENABLED:-true}
     ports:
       - "8001:8001"
     depends_on:
