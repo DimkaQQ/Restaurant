@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Смены — RestOS{% endblock %}
+{% block title %}{{ _("Смены") }} — RestOS{% endblock %}
 
 {% block head %}
 <style>
@@ -62,14 +62,14 @@
 {% include "partials/staff_tabs.html" %}
 <div class="shifts-header">
   <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
-    <h1>Смены</h1>
+    <h1>{{ _("Смены") }}</h1>
     {% if active_today_count > 0 %}
-    <span class="today-badge">Сегодня работают: {{ active_today_count }}</span>
+    <span class="today-badge">{{ _("Сегодня работают:") }} {{ active_today_count }}</span>
     {% endif %}
   </div>
   <div class="shifts-controls">
     <select class="select-input" onchange="changeVenue(this.value)">
-      <option value="">Все заведения</option>
+      <option value="">{{ _("Все заведения") }}</option>
       {% for v in venues %}
       <option value="{{ v.id }}" {% if selected_venue_id == v.id|string %}selected{% endif %}>{{ v.name }}</option>
       {% endfor %}
@@ -78,15 +78,15 @@
       <button onclick="changeWeek({{ week_offset - 1 }})">←</button>
       <span>{{ week_days[0].strftime('%d.%m') }} — {{ week_days[-1].strftime('%d.%m.%Y') }}</span>
       <button onclick="changeWeek({{ week_offset + 1 }})">→</button>
-      {% if week_offset != 0 %}<button onclick="changeWeek(0)" style="font-size:.75rem">Сегодня</button>{% endif %}
+      {% if week_offset != 0 %}<button onclick="changeWeek(0)" style="font-size:.75rem">{{ _("Сегодня") }}</button>{% endif %}
     </div>
-    <button class="btn-primary" onclick="openAddModal()">+ Добавить смену</button>
+    <button class="btn-primary" onclick="openAddModal()">{{ _("+ Добавить смену") }}</button>
   </div>
 </div>
 
 <div style="overflow-x:auto;margin-bottom:1.5rem;">
 <div class="week-grid" style="margin-bottom:0">
-  {% set day_names = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'] %}
+  {% set day_names = [_('Пн'), _('Вт'), _('Ср'), _('Чт'), _('Пт'), _('Сб'), _('Вс')] %}
   {% for day in week_days %}
   <div class="day-col {% if day == today %}today{% endif %}">
     <div class="day-header">
@@ -94,7 +94,7 @@
         <div class="day-name">{{ day_names[loop.index0] }}</div>
         <div class="day-date">{{ day.strftime('%d.%m') }}</div>
       </div>
-      <button class="day-add" onclick="openAddModal('{{ day.strftime('%Y-%m-%d') }}')" title="Добавить смену">+</button>
+      <button class="day-add" onclick="openAddModal('{{ day.strftime('%Y-%m-%d') }}')" title="{{ _('Добавить смену') }}">+</button>
     </div>
     <div class="day-body">
       {% set day_shifts = shifts_by_day.get(day, []) %}
@@ -104,7 +104,7 @@
              onclick="changeStatus('{{ s.id }}', '{{ s.status }}')"
              data-tip-name="{{ s.staff.name | e }}"
              data-tip-role="{{ s.staff.role_label | e }}"
-             data-tip-time="{{ s.start_time.strftime('%H:%M') }}–{{ s.end_time.strftime('%H:%M') }} ({{ s.duration_hours }} ч.)"
+             data-tip-time="{{ s.start_time.strftime('%H:%M') }}–{{ s.end_time.strftime('%H:%M') }} ({{ s.duration_hours }} {{ _('ч.') }})"
              onmouseenter="showTipFromEl(event, this)"
              onmouseleave="hideTip()">
           <div class="shift-avatar">{{ s.staff.initials }}</div>
@@ -135,49 +135,49 @@
 <div id="add-modal" class="modal" style="display:none">
   <div class="modal-overlay" onclick="closeModal()"></div>
   <div class="modal-content" style="max-width:380px">
-    <h2 class="modal-title">Добавить смену</h2>
+    <h2 class="modal-title">{{ _("Добавить смену") }}</h2>
     <div id="modal-error" style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#fca5a5;padding:.5rem .75rem;border-radius:6px;font-size:.8rem;margin-bottom:.75rem;display:none"></div>
     <form id="add-shift-form" class="modal-form">
       <div class="form-group">
-        <label>Заведение</label>
+        <label>{{ _("Заведение") }}</label>
         <select name="venue_id" id="modal-venue" required onchange="loadStaff(this.value)">
-          <option value="">Выбрать...</option>
+          <option value="">{{ _("Выбрать...") }}</option>
           {% for v in venues %}
           <option value="{{ v.id }}" {% if selected_venue_id == v.id|string %}selected{% endif %}>{{ v.name }}</option>
           {% endfor %}
         </select>
       </div>
       <div class="form-group">
-        <label>Сотрудник</label>
+        <label>{{ _("Сотрудник") }}</label>
         <select name="staff_id" id="modal-staff" required disabled
           style="opacity:.45;cursor:not-allowed;pointer-events:none">
-          <option value="">Сначала выберите заведение</option>
+          <option value="">{{ _("Сначала выберите заведение") }}</option>
           {% for s in all_staff %}
           <option value="{{ s.id }}" data-venue="{{ s.venue_id }}">{{ s.name }} ({{ s.role_label }})</option>
           {% endfor %}
         </select>
       </div>
       <div class="form-group">
-        <label>Дата</label>
+        <label>{{ _("Дата") }}</label>
         <input type="date" name="shift_date" id="modal-date" required>
       </div>
       <div class="form-row-2">
         <div class="form-group">
-          <label>Начало</label>
+          <label>{{ _("Начало") }}</label>
           <input type="time" name="start_time" value="09:00" required>
         </div>
         <div class="form-group">
-          <label>Конец</label>
+          <label>{{ _("Конец") }}</label>
           <input type="time" name="end_time" value="21:00" required>
         </div>
       </div>
       <div class="form-group">
-        <label>Примечание</label>
-        <input type="text" name="notes" placeholder="Необязательно">
+        <label>{{ _("Примечание") }}</label>
+        <input type="text" name="notes" placeholder="{{ _('Необязательно') }}">
       </div>
       <div style="display:flex;gap:.5rem;margin-top:1rem">
-        <button type="submit" class="btn-primary">Добавить</button>
-        <button type="button" onclick="closeModal()" class="btn-secondary">Отмена</button>
+        <button type="submit" class="btn-primary">{{ _("Добавить") }}</button>
+        <button type="button" onclick="closeModal()" class="btn-secondary">{{ _("Отмена") }}</button>
       </div>
     </form>
   </div>
@@ -186,6 +186,10 @@
 
 {% block scripts %}
 <script>
+const T = {
+  deleteConfirm: {{ _("Удалить смену?") | tojson }},
+  error: {{ _("Ошибка") | tojson }},
+};
 const STATUS_CYCLE = { planned: 'active', active: 'done', done: 'planned', cancelled: 'planned' };
 const _tip = document.getElementById('shift-tip');
 
@@ -252,7 +256,7 @@ async function changeStatus(id, current) {
 }
 
 async function deleteShift(id) {
-  if (!confirm('Удалить смену?')) return;
+  if (!confirm(T.deleteConfirm)) return;
   const res = await fetch('/api/shifts/'+id, {
     method:'DELETE', credentials:'include',
     headers:{'Authorization':'Bearer '+localStorage.getItem('access_token')},
@@ -273,7 +277,7 @@ document.getElementById('add-shift-form').addEventListener('submit', async (e) =
     body: JSON.stringify(body),
   });
   if (res.ok) location.reload();
-  else { const d = await res.json().catch(()=>({})); errEl.textContent=d.detail||'Ошибка'; errEl.style.display='block'; }
+  else { const d = await res.json().catch(()=>({})); errEl.textContent=d.detail||T.error; errEl.style.display='block'; }
 });
 </script>
 {% endblock %}

@@ -70,7 +70,7 @@
       <span class="star {% if i <= r %}filled{% endif %}">★</span>
       {% endfor %}
     </div>
-    <div class="review-total">{{ staff.total_reviews }} отзывов</div>
+    <div class="review-total">{{ staff.total_reviews }} {{ _("отзывов") }}</div>
   </div>
 </div>
 {% endif %}
@@ -79,7 +79,7 @@
 {% for rv in reviews %}
 <div class="review-item">
   <div class="review-meta">
-    <span class="review-guest">{{ rv.guest.name if rv.guest else "Гость" }}</span>
+    <span class="review-guest">{{ rv.guest.name if rv.guest else _("Гость") }}</span>
     <span class="review-date">{{ rv.created_at.strftime("%d.%m.%Y %H:%M") }}</span>
   </div>
   <div class="review-stars-small">
@@ -89,8 +89,8 @@
   </div>
   {% if rv.food_rating or rv.service_rating %}
   <div class="review-ratings-detail">
-    {% if rv.food_rating %}<span>Еда: {{ rv.food_rating }}/5</span>{% endif %}
-    {% if rv.service_rating %}<span>Сервис: {{ rv.service_rating }}/5</span>{% endif %}
+    {% if rv.food_rating %}<span>{{ _("Еда:") }} {{ rv.food_rating }}/5</span>{% endif %}
+    {% if rv.service_rating %}<span>{{ _("Сервис:") }} {{ rv.service_rating }}/5</span>{% endif %}
   </div>
   {% endif %}
   {% if rv.comment %}
@@ -99,5 +99,5 @@
 </div>
 {% endfor %}
 {% else %}
-<div class="no-reviews-msg">Отзывов пока нет</div>
+<div class="no-reviews-msg">{{ _("Отзывов пока нет") }}</div>
 {% endif %}

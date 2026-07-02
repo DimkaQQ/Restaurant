@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-02 06:41+0000\n"
+"POT-Creation-Date: 2026-07-02 06:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -24,6 +24,9 @@ msgstr "(copy and give it to the staff member to enter with /staff)"
 
 msgid "+ Добавить позицию"
 msgstr "+ Add item"
+
+msgid "+ Добавить смену"
+msgstr "+ Add shift"
 
 msgid "+ Добавить стол"
 msgstr "+ Add table"
@@ -194,6 +197,9 @@ msgstr "Sign in"
 msgid "Восстановление пароля"
 msgstr "Password recovery"
 
+msgid "Вс"
+msgstr "Sun"
+
 msgid "Все"
 msgstr "All"
 
@@ -208,6 +214,9 @@ msgstr "Total revenue"
 
 msgid "Всё, что нужно ресторану"
 msgstr "Everything a restaurant needs"
+
+msgid "Вт"
+msgstr "Tue"
 
 msgid "Вход"
 msgstr "Sign in"
@@ -242,6 +251,9 @@ msgstr ""
 
 msgid "Выберите заведение"
 msgstr "Select a venue"
+
+msgid "Выбрать..."
+msgstr "Choose..."
 
 msgid "Выдан"
 msgstr "Served"
@@ -327,6 +339,9 @@ msgstr ""
 "contacting support — the request will be handled within a reasonable "
 "time, subject to tax and accounting record-retention requirements."
 
+msgid "Дата"
+msgstr "Date"
+
 msgid "Дашборд"
 msgstr "Dashboard"
 
@@ -352,17 +367,26 @@ msgstr "Add"
 msgid "Добавить пользователя"
 msgstr "Add user"
 
+msgid "Добавить смену"
+msgstr "Add shift"
+
 msgid "Доступ ограничен до продления подписки"
 msgstr "Access is limited until the subscription is renewed"
 
 msgid "Доступно"
 msgstr "Available"
 
+msgid "Еда:"
+msgstr "Food:"
+
 msgid "Если такой email зарегистрирован, мы отправили ссылку для сброса пароля."
 msgstr "If that email is registered, we sent a password reset link."
 
 msgid "Забыли пароль?"
 msgstr "Forgot password?"
+
+msgid "Заведение"
+msgstr "Venue"
 
 msgid "Заведение (необязательно)"
 msgstr "Venue (optional)"
@@ -375,6 +399,9 @@ msgstr "No venues found."
 
 msgid "Загрузка заказов..."
 msgstr "Loading orders..."
+
+msgid "Загрузка..."
+msgstr "Loading..."
 
 msgid "Задайте новый пароль"
 msgstr "Set a new password"
@@ -427,6 +454,9 @@ msgstr "Category"
 
 msgid "Кол-во"
 msgstr "Qty"
+
+msgid "Конец"
+msgstr "End"
 
 msgid "Конфиденциальность"
 msgstr "Privacy"
@@ -511,11 +541,17 @@ msgstr "Settings"
 msgid "Настройки заведений"
 msgstr "Venue settings"
 
+msgid "Начало"
+msgstr "Start"
+
 msgid "Начать бесплатно"
 msgstr "Start free"
 
 msgid "Не подключено"
 msgstr "Not connected"
+
+msgid "Необязательно"
+msgstr "Optional"
 
 msgid "Нет аккаунта?"
 msgstr "Don't have an account?"
@@ -531,6 +567,9 @@ msgstr "No orders in progress"
 
 msgid "Нет новых заказов"
 msgstr "No new orders"
+
+msgid "Нет отзывов"
+msgstr "No reviews"
 
 msgid "Ничего не найдено"
 msgstr "Nothing found"
@@ -592,6 +631,12 @@ msgstr "Leave blank — we'll send an email invite"
 msgid "Осталось дней пробного периода:"
 msgstr "Trial days left:"
 
+msgid "Отзывов пока нет"
+msgstr "No reviews yet"
+
+msgid "Отзывы"
+msgstr "Reviews"
+
 msgid "Отмена"
 msgstr "Cancel"
 
@@ -646,6 +691,9 @@ msgstr "Failed to add item"
 
 msgid "Ошибка добавления стола"
 msgstr "Failed to add table"
+
+msgid "Ошибка загрузки"
+msgstr "Failed to load"
 
 msgid "Ошибка загрузки фото"
 msgstr "Failed to upload photo"
@@ -723,6 +771,9 @@ msgstr ""
 "Payment data is processed directly by Stripe; RestOS does not store card "
 "numbers."
 
+msgid "Пн"
+msgstr "Mon"
+
 msgid ""
 "По вопросам, связанным с условиями использования, пишите на адрес, "
 "указанный в вашем аккаунте платформы, или через раздел поддержки."
@@ -775,6 +826,9 @@ msgstr "See pricing"
 msgid "Привязать Telegram (для официантов)"
 msgstr "Link Telegram (for waitstaff)"
 
+msgid "Примечание"
+msgstr "Note"
+
 msgid "Принять"
 msgstr "Accept"
 
@@ -814,6 +868,9 @@ msgstr "Renews:"
 msgid "Прозрачные цены"
 msgstr "Transparent pricing"
 
+msgid "Пт"
+msgstr "Fri"
+
 msgid "Пусто"
 msgstr "Empty"
 
@@ -837,11 +894,20 @@ msgstr "Role"
 msgid "С нами с"
 msgstr "Customer since"
 
+msgid "Сб"
+msgstr "Sat"
+
 msgid "Свободен"
 msgstr "Free"
 
 msgid "Сгенерировать ссылку"
 msgstr "Generate link"
+
+msgid "Сегодня"
+msgstr "Today"
+
+msgid "Сегодня работают:"
+msgstr "Working today:"
 
 msgid ""
 "Сервис предоставляется «как есть». RestOS не несёт ответственности за "
@@ -852,6 +918,9 @@ msgstr ""
 "The Service is provided \"as is\". RestOS is not liable for indirect "
 "losses, lost profits, or data loss arising from the use or inability to "
 "use the Service, to the extent permitted by applicable law."
+
+msgid "Сервис:"
+msgstr "Service:"
 
 msgid "Склад"
 msgstr "Inventory"
@@ -899,6 +968,9 @@ msgstr "Sign up"
 msgid "Создать аккаунт"
 msgstr "Create account"
 
+msgid "Сотрудник"
+msgstr "Staff member"
+
 msgid ""
 "Сотрудник может принимать заказы прямо из Telegram-бота. Сгенерируйте "
 "ссылку и передайте её сотруднику — он перейдёт по ней и его аккаунт "
@@ -910,6 +982,9 @@ msgstr ""
 
 msgid "Сотрудники"
 msgstr "Staff"
+
+msgid "Сотрудники не найдены"
+msgstr "No staff found"
 
 msgid "Сохранено"
 msgstr "Saved"
@@ -929,6 +1004,9 @@ msgid ""
 msgstr ""
 "Ingredients are deducted automatically when an order closes, based on the"
 " dish recipe — stock levels stay accurate."
+
+msgid "Ср"
+msgstr "Wed"
 
 msgid "Ссылка 2GIS"
 msgstr "2GIS link"
@@ -980,6 +1058,9 @@ msgstr "Delete this item?"
 msgid "Удалить пользователя?"
 msgstr "Delete this user?"
 
+msgid "Удалить смену?"
+msgstr "Delete this shift?"
+
 msgid "Удалить стол?"
 msgstr "Delete this table?"
 
@@ -1030,6 +1111,9 @@ msgstr "Pricing"
 msgid "Чек пробит"
 msgstr "Receipt issued"
 
+msgid "Чт"
+msgstr "Thu"
+
 msgid ""
 "Экран для кухни на любом планшете — очередь заказов по колонкам, таймеры "
 "готовки, без бумажных чеков."
@@ -1067,6 +1151,9 @@ msgstr "min"
 msgid "мин на кухне"
 msgstr "min in the kitchen"
 
+msgid "отзывов"
+msgstr "reviews"
+
 msgid "пароль"
 msgstr "password"
 
@@ -1084,6 +1171,9 @@ msgstr "unique kassa number"
 
 msgid "условиями использования"
 msgstr "Terms of Service"
+
+msgid "ч."
+msgstr "h"
 
 msgid "чтобы обезопасить аккаунт."
 msgstr "to secure your account."

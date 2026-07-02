@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Персонал — RestOS{% endblock %}
+{% block title %}{{ _("Персонал") }} — RestOS{% endblock %}
 
 {% block head %}
 <style>
@@ -175,11 +175,11 @@
 {% block content %}
 {% include "partials/staff_tabs.html" %}
 <div class="staff-header">
-  <h1>Персонал</h1>
+  <h1>{{ _("Персонал") }}</h1>
   <div class="venue-filter">
     <form method="get" action="/staff">
       <select name="venue_id" onchange="this.value ? this.form.submit() : location.href='/staff'">
-        <option value="">Все заведения</option>
+        <option value="">{{ _("Все заведения") }}</option>
         {% for v in venues %}
         <option value="{{ v.id }}" {% if selected_venue_id == v.id|string %}selected{% endif %}>{{ v.name }}</option>
         {% endfor %}
@@ -211,9 +211,9 @@
         {% endfor %}
       </div>
       <span class="rating-value">{{ "%.1f"|format(s.avg_rating) }}</span>
-      <span class="rating-count">{{ s.total_reviews }} отзывов</span>
+      <span class="rating-count">{{ s.total_reviews }} {{ _("отзывов") }}</span>
       {% else %}
-      <span class="no-reviews">Нет отзывов</span>
+      <span class="no-reviews">{{ _("Нет отзывов") }}</span>
       {% endif %}
     </div>
   </div>
@@ -224,7 +224,7 @@
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
     <path d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/>
   </svg>
-  <p>Сотрудники не найдены</p>
+  <p>{{ _("Сотрудники не найдены") }}</p>
 </div>
 {% endif %}
 
@@ -232,17 +232,18 @@
 <div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
 <div class="review-drawer" id="review-drawer">
   <div class="drawer-header">
-    <span class="drawer-title" id="drawer-name">Отзывы</span>
+    <span class="drawer-title" id="drawer-name">{{ _("Отзывы") }}</span>
     <button class="drawer-close" onclick="closeDrawer()">✕</button>
   </div>
   <div class="drawer-body" id="drawer-body">
-    <p style="color:var(--muted);text-align:center;padding:2rem 0">Загрузка...</p>
+    <p style="color:var(--muted);text-align:center;padding:2rem 0">{{ _("Загрузка...") }}</p>
   </div>
 </div>
 {% endblock %}
 
 {% block scripts %}
 <script>
+const T = { loadError: {{ _("Ошибка загрузки") | tojson }} };
 function openReviews(staffId, name) {
   document.getElementById('drawer-name').textContent = name;
   document.getElementById('drawer-overlay').classList.add('open');
@@ -253,7 +254,7 @@ function openReviews(staffId, name) {
       return r.text();
     })
     .then(html => { if (html) document.getElementById('drawer-body').innerHTML = html; })
-    .catch(() => { document.getElementById('drawer-body').innerHTML = '<p style="color:var(--muted)">Ошибка загрузки</p>'; });
+    .catch(() => { document.getElementById('drawer-body').innerHTML = '<p style="color:var(--muted)">' + T.loadError + '</p>'; });
 }
 function closeDrawer() {
   document.getElementById('drawer-overlay').classList.remove('open');
