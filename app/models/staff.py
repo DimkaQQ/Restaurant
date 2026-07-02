@@ -18,8 +18,8 @@ class Staff(Base):
     __tablename__ = "staff"
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
-    network_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("networks.id"))
-    venue_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("venues.id"))
+    network_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("networks.id"), index=True)
+    venue_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("venues.id"), index=True)
     name: Mapped[str] = mapped_column(String(255))
     role: Mapped[str] = mapped_column(String(50), default="waiter")
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)

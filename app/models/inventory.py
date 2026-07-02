@@ -10,8 +10,8 @@ class Ingredient(Base):
     __tablename__ = "ingredients"
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
-    network_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("networks.id"))
-    venue_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("venues.id"))
+    network_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("networks.id"), index=True)
+    venue_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("venues.id"), index=True)
     name: Mapped[str] = mapped_column(String(255))
     unit: Mapped[str] = mapped_column(String(20), default="кг")
     quantity: Mapped[Decimal] = mapped_column(Numeric(12, 3), default=0)
@@ -42,11 +42,11 @@ class WriteOff(Base):
     __tablename__ = "writeoffs"
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
-    ingredient_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("ingredients.id"))
+    ingredient_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("ingredients.id"), index=True)
     quantity: Mapped[Decimal] = mapped_column(Numeric(12, 3))
     reason: Mapped[str] = mapped_column(String(50), default="usage")
     note: Mapped[str | None] = mapped_column(Text, nullable=True)
-    created_by_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("users.id"), nullable=True)
+    created_by_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("users.id"), nullable=True, index=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     ingredient: Mapped["Ingredient"] = relationship("Ingredient", back_populates="writeoffs")

@@ -9,10 +9,10 @@ class Review(Base):
     __tablename__ = "reviews"
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
-    venue_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("venues.id"))
-    order_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("orders.id"), nullable=True)
-    guest_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("guests.id"), nullable=True)
-    staff_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("staff.id"), nullable=True)
+    venue_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("venues.id"), index=True)
+    order_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("orders.id"), nullable=True, index=True)
+    guest_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("guests.id"), nullable=True, index=True)
+    staff_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("staff.id"), nullable=True, index=True)
     food_rating: Mapped[int | None] = mapped_column(SmallInteger, nullable=True)
     service_rating: Mapped[int | None] = mapped_column(SmallInteger, nullable=True)
     overall_rating: Mapped[int] = mapped_column(SmallInteger)

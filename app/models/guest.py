@@ -12,14 +12,14 @@ class Guest(Base):
     __table_args__ = (UniqueConstraint("network_id", "telegram_id", name="uq_guests_network_telegram"),)
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
-    network_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("networks.id"))
-    telegram_id: Mapped[int | None] = mapped_column(BigInteger)
+    network_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("networks.id"))  # indexed as ix_guests_network (migration 001)
+    telegram_id: Mapped[int | None] = mapped_column(BigInteger, index=True)
     name: Mapped[str | None] = mapped_column(String(255))
     phone: Mapped[str | None] = mapped_column(String(50))
     total_points: Mapped[int] = mapped_column(Integer, default=0)
     total_visits: Mapped[int] = mapped_column(Integer, default=0)
     language: Mapped[str] = mapped_column(String(5), default='ru')
-    preferred_venue_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("venues.id"), nullable=True)
+    preferred_venue_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("venues.id"), nullable=True, index=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     network: Mapped["Network"] = relationship("Network", back_populates="guests")

@@ -9,7 +9,7 @@ class Broadcast(Base):
     __tablename__ = "broadcasts"
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
-    network_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("networks.id"))
+    network_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("networks.id"), index=True)
     message: Mapped[str] = mapped_column(Text)
     lang_filter: Mapped[str | None] = mapped_column(String(5), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())

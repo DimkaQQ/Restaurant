@@ -9,8 +9,8 @@ class Shift(Base):
     __tablename__ = "shifts"
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
-    staff_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("staff.id"))
-    venue_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("venues.id"))
+    staff_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("staff.id"), index=True)
+    venue_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("venues.id"), index=True)
     shift_date: Mapped[date] = mapped_column(Date)
     start_time: Mapped[time] = mapped_column(Time)
     end_time: Mapped[time] = mapped_column(Time)

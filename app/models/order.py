@@ -10,17 +10,17 @@ class Order(Base):
     __tablename__ = "orders"
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
-    venue_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("venues.id"))
-    guest_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("guests.id"))
-    staff_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("staff.id"), nullable=True)
-    status: Mapped[str] = mapped_column(String(50), default="new")
+    venue_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("venues.id"))  # indexed via composite ix_orders_venue_status (migration 001)
+    guest_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("guests.id"), index=True)
+    staff_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("staff.id"), nullable=True, index=True)
+    status: Mapped[str] = mapped_column(String(50), default="new", index=True)
     total_amount: Mapped[Decimal] = mapped_column(Numeric(10, 2), default=0)
     points_earned: Mapped[int] = mapped_column(Integer, default=0)
     notes: Mapped[str | None] = mapped_column(Text)
     table_number: Mapped[str | None] = mapped_column(String(20), nullable=True)
-    table_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("tables.id", ondelete="SET NULL"), nullable=True)
+    table_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("tables.id", ondelete="SET NULL"), nullable=True, index=True)
     source: Mapped[str | None] = mapped_column(String(20), nullable=True, default='bot')
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), index=True)
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
     )
@@ -48,8 +48,8 @@ class OrderItem(Base):
     __tablename__ = "order_items"
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
-    order_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("orders.id"))
-    menu_item_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("menu_items.id"), nullable=True)
+    order_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("orders.id"), index=True)
+    menu_item_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("menu_items.id"), nullable=True, index=True)
     quantity: Mapped[int] = mapped_column(Integer)
     price: Mapped[Decimal] = mapped_column(Numeric(10, 2))
     name: Mapped[str] = mapped_column(String(255))
@@ -63,9 +63,9 @@ class Visit(Base):
     __tablename__ = "visits"
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
-    guest_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("guests.id"))
-    venue_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("venues.id"))
-    order_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("orders.id"), nullable=True)
+    guest_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("guests.id"), index=True)
+    venue_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("venues.id"), index=True)
+    order_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("orders.id"), nullable=True, index=True)
     visited_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     guest: Mapped["Guest"] = relationship("Guest", back_populates="visits")
@@ -77,7 +77,7 @@ class OrderStatusLog(Base):
     __tablename__ = "order_status_log"
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
-    order_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("orders.id", ondelete="CASCADE"))
+    order_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("orders.id", ondelete="CASCADE"), index=True)
     old_status: Mapped[str | None] = mapped_column(String(50), nullable=True)
     new_status: Mapped[str] = mapped_column(String(50))
     changed_by: Mapped[str | None] = mapped_column(String(255), nullable=True)

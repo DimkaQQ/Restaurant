@@ -9,7 +9,7 @@ class Venue(Base):
     __tablename__ = "venues"
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
-    network_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("networks.id"))
+    network_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("networks.id"), index=True)
     name: Mapped[str] = mapped_column(String(255))
     address: Mapped[str | None] = mapped_column(Text)
     telegram_bot_token: Mapped[str | None] = mapped_column(String(255))

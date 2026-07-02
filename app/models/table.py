@@ -9,7 +9,7 @@ class Table(Base):
     __tablename__ = "tables"
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
-    venue_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("venues.id", ondelete="CASCADE"))
+    venue_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("venues.id", ondelete="CASCADE"), index=True)
     label: Mapped[str] = mapped_column(String(20))
     seats: Mapped[int] = mapped_column(Integer, default=4)
     status: Mapped[str] = mapped_column(String(20), default="free")  # free, occupied, reserved

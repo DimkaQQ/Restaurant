@@ -11,7 +11,7 @@ class Subscription(Base):
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
     network_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("networks.id"), unique=True)
     plan: Mapped[str] = mapped_column(String(50), default="starter")  # starter, pro, enterprise
-    status: Mapped[str] = mapped_column(String(20), default="trial")  # trial, active, past_due, suspended, cancelled
+    status: Mapped[str] = mapped_column(String(20), default="trial", index=True)  # trial, active, past_due, suspended, cancelled
     trial_ends_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     current_period_end: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     stripe_customer_id: Mapped[str | None] = mapped_column(String(255), nullable=True)
