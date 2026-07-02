@@ -62,7 +62,7 @@ async def finance_page(
         # Revenue from orders (done)
         revenue = (await db.execute(
             select(func.coalesce(func.sum(Order.total_amount), 0))
-            .where(Order.venue_id.in_(filter_ids), Order.status == "done", Order.created_at >= start_dt)
+            .where(Order.venue_id.in_(filter_ids), Order.payment_status == "paid", Order.paid_at >= start_dt)
         )).scalar() or Decimal(0)
 
         # Expenses
@@ -90,11 +90,11 @@ async def finance_page(
         six_months_ago = now.date() - timedelta(days=180)
         revenue_monthly = (await db.execute(
             select(
-                extract("year", Order.created_at).label("yr"),
-                extract("month", Order.created_at).label("mo"),
+                extract("year", Order.paid_at).label("yr"),
+                extract("month", Order.paid_at).label("mo"),
                 func.sum(Order.total_amount).label("rev"),
             )
-            .where(Order.venue_id.in_(filter_ids), Order.status == "done", Order.created_at >= datetime.combine(six_months_ago, datetime.min.time()).replace(tzinfo=timezone.utc))
+            .where(Order.venue_id.in_(filter_ids), Order.payment_status == "paid", Order.paid_at >= datetime.combine(six_months_ago, datetime.min.time()).replace(tzinfo=timezone.utc))
             .group_by("yr", "mo")
             .order_by("yr", "mo")
         )).all()

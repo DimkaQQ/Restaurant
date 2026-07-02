@@ -8,6 +8,11 @@
     <div class="order-header">
       <span class="order-id">#{{ order.id | string | truncate(8, True, '') }}</span>
       <span class="order-status">{{ status_labels.get(order.status, order.status) }}</span>
+      {% if order.payment_status == 'paid' %}
+      <span class="pay-badge pay-badge-paid" title="{{ order.payment_method or '' }}">✓ {{ _("Оплачен") }}</span>
+      {% else %}
+      <span class="pay-badge pay-badge-unpaid">{{ _("Не оплачен") }}</span>
+      {% endif %}
       <span class="order-time">{{ order.created_at.strftime('%H:%M') }}</span>
     </div>
     <div class="order-guest">{{ order.guest.name if order.guest and order.guest.name else _("Гость") }}</div>
@@ -27,27 +32,28 @@
       {% endif %}
     </div>
     {% endif %}
-    <div class="order-footer">
-      <span class="order-total">{{ "{:,.0f}".format(order.total_amount) }} ₸</span>
-      {% if order.status == 'ready' %}
-      <span style="font-size:.75rem;color:var(--muted);align-self:center">{{ _("Выдать:") }}</span>
+    {% if order.payment_status != 'paid' and order.status != 'cancelled' %}
+    <div class="order-pay-row">
+      <span class="order-pay-label">{{ _("Принять оплату:") }}</span>
       <button
-        hx-patch="/api/orders/{{ order.id }}/status"
-        hx-vals='{"status": "done", "payment_method": "cash"}'
+        hx-post="/api/orders/{{ order.id }}/pay"
+        hx-vals='{"method": "cash"}'
         hx-target="closest .order-card"
         hx-swap="outerHTML"
-        class="btn-status"
-        title="{{ _('Выдать — оплата наличными') }}"
+        class="btn-pay"
       >💵 {{ _("Наличные") }}</button>
       <button
-        hx-patch="/api/orders/{{ order.id }}/status"
-        hx-vals='{"status": "done", "payment_method": "card"}'
+        hx-post="/api/orders/{{ order.id }}/pay"
+        hx-vals='{"method": "card"}'
         hx-target="closest .order-card"
         hx-swap="outerHTML"
-        class="btn-status"
-        title="{{ _('Выдать — оплата картой') }}"
+        class="btn-pay"
       >💳 {{ _("Карта") }}</button>
-      {% elif next_status.get(order.status) %}
+    </div>
+    {% endif %}
+    <div class="order-footer">
+      <span class="order-total">{{ "{:,.0f}".format(order.total_amount) }} ₸</span>
+      {% if next_status.get(order.status) %}
       <button
         hx-patch="/api/orders/{{ order.id }}/status"
         hx-vals='{"status": "{{ next_status[order.status] }}"}'

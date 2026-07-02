@@ -26,8 +26,11 @@ class Order(Base):
     )
     review_sent_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
-    # Fiscal receipt (KZ online kassa). payment_method is required to issue a
-    # check — cash/card/mobile — captured when staff closes the order.
+    # Payment is a separate event from the order lifecycle: a coffee shop takes
+    # payment before preparing, a table-service restaurant after the meal.
+    # status tracks logistics only (done = served); payment_status tracks money.
+    payment_status: Mapped[str] = mapped_column(String(20), default="unpaid", server_default="unpaid")  # unpaid, paid
+    paid_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     payment_method: Mapped[str | None] = mapped_column(String(20), nullable=True)  # cash, card, mobile
     fiscal_status: Mapped[str | None] = mapped_column(String(20), nullable=True)  # None, pending, issued, failed
     fiscal_check_number: Mapped[str | None] = mapped_column(String(100), nullable=True)

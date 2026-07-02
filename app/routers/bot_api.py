@@ -434,8 +434,8 @@ async def get_daily_report(network_id: uuid.UUID, db: AsyncSession = Depends(get
 
     revenue = (await db.execute(
         select(func.coalesce(func.sum(Order.total_amount), 0)).where(
-            Order.venue_id.in_(venue_ids), Order.status == "done",
-            Order.created_at >= day_start, Order.created_at < day_end,
+            Order.venue_id.in_(venue_ids), Order.payment_status == "paid",
+            Order.paid_at >= day_start, Order.paid_at < day_end,
         )
     )).scalar()
 

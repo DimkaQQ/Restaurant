@@ -50,11 +50,11 @@ async def analytics_page(
             selected_venue = None
 
         revenue_rows = (await db.execute(
-            select(cast(Order.created_at, Date).label("day"), func.sum(Order.total_amount).label("revenue"))
+            select(cast(Order.paid_at, Date).label("day"), func.sum(Order.total_amount).label("revenue"))
             .where(
                 Order.venue_id.in_(venue_ids),
-                Order.status == "done",
-                Order.created_at >= thirty_days_ago,
+                Order.payment_status == "paid",
+                Order.paid_at >= thirty_days_ago,
             )
             .group_by("day")
             .order_by("day")
@@ -84,7 +84,7 @@ async def analytics_page(
         venue_revenue = (await db.execute(
             select(Venue.name, func.sum(Order.total_amount).label("revenue"))
             .join(Order, Order.venue_id == Venue.id)
-            .where(Order.venue_id.in_(venue_ids), Order.status == "done")
+            .where(Order.venue_id.in_(venue_ids), Order.payment_status == "paid")
             .group_by(Venue.name)
             .order_by(func.sum(Order.total_amount).desc())
         )).all()
@@ -94,7 +94,7 @@ async def analytics_page(
         total_revenue = sum(r["revenue"] for r in venue_revenue_data)
         total_orders = (await db.execute(
             select(func.count(Order.id))
-            .where(Order.venue_id.in_(venue_ids), Order.status == "done")
+            .where(Order.venue_id.in_(venue_ids), Order.payment_status == "paid")
         )).scalar() or 0
 
         return templates.TemplateResponse("analytics.html", {

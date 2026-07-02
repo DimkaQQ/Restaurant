@@ -199,8 +199,9 @@ async def update_order_status(
     new_status: str,
     db: AsyncSession,
     changed_by: str = "staff",
-    payment_method: str | None = None,
 ) -> Order:
+    """Advance the order through its logistics lifecycle. Payment is a separate
+    event (see pay_order) — "done" means the order was served, nothing more."""
     # Lock the order row for the duration of the transition so two concurrent
     # requests (double-click, racing clients) can't both pass the
     # VALID_TRANSITIONS check and both trigger inventory deduction on "done".
@@ -218,8 +219,6 @@ async def update_order_status(
 
     old_status = order.status
     order.status = new_status
-    if payment_method:
-        order.payment_method = payment_method
     db.add(OrderStatusLog(
         id=uuid.uuid4(),
         order_id=order.id,
@@ -230,7 +229,6 @@ async def update_order_status(
 
     if new_status == "done":
         await _deduct_inventory_for_order(order, db)
-        await issue_fiscal_check(order, order.venue)
 
     if order.table_id and new_status in ("done", "cancelled"):
         await _sync_table_status(order.table_id, db)
@@ -241,6 +239,55 @@ async def update_order_status(
     )
     order = result.scalar_one()
     logger.info("Order %s status %s → %s by %s", order_id, old_status, new_status, changed_by)
+    return order
+
+
+PAYMENT_METHODS = ("cash", "card", "mobile")
+
+
+async def pay_order(
+    order_id: uuid.UUID,
+    method: str,
+    db: AsyncSession,
+    changed_by: str = "staff",
+) -> Order:
+    """Record payment for an order. Independent of the logistics status: a
+    coffee shop takes payment before preparing, a restaurant after the meal.
+    The fiscal receipt is issued here — at the moment money changes hands."""
+    if method not in PAYMENT_METHODS:
+        raise ValueError("Неверный способ оплаты")
+    result = await db.execute(
+        select(Order)
+        .options(selectinload(Order.items), selectinload(Order.guest), selectinload(Order.venue))
+        .where(Order.id == order_id)
+        .with_for_update()
+    )
+    order = result.scalar_one_or_none()
+    if not order:
+        raise ValueError("Заказ не найден")
+    if order.status == "cancelled":
+        raise ValueError("Нельзя принять оплату по отменённому заказу")
+    if order.payment_status == "paid":
+        raise ValueError("Заказ уже оплачен")
+
+    order.payment_status = "paid"
+    order.payment_method = method
+    order.paid_at = datetime.now(timezone.utc)
+    db.add(OrderStatusLog(
+        id=uuid.uuid4(),
+        order_id=order.id,
+        old_status=order.status,
+        new_status=f"paid:{method}",
+        changed_by=changed_by,
+    ))
+    await issue_fiscal_check(order, order.venue)
+
+    await db.commit()
+    result = await db.execute(
+        select(Order).options(selectinload(Order.items), selectinload(Order.guest)).where(Order.id == order_id)
+    )
+    order = result.scalar_one()
+    logger.info("Order %s paid (%s) by %s", order_id, method, changed_by)
     return order
 
 

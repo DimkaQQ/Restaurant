@@ -18,7 +18,7 @@ from app.models.table import Table
 from app.models.user import User
 from app.models.venue import Venue
 from app.routers.deps import get_current_user_dep, get_current_user_optional, get_accessible_venue_ids
-from app.services.order_service import update_order_status, WALKIN_MARKER
+from app.services.order_service import update_order_status, pay_order, WALKIN_MARKER
 from app.config import settings
 
 router = APIRouter(tags=["dashboard"])
@@ -55,14 +55,15 @@ async def dashboard(
         venues_result = await db.execute(select(Venue).where(Venue.id.in_(venue_ids)))
         venues = venues_result.scalars().all()
 
+        # Revenue = money actually received (payment_status), not orders served.
         total_rev = (await db.execute(
             select(func.sum(Order.total_amount))
-            .where(Order.venue_id.in_(venue_ids), Order.status == "done")
+            .where(Order.venue_id.in_(venue_ids), Order.payment_status == "paid")
         )).scalar() or 0
 
         today_rev = (await db.execute(
             select(func.sum(Order.total_amount))
-            .where(Order.venue_id.in_(venue_ids), Order.status == "done", Order.created_at >= today_start)
+            .where(Order.venue_id.in_(venue_ids), Order.payment_status == "paid", Order.paid_at >= today_start)
         )).scalar() or 0
 
         new_guests = (await db.execute(
@@ -171,12 +172,17 @@ async def orders_partial(
     try:
         accessible_ids = await get_accessible_venue_ids(current_user, db)
         filter_ids = [venue_id] if venue_id and venue_id in accessible_ids else accessible_ids
+        from sqlalchemy import or_, and_
         stmt = (
             select(Order)
             .options(selectinload(Order.items), selectinload(Order.guest))
             .where(
                 Order.venue_id.in_(filter_ids),
-                Order.status.in_(["new", "confirmed", "preparing", "ready"]),
+                or_(
+                    Order.status.in_(["new", "confirmed", "preparing", "ready"]),
+                    # served but not yet paid — keep on the board until money is collected
+                    and_(Order.status == "done", Order.payment_status == "unpaid"),
+                ),
             )
             .order_by(Order.created_at.desc())
             .limit(50)
@@ -204,11 +210,9 @@ async def change_status_html(
         if "application/json" in content_type:
             body = await request.json()
             new_status = body.get("status")
-            payment_method = body.get("payment_method")
         else:
             form = await request.form()
             new_status = form.get("status")
-            payment_method = form.get("payment_method")
         if not new_status:
             return HTMLResponse("<p class='error-state'>Статус обязателен</p>", status_code=400)
         venue_ids = await get_accessible_venue_ids(current_user, db)
@@ -217,11 +221,12 @@ async def change_status_html(
         )).scalar_one_or_none()
         if not check:
             return HTMLResponse("<p class='error-state'>Заказ не найден</p>", status_code=404)
-        order = await update_order_status(
-            order_id, new_status, db, changed_by=current_user.email, payment_method=payment_method
-        )
+        order = await update_order_status(order_id, new_status, db, changed_by=current_user.email)
 
-        if order.status in ("done", "cancelled"):
+        # The card leaves the board only when nothing is left to do: cancelled,
+        # or served AND paid. A served-but-unpaid order stays visible so the
+        # waiter doesn't forget to collect payment.
+        if order.status == "cancelled" or (order.status == "done" and order.payment_status == "paid"):
             return HTMLResponse("", headers={"HX-Reswap": "delete"})
         return templates.TemplateResponse("partials/orders_list.html", {
             "request": request,
@@ -231,6 +236,44 @@ async def change_status_html(
         return HTMLResponse(f"<p class='error-state'>{e}</p>", status_code=400)
     except Exception as e:
         logger.error("Status change error: %s", e)
+        return HTMLResponse("<p class='error-state'>Ошибка</p>", status_code=500)
+
+
+@router.post("/api/orders/{order_id}/pay", response_class=HTMLResponse)
+async def pay_order_html(
+    order_id: uuid.UUID,
+    request: Request,
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    try:
+        content_type = request.headers.get("content-type", "")
+        if "application/json" in content_type:
+            body = await request.json()
+            method = body.get("method")
+        else:
+            form = await request.form()
+            method = form.get("method")
+        if not method:
+            return HTMLResponse("<p class='error-state'>Способ оплаты обязателен</p>", status_code=400)
+        venue_ids = await get_accessible_venue_ids(current_user, db)
+        check = (await db.execute(
+            select(Order).where(Order.id == order_id, Order.venue_id.in_(venue_ids))
+        )).scalar_one_or_none()
+        if not check:
+            return HTMLResponse("<p class='error-state'>Заказ не найден</p>", status_code=404)
+        order = await pay_order(order_id, method, db, changed_by=current_user.email)
+
+        if order.status == "done":
+            return HTMLResponse("", headers={"HX-Reswap": "delete"})
+        return templates.TemplateResponse("partials/orders_list.html", {
+            "request": request,
+            "orders": [order],
+        })
+    except ValueError as e:
+        return HTMLResponse(f"<p class='error-state'>{e}</p>", status_code=400)
+    except Exception as e:
+        logger.error("Payment error: %s", e)
         return HTMLResponse("<p class='error-state'>Ошибка</p>", status_code=500)
 
 

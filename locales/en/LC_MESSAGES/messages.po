@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-02 19:48+0000\n"
+"POT-Creation-Date: 2026-07-02 20:25+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -318,21 +318,6 @@ msgstr "Served today"
 msgid "Выдать"
 msgstr "Serve"
 
-msgid "Выдать · Карта"
-msgstr "Serve · Card"
-
-msgid "Выдать · Наличные"
-msgstr "Serve · Cash"
-
-msgid "Выдать — оплата картой"
-msgstr "Serve — paid by card"
-
-msgid "Выдать — оплата наличными"
-msgstr "Serve — paid by cash"
-
-msgid "Выдать:"
-msgstr "Serve:"
-
 msgid "Выезд специалиста"
 msgstr "On-site technician visit"
 
@@ -538,6 +523,9 @@ msgstr "Set a new password"
 
 msgid "Заказ"
 msgstr "Order"
+
+msgid "Заказ оплачен и отправлен на кухню"
+msgstr "Order paid and sent to the kitchen"
 
 msgid "Заказ отправлен на кухню"
 msgstr "Order sent to the kitchen"
@@ -774,6 +762,9 @@ msgstr "Start"
 msgid "Начать бесплатно"
 msgstr "Start free"
 
+msgid "Не оплачен"
+msgstr "Unpaid"
+
 msgid "Не подключено"
 msgstr "Not connected"
 
@@ -917,6 +908,15 @@ msgstr "Payment"
 
 msgid "Оплата аренды за июнь"
 msgstr "June rent payment"
+
+msgid "Оплата будет принята позже — на экране заказов"
+msgstr "Payment will be taken later — on the orders screen"
+
+msgid "Оплата сейчас — чек пробьётся сразу"
+msgstr "Paying now — the receipt is issued immediately"
+
+msgid "Оплачен"
+msgstr "Paid"
 
 msgid "Оставьте пустым — отправим приглашение на email"
 msgstr "Leave blank — we'll send an email invite"
@@ -1138,6 +1138,9 @@ msgstr "Confirmed"
 msgid "Подтверждён"
 msgstr "Confirmed"
 
+msgid "Позже"
+msgstr "Later"
+
 msgid "Позиций на складе"
 msgstr "Items in stock"
 
@@ -1209,6 +1212,9 @@ msgstr "Take orders"
 
 msgid "Принять"
 msgstr "Accept"
+
+msgid "Принять оплату:"
+msgstr "Take payment:"
 
 msgid "Приоритетная поддержка"
 msgstr "Priority support"
@@ -1693,6 +1699,9 @@ msgstr "ml"
 
 msgid "млн"
 msgstr "M"
+
+msgid "не оплачен"
+msgstr "unpaid"
 
 msgid "необязательно"
 msgstr "optional"

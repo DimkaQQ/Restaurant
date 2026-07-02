@@ -13,7 +13,7 @@ from app.models.user import User
 from app.models.venue import Venue
 from app.routers.deps import get_current_user_dep, get_accessible_venue_ids
 from app.schemas.order import OrderCreate, OrderOut
-from app.services.order_service import create_order, get_or_create_walkin_guest
+from app.services.order_service import create_order, get_or_create_walkin_guest, pay_order
 
 router = APIRouter(tags=["pos"])
 logger = logging.getLogger(__name__)
@@ -65,6 +65,9 @@ async def place_pos_order(
         guest = await get_or_create_walkin_guest(current_user.network_id, db)
         data.source = "pos"
         order = await create_order(data, guest, db, changed_by=current_user.email)
+        # Counter-service: cashier took payment right at the register.
+        if data.payment_method:
+            order = await pay_order(order.id, data.payment_method, db, changed_by=current_user.email)
         return order
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))

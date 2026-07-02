@@ -188,10 +188,9 @@
       location.href = '/kitchen' + (vid ? '?venue_id=' + vid : '');
     }
 
-    async function advanceOrder(orderId, newStatus, paymentMethod) {
+    async function advanceOrder(orderId, newStatus) {
       try {
         const body = {status: newStatus};
-        if (paymentMethod) body.payment_method = paymentMethod;
         const res = await fetch('/api/orders/' + orderId + '/status', {
           method: 'PATCH',
           headers: {'Content-Type': 'application/json'},

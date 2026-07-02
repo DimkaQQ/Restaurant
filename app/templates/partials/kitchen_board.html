@@ -19,10 +19,11 @@
     <a href="/orders/{{ order.id }}/receipt" target="_blank" title="{{ _('Печать талона') }}" style="text-decoration:none">🖨</a>
     <span class="kds-elapsed {% if mins < 10 %}fast{% elif mins < 20 %}medium{% else %}slow{% endif %}">{{ mins }} {{ _("мин") }}</span>
   </div>
-  {% if order.table_number or order.source == 'online' %}
+  {% if order.table_number or order.source == 'online' or order.payment_status != 'paid' %}
   <div style="font-size:.78rem;color:var(--muted);margin-bottom:.5rem">
     {% if order.table_number %}📍 {{ _("Стол") }} {{ order.table_number }}{% endif %}
     {% if order.source == 'online' %} · 🌐 {{ _("Онлайн") }}{% elif order.source == 'staff' %} · 👨‍💼 {{ _("Официант") }}{% elif order.source == 'pos' %} · 💳 {{ _("Касса") }}{% endif %}
+    {% if order.payment_status != 'paid' %} · <span style="color:#E8A33D">{{ _("не оплачен") }}</span>{% endif %}
   </div>
   {% endif %}
   <div class="kds-items">
@@ -40,18 +41,7 @@
     {% endif %}
   </div>
   <div class="kds-action">
-    {% if order.status == 'ready' %}
-    <button
-      class="kds-btn kds-btn-advance"
-      onclick="advanceOrder('{{ order.id }}', 'done', 'cash')"
-      title="{{ _('Выдать — оплата наличными') }}"
-    >💵 {{ _("Выдать · Наличные") }}</button>
-    <button
-      class="kds-btn kds-btn-advance"
-      onclick="advanceOrder('{{ order.id }}', 'done', 'card')"
-      title="{{ _('Выдать — оплата картой') }}"
-    >💳 {{ _("Выдать · Карта") }}</button>
-    {% elif next_status.get(order.status) %}
+    {% if next_status.get(order.status) %}
     <button
       class="kds-btn kds-btn-advance"
       onclick="advanceOrder('{{ order.id }}', '{{ next_status[order.status] }}')"

@@ -25,6 +25,13 @@
 .pos-table-chip.occupied { border-color:#f87171; color:#f87171; }
 .pos-table-chip.reserved { border-color:#fbbf24; color:#fbbf24; }
 .pos-table-chip.selected { background:var(--gold); color:#000; border-color:var(--gold); }
+.pos-pay-seg { display:flex; gap:.4rem; }
+.pos-pay-opt {
+  flex:1; padding:.5rem .4rem; min-height:38px; border-radius:8px;
+  border:1px solid var(--border); background:none; color:var(--muted);
+  font-size:.8rem; cursor:pointer; transition:all .15s; white-space:nowrap;
+}
+.pos-pay-opt.active { background:rgba(200,168,75,.15); border-color:var(--gold); color:var(--gold); font-weight:600; }
 </style>
 {% endblock %}
 
@@ -60,6 +67,15 @@
     </div>
     <div id="cart-lines"><p class="empty-state" style="padding:.5rem 0">{{ _("Корзина пуста") }}</p></div>
     <div class="pos-total"><span>{{ _("Итого") }}</span><span id="cart-total">0 ₸</span></div>
+    <div class="form-group">
+      <label style="font-size:.8rem;color:var(--muted)">{{ _("Оплата") }}</label>
+      <div class="pos-pay-seg" id="pos-pay-seg">
+        <button type="button" class="pos-pay-opt active" data-method="cash" onclick="selectPayment(this)">💵 {{ _("Наличные") }}</button>
+        <button type="button" class="pos-pay-opt" data-method="card" onclick="selectPayment(this)">💳 {{ _("Карта") }}</button>
+        <button type="button" class="pos-pay-opt" data-method="" onclick="selectPayment(this)">{{ _("Позже") }}</button>
+      </div>
+      <p style="font-size:.72rem;color:var(--muted);margin-top:.35rem" id="pay-hint">{{ _("Оплата сейчас — чек пробьётся сразу") }}</p>
+    </div>
     <button onclick="submitOrder()" class="btn-primary" style="width:100%" id="submit-btn" disabled>{{ _("Оформить заказ") }}</button>
   </div>
 </div>
@@ -73,7 +89,10 @@
     all: {{ _("Все") | tojson }},
     cartEmpty: {{ _("Корзина пуста") | tojson }},
     orderSent: {{ _("Заказ отправлен на кухню") | tojson }},
+    orderSentPaid: {{ _("Заказ оплачен и отправлен на кухню") | tojson }},
     orderError: {{ _("Ошибка оформления заказа") | tojson }},
+    payNowHint: {{ _("Оплата сейчас — чек пробьётся сразу") | tojson }},
+    payLaterHint: {{ _("Оплата будет принята позже — на экране заказов") | tojson }},
   };
   let _menuItems = [];
   let _cart = {}; // menu_item_id -> {item, qty}
@@ -188,6 +207,14 @@
     submitBtn.disabled = false;
   }
 
+  let _payMethod = 'cash';
+  function selectPayment(btn) {
+    document.querySelectorAll('.pos-pay-opt').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    _payMethod = btn.dataset.method || null;
+    document.getElementById('pay-hint').textContent = _payMethod ? T.payNowHint : T.payLaterHint;
+  }
+
   async function submitOrder() {
     const venueId = document.getElementById('venue-select').value;
     const items = Object.values(_cart).map(({ item, qty }) => ({ menu_item_id: item.id, quantity: qty }));
@@ -204,6 +231,7 @@
           items,
           table_id: _selectedTableId || null,
           table_number: _selectedTableId ? null : (document.getElementById('table-number').value || null),
+          payment_method: _payMethod,
         }),
       });
       if (res.status === 401) { location.href = '/auth/login'; return; }
@@ -212,7 +240,7 @@
         document.getElementById('table-number').value = '';
         renderCart();
         loadMenu();
-        notify.success(T.orderSent);
+        notify.success(_payMethod ? T.orderSentPaid : T.orderSent);
       } else {
         const err = await res.json().catch(() => ({}));
         notify.error(err.detail || T.orderError);

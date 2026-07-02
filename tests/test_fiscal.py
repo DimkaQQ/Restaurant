@@ -158,7 +158,9 @@ async def test_issue_fiscal_check_noop_when_provider_not_configured(client, db):
     assert order.fiscal_status is None
 
 
-async def test_order_completion_issues_fiscal_check(monkeypatch, client, db):
+async def test_payment_issues_fiscal_check(monkeypatch, client, db):
+    """The fiscal receipt is tied to the payment event, not to serving:
+    taking payment must issue the Webkassa check."""
     _mock_sequence(monkeypatch, [
         _FakeResp({"Data": {"Token": "tok123"}}),
         _FakeResp({"Data": {"CheckNumber": "CHK-99", "TicketUrl": "https://devkkm.webkassa.kz/t/99"}}),
@@ -188,32 +190,25 @@ async def test_order_completion_issues_fiscal_check(monkeypatch, client, db):
     )
     order_id = order_resp.json()["id"]
 
-    # Note: PATCH /api/orders/{id}/status is actually served by dashboard.py's
-    # HTMX handler (registered before orders.py in main.py — see the NOTE in
-    # dashboard.py), which returns HTML, not the OrderOut JSON orders.py's
-    # dead handler would. So verify via a fresh GET instead of the PATCH body.
-    for status in ("confirmed", "preparing", "ready"):
-        resp = await client.patch(f"/api/orders/{order_id}/status", json={"status": status}, headers=auth_headers(reg["token"]))
-        assert resp.status_code == 200, resp.text
-
-    resp = await client.patch(
-        f"/api/orders/{order_id}/status",
-        json={"status": "done", "payment_method": "cash"},
+    resp = await client.post(
+        f"/api/orders/{order_id}/pay",
+        json={"method": "cash"},
         headers=auth_headers(reg["token"]),
     )
     assert resp.status_code == 200, resp.text
 
     order_resp = await client.get(f"/api/orders/{order_id}", headers=auth_headers(reg["token"]))
     body = order_resp.json()
+    assert body["payment_status"] == "paid"
     assert body["fiscal_status"] == "issued"
     assert body["fiscal_check_number"] == "CHK-99"
     assert body["fiscal_ticket_url"] == "https://devkkm.webkassa.kz/t/99"
 
 
-async def test_order_completion_without_payment_method_marks_fiscal_failed(monkeypatch, client, db):
-    """A venue with fiscalization on but no payment_method supplied on the
-    done transition can't be fiscalized — must fail loudly in fiscal_error,
-    not silently skip or crash the status update."""
+async def test_serving_unpaid_order_does_not_touch_fiscal(client, db):
+    """Serving (done) is pure logistics: a table-service order handed out
+    before payment must NOT trigger fiscalization or mark it failed — the
+    check is issued later, when the guest actually pays."""
     reg = await register_network(client)
     venue_resp = await client.post("/api/venues/", json={"name": "Hall"}, headers=auth_headers(reg["token"]))
     venue_id = venue_resp.json()["id"]
@@ -243,4 +238,7 @@ async def test_order_completion_without_payment_method_marks_fiscal_failed(monke
         assert resp.status_code == 200, resp.text
 
     order_resp = await client.get(f"/api/orders/{order_id}", headers=auth_headers(reg["token"]))
-    assert order_resp.json()["fiscal_status"] == "failed"
+    body = order_resp.json()
+    assert body["status"] == "done"
+    assert body["payment_status"] == "unpaid"
+    assert body["fiscal_status"] is None

@@ -17,6 +17,9 @@ class OrderCreate(BaseModel):
     table_number: str | None = None
     table_id: uuid.UUID | None = None
     source: str | None = None
+    # Counter-service flow: take payment at order time (cash/card/mobile).
+    # None = pay later (table service) — payment recorded separately.
+    payment_method: str | None = None
 
 
 class OrderItemOut(BaseModel):
@@ -51,6 +54,8 @@ class OrderOut(BaseModel):
     source: str | None = None
     created_at: datetime
     updated_at: datetime
+    payment_status: str = "unpaid"
+    paid_at: datetime | None = None
     payment_method: str | None = None
     fiscal_status: str | None = None
     fiscal_check_number: str | None = None
