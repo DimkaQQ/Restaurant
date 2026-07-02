@@ -168,11 +168,6 @@ async def change_status_html(
     current_user: User = Depends(get_current_user_dep),
     db: AsyncSession = Depends(get_db),
 ):
-    # NOTE: app/routers/orders.py also declares PATCH /api/orders/{order_id}/status
-    # (registered under the same "/api/orders" path) — since this router is
-    # included first in main.py, THIS handler is the one that actually runs;
-    # the one in orders.py is unreachable. Fixing that route collision is a
-    # separate cleanup; for now this is the one real callers hit.
     try:
         content_type = request.headers.get("content-type", "")
         if "application/json" in content_type:

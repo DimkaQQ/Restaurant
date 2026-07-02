@@ -13,7 +13,7 @@ from app.models.user import User
 from app.models.venue import Venue
 from app.routers.bot_api import _require_bot_secret
 from app.routers.deps import get_current_user_dep, get_accessible_venue_ids
-from app.schemas.order import OrderCreate, OrderOut, OrderStatusUpdate
+from app.schemas.order import OrderCreate, OrderOut
 from app.services.order_service import create_order, update_order_status, cancel_order, get_order_with_items
 
 router = APIRouter(prefix="/api/orders", tags=["orders"])
@@ -151,31 +151,11 @@ async def get_order(
         raise HTTPException(status_code=500, detail="Ошибка загрузки заказа")
 
 
-@router.patch("/{order_id}/status", response_model=OrderOut)
-async def change_order_status(
-    order_id: uuid.UUID,
-    data: OrderStatusUpdate,
-    current_user: User = Depends(get_current_user_dep),
-    db: AsyncSession = Depends(get_db),
-):
-    try:
-        # Verify order belongs to current user's network before mutating
-        check = (await db.execute(
-            select(Order).join(Venue).where(Order.id == order_id, Venue.network_id == current_user.network_id)
-        )).scalar_one_or_none()
-        if not check:
-            raise HTTPException(status_code=404, detail="Заказ не найден")
-        order = await update_order_status(
-            order_id, data.status, db, changed_by=current_user.email, payment_method=data.payment_method
-        )
-        return order
-    except HTTPException:
-        raise
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
-    except Exception as e:
-        logger.error("Status update error: %s", e)
-        raise HTTPException(status_code=500, detail="Ошибка обновления статуса")
+# PATCH /{order_id}/status intentionally lives in dashboard.py's
+# change_status_html, not here — the web UI (HTMX) is the only caller today,
+# and it needs an HTML fragment/HX-Reswap response, not OrderOut JSON. A
+# duplicate JSON handler on this same path was dead code (route order in
+# main.py meant dashboard.py's always won) until this note replaced it.
 
 
 @router.post("/{order_id}/cancel", response_model=OrderOut)
