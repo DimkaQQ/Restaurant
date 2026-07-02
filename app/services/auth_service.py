@@ -117,3 +117,23 @@ async def verify_password_reset_token(token: str, db: AsyncSession) -> User | No
     if not user or user.hashed_password[-16:] != payload.get("pw"):
         return None
     return user
+
+
+def create_email_verification_token(user: User) -> str:
+    payload = {
+        "sub": str(user.id),
+        "purpose": "email_verify",
+        "exp": datetime.now(timezone.utc) + timedelta(days=3),
+    }
+    return jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
+
+
+async def verify_email_token(token: str, db: AsyncSession) -> User | None:
+    payload = decode_token(token)
+    if not payload or payload.get("purpose") != "email_verify":
+        return None
+    user_id = payload.get("sub")
+    if not user_id:
+        return None
+    result = await db.execute(select(User).where(User.id == uuid.UUID(user_id)))
+    return result.scalar_one_or_none()

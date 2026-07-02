@@ -14,12 +14,25 @@ from sqlalchemy import select
 from app.config import settings
 from app.database import get_db
 from app.models.user import User
+from app.routers.deps import get_current_user_dep
 from app.schemas.auth import NetworkCreate, LoginRequest, TokenResponse, PasswordResetRequest, PasswordResetConfirm
 from app.services.auth_service import (
     authenticate_user, register_network, create_access_token, create_refresh_token,
     create_password_reset_token, verify_password_reset_token, hash_password,
+    create_email_verification_token, verify_email_token,
 )
 from app.services.email_service import send_email
+
+
+async def _send_verification_email(user: User) -> None:
+    token = create_email_verification_token(user)
+    verify_url = f"{settings.PUBLIC_URL}/auth/verify-email?token={token}"
+    await send_email(
+        user.email,
+        "Подтвердите email — RestOS",
+        f"<p>Чтобы подтвердить email, перейдите по ссылке:</p>"
+        f"<p><a href='{verify_url}'>{verify_url}</a></p>",
+    )
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 logger = logging.getLogger(__name__)
@@ -49,6 +62,8 @@ async def register(request: Request, data: NetworkCreate, response: Response, db
     except Exception as e:
         logger.error("Registration error: %s", e)
         raise HTTPException(status_code=400, detail=str(e))
+
+    await _send_verification_email(user)
 
     access_token = create_access_token({"sub": str(user.id)})
     refresh_token = create_refresh_token({"sub": str(user.id)})
@@ -147,3 +162,26 @@ async def reset_password(request: Request, data: PasswordResetConfirm, db: Async
     await db.commit()
     logger.info("Password reset for user %s", user.email)
     return {"message": "Пароль обновлён"}
+
+
+@router.get("/verify-email", response_class=HTMLResponse)
+async def verify_email(request: Request, token: str = "", db: AsyncSession = Depends(get_db)):
+    user = await verify_email_token(token, db)
+    if not user:
+        return templates.TemplateResponse(
+            "verify_email.html", {"request": request, "ok": False}, status_code=400
+        )
+    if not user.email_verified:
+        user.email_verified = True
+        await db.commit()
+        logger.info("Email verified for user %s", user.email)
+    return templates.TemplateResponse("verify_email.html", {"request": request, "ok": True})
+
+
+@router.post("/resend-verification")
+@limiter.limit("3/minute")
+async def resend_verification(request: Request, current_user: User = Depends(get_current_user_dep)):
+    if current_user.email_verified:
+        return {"message": "Email уже подтверждён"}
+    await _send_verification_email(current_user)
+    return {"message": "Письмо отправлено"}

@@ -95,6 +95,27 @@
     </div>
   </nav>
   <main class="main-content">
+    {% if user is defined and user and not user.email_verified %}
+    <div id="verify-email-banner" style="background:rgba(200,168,75,.12); border:1px solid var(--border); border-radius:8px; padding:.75rem 1rem; margin-bottom:1.25rem; display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap; font-size:.85rem">
+      <span>📧 Подтвердите email ({{ user.email }}), чтобы обезопасить аккаунт.</span>
+      <button onclick="resendVerification(this)" style="background:none; border:1px solid var(--gold); color:var(--gold); border-radius:6px; padding:.35rem .8rem; font-size:.8rem; cursor:pointer">Отправить письмо повторно</button>
+    </div>
+    <script>
+      async function resendVerification(btn) {
+        btn.disabled = true;
+        btn.textContent = 'Отправляем…';
+        try {
+          const token = document.cookie.split(';').find(c => c.trim().startsWith('access_token='));
+          const headers = {};
+          if (token) headers['Authorization'] = 'Bearer ' + token.split('=')[1];
+          const resp = await fetch('/auth/resend-verification', { method: 'POST', headers, credentials: 'include' });
+          btn.textContent = resp.ok ? 'Отправлено ✓' : 'Ошибка, попробуйте позже';
+        } catch (e) {
+          btn.textContent = 'Ошибка, попробуйте позже';
+        }
+      }
+    </script>
+    {% endif %}
     {% block content %}{% endblock %}
   </main>
   {% else %}
