@@ -169,4 +169,30 @@ async def stripe_webhook(request: Request, db: AsyncSession = Depends(get_db)):
             sub.status = "cancelled"
             await db.commit()
 
+    elif event_type == "customer.subscription.updated":
+        # Covers plan upgrades/downgrades and status changes made from the
+        # Stripe side (e.g. via the customer billing portal) so our copy of
+        # the subscription doesn't drift from what Stripe actually has.
+        stripe_sub_id = data.get("id")
+        sub = (await db.execute(
+            select(Subscription).where(Subscription.stripe_subscription_id == stripe_sub_id)
+        )).scalar_one_or_none()
+        if sub:
+            price_id = (data.get("items", {}).get("data") or [{}])[0].get("price", {}).get("id")
+            plan = next((p for p, pid in _PLAN_PRICE_IDS.items() if pid and pid == price_id), None)
+            if plan:
+                sub.plan = plan
+            stripe_status = data.get("status")
+            if stripe_status in ("active", "trialing"):
+                sub.status = "active"
+            elif stripe_status == "past_due":
+                sub.status = "past_due"
+            elif stripe_status in ("canceled", "unpaid", "incomplete_expired"):
+                sub.status = "cancelled"
+            period_end = data.get("current_period_end")
+            if period_end:
+                sub.current_period_end = datetime.fromtimestamp(period_end, tz=timezone.utc)
+            await db.commit()
+            logger.info("Subscription %s updated via Stripe: status=%s plan=%s", stripe_sub_id, sub.status, sub.plan)
+
     return {"received": True}

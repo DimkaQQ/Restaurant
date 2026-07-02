@@ -54,6 +54,26 @@ async def test_dashboard_requires_auth(client: AsyncClient):
     assert resp.status_code in (401, 307)
 
 
+async def test_root_shows_landing_page_for_anonymous_visitor(client: AsyncClient):
+    resp = await client.get("/")
+    assert resp.status_code == 200
+    assert "RestOS" in resp.text
+
+
+async def test_root_redirects_to_dashboard_when_logged_in(client: AsyncClient):
+    reg = await register_network(client)
+    resp = await client.get("/", headers=auth_headers(reg["token"]), follow_redirects=False)
+    assert resp.status_code == 307
+    assert resp.headers["location"] == "/dashboard"
+
+
+async def test_legal_pages_are_public(client: AsyncClient):
+    terms = await client.get("/legal/terms")
+    privacy = await client.get("/legal/privacy")
+    assert terms.status_code == 200
+    assert privacy.status_code == 200
+
+
 async def test_dashboard_accessible_with_token(client: AsyncClient):
     reg = await register_network(client)
     resp = await client.get("/dashboard", headers=auth_headers(reg["token"]))

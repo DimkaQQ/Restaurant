@@ -31,6 +31,13 @@
           <label>Пароль</label>
           <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="new-password" minlength="8" required>
         </div>
+        <div class="form-group" style="display:flex; align-items:flex-start; gap:.5rem">
+          <input type="checkbox" id="agree" required style="margin-top:.2rem">
+          <label for="agree" style="font-size:.8rem; color:var(--muted); font-weight:400">
+            Согласен с <a href="/legal/terms" target="_blank" style="color:var(--gold)">условиями использования</a>
+            и <a href="/legal/privacy" target="_blank" style="color:var(--gold)">политикой конфиденциальности</a>
+          </label>
+        </div>
         <button type="submit" class="btn-primary btn-full">Создать аккаунт</button>
       </form>
       <p class="auth-subtitle" style="margin-top:1rem">

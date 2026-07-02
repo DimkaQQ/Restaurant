@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 async def root(request: Request, current_user: User | None = Depends(get_current_user_optional)):
     if current_user:
         return RedirectResponse(url="/dashboard")
-    return RedirectResponse(url="/auth/login")
+    return templates.TemplateResponse("landing.html", {"request": request, "year": datetime.now(timezone.utc).year})
 
 
 @router.get("/dashboard", response_class=HTMLResponse)
