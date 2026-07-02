@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Рассылки — RestOS{% endblock %}
+{% block title %}{{ _("Рассылки") }} — RestOS{% endblock %}
 
 {% block head %}
 <style>
@@ -43,29 +43,29 @@
 {% block content %}
 {% include "partials/settings_tabs.html" %}
 <div class="bc-header">
-  <h1>Рассылки</h1>
+  <h1>{{ _("Рассылки") }}</h1>
 </div>
 
 <div class="bc-stats">
   <div class="bc-stat">
     <div class="bc-stat-val">{{ total_guests }}</div>
-    <div class="bc-stat-lbl">Гостей в базе</div>
+    <div class="bc-stat-lbl">{{ _("Гостей в базе") }}</div>
   </div>
   <div class="bc-stat">
     <div class="bc-stat-val">{{ tg_guests }}</div>
-    <div class="bc-stat-lbl">Подключены в Telegram</div>
+    <div class="bc-stat-lbl">{{ _("Подключены в Telegram") }}</div>
   </div>
   <div class="bc-stat">
     <div class="bc-stat-val">{{ total_sent }}</div>
-    <div class="bc-stat-lbl">Рассылок отправлено</div>
+    <div class="bc-stat-lbl">{{ _("Рассылок отправлено") }}</div>
   </div>
 </div>
 
 <div class="bc-layout">
   <div class="bc-list-card">
     <div class="bc-list-header">
-      <h2>История рассылок</h2>
-      <span style="font-size:.8rem;color:var(--muted)">{{ broadcasts|length }} всего</span>
+      <h2>{{ _("История рассылок") }}</h2>
+      <span style="font-size:.8rem;color:var(--muted)">{{ broadcasts|length }} {{ _("всего") }}</span>
     </div>
     {% if broadcasts %}
       {% for b in broadcasts %}
@@ -75,52 +75,52 @@
           <div class="bc-item-meta">
             <span>{{ b.created_at.strftime('%d.%m.%Y %H:%M') }}</span>
             {% if b.sent_at %}
-              <span class="bc-badge sent">Отправлена · {{ b.sent_count }} получ.</span>
+              <span class="bc-badge sent">{{ _("Отправлена") }} · {{ b.sent_count }} {{ _("получ.") }}</span>
             {% else %}
-              <span class="bc-badge pending">Ожидает</span>
+              <span class="bc-badge pending">{{ _("Ожидает") }}</span>
             {% endif %}
             {% if b.lang_filter %}
               <span class="bc-badge lang">{{ b.lang_filter | upper }}</span>
             {% else %}
-              <span class="bc-badge lang">Все языки</span>
+              <span class="bc-badge lang">{{ _("Все языки") }}</span>
             {% endif %}
           </div>
         </div>
-        <button class="bc-item-del" onclick="deleteBroadcast('{{ b.id }}')" title="Удалить">✕</button>
+        <button class="bc-item-del" onclick="deleteBroadcast('{{ b.id }}')" title="{{ _('Удалить') }}">✕</button>
       </div>
       {% endfor %}
     {% else %}
-      <div class="bc-list-empty">Рассылок пока не было</div>
+      <div class="bc-list-empty">{{ _("Рассылок пока не было") }}</div>
     {% endif %}
   </div>
 
   <div>
     <div class="bc-form-card">
-      <h2>Новая рассылка</h2>
+      <h2>{{ _("Новая рассылка") }}</h2>
       <div id="bc-error" style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#fca5a5;padding:.5rem .75rem;border-radius:6px;font-size:.8rem;margin-bottom:.75rem;display:none"></div>
       <div class="bc-form-group">
-        <label>Язык получателей</label>
+        <label>{{ _("Язык получателей") }}</label>
         <select id="bc-lang">
-          <option value="">Все языки (ru + kz + en)</option>
-          <option value="ru">🇷🇺 Русский</option>
+          <option value="">{{ _("Все языки (ru + kz + en)") }}</option>
+          <option value="ru">🇷🇺 {{ _("Русский") }}</option>
           <option value="kz">🇰🇿 Қазақша</option>
           <option value="en">🇬🇧 English</option>
         </select>
       </div>
       <div class="bc-form-group">
-        <label>Текст сообщения</label>
-        <textarea id="bc-msg" placeholder="Введите текст рассылки..." oninput="updatePreview()" maxlength="4000"></textarea>
+        <label>{{ _("Текст сообщения") }}</label>
+        <textarea id="bc-msg" placeholder="{{ _('Введите текст рассылки...') }}" oninput="updatePreview()" maxlength="4000"></textarea>
         <div class="bc-counter"><span id="bc-len">0</span> / 4000</div>
       </div>
       <div class="bc-form-group">
-        <label>Предпросмотр</label>
-        <div class="bc-preview" id="bc-preview">Введите текст выше...</div>
+        <label>{{ _("Предпросмотр") }}</label>
+        <div class="bc-preview" id="bc-preview">{{ _("Введите текст выше...") }}</div>
       </div>
       <button class="btn-primary" style="width:100%" onclick="sendBroadcast()" id="bc-send-btn">
-        Создать рассылку →
+        {{ _("Создать рассылку →") }}
       </button>
       <p style="font-size:.75rem;color:var(--muted);margin-top:.75rem;text-align:center">
-        Бот отправит сообщение гостям в течение 5 минут
+        {{ _("Бот отправит сообщение гостям в течение 5 минут") }}
       </p>
     </div>
   </div>
@@ -129,11 +129,20 @@
 
 {% block scripts %}
 <script>
+const T = {
+  enterText: {{ _("Введите текст выше...") | tojson }},
+  enterMessage: {{ _("Введите текст рассылки") | tojson }},
+  creating: {{ _("Создаётся...") | tojson }},
+  createBroadcast: {{ _("Создать рассылку →") | tojson }},
+  error: {{ _("Ошибка") | tojson }},
+  deleteConfirm: {{ _("Удалить рассылку?") | tojson }},
+};
+
 function updatePreview() {
   const msg = document.getElementById('bc-msg').value;
   document.getElementById('bc-len').textContent = msg.length;
   const preview = document.getElementById('bc-preview');
-  preview.textContent = msg ? '📢 ' + msg : 'Введите текст выше...';
+  preview.textContent = msg ? '📢 ' + msg : T.enterText;
 }
 
 async function sendBroadcast() {
@@ -142,10 +151,10 @@ async function sendBroadcast() {
   const errEl = document.getElementById('bc-error');
   errEl.style.display = 'none';
 
-  if (!msg) { errEl.textContent = 'Введите текст рассылки'; errEl.style.display = 'block'; return; }
+  if (!msg) { errEl.textContent = T.enterMessage; errEl.style.display = 'block'; return; }
 
   const btn = document.getElementById('bc-send-btn');
-  btn.disabled = true; btn.textContent = 'Создаётся...';
+  btn.disabled = true; btn.textContent = T.creating;
 
   const res = await fetch('/settings/api/broadcasts', {
     method: 'POST',
@@ -153,21 +162,21 @@ async function sendBroadcast() {
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('access_token') },
     body: JSON.stringify({ message: msg, lang_filter: lang || null }),
   });
-  btn.disabled = false; btn.textContent = 'Создать рассылку →';
+  btn.disabled = false; btn.textContent = T.createBroadcast;
 
   if (res.ok) {
     document.getElementById('bc-msg').value = '';
-    document.getElementById('bc-preview').textContent = 'Введите текст выше...';
+    document.getElementById('bc-preview').textContent = T.enterText;
     document.getElementById('bc-len').textContent = '0';
     location.reload();
   } else {
     const d = await res.json().catch(() => ({}));
-    errEl.textContent = d.detail || 'Ошибка'; errEl.style.display = 'block';
+    errEl.textContent = d.detail || T.error; errEl.style.display = 'block';
   }
 }
 
 async function deleteBroadcast(id) {
-  if (!confirm('Удалить рассылку?')) return;
+  if (!confirm(T.deleteConfirm)) return;
   const res = await fetch('/settings/api/broadcasts/' + id, {
     method: 'DELETE',
     credentials: 'include',

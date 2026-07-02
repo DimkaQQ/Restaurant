@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="{{ locale }}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Чек #{{ order.id | string | truncate(8, True, '') }}</title>
+  <title>{{ _("Чек") }} #{{ order.id | string | truncate(8, True, '') }}</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -53,10 +53,10 @@
       {% if order.venue and order.venue.address %}<div class="venue-addr">{{ order.venue.address }}</div>{% endif %}
     </div>
     <div class="divider"></div>
-    <div class="meta-row"><span>Заказ</span><span>#{{ order.id | string | truncate(8, True, '') }}</span></div>
-    <div class="meta-row"><span>Дата</span><span>{{ order.created_at.strftime('%d.%m.%Y %H:%M') }}</span></div>
-    {% if order.table_number %}<div class="meta-row"><span>Стол</span><span>{{ order.table_number }}</span></div>{% endif %}
-    {% if order.guest and order.guest.name %}<div class="meta-row"><span>Гость</span><span>{{ order.guest.name }}</span></div>{% endif %}
+    <div class="meta-row"><span>{{ _("Заказ") }}</span><span>#{{ order.id | string | truncate(8, True, '') }}</span></div>
+    <div class="meta-row"><span>{{ _("Дата") }}</span><span>{{ order.created_at.strftime('%d.%m.%Y %H:%M') }}</span></div>
+    {% if order.table_number %}<div class="meta-row"><span>{{ _("Стол") }}</span><span>{{ order.table_number }}</span></div>{% endif %}
+    {% if order.guest and order.guest.name %}<div class="meta-row"><span>{{ _("Гость") }}</span><span>{{ order.guest.name }}</span></div>{% endif %}
     <div class="divider"></div>
     <div class="items">
       {% for item in order.items %}
@@ -68,23 +68,23 @@
       {% endfor %}
     </div>
     <div class="divider"></div>
-    <div class="total-row"><span>Итого</span><span>{{ "{:,.0f}".format(order.total_amount) }} ₸</span></div>
+    <div class="total-row"><span>{{ _("Итого") }}</span><span>{{ "{:,.0f}".format(order.total_amount) }} ₸</span></div>
     {% if order.payment_method %}
     <div class="meta-row" style="margin-top:.3rem">
-      <span>Оплата</span>
-      <span>{{ {"cash": "Наличные", "card": "Картой", "mobile": "Моб. платёж"}.get(order.payment_method, order.payment_method) }}</span>
+      <span>{{ _("Оплата") }}</span>
+      <span>{{ {"cash": _("Наличные"), "card": _("Картой"), "mobile": _("Моб. платёж")}.get(order.payment_method, order.payment_method) }}</span>
     </div>
     {% endif %}
     {% if order.fiscal_check_number %}
     <div class="fiscal">
-      Фискальный чек №{{ order.fiscal_check_number }}
+      {{ _("Фискальный чек №") }}{{ order.fiscal_check_number }}
       {% if order.fiscal_ticket_url %}<br>{{ order.fiscal_ticket_url }}{% endif %}
     </div>
     {% endif %}
-    <div class="footer">Спасибо, ждём вас снова!</div>
+    <div class="footer">{{ _("Спасибо, ждём вас снова!") }}</div>
   </div>
   <div class="no-print">
-    <button onclick="window.print()">🖨 Печать</button>
+    <button onclick="window.print()">🖨 {{ _("Печать") }}</button>
   </div>
 </body>
 </html>

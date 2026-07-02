@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-02 06:50+0000\n"
+"POT-Creation-Date: 2026-07-02 06:53+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -97,6 +97,9 @@ msgstr "7. Contact"
 msgid "API-ключ (x-api-key)"
 msgstr "API key (x-api-key)"
 
+msgid "Email подтверждён"
+msgstr "Email verified"
+
 msgid ""
 "P&L, расходы, выручка по заведениям, NPS гостей — вся картина бизнеса в "
 "одном месте."
@@ -179,11 +182,26 @@ msgstr ""
 "Bonus points, visit history, and a Telegram bot for guests — no third-"
 "party CRM needed."
 
+msgid "Бот отправит сообщение гостям в течение 5 минут"
+msgstr "The bot will send the message to guests within 5 minutes"
+
 msgid "Бронь"
 msgstr "Reserved"
 
+msgid "В панель управления"
+msgstr "Go to dashboard"
+
 msgid "Введите количество"
 msgstr "Enter a quantity"
+
+msgid "Введите текст выше..."
+msgstr "Type the text above..."
+
+msgid "Введите текст рассылки"
+msgstr "Enter the broadcast text"
+
+msgid "Введите текст рассылки..."
+msgstr "Enter the broadcast text..."
 
 msgid "Вернуть назад"
 msgstr "Move back"
@@ -214,6 +232,12 @@ msgstr "All venues"
 
 msgid "Все заказы →"
 msgstr "All orders →"
+
+msgid "Все языки"
+msgstr "All languages"
+
+msgid "Все языки (ru + kz + en)"
+msgstr "All languages (ru + kz + en)"
 
 msgid "Всего выручки"
 msgstr "Total revenue"
@@ -309,6 +333,9 @@ msgstr "Generating..."
 msgid "Год"
 msgstr "Year"
 
+msgid "Гостей в базе"
+msgstr "Guests in database"
+
 msgid "Гости"
 msgstr "Guests"
 
@@ -371,6 +398,9 @@ msgstr "Date"
 
 msgid "Дашборд"
 msgstr "Dashboard"
+
+msgid "Динамика отзывов (30 дней)"
+msgstr "Review trend (30 days)"
 
 msgid ""
 "Для предоставления функций Сервиса (приём заказов, кухонный дисплей, "
@@ -485,6 +515,9 @@ msgstr "Usage"
 msgid "Использование на кухне"
 msgstr "Kitchen usage"
 
+msgid "История рассылок"
+msgstr "Broadcast history"
+
 msgid "История сегодня"
 msgstr "Today's history"
 
@@ -493,6 +526,9 @@ msgstr "Total"
 
 msgid "Казахстан"
 msgstr "Kazakhstan"
+
+msgid "Картой"
+msgstr "Card"
 
 msgid "Касса"
 msgstr "Register"
@@ -517,6 +553,9 @@ msgstr "Restock quantity"
 
 msgid "Количество списания"
 msgstr "Write-off quantity"
+
+msgid "Комментарий"
+msgstr "Comment"
 
 msgid "Конец"
 msgstr "End"
@@ -563,6 +602,9 @@ msgstr "Month"
 msgid "Мин. остаток"
 msgstr "Min stock"
 
+msgid "Моб. платёж"
+msgstr "Mobile payment"
+
 msgid "Мой ресторан"
 msgstr "My Restaurant"
 
@@ -606,6 +648,9 @@ msgstr "Restaurant / network name"
 msgid "Наименование"
 msgstr "Name"
 
+msgid "Наличные"
+msgstr "Cash"
+
 msgid "Написать в поддержку"
 msgstr "Contact support"
 
@@ -636,6 +681,12 @@ msgstr "Start free"
 
 msgid "Не подключено"
 msgstr "Not connected"
+
+msgid "Негативные отзывы"
+msgstr "Negative reviews"
+
+msgid "Негативных отзывов пока нет 🎉"
+msgstr "No negative reviews yet 🎉"
 
 msgid "Неделя"
 msgstr "Week"
@@ -688,6 +739,9 @@ msgstr "Nothing found"
 msgid "Новая позиция"
 msgstr "New item"
 
+msgid "Новая рассылка"
+msgstr "New broadcast"
+
 msgid "Новые"
 msgstr "New"
 
@@ -719,11 +773,23 @@ msgstr "Kassa number (CashboxUniqueNumber)"
 msgid "Номер стола"
 msgstr "Table number"
 
+msgid "Нормально"
+msgstr "OK"
+
+msgid "Нужно улучшить"
+msgstr "Needs improvement"
+
 msgid "Обзор"
 msgstr "Overview"
 
 msgid "Обновлено:"
 msgstr "Last updated:"
+
+msgid "Общий NPS"
+msgstr "Overall NPS"
+
+msgid "Ожидает"
+msgstr "Pending"
 
 msgid "Онлайн"
 msgstr "Online"
@@ -742,6 +808,9 @@ msgstr "Description"
 msgid "Описание (необязательно)"
 msgstr "Description (optional)"
 
+msgid "Оплата"
+msgstr "Payment"
+
 msgid "Оплата аренды за июнь"
 msgstr "June rent payment"
 
@@ -754,11 +823,20 @@ msgstr "Trial days left:"
 msgid "Остаток"
 msgstr "In stock"
 
+msgid "Отзывов"
+msgstr "Reviews"
+
+msgid "Отзывов за месяц"
+msgstr "Reviews this month"
+
 msgid "Отзывов пока нет"
 msgstr "No reviews yet"
 
 msgid "Отзывы"
 msgstr "Reviews"
+
+msgid "Отлично"
+msgstr "Excellent"
 
 msgid "Отмена"
 msgstr "Cancel"
@@ -777,6 +855,9 @@ msgstr "Resend email"
 
 msgid "Отправить ссылку для сброса"
 msgstr "Send reset link"
+
+msgid "Отправлена"
+msgstr "Sent"
 
 msgid "Отправлено ✓"
 msgstr "Sent ✓"
@@ -799,6 +880,9 @@ msgstr "Subscribe"
 
 msgid "Оформить заказ"
 msgstr "Place order"
+
+msgid "Оценка"
+msgstr "Rating"
 
 msgid "Ошибка"
 msgstr "Error"
@@ -881,6 +965,9 @@ msgstr "Kassa password"
 msgid "Персонал"
 msgstr "Staff"
 
+msgid "Печать"
+msgstr "Print"
+
 msgid "Печать талона"
 msgstr "Print ticket"
 
@@ -904,8 +991,14 @@ msgstr ""
 "For questions about these terms, contact the address listed in your "
 "platform account, or via the support section."
 
+msgid "По заведениям"
+msgstr "By venue"
+
 msgid "Повреждение"
 msgstr "Damage"
+
+msgid "Подключены в Telegram"
+msgstr "Connected via Telegram"
 
 msgid "Подписка"
 msgstr "Subscription"
@@ -918,6 +1011,9 @@ msgstr "Verify your email"
 
 msgid "Подтвердить"
 msgstr "Confirm"
+
+msgid "Подтверждение email"
+msgstr "Email verification"
 
 msgid "Подтверждено"
 msgstr "Confirmed"
@@ -972,6 +1068,9 @@ msgstr "Recent expenses"
 
 msgid "Посмотреть цены"
 msgstr "See pricing"
+
+msgid "Предпросмотр"
+msgstr "Preview"
 
 msgid "Прибыль"
 msgstr "Profit"
@@ -1039,6 +1138,12 @@ msgstr "Empty"
 msgid "Рассылки"
 msgstr "Broadcasts"
 
+msgid "Рассылок отправлено"
+msgstr "Broadcasts sent"
+
+msgid "Рассылок пока не было"
+msgstr "No broadcasts yet"
+
 msgid "Расходы"
 msgstr "Expenses"
 
@@ -1064,6 +1169,9 @@ msgstr "Tablet mode ↗"
 
 msgid "Роль"
 msgstr "Role"
+
+msgid "Русский"
+msgstr "Russian"
 
 msgid "С нами с"
 msgstr "Customer since"
@@ -1148,6 +1256,12 @@ msgstr "Sign up"
 msgid "Создать аккаунт"
 msgstr "Create account"
 
+msgid "Создать рассылку →"
+msgstr "Create broadcast →"
+
+msgid "Создаётся..."
+msgstr "Creating..."
+
 msgid "Сотрудник"
 msgstr "Staff member"
 
@@ -1178,6 +1292,9 @@ msgstr "Save password"
 msgid "Сохранить фискализацию"
 msgstr "Save fiscalization settings"
 
+msgid "Спасибо, ждём вас снова!"
+msgstr "Thank you, see you again!"
+
 msgid ""
 "Списание ингредиентов автоматически при закрытии заказа по рецептуре "
 "блюда — остатки всегда актуальны."
@@ -1193,6 +1310,9 @@ msgstr "Wed"
 
 msgid "Средний чек"
 msgstr "Average check"
+
+msgid "Средняя оценка"
+msgstr "Average rating"
 
 msgid "Ссылка 2GIS"
 msgstr "2GIS link"
@@ -1224,6 +1344,9 @@ msgstr "Tables"
 msgid "Сумма (₸)"
 msgstr "Amount (₸)"
 
+msgid "Текст сообщения"
+msgstr "Message text"
+
 msgid "Текущий тариф"
 msgstr "Current plan"
 
@@ -1247,11 +1370,17 @@ msgstr ""
 msgid "Токен:"
 msgstr "Token:"
 
+msgid "Удалить"
+msgstr "Delete"
+
 msgid "Удалить позицию?"
 msgstr "Delete this item?"
 
 msgid "Удалить пользователя?"
 msgstr "Delete this user?"
+
+msgid "Удалить рассылку?"
+msgstr "Delete this broadcast?"
 
 msgid "Удалить расход?"
 msgstr "Delete this expense?"
@@ -1300,6 +1429,9 @@ msgstr "Receipt fiscalization"
 msgid "Фискализация…"
 msgstr "Fiscalizing…"
 
+msgid "Фискальный чек №"
+msgstr "Fiscal receipt No."
+
 msgid "Цена (₸)"
 msgstr "Price (₸)"
 
@@ -1311,6 +1443,9 @@ msgstr "Price/unit"
 
 msgid "Цены"
 msgstr "Pricing"
+
+msgid "Чек"
+msgstr "Receipt"
 
 msgid "Чек пробит"
 msgstr "Receipt issued"
@@ -1328,8 +1463,14 @@ msgstr ""
 msgid "Экран кухни ↗"
 msgstr "Kitchen screen ↗"
 
+msgid "Язык получателей"
+msgstr "Recipient language"
+
 msgid "в базе"
 msgstr "in the database"
+
+msgid "всего"
+msgstr "total"
 
 msgid "г"
 msgstr "g"
@@ -1384,6 +1525,9 @@ msgstr "connected"
 
 msgid "политикой конфиденциальности"
 msgstr "Privacy Policy"
+
+msgid "получ."
+msgstr "recip."
 
 msgid "ссылка"
 msgstr "link"

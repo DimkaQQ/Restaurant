@@ -32,33 +32,33 @@
 {% block content %}
 {% include "partials/analytics_tabs.html" %}
 <div class="page-header">
-  <h1 class="page-title">NPS &amp; Отзывы</h1>
+  <h1 class="page-title">NPS &amp; {{ _("Отзывы") }}</h1>
   <span class="muted">Net Promoter Score</span>
 </div>
 
 <div class="stats-grid" style="margin-bottom:1.75rem">
   <div class="stat-card">
-    <span class="stat-label">Общий NPS</span>
+    <span class="stat-label">{{ _("Общий NPS") }}</span>
     <span class="stat-value {% if overall_nps >= 50 %}gold{% elif overall_nps >= 0 %}{% else %}muted{% endif %}">
       {{ overall_nps }}
     </span>
     <span class="muted" style="font-size:0.78rem">
-      {% if overall_nps >= 50 %}Отлично{% elif overall_nps >= 0 %}Нормально{% else %}Нужно улучшить{% endif %}
+      {% if overall_nps >= 50 %}{{ _("Отлично") }}{% elif overall_nps >= 0 %}{{ _("Нормально") }}{% else %}{{ _("Нужно улучшить") }}{% endif %}
     </span>
   </div>
   <div class="stat-card">
-    <span class="stat-label">Отзывов за месяц</span>
+    <span class="stat-label">{{ _("Отзывов за месяц") }}</span>
     <span class="stat-value">{{ total_month }}</span>
   </div>
   <div class="stat-card">
-    <span class="stat-label">Средняя оценка</span>
+    <span class="stat-label">{{ _("Средняя оценка") }}</span>
     <span class="stat-value gold">{{ avg_rating }} ⭐</span>
   </div>
 </div>
 
 {% if trend_data %}
 <div class="card" style="margin-bottom:1.75rem">
-  <div class="card-header"><h2 class="card-title">Динамика отзывов (30 дней)</h2></div>
+  <div class="card-header"><h2 class="card-title">{{ _("Динамика отзывов (30 дней)") }}</h2></div>
   <div style="height:200px; padding: 0.5rem 0.5rem 0">
     <canvas id="trendChart"></canvas>
   </div>
@@ -66,17 +66,17 @@
 {% endif %}
 
 {% if venue_cards %}
-<h2 style="font-size:1rem; font-weight:600; margin-bottom:1rem; color:var(--white)">По заведениям</h2>
+<h2 style="font-size:1rem; font-weight:600; margin-bottom:1rem; color:var(--white)">{{ _("По заведениям") }}</h2>
 <div class="venue-cards">
   {% for vc in venue_cards %}
   <div class="venue-card">
     <div class="venue-card-name">{{ vc.name }}</div>
     <div class="venue-card-row">
-      <span class="venue-card-label">Средняя оценка</span>
+      <span class="venue-card-label">{{ _("Средняя оценка") }}</span>
       <span class="stars-display">{{ vc.avg_rating }} ⭐</span>
     </div>
     <div class="venue-card-row">
-      <span class="venue-card-label">Отзывов</span>
+      <span class="venue-card-label">{{ _("Отзывов") }}</span>
       <span>{{ vc.count }}</span>
     </div>
     <div class="venue-card-row">
@@ -90,16 +90,16 @@
 
 {% if negative_reviews %}
 <div class="card">
-  <div class="card-header"><h2 class="card-title">Негативные отзывы</h2></div>
+  <div class="card-header"><h2 class="card-title">{{ _("Негативные отзывы") }}</h2></div>
   <div class="table-wrapper">
   <table class="neg-table">
     <thead>
       <tr>
-        <th>Дата</th>
-        <th>Заведение</th>
-        <th>Гость</th>
-        <th>Оценка</th>
-        <th>Комментарий</th>
+        <th>{{ _("Дата") }}</th>
+        <th>{{ _("Заведение") }}</th>
+        <th>{{ _("Гость") }}</th>
+        <th>{{ _("Оценка") }}</th>
+        <th>{{ _("Комментарий") }}</th>
       </tr>
     </thead>
     <tbody>
@@ -120,7 +120,7 @@
 </div>
 {% else %}
 <div class="card" style="text-align:center; padding:2.5rem; color:var(--muted)">
-  Негативных отзывов пока нет 🎉
+  {{ _("Негативных отзывов пока нет 🎉") }}
 </div>
 {% endif %}
 {% endblock %}
@@ -136,7 +136,7 @@
     data: {
       labels: data.map(d => d.day),
       datasets: [{
-        label: 'Отзывов',
+        label: {{ _("Отзывов") | tojson }},
         data: data.map(d => d.cnt),
         borderColor: '#d4a843',
         backgroundColor: 'rgba(212,168,67,0.12)',

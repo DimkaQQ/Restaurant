@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="{{ locale }}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RestOS — Подтверждение email</title>
+  <title>RestOS — {{ _("Подтверждение email") }}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/css/main.css?v=7">
@@ -15,11 +15,11 @@
         <span class="logo-serif">Rest</span><span class="logo-mono">OS</span>
       </div>
       {% if ok %}
-        <p class="auth-subtitle" style="color:#4ade80">✅ Email подтверждён</p>
+        <p class="auth-subtitle" style="color:#4ade80">✅ {{ _("Email подтверждён") }}</p>
       {% else %}
-        <p class="auth-subtitle" style="color:#f87171">❌ Ссылка недействительна или устарела</p>
+        <p class="auth-subtitle" style="color:#f87171">❌ {{ _("Ссылка недействительна или устарела") }}</p>
       {% endif %}
-      <a href="/dashboard" class="btn-primary btn-full" style="display:block; text-align:center; text-decoration:none; margin-top:1rem">В панель управления</a>
+      <a href="/dashboard" class="btn-primary btn-full" style="display:block; text-align:center; text-decoration:none; margin-top:1rem">{{ _("В панель управления") }}</a>
     </div>
   </div>
 </body>
