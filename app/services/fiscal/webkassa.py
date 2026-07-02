@@ -8,6 +8,7 @@ import logging
 from decimal import Decimal
 
 import httpx
+from tenacity import retry, retry_if_exception, stop_after_attempt, wait_exponential
 
 logger = logging.getLogger(__name__)
 
@@ -16,6 +17,28 @@ logger = logging.getLogger(__name__)
 # live keys (this is not something to guess at).
 BASE_URL = "https://devkkm.webkassa.kz"
 TIMEOUT = 15.0
+
+
+def _is_transient(exc: BaseException) -> bool:
+    """Retry on network hiccups and 5xx (Webkassa's side breaking) — never
+    on 4xx (bad credentials, malformed request) since retrying those just
+    repeats the same failure."""
+    if isinstance(exc, (httpx.TimeoutException, httpx.ConnectError, httpx.ReadError, httpx.RemoteProtocolError)):
+        return True
+    if isinstance(exc, httpx.HTTPStatusError):
+        return exc.response.status_code >= 500
+    return False
+
+
+# A fiscal check failing to post is a compliance/revenue problem, not just a
+# UX hiccup — worth a few retries with backoff before giving up and marking
+# the order fiscal_status=failed for a human to notice.
+_webkassa_retry = retry(
+    retry=retry_if_exception(_is_transient),
+    stop=stop_after_attempt(3),
+    wait=wait_exponential(multiplier=1, min=1, max=8),
+    reraise=True,
+)
 
 # 796 = "штука" (piece) in the OKEI unit classifier Webkassa's RefUnits uses —
 # the sane default for restaurant menu items sold by the portion.
@@ -38,6 +61,7 @@ def _raise_for_errors(data: dict) -> None:
         raise WebkassaError(first.get("Code"), first.get("Text", "Unknown error"))
 
 
+@_webkassa_retry
 async def _authorize(api_key: str, login: str, password: str) -> str:
     async with httpx.AsyncClient(timeout=TIMEOUT) as client:
         resp = await client.post(
@@ -52,6 +76,18 @@ async def _authorize(api_key: str, login: str, password: str) -> str:
     if not token:
         raise WebkassaError(-1, "Authorize response had no Token")
     return token
+
+
+@_webkassa_retry
+async def _post_check(api_key: str, payload: dict) -> dict:
+    async with httpx.AsyncClient(timeout=TIMEOUT) as client:
+        resp = await client.post(
+            f"{BASE_URL}/api/v4/check",
+            headers={"x-api-key": api_key},
+            json=payload,
+        )
+        resp.raise_for_status()
+    return resp.json()
 
 
 async def issue_check(
@@ -100,14 +136,7 @@ async def issue_check(
         "ExternalCheckNumber": external_check_number,
     }
 
-    async with httpx.AsyncClient(timeout=TIMEOUT) as client:
-        resp = await client.post(
-            f"{BASE_URL}/api/v4/check",
-            headers={"x-api-key": api_key},
-            json=payload,
-        )
-        resp.raise_for_status()
-    data = resp.json()
+    data = await _post_check(api_key, payload)
 
     errors = data.get("Errors")
     result = data.get("Data")

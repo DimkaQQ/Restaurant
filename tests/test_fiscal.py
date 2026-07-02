@@ -79,6 +79,54 @@ async def test_webkassa_duplicate_check_number_treated_as_success(monkeypatch):
     assert result["check_number"] == "CHK-1"
 
 
+async def test_webkassa_retries_transient_network_failure_then_succeeds(monkeypatch):
+    """A fiscal check failing to post is a revenue/compliance problem, not
+    just a UX hiccup — a transient connection error must be retried instead
+    of failing the whole order on the first hiccup."""
+    import httpx as httpx_module
+
+    call_count = {"check": 0}
+
+    class _FlakyThenOkClient:
+        def __init__(self, is_check):
+            self._is_check = is_check
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, *exc):
+            return False
+
+        async def post(self, url, **kwargs):
+            if not self._is_check:
+                return _FakeResp({"Data": {"Token": "tok123"}})
+            call_count["check"] += 1
+            if call_count["check"] == 1:
+                raise httpx_module.ConnectError("connection reset")
+            return _FakeResp({"Data": {"CheckNumber": "CHK-RETRY", "TicketUrl": "https://devkkm.webkassa.kz/t/retry"}})
+
+    # Distinguish authorize vs check by call order — first AsyncClient() is
+    # always the authorize call, everything after is the check call (and its
+    # retries), since both endpoints are invoked with the same kwargs shape.
+    calls = {"n": 0}
+
+    def _factory(**kw):
+        calls["n"] += 1
+        return _FlakyThenOkClient(is_check=calls["n"] > 1)
+
+    monkeypatch.setattr(webkassa.httpx, "AsyncClient", _factory)
+
+    result = await webkassa.issue_check(
+        api_key="key", login="login", password="pass", cashbox_number="CB1",
+        external_check_number="order-retry",
+        items=[{"name": "Burger", "quantity": 1, "price": Decimal("2500")}],
+        total_amount=Decimal("2500"),
+        payment_method="cash",
+    )
+    assert result["check_number"] == "CHK-RETRY"
+    assert call_count["check"] == 2  # failed once, succeeded on retry
+
+
 async def test_webkassa_authorize_failure_raises(monkeypatch):
     _mock_sequence(monkeypatch, [
         _FakeResp({"Errors": [{"Code": 1, "Text": "Bad credentials"}]}),

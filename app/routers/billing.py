@@ -18,6 +18,11 @@ router = APIRouter(prefix="/billing", tags=["billing"])
 logger = logging.getLogger(__name__)
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
+# Stripe's own SDK retries idempotent requests (GET, and POST with an
+# idempotency key — which Session.create/Portal.create send automatically)
+# on connection errors and 5xx, so a transient network blip to Stripe
+# doesn't surface directly as a user-facing checkout failure.
+stripe.max_network_retries = 2
 
 _PLAN_PRICE_IDS = {
     "starter": settings.STRIPE_PRICE_STARTER,
