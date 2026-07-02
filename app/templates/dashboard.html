@@ -1,11 +1,73 @@
 {% extends "base.html" %}
 {% block title %}{{ _("Дашборд") }} — RestOS{% endblock %}
 
+{% block head %}
+<style>
+  .onb-card { background: var(--card); border: 1px solid var(--gold); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
+  .onb-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.1rem; gap: 1rem; flex-wrap: wrap; }
+  .onb-title { font-size: 1.05rem; font-weight: 600; }
+  .onb-progress-text { font-size: 0.8rem; color: var(--muted); }
+  .onb-bar { height: 6px; background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden; margin-bottom: 1.25rem; }
+  .onb-bar-fill { height: 100%; background: var(--gold); border-radius: 4px; transition: width .3s; }
+  .onb-steps { display: flex; flex-direction: column; gap: 0.5rem; }
+  .onb-step {
+    display: flex; align-items: center; gap: 0.75rem; padding: 0.7rem 0.85rem;
+    border-radius: 8px; text-decoration: none; color: var(--white);
+    background: rgba(255,255,255,0.02); border: 1px solid transparent;
+    transition: background .15s, border-color .15s;
+  }
+  .onb-step:hover { background: rgba(200,168,75,0.08); border-color: var(--border); }
+  .onb-step.done { opacity: 0.55; }
+  .onb-step.done:hover { background: rgba(255,255,255,0.02); border-color: transparent; }
+  .onb-check {
+    width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem; font-weight: 700;
+    border: 1.5px solid var(--border); color: transparent;
+  }
+  .onb-step.done .onb-check { background: var(--success); border-color: var(--success); color: #0D0D0D; }
+  .onb-step:not(.done) .onb-check { border-color: var(--gold); }
+  .onb-step-label { font-size: 0.9rem; flex: 1; }
+  .onb-step.done .onb-step-label { text-decoration: line-through; }
+  .onb-arrow { color: var(--gold); font-size: 0.9rem; }
+  .onb-step.done .onb-arrow { display: none; }
+  @media (max-width: 768px) {
+    .onb-card { padding: 1.1rem; }
+  }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="page-header">
   <h1 class="page-title">{{ _("Дашборд") }}</h1>
   <span class="page-date" id="current-date"></span>
 </div>
+
+{% if onboarding %}
+{% set step_labels = {
+  'venue': _("Создайте заведение"),
+  'menu': _("Добавьте позиции в меню"),
+  'tables': _("Добавьте столы"),
+  'staff': _("Пригласите сотрудника"),
+  'order': _("Оформите первый заказ в кассе"),
+} %}
+<div class="onb-card">
+  <div class="onb-head">
+    <span class="onb-title">👋 {{ _("Быстрый старт") }}</span>
+    <span class="onb-progress-text">{{ onboarding.done_count }} / {{ onboarding.total }} {{ _("шагов выполнено") }}</span>
+  </div>
+  <div class="onb-bar"><div class="onb-bar-fill" style="width:{{ (onboarding.done_count / onboarding.total * 100) | round | int }}%"></div></div>
+  <div class="onb-steps">
+    {% for step in onboarding.steps %}
+    <a href="{{ step.href }}" class="onb-step {% if step.done %}done{% endif %}">
+      <span class="onb-check">✓</span>
+      <span class="onb-step-label">{{ step_labels[step.key] }}</span>
+      <span class="onb-arrow">→</span>
+    </a>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
 
 <div class="stats-grid">
   <div class="stat-card">
@@ -67,6 +129,7 @@
   <div class="panel-header">
     <h2 class="panel-title">{{ _("Заведения") }}</h2>
   </div>
+  {% if venues %}
   <div class="venues-list">
     {% for venue in venues %}
     <a href="/analytics/?venue_id={{ venue.id }}" class="venue-item venue-item-link">
@@ -80,6 +143,12 @@
     </a>
     {% endfor %}
   </div>
+  {% else %}
+  <div class="empty-state" style="padding:1.5rem 0">
+    {{ _("У вас пока нет заведений.") }}
+    <a href="/settings/venues" style="color:var(--gold);text-decoration:none">{{ _("Добавить первое →") }}</a>
+  </div>
+  {% endif %}
 </div>
 
 <script>

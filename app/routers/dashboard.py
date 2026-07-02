@@ -12,7 +12,9 @@ from sqlalchemy.orm import selectinload
 
 from app.database import get_db
 from app.models.guest import Guest
+from app.models.menu import MenuItem
 from app.models.order import Order, OrderItem
+from app.models.table import Table
 from app.models.user import User
 from app.models.venue import Venue
 from app.routers.deps import get_current_user_dep, get_current_user_optional, get_accessible_venue_ids
@@ -109,6 +111,32 @@ async def dashboard(
             .where(Order.venue_id.in_(venue_ids), Order.status == "done", Order.created_at >= today_start)
         )).scalar() or 0
 
+        onboarding = None
+        if current_user.role == "owner":
+            menu_count = (await db.execute(
+                select(func.count(MenuItem.id)).where(MenuItem.venue_id.in_(venue_ids))
+            )).scalar() or 0
+            table_count = (await db.execute(
+                select(func.count(Table.id)).where(Table.venue_id.in_(venue_ids))
+            )).scalar() or 0
+            staff_count = (await db.execute(
+                select(func.count(User.id)).where(User.network_id == current_user.network_id)
+            )).scalar() or 0
+            any_order = (await db.execute(
+                select(func.count(Order.id)).where(Order.venue_id.in_(venue_ids)).limit(1)
+            )).scalar() or 0
+
+            steps = [
+                {"done": len(venues) > 0, "key": "venue", "href": "/settings/venues"},
+                {"done": menu_count > 0, "key": "menu", "href": "/menu"},
+                {"done": table_count > 0, "key": "tables", "href": "/settings/tables"},
+                {"done": staff_count > 1, "key": "staff", "href": "/settings/users"},
+                {"done": any_order > 0, "key": "order", "href": "/pos"},
+            ]
+            done_count = sum(1 for s in steps if s["done"])
+            if done_count < len(steps):
+                onboarding = {"steps": steps, "done_count": done_count, "total": len(steps)}
+
         return templates.TemplateResponse("dashboard.html", {
             "request": request,
             "user": current_user,
@@ -126,6 +154,7 @@ async def dashboard(
             },
             "active_orders": orders,
             "top_items": top_items_data,
+            "onboarding": onboarding,
         })
     except Exception as e:
         logger.error("Dashboard error: %s", e)

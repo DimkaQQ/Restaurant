@@ -54,7 +54,7 @@
       {% if stripe_enabled and subscription and subscription.stripe_customer_id %}
       <form method="post" action="/billing/portal"><button type="submit" class="btn-primary">{{ _("Управлять оплатой") }}</button></form>
       {% endif %}
-      <a href="https://t.me/" target="_blank" class="btn-primary" style="{% if stripe_enabled and subscription and subscription.stripe_customer_id %}background:none;border:1px solid var(--border);color:var(--white){% endif %}">{{ _("Написать в поддержку") }}</a>
+      <a href="https://t.me/Dimka_Hum" target="_blank" class="btn-primary" style="{% if stripe_enabled and subscription and subscription.stripe_customer_id %}background:none;border:1px solid var(--border);color:var(--white){% endif %}">{{ _("Написать в поддержку") }}</a>
     </div>
   {% else %}
     <p style="color:var(--muted)">{{ _("Подписка не найдена. Свяжитесь с поддержкой.") }}</p>

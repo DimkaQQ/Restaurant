@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-02 17:48+0000\n"
+"POT-Creation-Date: 2026-07-02 19:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -193,6 +193,9 @@ msgstr "The bot will send the message to guests within 5 minutes"
 
 msgid "Бронь"
 msgstr "Reserved"
+
+msgid "Быстрый старт"
+msgstr "Quick start"
 
 msgid "В панель управления"
 msgstr "Go to dashboard"
@@ -430,6 +433,9 @@ msgstr "Up to 5 venues"
 msgid "Добавить"
 msgstr "Add"
 
+msgid "Добавить первое →"
+msgstr "Add your first one →"
+
 msgid "Добавить позицию"
 msgstr "Add item"
 
@@ -441,6 +447,12 @@ msgstr "Add expense"
 
 msgid "Добавить смену"
 msgstr "Add shift"
+
+msgid "Добавьте позиции в меню"
+msgstr "Add menu items"
+
+msgid "Добавьте столы"
+msgstr "Add tables"
 
 msgid "Доступ ограничен до продления подписки"
 msgstr "Access is limited until the subscription is renewed"
@@ -887,6 +899,9 @@ msgstr ""
 "Waiter, kitchen, and register see the order in real time. Tables, "
 "statuses, item comments."
 
+msgid "Оформите первый заказ в кассе"
+msgstr "Place your first order in POS"
+
 msgid "Оформить"
 msgstr "Subscribe"
 
@@ -1090,6 +1105,9 @@ msgstr "Profit"
 msgid "Привязать Telegram (для официантов)"
 msgstr "Link Telegram (for waitstaff)"
 
+msgid "Пригласите сотрудника"
+msgstr "Invite a staff member"
+
 msgid "Примечание"
 msgstr "Note"
 
@@ -1265,6 +1283,9 @@ msgstr "Add ingredients to inventory first"
 msgid "Согласен с"
 msgstr "I agree to the"
 
+msgid "Создайте заведение"
+msgstr "Create a venue"
+
 msgid "Создать"
 msgstr "Sign up"
 
@@ -1393,6 +1414,9 @@ msgstr ""
 
 msgid "Токен:"
 msgstr "Token:"
+
+msgid "У вас пока нет заведений."
+msgstr "You don't have any venues yet."
 
 msgid ""
 "У вас пока нет ни одного заведения. Добавьте первое — это займёт меньше "
@@ -1591,6 +1615,9 @@ msgstr "h"
 
 msgid "чтобы обезопасить аккаунт."
 msgstr "to secure your account."
+
+msgid "шагов выполнено"
+msgstr "steps done"
 
 msgid "шт"
 msgstr "pcs"
