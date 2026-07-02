@@ -56,7 +56,10 @@ async def list_orders(
         filter_ids = [venue_id] if venue_id and venue_id in accessible_ids else accessible_ids
         stmt = (
             select(Order)
-            .options(selectinload(Order.items))
+            # guest must be eager-loaded: OrderOut serializes it after the
+            # session's request scope, where a lazy async load would blow up
+            # with MissingGreenlet (500 on every non-empty response).
+            .options(selectinload(Order.items), selectinload(Order.guest))
             .where(Order.venue_id.in_(filter_ids))
             .order_by(Order.created_at.desc())
             .limit(limit)
@@ -84,7 +87,7 @@ async def guest_order_history(
     try:
         stmt = (
             select(Order)
-            .options(selectinload(Order.items))
+            .options(selectinload(Order.items), selectinload(Order.guest))
             .join(Guest, Order.guest_id == Guest.id)
             .where(Guest.telegram_id == telegram_id, Guest.network_id == network_id)
             .order_by(Order.created_at.desc())

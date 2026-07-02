@@ -1,6 +1,7 @@
 from app.templates_env import templates
 import asyncio
 import logging
+import uuid
 from datetime import datetime, timezone
 
 import stripe
@@ -130,8 +131,16 @@ async def stripe_webhook(request: Request, db: AsyncSession = Depends(get_db)):
     event_type = event["type"]
 
     if event_type == "checkout.session.completed":
-        network_id = data.get("metadata", {}).get("network_id") or data.get("client_reference_id")
+        raw_network_id = data.get("metadata", {}).get("network_id") or data.get("client_reference_id")
         plan = data.get("metadata", {}).get("plan", "starter")
+        # Stripe metadata values are strings; the column is UUID. A malformed
+        # id must not 500 (Stripe would retry the webhook forever) — log and ack.
+        network_id = None
+        if raw_network_id:
+            try:
+                network_id = uuid.UUID(raw_network_id)
+            except ValueError:
+                logger.error("Webhook checkout.session.completed with bad network_id: %r", raw_network_id)
         if network_id:
             sub = await _get_subscription(network_id, db)
             if sub:

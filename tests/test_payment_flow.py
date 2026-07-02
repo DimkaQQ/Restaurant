@@ -107,3 +107,28 @@ async def test_served_unpaid_order_stays_on_orders_board(client: AsyncClient):
     assert resp.status_code == 200
     assert oid[:8] in resp.text  # card still visible, awaiting payment
     assert "Принять оплату" in resp.text
+
+
+async def test_offline_queue_idempotency(client: AsyncClient):
+    """An offline-queued order retried after reconnect (same client_order_id)
+    must return the already-created order, never a duplicate."""
+    reg = await register_network(client)
+    h = auth_headers(reg["token"])
+    venue_id = (await client.post("/api/venues/", json={"name": "Hall"}, headers=h)).json()["id"]
+    item_id = (await client.post(
+        f"/api/menu/{venue_id}", json={"name": "Latte", "price": 1300}, headers=h
+    )).json()["id"]
+
+    body = {
+        "venue_id": venue_id,
+        "items": [{"menu_item_id": item_id, "quantity": 1}],
+        "client_order_id": "offline-test-abc123",
+    }
+    first = (await client.post("/api/pos/order", json=body, headers=h)).json()
+    second = (await client.post("/api/pos/order", json=body, headers=h)).json()
+    assert first["id"] == second["id"]
+
+    listed = await client.get("/api/orders/", headers=h)
+    ids = [o["id"] for o in listed.json()]
+    assert ids.count(first["id"]) == 1
+    assert len([i for i in ids]) == 1

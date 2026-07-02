@@ -7,9 +7,8 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from fastapi.staticfiles import StaticFiles
-from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
-from slowapi.util import get_remote_address
 from sqlalchemy import text
 
 from app.config import settings
@@ -40,7 +39,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="RestOS", version="1.0.0", lifespan=lifespan)
 
-limiter = Limiter(key_func=get_remote_address, enabled=settings.RATE_LIMIT_ENABLED)
+from app.ratelimit import limiter  # noqa: E402 — proxy-aware, shared with routers
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
@@ -109,6 +108,26 @@ async def security_headers(request: Request, call_next):
 
 
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
+
+
+@app.get("/sw.js", include_in_schema=False)
+async def service_worker():
+    # Served from the root path so the service worker's scope covers the whole
+    # app (a worker served from /static/js/ could only control /static/js/).
+    from fastapi.responses import FileResponse
+    return FileResponse("app/static/js/sw.js", media_type="application/javascript")
+
+
+@app.get("/health", include_in_schema=False)
+async def health():
+    """Liveness/readiness probe for uptime monitors and load balancers."""
+    try:
+        async with engine.connect() as conn:
+            await conn.execute(text("SELECT 1"))
+        return {"status": "ok", "db": "ok"}
+    except Exception:
+        logger.exception("Health check: database unreachable")
+        return JSONResponse(status_code=503, content={"status": "degraded", "db": "unreachable"})
 
 app.include_router(auth.router)
 app.include_router(dashboard.router)

@@ -38,6 +38,9 @@
 {% block content %}
 <div class="page-header">
   <h1 class="page-title">{{ _("Касса") }}</h1>
+  <div id="offline-queue-badge" style="display:none; align-items:center; gap:.5rem; background:rgba(200,140,50,.12); border:1px solid rgba(200,140,50,.35); color:#E8A33D; border-radius:20px; padding:.35rem .9rem; font-size:.8rem">
+    ⏳ {{ _("В очереди офлайн:") }} <strong id="offline-queue-count">0</strong>
+  </div>
 </div>
 
 <div class="filters">
@@ -93,6 +96,10 @@
     orderError: {{ _("Ошибка оформления заказа") | tojson }},
     payNowHint: {{ _("Оплата сейчас — чек пробьётся сразу") | tojson }},
     payLaterHint: {{ _("Оплата будет принята позже — на экране заказов") | tojson }},
+    orderQueued: {{ _("Нет связи — заказ сохранён и отправится автоматически") | tojson }},
+    queueSynced: {{ _("Связь восстановлена: отправлено заказов — {n}") | tojson }},
+    offlineMenu: {{ _("Офлайн-режим: меню из локальной копии") | tojson }},
+    offlineNoCache: {{ _("Нет связи и нет локальной копии меню. Подключитесь к интернету один раз.") | tojson }},
   };
   let _menuItems = [];
   let _cart = {}; // menu_item_id -> {item, qty}
@@ -108,15 +115,33 @@
     _selectedTableId = null;
     renderCart();
     if (!venueId) { document.getElementById('pos-grid').innerHTML = '<p class="empty-state">' + T.selectVenue + '</p>'; return; }
-    const [menuRes, tablesRes] = await Promise.all([
-      fetch('/api/menu/' + venueId, { credentials: 'include' }),
-      fetch('/api/pos/tables?venue_id=' + venueId, { credentials: 'include' }),
-    ]);
-    if (menuRes.status === 401) { location.href = '/auth/login'; return; }
-    _menuItems = (await menuRes.json()).filter(i => i.is_available);
-    renderCats();
-    renderGrid(null);
-    renderTables(tablesRes.ok ? await tablesRes.json() : []);
+    try {
+      const [menuRes, tablesRes] = await Promise.all([
+        fetch('/api/menu/' + venueId, { credentials: 'include' }),
+        fetch('/api/pos/tables?venue_id=' + venueId, { credentials: 'include' }),
+      ]);
+      if (menuRes.status === 401) { location.href = '/auth/login'; return; }
+      _menuItems = (await menuRes.json()).filter(i => i.is_available);
+      const tables = tablesRes.ok ? await tablesRes.json() : [];
+      // Snapshot for offline mode: the register keeps working without Wi-Fi.
+      localStorage.setItem('pos_menu_' + venueId, JSON.stringify(_menuItems));
+      localStorage.setItem('pos_tables_' + venueId, JSON.stringify(tables));
+      renderCats();
+      renderGrid(null);
+      renderTables(tables);
+    } catch (e) {
+      // Offline: run from the last snapshot
+      const cachedMenu = localStorage.getItem('pos_menu_' + venueId);
+      if (cachedMenu) {
+        _menuItems = JSON.parse(cachedMenu);
+        renderCats();
+        renderGrid(null);
+        renderTables(JSON.parse(localStorage.getItem('pos_tables_' + venueId) || '[]'));
+        notify.info(T.offlineMenu);
+      } else {
+        document.getElementById('pos-grid').innerHTML = '<p class="empty-state">' + T.offlineNoCache + '</p>';
+      }
+    }
   }
 
   function renderTables(tables) {
@@ -215,36 +240,105 @@
     document.getElementById('pay-hint').textContent = _payMethod ? T.payNowHint : T.payLaterHint;
   }
 
+  // ── Offline order queue ──────────────────────────────────────────────
+  // Orders placed without connectivity are stored locally with a
+  // client-generated idempotency key and flushed automatically on
+  // reconnect — the server dedupes by client_order_id, so a retry can
+  // never create a duplicate.
+  const QUEUE_KEY = 'pos_order_queue';
+  const getQueue = () => JSON.parse(localStorage.getItem(QUEUE_KEY) || '[]');
+  const setQueue = (q) => { localStorage.setItem(QUEUE_KEY, JSON.stringify(q)); renderQueueBadge(); };
+
+  function renderQueueBadge() {
+    const n = getQueue().length;
+    const el = document.getElementById('offline-queue-badge');
+    el.style.display = n ? 'flex' : 'none';
+    if (n) document.getElementById('offline-queue-count').textContent = n;
+  }
+
+  async function postOrder(body) {
+    const res = await fetch('/api/pos/order', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {'Content-Type':'application/json','Authorization':'Bearer '+token()},
+      body: JSON.stringify(body),
+    });
+    return res;
+  }
+
+  let _flushing = false;
+  async function flushQueue() {
+    if (_flushing) return;
+    const queue = getQueue();
+    if (!queue.length) return;
+    _flushing = true;
+    try {
+      const remaining = [];
+      let sent = 0;
+      for (const body of queue) {
+        try {
+          const res = await postOrder(body);
+          if (res.ok || res.status === 400) {
+            // 400 = order permanently rejected (e.g. item deleted) — don't
+            // retry forever, surface it instead
+            if (res.ok) sent++;
+            else {
+              const err = await res.json().catch(() => ({}));
+              notify.error((err.detail || T.orderError) + ' (#' + body.client_order_id.slice(0, 6) + ')');
+            }
+          } else {
+            remaining.push(body);
+          }
+        } catch (e) {
+          remaining.push(body); // still offline
+        }
+      }
+      setQueue(remaining);
+      if (sent) notify.success(T.queueSynced.replace('{n}', sent));
+    } finally {
+      _flushing = false;
+    }
+  }
+  window.addEventListener('online', flushQueue);
+  setInterval(flushQueue, 15000);
+
   async function submitOrder() {
     const venueId = document.getElementById('venue-select').value;
     const items = Object.values(_cart).map(({ item, qty }) => ({ menu_item_id: item.id, quantity: qty }));
     if (!items.length) return;
     const submitBtn = document.getElementById('submit-btn');
     submitBtn.disabled = true;
+    const body = {
+      venue_id: venueId,
+      items,
+      table_id: _selectedTableId || null,
+      table_number: _selectedTableId ? null : (document.getElementById('table-number').value || null),
+      payment_method: _payMethod,
+      client_order_id: (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(36).slice(2)),
+    };
+    const clearCart = () => {
+      _cart = {};
+      document.getElementById('table-number').value = '';
+      renderCart();
+    };
     try {
-      const res = await fetch('/api/pos/order', {
-        method: 'POST',
-        credentials: 'include',
-        headers: {'Content-Type':'application/json','Authorization':'Bearer '+token()},
-        body: JSON.stringify({
-          venue_id: venueId,
-          items,
-          table_id: _selectedTableId || null,
-          table_number: _selectedTableId ? null : (document.getElementById('table-number').value || null),
-          payment_method: _payMethod,
-        }),
-      });
+      const res = await postOrder(body);
       if (res.status === 401) { location.href = '/auth/login'; return; }
       if (res.ok) {
-        _cart = {};
-        document.getElementById('table-number').value = '';
-        renderCart();
+        clearCart();
         loadMenu();
         notify.success(_payMethod ? T.orderSentPaid : T.orderSent);
       } else {
         const err = await res.json().catch(() => ({}));
         notify.error(err.detail || T.orderError);
       }
+    } catch (e) {
+      // Network down: queue the order — it will sync automatically.
+      const q = getQueue();
+      q.push(body);
+      setQueue(q);
+      clearCart();
+      notify.info(T.orderQueued);
     } finally {
       submitBtn.disabled = Object.keys(_cart).length === 0;
     }
@@ -252,5 +346,7 @@
 
   // Single-venue networks: the venue is pre-selected server-side — load it right away.
   if (document.getElementById('venue-select').value) loadMenu();
+  renderQueueBadge();
+  flushQueue();
 </script>
 {% endblock %}

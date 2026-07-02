@@ -33,6 +33,8 @@
       <div class="bill-status trial">{{ _("Пробный период") }}</div>
     {% elif subscription.status == 'active' %}
       <div class="bill-status active">{{ _("Активна") }}</div>
+    {% elif subscription.status == 'past_due' %}
+      <div class="bill-status blocked">{{ _("Оплата не прошла") }}</div>
     {% else %}
       <div class="bill-status blocked">{{ _("Приостановлена") }}</div>
     {% endif %}
@@ -47,6 +49,8 @@
       </div>
     {% elif subscription.status == 'active' %}
       <div class="bill-meta">{{ _("Продление:") }} {{ subscription.current_period_end.strftime('%d.%m.%Y') if subscription.current_period_end else '—' }}</div>
+    {% elif subscription.status == 'past_due' %}
+      <div class="bill-meta" style="color:#f87171">{{ _("Не удалось списать оплату с карты. Обновите способ оплаты — доступ сохранится, Stripe повторит списание автоматически.") }}</div>
     {% else %}
       <div class="bill-meta">{{ _("Доступ ограничен до продления подписки") }}</div>
     {% endif %}

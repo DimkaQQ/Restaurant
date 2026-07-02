@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ _("Кухня") }} — {{ current_venue.name if current_venue else _('Все заведения') }}</title>
   <link rel="stylesheet" href="/static/fonts/fonts.css">
+  <link rel="manifest" href="/static/manifest.json">
+  <meta name="theme-color" content="#0D0D0D">
   <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-192.png">
   <link rel="alternate icon" href="/static/favicon.ico">
@@ -136,6 +138,10 @@
     </select>
   </div>
 
+  <div id="kds-offline-banner" style="display:none; background:rgba(200,140,50,.15); border-bottom:2px solid rgba(200,140,50,.5); color:#E8A33D; padding:.5rem 1.25rem; font-size:.85rem; font-weight:600">
+    📡 {{ _("Нет связи — экран показывает последние полученные заказы. Обновится автоматически.") }}
+  </div>
+
   <div class="kds-tabs">
     <button class="kds-tab active" id="tab-btn-active" onclick="switchTab('active')">
       {{ _("Активные") }} <span class="kds-tab-count" id="active-count">—</span>
@@ -234,6 +240,21 @@
         location.href = '/auth/login';
       }
     });
+
+    // Offline awareness: a silently stale kitchen screen is dangerous —
+    // show a clear banner whenever polling can't reach the server.
+    const offlineBanner = document.getElementById('kds-offline-banner');
+    document.addEventListener('htmx:sendError', () => { offlineBanner.style.display = 'block'; });
+    document.addEventListener('htmx:afterOnLoad', () => { offlineBanner.style.display = 'none'; });
+    window.addEventListener('offline', () => { offlineBanner.style.display = 'block'; });
+    window.addEventListener('online', () => {
+      offlineBanner.style.display = 'none';
+      htmx.trigger(document.getElementById('tab-active-panel'), 'refresh');
+    });
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch(() => {});
+    }
   </script>
 </body>
 </html>

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-02 20:25+0000\n"
+"POT-Creation-Date: 2026-07-02 20:46+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -208,6 +208,9 @@ msgstr "Reserved"
 
 msgid "Быстрый старт"
 msgstr "Quick start"
+
+msgid "В очереди офлайн:"
+msgstr "Queued offline:"
 
 msgid "В панель управления"
 msgstr "Go to dashboard"
@@ -768,6 +771,13 @@ msgstr "Unpaid"
 msgid "Не подключено"
 msgstr "Not connected"
 
+msgid ""
+"Не удалось списать оплату с карты. Обновите способ оплаты — доступ "
+"сохранится, Stripe повторит списание автоматически."
+msgstr ""
+"The card charge failed. Update your payment method — access stays on, "
+"Stripe will retry automatically."
+
 msgid "Негативные отзывы"
 msgstr "Negative reviews"
 
@@ -812,6 +822,19 @@ msgstr "No expenses"
 
 msgid "Нет расходов за период"
 msgstr "No expenses for this period"
+
+msgid "Нет связи и нет локальной копии меню. Подключитесь к интернету один раз."
+msgstr "No connection and no local copy of the menu. Connect to the internet once."
+
+msgid "Нет связи — заказ сохранён и отправится автоматически"
+msgstr "No connection — the order is saved and will be sent automatically"
+
+msgid ""
+"Нет связи — экран показывает последние полученные заказы. Обновится "
+"автоматически."
+msgstr ""
+"No connection — showing the last received orders. Will refresh "
+"automatically."
 
 msgid "Низкий остаток"
 msgstr "Low stock"
@@ -912,6 +935,9 @@ msgstr "June rent payment"
 msgid "Оплата будет принята позже — на экране заказов"
 msgstr "Payment will be taken later — on the orders screen"
 
+msgid "Оплата не прошла"
+msgstr "Payment failed"
+
 msgid "Оплата сейчас — чек пробьётся сразу"
 msgstr "Paying now — the receipt is issued immediately"
 
@@ -981,6 +1007,9 @@ msgid ""
 msgstr ""
 "Waiter, kitchen, and register see the order in real time. Tables, "
 "statuses, item comments."
+
+msgid "Офлайн-режим: меню из локальной копии"
+msgstr "Offline mode: menu from local copy"
 
 msgid "Оформите первый заказ в кассе"
 msgstr "Place your first order in POS"
@@ -1322,6 +1351,10 @@ msgstr "Reset"
 
 msgid "Свободен"
 msgstr "Free"
+
+#, python-brace-format
+msgid "Связь восстановлена: отправлено заказов — {n}"
+msgstr "Back online: orders sent — {n}"
 
 msgid "Сгенерировать ссылку"
 msgstr "Generate link"

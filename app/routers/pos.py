@@ -62,6 +62,21 @@ async def place_pos_order(
     if data.venue_id not in accessible_ids:
         raise HTTPException(status_code=403, detail="Нет доступа к этому заведению")
     try:
+        # Offline-queue idempotency: a queued order retried after reconnect
+        # returns the already-created order instead of a duplicate.
+        if data.client_order_id:
+            from sqlalchemy.orm import selectinload
+            from app.models.order import Order
+            existing = (await db.execute(
+                select(Order)
+                .options(selectinload(Order.items), selectinload(Order.guest))
+                .where(Order.client_order_id == data.client_order_id)
+            )).scalar_one_or_none()
+            if existing:
+                if existing.venue_id not in accessible_ids:
+                    raise HTTPException(status_code=403, detail="Нет доступа к этому заказу")
+                return existing
+
         guest = await get_or_create_walkin_guest(current_user.network_id, db)
         data.source = "pos"
         order = await create_order(data, guest, db, changed_by=current_user.email)

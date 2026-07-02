@@ -20,6 +20,8 @@ class OrderCreate(BaseModel):
     # Counter-service flow: take payment at order time (cash/card/mobile).
     # None = pay later (table service) — payment recorded separately.
     payment_method: str | None = None
+    # Idempotency key for offline-queued orders (client-generated UUID).
+    client_order_id: str | None = Field(None, max_length=64)
 
 
 class OrderItemOut(BaseModel):

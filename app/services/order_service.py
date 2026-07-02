@@ -116,6 +116,7 @@ async def create_order(data: OrderCreate, guest: Guest, db: AsyncSession, change
         table_number=table.label if table else getattr(data, 'table_number', None),
         table_id=table.id if table else None,
         source=getattr(data, 'source', None) or 'bot',
+        client_order_id=getattr(data, 'client_order_id', None),
         items=order_items,
     )
     db.add(order)

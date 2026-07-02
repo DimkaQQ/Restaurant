@@ -3,8 +3,6 @@ import logging
 
 from fastapi import APIRouter, Depends, HTTPException, Response, Request
 from fastapi.responses import HTMLResponse
-from slowapi import Limiter
-from slowapi.util import get_remote_address
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -36,7 +34,7 @@ async def _send_verification_email(user: User) -> None:
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 logger = logging.getLogger(__name__)
-limiter = Limiter(key_func=get_remote_address, enabled=settings.RATE_LIMIT_ENABLED)
+from app.ratelimit import limiter
 
 # Only mark cookies Secure once PUBLIC_URL is actually https — otherwise local/
 # staging http deployments would silently stop sending the auth cookie at all.

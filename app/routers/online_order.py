@@ -10,6 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
 from app.models.guest import Guest
+from app.ratelimit import limiter
 from app.models.menu import MenuItem
 from app.models.venue import Venue
 from app.schemas.order import OrderCreate, OrderItemCreate
@@ -85,7 +86,9 @@ class OnlineOrderSubmit(BaseModel):
 
 
 @router.post("/order/{venue_id}/submit")
+@limiter.limit("10/minute")
 async def submit_online_order(
+    request: Request,
     venue_id: uuid.UUID,
     data: OnlineOrderSubmit,
     db: AsyncSession = Depends(get_db),
