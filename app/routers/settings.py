@@ -92,10 +92,17 @@ async def create_user(
         role = body.get("role", "manager")
         venue_id_str = body.get("venue_id") or None
 
-        if not email or not password:
-            raise HTTPException(status_code=400, detail="Email и пароль обязательны")
-        if len(password) < 8:
+        if not email:
+            raise HTTPException(status_code=400, detail="Email обязателен")
+        # Password is optional: leaving it blank sends an email invite with
+        # a set-password link instead of the owner choosing a password for
+        # someone else (the previous, only, flow).
+        send_invite = not password
+        if password and len(password) < 8:
             raise HTTPException(status_code=400, detail="Пароль должен быть не короче 8 символов")
+        if send_invite:
+            import secrets
+            password = secrets.token_urlsafe(24)
         if role not in ("manager", "cashier", "administrator"):
             raise HTTPException(status_code=400, detail="Некорректная роль")
 
@@ -128,7 +135,22 @@ async def create_user(
         db.add(new_user)
         await db.commit()
         await db.refresh(new_user)
-        return {"id": str(new_user.id), "email": new_user.email, "role": new_user.role}
+
+        if send_invite:
+            from app.config import settings as app_settings
+            from app.services.auth_service import create_password_reset_token
+            from app.services.email_service import send_email
+            token = create_password_reset_token(new_user, expire_minutes=60 * 24 * 7)
+            invite_url = f"{app_settings.PUBLIC_URL}/auth/reset-password?token={token}"
+            await send_email(
+                new_user.email,
+                "Приглашение в RestOS",
+                f"<p>{current_user.email} пригласил вас в команду RestOS.</p>"
+                f"<p>Чтобы задать пароль и войти, перейдите по ссылке (действует 7 дней):</p>"
+                f"<p><a href='{invite_url}'>{invite_url}</a></p>",
+            )
+
+        return {"id": str(new_user.id), "email": new_user.email, "role": new_user.role, "invited": send_invite}
     except HTTPException:
         raise
     except IntegrityError:

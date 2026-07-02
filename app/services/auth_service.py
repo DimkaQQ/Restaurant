@@ -92,15 +92,17 @@ async def authenticate_user(email: str, password: str, db: AsyncSession) -> User
     return user
 
 
-def create_password_reset_token(user: User) -> str:
+def create_password_reset_token(user: User, expire_minutes: int = 30) -> str:
     # Bind the token to the current password hash so it's invalidated the
     # moment it's used (or the password is changed some other way) — a
     # stateless JWT alone would stay valid and replayable until it expires.
+    # Staff invites reuse this same token type with a longer expiry instead
+    # of a separate mechanism (see routers/settings.py create_user).
     payload = {
         "sub": str(user.id),
         "purpose": "password_reset",
         "pw": user.hashed_password[-16:],
-        "exp": datetime.now(timezone.utc) + timedelta(minutes=30),
+        "exp": datetime.now(timezone.utc) + timedelta(minutes=expire_minutes),
     }
     return jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 
