@@ -106,6 +106,18 @@
   {% endif %}
 </div>
 
+{% if user.role == 'owner' %}
+<div class="panel" style="margin-top:1.5rem; border-color:rgba(200,168,75,.35)">
+  <div class="panel-header">
+    <h2 class="panel-title">🤖 {{ _("AI-инсайты") }}</h2>
+    <button class="btn-secondary" id="insights-btn" onclick="loadInsights()" style="font-size:.78rem;padding:.4rem .8rem">{{ _("Получить рекомендации") }}</button>
+  </div>
+  <div id="insights-body" style="font-size:.9rem; line-height:1.65; color:var(--muted)">
+    {{ _("Нажмите кнопку — AI проанализирует продажи, меню и склад за 28 дней и даст конкретные рекомендации.") }}
+  </div>
+</div>
+{% endif %}
+
 <div class="panel" style="margin-top:1.5rem">
   <div class="panel-header">
     <h2 class="panel-title">{{ _("Меню-инжиниринг: себестоимость и маржа") }}</h2>
@@ -214,5 +226,34 @@ new Chart(document.getElementById('venues-chart'), {
   },
 });
 {% endif %}
+
+// ── AI insights ──
+async function loadInsights() {
+  const btn = document.getElementById('insights-btn');
+  const body = document.getElementById('insights-body');
+  btn.disabled = true;
+  btn.textContent = {{ _("Анализируем…") | tojson }};
+  try {
+    const params = new URLSearchParams(location.search);
+    const vid = params.get('venue_id');
+    const res = await fetch('/analytics/api/insights' + (vid ? '?venue_id=' + vid : ''), {
+      method: 'POST', credentials: 'include',
+    });
+    if (res.ok) {
+      const d = await res.json();
+      body.textContent = d.text;
+      body.style.color = 'var(--white)';
+      body.style.whiteSpace = 'pre-wrap';
+    } else {
+      const d = await res.json().catch(() => ({}));
+      notify.error(d.detail || {{ _("Ошибка") | tojson }});
+    }
+  } catch (e) {
+    notify.error({{ _("Ошибка соединения") | tojson }});
+  } finally {
+    btn.disabled = false;
+    btn.textContent = {{ _("Получить рекомендации") | tojson }};
+  }
+}
 </script>
 {% endblock %}

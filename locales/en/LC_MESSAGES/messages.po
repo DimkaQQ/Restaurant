@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-03 20:56+0000\n"
+"POT-Creation-Date: 2026-07-03 21:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -115,6 +115,9 @@ msgstr "6. Changes to these terms"
 msgid "7. Контакты"
 msgstr "7. Contact"
 
+msgid "AI-инсайты"
+msgstr "AI insights"
+
 msgid "API-ключ (x-api-key)"
 msgstr "API key (x-api-key)"
 
@@ -205,6 +208,9 @@ msgstr "Active orders"
 
 msgid "Активных заведений"
 msgstr "Active venues"
+
+msgid "Анализируем…"
+msgstr "Analyzing…"
 
 msgid "Аналитика"
 msgstr "Analytics"
@@ -849,6 +855,13 @@ msgstr "Meat"
 msgid "Мясо говядина"
 msgstr "Beef"
 
+msgid ""
+"Нажмите кнопку — AI проанализирует продажи, меню и склад за 28 дней и "
+"даст конкретные рекомендации."
+msgstr ""
+"Press the button — AI will analyze 28 days of sales, menu, and stock and "
+"give concrete recommendations."
+
 msgid "Назад ко входу"
 msgstr "Back to sign in"
 
@@ -1378,6 +1391,9 @@ msgstr "Privacy Policy →"
 
 msgid "Полный вид →"
 msgstr "Full view →"
+
+msgid "Получить рекомендации"
+msgstr "Get recommendations"
 
 msgid "Пользователей нет"
 msgstr "No users"

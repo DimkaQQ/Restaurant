@@ -16,6 +16,7 @@ from app.models.order import Order, OrderItem
 from app.models.review import Review
 from app.models.user import User
 from app.models.venue import Venue
+from app.ratelimit import limiter
 from app.routers.deps import get_current_user_dep, get_accessible_venue_ids
 
 router = APIRouter(prefix="/analytics", tags=["analytics"])
@@ -250,3 +251,31 @@ async def nps_page(
     except Exception as e:
         logger.error("NPS analytics error: %s", e)
         raise HTTPException(status_code=500, detail="Ошибка NPS аналитики")
+
+
+@router.post("/api/insights")
+@limiter.limit("3/minute")
+async def ai_insights(
+    request: Request,
+    venue_id: uuid.UUID | None = Query(None),
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    """AI recommendations for the owner, computed from real order/stock
+    stats. Rate-limited — each call costs an LLM request."""
+    if current_user.role != "owner":
+        raise HTTPException(status_code=403, detail="Только для владельца")
+    from app.config import settings as app_settings
+    if not app_settings.ANTHROPIC_API_KEY:
+        raise HTTPException(status_code=503, detail="AI-инсайты не настроены на этом сервере")
+
+    accessible_ids = await get_accessible_venue_ids(current_user, db)
+    venue_ids = [venue_id] if venue_id and venue_id in accessible_ids else accessible_ids
+
+    from app.services.ai_insights import generate_insights
+    try:
+        text = await generate_insights(db, venue_ids)
+    except Exception as e:
+        logger.error("AI insights error: %s", e)
+        raise HTTPException(status_code=502, detail="Не удалось получить инсайты, попробуйте позже")
+    return {"text": text}
