@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/static/fonts/fonts.css">
+  <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+  <title>{{ venue.name }} — Заказы</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0A0A0A; color: #F7F5F0; font-family: 'Inter', sans-serif;
+      height: 100vh; display: flex; flex-direction: column; overflow: hidden;
+    }
+    header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 2rem; border-bottom: 2px solid #222;
+    }
+    .brand { font-size: 1.4rem; font-weight: 700; color: #C8A84B; }
+    .clock { font-size: 2rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+    main { flex: 1; display: grid; grid-template-columns: 1fr 1fr; overflow: hidden; }
+    section { padding: 1.5rem 2rem; overflow: hidden; }
+    section + section { border-left: 2px solid #1a1a1a; }
+    h2 { font-size: 1.6rem; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 1.2rem; }
+    .preparing h2 { color: #F97316; }
+    .ready h2 { color: #4BC87A; }
+    .nums { display: flex; flex-wrap: wrap; gap: 1rem; align-content: flex-start; }
+    .num {
+      font-family: monospace; font-size: 2.6rem; font-weight: 700;
+      padding: .6rem 1.2rem; border-radius: 14px;
+    }
+    .preparing .num { background: rgba(249,115,22,.12); color: #F97316; border: 2px solid rgba(249,115,22,.35); }
+    .ready .num { background: rgba(75,200,122,.15); color: #4BC87A; border: 2px solid rgba(75,200,122,.45); animation: pulse 1.6s infinite; }
+    @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+    .empty { color: #6B6560; font-size: 1.1rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">{{ venue.name }}</div>
+    <div class="clock" id="clock">--:--</div>
+  </header>
+  <main>
+    <section class="preparing">
+      <h2>Готовится · Дайындалуда</h2>
+      <div class="nums" id="preparing"><span class="empty">—</span></div>
+    </section>
+    <section class="ready">
+      <h2>Готово · Дайын</h2>
+      <div class="nums" id="ready"><span class="empty">—</span></div>
+    </section>
+  </main>
+  <script>
+    const VENUE_ID = '{{ venue.id }}';
+    function tick() {
+      document.getElementById('clock').textContent =
+        new Date().toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit'});
+    }
+    tick(); setInterval(tick, 10000);
+
+    async function refresh() {
+      try {
+        const res = await fetch('/queue/' + VENUE_ID + '/data');
+        if (!res.ok) return;
+        const d = await res.json();
+        for (const key of ['preparing', 'ready']) {
+          const el = document.getElementById(key);
+          el.innerHTML = d[key].length
+            ? d[key].map(n => `<div class="num">${n}</div>`).join('')
+            : '<span class="empty">—</span>';
+        }
+      } catch (e) { /* offline: keep last state */ }
+    }
+    refresh(); setInterval(refresh, 5000);
+  </script>
+</body>
+</html>

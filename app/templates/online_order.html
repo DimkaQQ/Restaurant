@@ -335,9 +335,9 @@
 <div class="order-done" id="orderDone">
   <div class="order-done-icon">✅</div>
   <div class="order-done-id" id="orderDoneId">{{ t.order_number }}XXXXXXXX</div>
+  <div id="liveStatus" style="margin:1rem auto; padding:.6rem 1.4rem; border-radius:20px; font-weight:600; font-size:1rem; background:rgba(200,168,75,.12); color:var(--gold); display:inline-block"></div>
   <div class="order-done-text">
-    {{ t.order_accepted }}<br>
-    {{ t.preparing_now }}<br><br>
+    {{ t.order_accepted }}<br><br>
     <span id="orderDonePoints" style="color:var(--gold)"></span>
   </div>
   <button class="btn-primary" style="margin-top:2rem;max-width:300px" onclick="resetPage()">{{ t.order_again }}</button>
@@ -359,6 +359,12 @@ const T = {
   placeOrder: {{ t.place_order | tojson }},
   orderNumber: {{ t.order_number | tojson }},
   pointsEarned: {{ t.points_earned | tojson }},
+  stNew: {{ t.st_new | tojson }},
+  stConfirmed: {{ t.st_confirmed | tojson }},
+  stPreparing: {{ t.st_preparing | tojson }},
+  stReady: {{ t.st_ready | tojson }},
+  stDone: {{ t.st_done | tojson }},
+  stCancelled: {{ t.st_cancelled | tojson }},
 };
 
 // Cart state: [{key, id, name, price(unit incl. options), qty, comment, optionIds, optionNames}]
@@ -619,6 +625,7 @@ async function placeOrder() {
         document.getElementById('orderDonePoints').textContent = '+' + data.points_earned + ' ' + T.pointsEarned;
       }
       document.getElementById('orderDone').classList.add('visible');
+      startStatusPolling(data.order_id);
     } else {
       errEl.textContent = data.detail || T.orderError;
       errEl.style.display = 'block';
@@ -633,8 +640,41 @@ async function placeOrder() {
   }
 }
 
+// ── Live order status on the success screen ──
+let _statusTimer = null;
+function startStatusPolling(orderId) {
+  const el = document.getElementById('liveStatus');
+  const labels = {
+    new: T.stNew, confirmed: T.stConfirmed, preparing: T.stPreparing,
+    ready: T.stReady, done: T.stDone, cancelled: T.stCancelled,
+  };
+  async function poll() {
+    try {
+      const res = await fetch('/order/' + VENUE_ID + '/status/' + orderId);
+      if (!res.ok) return;
+      const d = await res.json();
+      el.textContent = labels[d.status] || d.status;
+      if (d.status === 'ready') {
+        el.style.background = 'rgba(75,200,122,.15)';
+        el.style.color = '#4BC87A';
+      }
+      if (d.status === 'done' || d.status === 'cancelled') {
+        clearInterval(_statusTimer);
+        _statusTimer = null;
+      }
+    } catch (e) { /* offline — keep last state */ }
+  }
+  el.textContent = labels.new;
+  el.style.background = 'rgba(200,168,75,.12)';
+  el.style.color = 'var(--gold)';
+  if (_statusTimer) clearInterval(_statusTimer);
+  _statusTimer = setInterval(poll, 5000);
+  poll();
+}
+
 function resetPage() {
   document.getElementById('orderDone').classList.remove('visible');
+  if (_statusTimer) { clearInterval(_statusTimer); _statusTimer = null; }
   updateCartUI();
 }
 

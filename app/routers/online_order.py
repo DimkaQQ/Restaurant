@@ -179,3 +179,58 @@ async def submit_online_order(
         "total": float(order.total_amount),
         "points_earned": order.points_earned,
     }
+
+
+@router.get("/order/{venue_id}/status/{order_id}")
+async def guest_order_status(
+    venue_id: uuid.UUID,
+    order_id: uuid.UUID,
+    db: AsyncSession = Depends(get_db),
+):
+    """Live status for the guest who just ordered. The order UUID is the
+    capability: unguessable, returned only to the client that placed it.
+    Response is deliberately minimal — status and short id only."""
+    from app.models.order import Order
+    order = (await db.execute(
+        select(Order.status).where(Order.id == order_id, Order.venue_id == venue_id)
+    )).scalar_one_or_none()
+    if order is None:
+        raise HTTPException(status_code=404, detail="Заказ не найден")
+    return {"status": order, "short_id": str(order_id)[:8].upper()}
+
+
+# ── Public queue board (TV screen near the counter) ─────────────────────
+
+@router.get("/queue/{venue_id}", response_class=HTMLResponse)
+async def queue_board_page(
+    request: Request,
+    venue_id: uuid.UUID,
+    db: AsyncSession = Depends(get_db),
+):
+    venue = (await db.execute(
+        select(Venue).where(Venue.id == venue_id, Venue.is_active == True)
+    )).scalar_one_or_none()
+    if not venue:
+        raise HTTPException(status_code=404, detail="Заведение не найдено")
+    return templates.TemplateResponse("queue_board.html", {
+        "request": request,
+        "venue": venue,
+    })
+
+
+@router.get("/queue/{venue_id}/data")
+async def queue_board_data(
+    venue_id: uuid.UUID,
+    db: AsyncSession = Depends(get_db),
+):
+    """Order numbers only — safe to show on a public screen."""
+    from app.models.order import Order
+    rows = (await db.execute(
+        select(Order.id, Order.status)
+        .where(Order.venue_id == venue_id, Order.status.in_(["confirmed", "preparing", "ready"]))
+        .order_by(Order.created_at)
+        .limit(40)
+    )).all()
+    preparing = [str(r.id)[:8].upper() for r in rows if r.status in ("confirmed", "preparing")]
+    ready = [str(r.id)[:8].upper() for r in rows if r.status == "ready"]
+    return {"preparing": preparing, "ready": ready}

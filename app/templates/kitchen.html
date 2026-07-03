@@ -136,6 +136,9 @@
       <option value="{{ v.id }}" {% if current_venue and v.id == current_venue.id %}selected{% endif %}>{{ v.name }}</option>
       {% endfor %}
     </select>
+    {% if current_venue %}
+    <a href="/queue/{{ current_venue.id }}" target="_blank" style="color:var(--muted);font-size:.85rem;text-decoration:none;align-self:center;white-space:nowrap">📺 {{ _("Табло очереди ↗") }}</a>
+    {% endif %}
   </div>
 
   <div id="kds-offline-banner" style="display:none; background:rgba(200,140,50,.15); border-bottom:2px solid rgba(200,140,50,.5); color:#E8A33D; padding:.5rem 1.25rem; font-size:.85rem; font-weight:600">
