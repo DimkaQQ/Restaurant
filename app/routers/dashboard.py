@@ -269,6 +269,12 @@ async def pay_order_html(
             return HTMLResponse("<p class='error-state'>Заказ не найден</p>", status_code=404)
         order = await pay_order(order_id, method, db, changed_by=current_user.email)
 
+        from app.services.webhooks import dispatch_event
+        await dispatch_event(db, current_user.network_id, "order.paid", {
+            "id": str(order.id), "venue_id": str(order.venue_id), "status": order.status,
+            "payment_status": order.payment_status, "total_amount": float(order.total_amount),
+        })
+
         if order.status == "done":
             return HTMLResponse("", headers={"HX-Reswap": "delete"})
         return templates.TemplateResponse("partials/orders_list.html", {

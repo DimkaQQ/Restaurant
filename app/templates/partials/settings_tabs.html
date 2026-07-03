@@ -16,6 +16,7 @@
   <a href="/settings/promos" class="settings-tab {% if request.url.path == '/settings/promos' %}active{% endif %}">{{ _("Промокоды") }}</a>
   {% if user.role == 'owner' %}
   <a href="/settings/audit" class="settings-tab {% if request.url.path == '/settings/audit' %}active{% endif %}">{{ _("Журнал") }}</a>
+  <a href="/settings/api-access" class="settings-tab {% if request.url.path == '/settings/api-access' %}active{% endif %}">API</a>
   {% endif %}
   {% if user.role == 'owner' %}
   <a href="/billing" class="settings-tab {% if request.url.path == '/billing' %}active{% endif %}">{{ _("Подписка") }}</a>

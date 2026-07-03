@@ -89,6 +89,13 @@ async def place_pos_order(
         # Counter-service: cashier took payment right at the register.
         if data.payment_method:
             order = await pay_order(order.id, data.payment_method, db, changed_by=current_user.email)
+
+        from app.services.webhooks import dispatch_event
+        payload = {"id": str(order.id), "venue_id": str(order.venue_id), "status": order.status,
+                   "payment_status": order.payment_status, "total_amount": float(order.total_amount)}
+        await dispatch_event(db, current_user.network_id, "order.created", payload)
+        if order.payment_status == "paid":
+            await dispatch_event(db, current_user.network_id, "order.paid", payload)
         return order
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))

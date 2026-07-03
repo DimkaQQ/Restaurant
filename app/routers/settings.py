@@ -642,3 +642,118 @@ async def settings_audit_page(
         "user": current_user,
         "entries": entries,
     })
+
+
+# ── API keys & webhooks ──────────────────────────────────────────────────
+
+@router.get("/api-access", response_class=HTMLResponse)
+async def settings_api_page(
+    request: Request,
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    _require_owner(current_user)
+    from app.models.api_key import ApiKey, WebhookSubscription
+    keys = (await db.execute(
+        select(ApiKey).where(ApiKey.network_id == current_user.network_id).order_by(ApiKey.created_at.desc())
+    )).scalars().all()
+    hooks = (await db.execute(
+        select(WebhookSubscription).where(WebhookSubscription.network_id == current_user.network_id)
+        .order_by(WebhookSubscription.created_at.desc())
+    )).scalars().all()
+    return templates.TemplateResponse("settings_api.html", {
+        "request": request,
+        "user": current_user,
+        "keys": keys,
+        "hooks": hooks,
+    })
+
+
+@router.post("/api/keys")
+async def create_api_key(
+    request: Request,
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    _require_owner(current_user)
+    import hashlib
+    import secrets as _sec
+    from app.models.api_key import ApiKey
+    body = await request.json()
+    name = (body.get("name") or "").strip() or "API key"
+    raw = "rk_" + _sec.token_urlsafe(32)
+    key = ApiKey(
+        id=uuid.uuid4(), network_id=current_user.network_id, name=name[:100],
+        key_hash=hashlib.sha256(raw.encode()).hexdigest(), prefix=raw[:11],
+    )
+    db.add(key)
+    from app.services.audit import log_action
+    log_action(db, current_user.network_id, current_user.email, "api_key_created", name)
+    await db.commit()
+    # The full key is returned exactly once — never retrievable again.
+    return {"id": str(key.id), "key": raw}
+
+
+@router.delete("/api/keys/{key_id}")
+async def revoke_api_key(
+    key_id: uuid.UUID,
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    _require_owner(current_user)
+    from app.models.api_key import ApiKey
+    key = (await db.execute(
+        select(ApiKey).where(ApiKey.id == key_id, ApiKey.network_id == current_user.network_id)
+    )).scalar_one_or_none()
+    if not key:
+        raise HTTPException(status_code=404, detail="Ключ не найден")
+    await db.delete(key)
+    await db.commit()
+    return {"ok": True}
+
+
+@router.post("/api/webhooks")
+async def create_webhook(
+    request: Request,
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    _require_owner(current_user)
+    import secrets as _sec
+    from app.models.api_key import WebhookSubscription
+    from app.services.webhooks import EVENTS
+    body = await request.json()
+    url = (body.get("url") or "").strip()
+    events = [e for e in (body.get("events") or []) if e in EVENTS]
+    if not url.startswith(("http://", "https://")) or len(url) > 500:
+        raise HTTPException(status_code=400, detail="Введите корректный URL")
+    if not events:
+        raise HTTPException(status_code=400, detail="Выберите хотя бы одно событие")
+    hook = WebhookSubscription(
+        id=uuid.uuid4(), network_id=current_user.network_id,
+        url=url, secret=_sec.token_hex(32), events=",".join(events),
+    )
+    db.add(hook)
+    await db.commit()
+    return {"id": str(hook.id), "secret": hook.secret}
+
+
+@router.delete("/api/webhooks/{hook_id}")
+async def delete_webhook(
+    hook_id: uuid.UUID,
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    _require_owner(current_user)
+    from app.models.api_key import WebhookSubscription
+    hook = (await db.execute(
+        select(WebhookSubscription).where(
+            WebhookSubscription.id == hook_id,
+            WebhookSubscription.network_id == current_user.network_id,
+        )
+    )).scalar_one_or_none()
+    if not hook:
+        raise HTTPException(status_code=404, detail="Вебхук не найден")
+    await db.delete(hook)
+    await db.commit()
+    return {"ok": True}

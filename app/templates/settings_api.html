@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% block title %}API — RestOS{% endblock %}
+
+{% block head %}
+<style>
+.api-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:1.5rem; margin-bottom:1.5rem; }
+.api-card h2 { font-size:1rem; font-weight:600; margin-bottom:.5rem; }
+.api-card .hint { font-size:.8rem; color:var(--muted); margin-bottom:1rem; }
+.api-table { width:100%; border-collapse:collapse; }
+.api-table th, .api-table td { text-align:left; padding:.5rem .6rem; font-size:.82rem; border-bottom:1px solid rgba(255,255,255,.05); }
+.api-table th { color:var(--muted); text-transform:uppercase; font-size:.68rem; letter-spacing:.04em; }
+.api-mono { font-family:monospace; color:var(--gold); }
+.key-reveal { background:rgba(75,200,122,.08); border:1px solid rgba(75,200,122,.3); border-radius:8px; padding:.75rem 1rem; margin:.75rem 0; font-family:monospace; word-break:break-all; display:none; }
+.inline-form { display:flex; gap:.5rem; flex-wrap:wrap; align-items:center; }
+.inline-form input[type=text], .inline-form input[type=url] {
+  background:var(--black); border:1px solid var(--border); color:var(--white);
+  padding:.5rem .75rem; border-radius:6px; font-size:.85rem;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+{% include "partials/settings_tabs.html" %}
+<div class="page-header">
+  <h1 class="page-title">API {{ _("и интеграции") }}</h1>
+</div>
+
+<div class="api-card">
+  <h2>🔑 {{ _("API-ключи") }}</h2>
+  <p class="hint">{{ _("Доступ к данным для интеграций (только чтение): GET /api/v1/venues, /api/v1/menu, /api/v1/orders с заголовком X-API-Key.") }}</p>
+  <div class="inline-form">
+    <input type="text" id="key-name" placeholder="{{ _('Название (например, «BI-отчёты»)') }}" style="flex:1;min-width:200px">
+    <button class="btn-primary" onclick="createKey()">{{ _("Создать ключ") }}</button>
+  </div>
+  <div class="key-reveal" id="key-reveal">
+    <div style="color:var(--success);font-family:'Inter';font-size:.78rem;margin-bottom:.4rem">{{ _("Скопируйте ключ сейчас — он показывается только один раз:") }}</div>
+    <span id="key-value"></span>
+  </div>
+  {% if keys %}
+  <table class="api-table" style="margin-top:1rem">
+    <thead><tr><th>{{ _("Название") }}</th><th>{{ _("Ключ") }}</th><th>{{ _("Создан") }}</th><th>{{ _("Последнее использование") }}</th><th></th></tr></thead>
+    <tbody>
+      {% for k in keys %}
+      <tr id="key-{{ k.id }}">
+        <td>{{ k.name }}</td>
+        <td class="api-mono">{{ k.prefix }}…</td>
+        <td>{{ k.created_at.strftime('%d.%m.%Y') }}</td>
+        <td>{{ k.last_used_at.strftime('%d.%m.%Y %H:%M') if k.last_used_at else '—' }}</td>
+        <td><button class="btn-icon-danger" onclick="revokeKey('{{ k.id }}')">✕</button></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+</div>
+
+<div class="api-card">
+  <h2>🪝 {{ _("Вебхуки") }}</h2>
+  <p class="hint">{{ _("RestOS отправит подписанный POST (HMAC-SHA256, заголовок X-RestOS-Signature) на ваш URL при событиях заказа.") }}</p>
+  <div class="inline-form">
+    <input type="url" id="hook-url" placeholder="https://example.com/webhook" style="flex:1;min-width:240px">
+    <label style="font-size:.8rem;display:flex;gap:.3rem;align-items:center"><input type="checkbox" id="ev-created" checked> order.created</label>
+    <label style="font-size:.8rem;display:flex;gap:.3rem;align-items:center"><input type="checkbox" id="ev-paid" checked> order.paid</label>
+    <button class="btn-primary" onclick="createHook()">{{ _("Добавить") }}</button>
+  </div>
+  <div class="key-reveal" id="hook-reveal">
+    <div style="color:var(--success);font-family:'Inter';font-size:.78rem;margin-bottom:.4rem">{{ _("Секрет для проверки подписи:") }}</div>
+    <span id="hook-secret"></span>
+  </div>
+  {% if hooks %}
+  <table class="api-table" style="margin-top:1rem">
+    <thead><tr><th>URL</th><th>{{ _("События") }}</th><th></th></tr></thead>
+    <tbody>
+      {% for h in hooks %}
+      <tr id="hook-{{ h.id }}">
+        <td class="api-mono" style="color:var(--white)">{{ h.url }}</td>
+        <td>{{ h.events }}</td>
+        <td><button class="btn-icon-danger" onclick="deleteHook('{{ h.id }}')">✕</button></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const T = { error: {{ _("Ошибка") | tojson }}, revokeConfirm: {{ _("Отозвать ключ?") | tojson }}, hookConfirm: {{ _("Удалить вебхук?") | tojson }} };
+
+async function createKey() {
+  const res = await fetch('/settings/api/keys', {
+    method: 'POST', credentials: 'include',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ name: document.getElementById('key-name').value }),
+  });
+  if (res.ok) {
+    const d = await res.json();
+    document.getElementById('key-value').textContent = d.key;
+    document.getElementById('key-reveal').style.display = 'block';
+  } else {
+    const d = await res.json().catch(() => ({}));
+    notify.error(d.detail || T.error);
+  }
+}
+
+async function revokeKey(id) {
+  if (!(await notify.confirm(T.revokeConfirm, {danger: true}))) return;
+  const res = await fetch('/settings/api/keys/' + id, { method: 'DELETE', credentials: 'include' });
+  if (res.ok) document.getElementById('key-' + id)?.remove();
+  else notify.error(T.error);
+}
+
+async function createHook() {
+  const events = [];
+  if (document.getElementById('ev-created').checked) events.push('order.created');
+  if (document.getElementById('ev-paid').checked) events.push('order.paid');
+  const res = await fetch('/settings/api/webhooks', {
+    method: 'POST', credentials: 'include',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ url: document.getElementById('hook-url').value, events }),
+  });
+  if (res.ok) {
+    const d = await res.json();
+    document.getElementById('hook-secret').textContent = d.secret;
+    document.getElementById('hook-reveal').style.display = 'block';
+  } else {
+    const d = await res.json().catch(() => ({}));
+    notify.error(d.detail || T.error);
+  }
+}
+
+async function deleteHook(id) {
+  if (!(await notify.confirm(T.hookConfirm, {danger: true}))) return;
+  const res = await fetch('/settings/api/webhooks/' + id, { method: 'DELETE', credentials: 'include' });
+  if (res.ok) document.getElementById('hook-' + id)?.remove();
+  else notify.error(T.error);
+}
+</script>
+{% endblock %}

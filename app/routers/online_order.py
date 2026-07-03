@@ -172,6 +172,12 @@ async def submit_online_order(
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+    from app.services.webhooks import dispatch_event
+    await dispatch_event(db, venue.network_id, "order.created", {
+        "id": str(order.id), "venue_id": str(order.venue_id), "status": order.status,
+        "payment_status": order.payment_status, "total_amount": float(order.total_amount),
+    })
+
     return {
         "ok": True,
         "order_id": str(order.id),

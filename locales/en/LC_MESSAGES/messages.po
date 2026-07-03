@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-03 05:07+0000\n"
+"POT-Creation-Date: 2026-07-03 20:56+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -118,6 +118,9 @@ msgstr "7. Contact"
 msgid "API-ключ (x-api-key)"
 msgstr "API key (x-api-key)"
 
+msgid "API-ключи"
+msgstr "API keys"
+
 msgid "CSV для бухгалтерии"
 msgstr "CSV for accounting"
 
@@ -142,6 +145,13 @@ msgstr ""
 "RestOS processes personal data of restaurant owners, their staff, and "
 "guests (restaurant customers) to the extent necessary to operate the "
 "Service."
+
+msgid ""
+"RestOS отправит подписанный POST (HMAC-SHA256, заголовок X-RestOS-"
+"Signature) на ваш URL при событиях заказа."
+msgstr ""
+"RestOS will send a signed POST (HMAC-SHA256, X-RestOS-Signature header) "
+"to your URL on order events."
 
 msgid "RestOS — Восстановление пароля"
 msgstr "RestOS — Password recovery"
@@ -259,6 +269,9 @@ msgstr "Enter the broadcast text"
 
 msgid "Введите текст рассылки..."
 msgstr "Enter the broadcast text..."
+
+msgid "Вебхуки"
+msgstr "Webhooks"
 
 msgid "Вернуть назад"
 msgstr "Move back"
@@ -544,6 +557,13 @@ msgstr "Add tables"
 msgid "Добавьте хотя бы одну строку с количеством"
 msgstr "Add at least one line with a quantity"
 
+msgid ""
+"Доступ к данным для интеграций (только чтение): GET /api/v1/venues, "
+"/api/v1/menu, /api/v1/orders с заголовком X-API-Key."
+msgstr ""
+"Read-only data access for integrations: GET /api/v1/venues, /api/v1/menu,"
+" /api/v1/orders with the X-API-Key header."
+
 msgid "Доступ ограничен до продления подписки"
 msgstr "Access is limited until the subscription is renewed"
 
@@ -702,6 +722,9 @@ msgstr ""
 "Legacy restaurant systems were built for big chains. For a small coffee "
 "shop they add complexity, not control."
 
+msgid "Ключ"
+msgstr "Key"
+
 msgid "Когда"
 msgstr "When"
 
@@ -831,6 +854,9 @@ msgstr "Back to sign in"
 
 msgid "Название"
 msgstr "Name"
+
+msgid "Название (например, «BI-отчёты»)"
+msgstr "Name (e.g. \"BI reports\")"
 
 msgid "Название группы"
 msgstr "Group name"
@@ -1123,6 +1149,9 @@ msgstr "Cancel this order?"
 msgid "Отменён"
 msgstr "Cancelled"
 
+msgid "Отозвать ключ?"
+msgstr "Revoke this key?"
+
 msgid "Отправить письмо повторно"
 msgstr "Resend email"
 
@@ -1368,6 +1397,9 @@ msgstr "Spoilage"
 msgid "Порча / просрочка"
 msgstr "Spoilage / expired"
 
+msgid "Последнее использование"
+msgstr "Last used"
+
 msgid "Последние 30 дней"
 msgstr "Last 30 days"
 
@@ -1571,6 +1603,9 @@ msgstr "Today"
 msgid "Сегодня работают:"
 msgstr "Working today:"
 
+msgid "Секрет для проверки подписи:"
+msgstr "Secret for signature verification:"
+
 msgid ""
 "Сервис предоставляется «как есть». RestOS не несёт ответственности за "
 "косвенные убытки, упущенную выгоду или потерю данных, возникшие в "
@@ -1615,6 +1650,9 @@ msgstr "Copied!"
 msgid "Скопировать"
 msgstr "Copy"
 
+msgid "Скопируйте ключ сейчас — он показывается только один раз:"
+msgstr "Copy the key now — it is shown only once:"
+
 msgid "Скрыто"
 msgstr "Hidden"
 
@@ -1655,6 +1693,9 @@ msgstr "Add ingredients first"
 msgid "Сначала добавьте ингредиенты на складе"
 msgstr "Add ingredients to inventory first"
 
+msgid "События"
+msgstr "Events"
+
 msgid "Согласен с"
 msgstr "I agree to the"
 
@@ -1667,6 +1708,9 @@ msgstr "Created a user"
 msgid "Создал промокод"
 msgstr "Created a promo code"
 
+msgid "Создан"
+msgstr "Created"
+
 msgid "Создать"
 msgstr "Sign up"
 
@@ -1678,6 +1722,9 @@ msgstr "Create accounts and linking links →"
 
 msgid "Создать заведение"
 msgstr "Create venue"
+
+msgid "Создать ключ"
+msgstr "Create key"
 
 msgid "Создать рассылку →"
 msgstr "Create broadcast →"
@@ -1836,6 +1883,9 @@ msgstr "Deleted a user"
 msgid "Удалить"
 msgstr "Delete"
 
+msgid "Удалить вебхук?"
+msgstr "Delete this webhook?"
+
 msgid "Удалить позицию?"
 msgstr "Delete this item?"
 
@@ -1969,6 +2019,9 @@ msgstr "g"
 
 msgid "и"
 msgstr "and"
+
+msgid "и интеграции"
+msgstr "and integrations"
 
 msgid "из кабинета Webkassa"
 msgstr "from your Webkassa dashboard"

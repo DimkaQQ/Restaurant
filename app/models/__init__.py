@@ -18,6 +18,7 @@ from app.models.audit_log import AdminAuditLog, StaffAuditLog
 from app.models.promo import PromoCode
 from app.models.cash_shift import CashShift
 from app.models.purchasing import Supplier, PurchaseInvoice, PurchaseInvoiceLine
+from app.models.api_key import ApiKey, WebhookSubscription
 
 __all__ = [
     "Network", "Venue", "User", "Guest",
@@ -33,4 +34,5 @@ __all__ = [
     "PromoCode",
     "CashShift",
     "Supplier", "PurchaseInvoice", "PurchaseInvoiceLine",
+    "ApiKey", "WebhookSubscription",
 ]
