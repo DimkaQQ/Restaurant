@@ -97,6 +97,29 @@ async def analytics_page(
             .where(Order.venue_id.in_(venue_ids), Order.payment_status == "paid")
         )).scalar() or 0
 
+        # Menu engineering: recipe cost vs price → margin per item.
+        from app.models.menu import MenuItem
+        from app.models.recipe import Recipe
+        from app.models.inventory import Ingredient
+        cost_rows = (await db.execute(
+            select(
+                MenuItem.id, MenuItem.name, MenuItem.price,
+                func.sum(Recipe.quantity * Ingredient.cost_per_unit).label("cost"),
+            )
+            .join(Recipe, Recipe.menu_item_id == MenuItem.id, isouter=True)
+            .join(Ingredient, Ingredient.id == Recipe.ingredient_id, isouter=True)
+            .where(MenuItem.venue_id.in_(venue_ids))
+            .group_by(MenuItem.id, MenuItem.name, MenuItem.price)
+        )).all()
+        food_cost = []
+        for r in cost_rows:
+            price = float(r.price)
+            cost = float(r.cost) if r.cost is not None else None
+            margin_pct = round((price - cost) / price * 100, 1) if (cost is not None and price > 0) else None
+            food_cost.append({"name": r.name, "price": price, "cost": cost, "margin_pct": margin_pct})
+        # lowest margins first — those need the owner's attention
+        food_cost.sort(key=lambda x: (x["margin_pct"] is None, x["margin_pct"] if x["margin_pct"] is not None else 0))
+
         return templates.TemplateResponse("analytics.html", {
             "request": request,
             "user": current_user,
@@ -109,6 +132,7 @@ async def analytics_page(
             "venue_revenue": venue_revenue_data,
             "total_revenue": total_revenue,
             "total_orders": total_orders,
+            "food_cost": food_cost,
         })
     except Exception as e:
         logger.error("Analytics error: %s", e)

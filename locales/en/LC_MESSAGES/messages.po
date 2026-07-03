@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-03 04:46+0000\n"
+"POT-Creation-Date: 2026-07-03 04:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -111,6 +111,9 @@ msgstr "7. Contact"
 
 msgid "API-ключ (x-api-key)"
 msgstr "API key (x-api-key)"
+
+msgid "CSV для бухгалтерии"
+msgstr "CSV for accounting"
 
 msgid "Email и название заведения — аккаунт готов за 2 минуты, карта не нужна."
 msgstr "Email and venue name — your account is ready in 2 minutes, no card needed."
@@ -520,6 +523,9 @@ msgstr "Add your menu and tables"
 msgid "Добавьте позиции в меню"
 msgstr "Add menu items"
 
+msgid "Добавьте позиции меню и техкарты, чтобы видеть маржинальность."
+msgstr "Add menu items and recipes to see margins."
+
 msgid "Добавьте столы"
 msgstr "Add tables"
 
@@ -737,6 +743,9 @@ msgstr "Menu"
 
 msgid "Меню пусто"
 msgstr "Menu is empty"
+
+msgid "Меню-инжиниринг: себестоимость и маржа"
+msgstr "Menu engineering: cost and margin"
 
 msgid "Мест"
 msgstr "Seats"
@@ -1271,6 +1280,9 @@ msgstr "Later"
 msgid "Позиций на складе"
 msgstr "Items in stock"
 
+msgid "Позиция"
+msgstr "Item"
+
 msgid "Поиск по имени или телефону..."
 msgstr "Search by name or phone..."
 
@@ -1379,6 +1391,9 @@ msgstr "Provider"
 msgid "Программа лояльности"
 msgstr "Loyalty program"
 
+msgid "Продажи CSV"
+msgstr "Sales CSV"
+
 msgid "Продажи картой"
 msgstr "Card sales"
 
@@ -1428,6 +1443,9 @@ msgstr "No broadcasts yet"
 
 msgid "Расходы"
 msgstr "Expenses"
+
+msgid "Расходы CSV"
+msgstr "Expenses CSV"
 
 msgid "Расходы по категориям"
 msgstr "Expenses by category"
@@ -1479,6 +1497,12 @@ msgstr "Back online: orders sent — {n}"
 
 msgid "Сгенерировать ссылку"
 msgstr "Generate link"
+
+msgid "Себестоимость"
+msgstr "Cost"
+
+msgid "Себестоимость считается по техкартам и ценам ингредиентов"
+msgstr "Cost is computed from recipes and ingredient prices"
 
 msgid "Сегодня"
 msgstr "Today"
@@ -1902,6 +1926,9 @@ msgstr "unpaid"
 
 msgid "необязательно"
 msgstr "optional"
+
+msgid "нет техкарты"
+msgstr "no recipe"
 
 msgid "обязательный выбор"
 msgstr "required choice"

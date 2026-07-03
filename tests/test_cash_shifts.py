@@ -66,3 +66,35 @@ async def test_shift_scoped_to_accessible_venues(client: AsyncClient):
         "venue_id": venue_id, "opening_cash": 0,
     })
     assert resp.status_code == 403
+
+
+async def test_sales_csv_export(client: AsyncClient):
+    """The accountant's CSV export: paid orders with discount columns,
+    utf-8-sig so Russian Excel opens it with a double click."""
+    h, venue_id, item_id = await _setup(client)
+    await client.post("/api/pos/order", headers=h, json={
+        "venue_id": venue_id, "items": [{"menu_item_id": item_id, "quantity": 1}],
+        "payment_method": "cash",
+    })
+    resp = await client.get("/finance/export/sales.csv?period=month", headers=h)
+    assert resp.status_code == 200
+    assert "text/csv" in resp.headers["content-type"]
+    body = resp.text
+    assert "Дата оплаты" in body
+    assert "Латте x1" in body
+
+
+async def test_food_cost_on_analytics_page(client: AsyncClient):
+    h, venue_id, item_id = await _setup(client)
+    # ingredient 200₸/unit, recipe uses 2 units → cost 400 on a 1000₸ item = 60% margin
+    ing = (await client.post("/api/inventory", headers=h, json={
+        "venue_id": venue_id, "name": "Молоко", "unit": "л",
+        "quantity": 10, "min_quantity": 1, "cost_per_unit": 200,
+    })).json()
+    await client.put(f"/api/menu/{item_id}/recipe", headers=h, json=[
+        {"ingredient_id": ing["id"], "quantity": 2},
+    ])
+    resp = await client.get("/analytics/", headers=h)
+    assert resp.status_code == 200
+    assert "Меню-инжиниринг" in resp.text
+    assert "60.0%" in resp.text

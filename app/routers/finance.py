@@ -209,3 +209,93 @@ async def delete_expense(
     except Exception as e:
         logger.error("Delete expense error: %s", e)
         raise HTTPException(status_code=500, detail="Ошибка удаления")
+
+
+# ── CSV exports for accounting ───────────────────────────────────────────
+
+def _period_start(period: str, now: datetime) -> datetime:
+    if period == "week":
+        d = now.date() - timedelta(days=7)
+    elif period == "quarter":
+        d = now.date() - timedelta(days=90)
+    elif period == "year":
+        d = now.date().replace(month=1, day=1)
+    else:
+        d = now.date().replace(day=1)
+    return datetime.combine(d, datetime.min.time()).replace(tzinfo=timezone.utc)
+
+
+@router.get("/finance/export/{kind}.csv")
+async def export_csv(
+    kind: str,
+    period: str = Query("month"),
+    venue_id: uuid.UUID | None = Query(None),
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    """Sales / expenses export for the accountant. utf-8-sig + ';' delimiter
+    so Russian-locale Excel opens it correctly with a double click."""
+    import csv
+    import io
+    from fastapi.responses import Response
+    from sqlalchemy.orm import selectinload
+
+    if kind not in ("sales", "expenses"):
+        raise HTTPException(status_code=404, detail="Неизвестный экспорт")
+
+    now = datetime.now(timezone.utc)
+    start_dt = _period_start(period, now)
+    accessible_ids = await get_accessible_venue_ids(current_user, db)
+    filter_ids = [venue_id] if venue_id and venue_id in accessible_ids else accessible_ids
+
+    venue_names = dict((await db.execute(
+        select(Venue.id, Venue.name).where(Venue.id.in_(filter_ids))
+    )).all())
+
+    buf = io.StringIO()
+    writer = csv.writer(buf, delimiter=";")
+
+    if kind == "sales":
+        orders = (await db.execute(
+            select(Order)
+            .options(selectinload(Order.items))
+            .where(Order.venue_id.in_(filter_ids), Order.payment_status == "paid", Order.paid_at >= start_dt)
+            .order_by(Order.paid_at)
+        )).scalars().all()
+        writer.writerow(["Дата оплаты", "Номер", "Заведение", "Позиции", "Подытог", "Скидка", "Итого", "Способ оплаты", "Фискальный чек"])
+        for o in orders:
+            items_str = ", ".join(f"{i.name} x{i.quantity}" for i in o.items)
+            subtotal = o.subtotal_amount if o.subtotal_amount is not None else o.total_amount
+            writer.writerow([
+                o.paid_at.strftime("%d.%m.%Y %H:%M") if o.paid_at else "",
+                str(o.id)[:8].upper(),
+                venue_names.get(o.venue_id, ""),
+                items_str,
+                f"{subtotal:.2f}".replace(".", ","),
+                f"{(subtotal - o.total_amount):.2f}".replace(".", ","),
+                f"{o.total_amount:.2f}".replace(".", ","),
+                o.payment_method or "",
+                o.fiscal_check_number or "",
+            ])
+    else:
+        expenses = (await db.execute(
+            select(Expense)
+            .where(Expense.venue_id.in_(filter_ids), Expense.expense_date >= start_dt.date())
+            .order_by(Expense.expense_date)
+        )).scalars().all()
+        writer.writerow(["Дата", "Заведение", "Категория", "Описание", "Сумма"])
+        for e in expenses:
+            writer.writerow([
+                e.expense_date.strftime("%d.%m.%Y"),
+                venue_names.get(e.venue_id, ""),
+                EXPENSE_CATEGORIES.get(e.category, e.category),
+                e.description or "",
+                f"{e.amount:.2f}".replace(".", ","),
+            ])
+
+    filename = f"restos_{kind}_{now.strftime('%Y%m%d')}.csv"
+    return Response(
+        content="﻿" + buf.getvalue(),
+        media_type="text/csv; charset=utf-8",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )

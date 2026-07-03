@@ -106,6 +106,36 @@
   {% endif %}
 </div>
 
+<div class="panel" style="margin-top:1.5rem">
+  <div class="panel-header">
+    <h2 class="panel-title">{{ _("Меню-инжиниринг: себестоимость и маржа") }}</h2>
+    <span class="muted" style="font-size:.78rem">{{ _("Себестоимость считается по техкартам и ценам ингредиентов") }}</span>
+  </div>
+  {% if food_cost %}
+  <div class="table-wrapper">
+  <table class="data-table">
+    <thead><tr><th>{{ _("Позиция") }}</th><th>{{ _("Цена") }}</th><th>{{ _("Себестоимость") }}</th><th>{{ _("Маржа") }}</th></tr></thead>
+    <tbody>
+      {% for f in food_cost %}
+      <tr>
+        <td>{{ f.name }}</td>
+        <td>{{ "{:,.0f}".format(f.price) }} ₸</td>
+        <td>{% if f.cost is not none %}{{ "{:,.0f}".format(f.cost) }} ₸{% else %}<span class="muted">{{ _("нет техкарты") }}</span>{% endif %}</td>
+        <td>
+          {% if f.margin_pct is not none %}
+          <span style="font-weight:600; color:{% if f.margin_pct >= 60 %}var(--success){% elif f.margin_pct >= 30 %}#fbbf24{% else %}#f87171{% endif %}">{{ f.margin_pct }}%</span>
+          {% else %}<span class="muted">—</span>{% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% else %}
+  <p class="empty-state" style="padding:1rem 0">{{ _("Добавьте позиции меню и техкарты, чтобы видеть маржинальность.") }}</p>
+  {% endif %}
+</div>
+
 {% if venue_revenue | length > 1 %}
 <div class="panel" style="margin-top:1.5rem">
   <div class="panel-header">
