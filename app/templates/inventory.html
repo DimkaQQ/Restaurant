@@ -186,6 +186,40 @@
       </div>
       <button type="submit" class="btn-primary" style="width:100%">{{ _("Добавить") }}</button>
     </form>
+
+    <hr style="border-color:var(--border); margin:1.25rem 0">
+    <h2>{{ _("Накладные (приход)") }}</h2>
+    <p style="font-size:.75rem;color:var(--muted);margin-bottom:.75rem">{{ _("Приход от поставщика: остатки увеличиваются, цена ингредиента обновляется.") }}</p>
+    <button class="btn-secondary" style="width:100%" onclick="openInvoiceModal()">{{ _("+ Новая накладная") }}</button>
+    <div id="invoice-list" style="margin-top:.75rem; font-size:.8rem"></div>
+  </div>
+</div>
+
+<!-- Invoice modal -->
+<div id="invoice-modal" class="modal" style="display:none">
+  <div class="modal-overlay" onclick="closeInvoiceModal()"></div>
+  <div class="modal-content" style="max-width:560px">
+    <h2 class="modal-title">{{ _("Новая накладная") }}</h2>
+    <div class="form-row-2">
+      <div class="form-group">
+        <label>{{ _("Поставщик") }}</label>
+        <input type="text" id="inv-supplier" placeholder="{{ _('ТОО Продукты') }}" list="supplier-list">
+        <datalist id="supplier-list"></datalist>
+      </div>
+      <div class="form-group">
+        <label>{{ _("Номер накладной") }}</label>
+        <input type="text" id="inv-number" placeholder="№ 123">
+      </div>
+    </div>
+    <div id="inv-lines"></div>
+    <button type="button" onclick="addInvLine()" class="btn-secondary" style="margin:.5rem 0">{{ _("+ строка") }}</button>
+    <div style="display:flex;justify-content:space-between;font-weight:600;margin:.5rem 0">
+      <span>{{ _("Итого") }}</span><span id="inv-total">0 ₸</span>
+    </div>
+    <div class="form-row">
+      <button type="button" onclick="postInvoice()" class="btn-primary">{{ _("Провести накладную") }}</button>
+      <button type="button" onclick="closeInvoiceModal()" class="btn-secondary">{{ _("Отмена") }}</button>
+    </div>
   </div>
 </div>
 
@@ -224,6 +258,10 @@
 {% block scripts %}
 <script>
 const T = {
+  invSelectVenue: {{ _("Сначала выберите заведение (не «Все заведения»)") | tojson }},
+  invNoIngredients: {{ _("Сначала добавьте ингредиенты") | tojson }},
+  invQty: {{ _("Кол-во") | tojson }},
+  invQtyRequired: {{ _("Добавьте хотя бы одну строку с количеством") | tojson }},
   restock: {{ _("Приход:") | tojson }},
   writeoff: {{ _("Списание:") | tojson }},
   restockQty: {{ _("Количество прихода") | tojson }},
@@ -300,5 +338,102 @@ document.getElementById('add-form').addEventListener('submit', async (e) => {
   if (res.ok) { location.reload(); }
   else { const d = await res.json().catch(()=>({})); errEl.textContent=d.detail||T.error; errEl.style.display='block'; }
 });
+
+// ── Purchase invoices (goods receipts) ──
+const INGREDIENTS = [
+  {% for item in ingredients %}
+  { id: {{ item.id | string | tojson }}, name: {{ item.name | tojson }}, unit: {{ item.unit | tojson }}, cost: {{ item.cost_per_unit | float }} },
+  {% endfor %}
+];
+const VENUE_ID_INV = {{ selected_venue_id | tojson }};
+
+async function loadInvoices() {
+  const el = document.getElementById('invoice-list');
+  try {
+    const url = '/api/purchasing/invoices' + (VENUE_ID_INV ? '?venue_id=' + VENUE_ID_INV : '');
+    const res = await fetch(url, { credentials: 'include' });
+    if (!res.ok) return;
+    const invoices = (await res.json()).invoices.slice(0, 5);
+    el.innerHTML = invoices.length ? invoices.map(i => `
+      <div style="display:flex;justify-content:space-between;padding:.35rem 0;border-bottom:1px solid rgba(255,255,255,.05)">
+        <span style="color:var(--muted)">${i.invoice_date}${i.supplier ? ' · ' + i.supplier : ''}</span>
+        <strong>${i.total.toLocaleString('ru-RU')} ₸</strong>
+      </div>`).join('') : '';
+  } catch (e) { /* offline */ }
+}
+
+function openInvoiceModal() {
+  if (!VENUE_ID_INV) { notify.error(T.invSelectVenue); return; }
+  if (!INGREDIENTS.length) { notify.error(T.invNoIngredients); return; }
+  document.getElementById('inv-lines').innerHTML = '';
+  addInvLine();
+  fetch('/api/purchasing/suppliers', { credentials: 'include' })
+    .then(r => r.ok ? r.json() : {suppliers: []})
+    .then(d => {
+      document.getElementById('supplier-list').innerHTML =
+        d.suppliers.map(s => `<option value="${s.name}">`).join('');
+    }).catch(() => {});
+  document.getElementById('invoice-modal').style.display = 'flex';
+}
+
+function addInvLine() {
+  const wrap = document.getElementById('inv-lines');
+  const row = document.createElement('div');
+  row.className = 'form-row inv-line';
+  row.style.cssText = 'gap:.4rem;margin-bottom:.4rem;align-items:center';
+  row.innerHTML = `
+    <select class="il-ing" style="flex:2" onchange="prefillCost(this)">
+      ${INGREDIENTS.map(i => `<option value="${i.id}" data-cost="${i.cost}">${i.name} (${i.unit})</option>`).join('')}
+    </select>
+    <input type="number" class="il-qty" step="0.001" min="0.001" placeholder="${T.invQty}" style="flex:1" oninput="recalcInvoice()">
+    <input type="number" class="il-cost" step="0.01" min="0" placeholder="₸/ед" style="flex:1" value="${INGREDIENTS[0] ? INGREDIENTS[0].cost : ''}" oninput="recalcInvoice()">
+    <button type="button" onclick="this.closest('.inv-line').remove();recalcInvoice()" class="btn-icon-danger">✕</button>
+  `;
+  wrap.appendChild(row);
+}
+
+function prefillCost(sel) {
+  const cost = sel.selectedOptions[0]?.dataset.cost;
+  const row = sel.closest('.inv-line');
+  if (cost && row) row.querySelector('.il-cost').value = cost;
+  recalcInvoice();
+}
+
+function recalcInvoice() {
+  let total = 0;
+  document.querySelectorAll('.inv-line').forEach(r => {
+    const q = parseFloat(r.querySelector('.il-qty').value) || 0;
+    const c = parseFloat(r.querySelector('.il-cost').value) || 0;
+    total += q * c;
+  });
+  document.getElementById('inv-total').textContent = total.toLocaleString('ru-RU') + ' ₸';
+}
+
+async function postInvoice() {
+  const lines = [...document.querySelectorAll('.inv-line')].map(r => ({
+    ingredient_id: r.querySelector('.il-ing').value,
+    quantity: parseFloat(r.querySelector('.il-qty').value) || 0,
+    unit_cost: parseFloat(r.querySelector('.il-cost').value) || 0,
+  })).filter(l => l.quantity > 0);
+  if (!lines.length) { notify.error(T.invQtyRequired); return; }
+  const res = await fetch('/api/purchasing/invoices', {
+    method: 'POST', credentials: 'include',
+    headers: {'Content-Type':'application/json','Authorization':'Bearer '+localStorage.getItem('access_token')},
+    body: JSON.stringify({
+      venue_id: VENUE_ID_INV,
+      supplier_name: document.getElementById('inv-supplier').value.trim() || null,
+      number: document.getElementById('inv-number').value.trim() || null,
+      lines,
+    }),
+  });
+  if (res.ok) location.reload();
+  else { const d = await res.json().catch(()=>({})); notify.error(d.detail || T.error); }
+}
+
+function closeInvoiceModal() {
+  document.getElementById('invoice-modal').style.display = 'none';
+}
+
+loadInvoices();
 </script>
 {% endblock %}

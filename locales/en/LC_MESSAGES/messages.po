@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-03 04:56+0000\n"
+"POT-Creation-Date: 2026-07-03 05:01+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -40,6 +40,9 @@ msgstr "+ Add table"
 msgid "+ Ингредиент"
 msgstr "+ Ingredient"
 
+msgid "+ Новая накладная"
+msgstr "+ New invoice"
+
 msgid "+ Новый заказ"
 msgstr "+ New order"
 
@@ -51,6 +54,9 @@ msgstr "+ Photo"
 
 msgid "+ вариант"
 msgstr "+ option"
+
+msgid "+ строка"
+msgstr "+ line"
 
 msgid "+₸"
 msgstr "+₸"
@@ -529,6 +535,9 @@ msgstr "Add menu items and recipes to see margins."
 msgid "Добавьте столы"
 msgstr "Add tables"
 
+msgid "Добавьте хотя бы одну строку с количеством"
+msgstr "Add at least one line with a quantity"
+
 msgid "Доступ ограничен до продления подписки"
 msgstr "Access is limited until the subscription is renewed"
 
@@ -811,6 +820,9 @@ msgstr "Restaurant / network name"
 msgid "Наименование"
 msgstr "Name"
 
+msgid "Накладные (приход)"
+msgstr "Invoices (goods receipt)"
+
 msgid "Наличные"
 msgstr "Cash"
 
@@ -925,6 +937,9 @@ msgstr "Low stock"
 msgid "Ничего не найдено"
 msgstr "Nothing found"
 
+msgid "Новая накладная"
+msgstr "New invoice"
+
 msgid "Новая позиция"
 msgstr "New item"
 
@@ -958,6 +973,9 @@ msgstr "New guests today"
 
 msgid "Номер кассы (CashboxUniqueNumber)"
 msgstr "Kassa number (CashboxUniqueNumber)"
+
+msgid "Номер накладной"
+msgstr "Invoice number"
 
 msgid "Номер стола"
 msgstr "Table number"
@@ -1328,6 +1346,9 @@ msgstr "Recent expenses"
 msgid "Посмотреть цены"
 msgstr "See pricing"
 
+msgid "Поставщик"
+msgstr "Supplier"
+
 msgid "Почему не тяжёлая ERP?"
 msgstr "Why not a heavyweight ERP?"
 
@@ -1361,6 +1382,9 @@ msgstr "Priority support"
 msgid "Приостановлена"
 msgstr "Suspended"
 
+msgid "Приход от поставщика: остатки увеличиваются, цена ингредиента обновляется."
+msgstr "Goods receipt from a supplier: stock goes up, ingredient price is updated."
+
 msgid "Приход:"
 msgstr "Restock:"
 
@@ -1387,6 +1411,9 @@ msgstr "Trial period has ended"
 
 msgid "Провайдер"
 msgstr "Provider"
+
+msgid "Провести накладную"
+msgstr "Post invoice"
 
 msgid "Программа лояльности"
 msgstr "Loyalty program"
@@ -1582,8 +1609,14 @@ msgstr ""
 msgid "Сначала выберите заведение"
 msgstr "Select a venue first"
 
+msgid "Сначала выберите заведение (не «Все заведения»)"
+msgstr "First pick a venue (not \"All venues\")"
+
 msgid "Сначала добавьте заведение"
 msgstr "Add a venue first"
+
+msgid "Сначала добавьте ингредиенты"
+msgstr "Add ingredients first"
 
 msgid "Сначала добавьте ингредиенты на складе"
 msgstr "Add ingredients to inventory first"
@@ -1702,6 +1735,9 @@ msgstr "Page not found"
 
 msgid "Сумма (₸)"
 msgstr "Amount (₸)"
+
+msgid "ТОО Продукты"
+msgstr "Foods LLC"
 
 msgid "Табло очереди ↗"
 msgstr "Queue board ↗"

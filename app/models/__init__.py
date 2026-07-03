@@ -17,6 +17,7 @@ from app.models.recipe import Recipe
 from app.models.audit_log import AdminAuditLog
 from app.models.promo import PromoCode
 from app.models.cash_shift import CashShift
+from app.models.purchasing import Supplier, PurchaseInvoice, PurchaseInvoiceLine
 
 __all__ = [
     "Network", "Venue", "User", "Guest",
@@ -31,4 +32,5 @@ __all__ = [
     "AdminAuditLog",
     "PromoCode",
     "CashShift",
+    "Supplier", "PurchaseInvoice", "PurchaseInvoiceLine",
 ]
