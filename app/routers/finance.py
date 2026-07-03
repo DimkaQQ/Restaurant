@@ -128,6 +128,15 @@ async def finance_page(
             .limit(50)
         )).scalars().all()
 
+        # Cash shift history (Z-reports)
+        from app.models.cash_shift import CashShift
+        cash_shifts = (await db.execute(
+            select(CashShift)
+            .where(CashShift.venue_id.in_(filter_ids))
+            .order_by(CashShift.opened_at.desc())
+            .limit(20)
+        )).scalars().all()
+
         return templates.TemplateResponse("finance.html", {
             "request": request,
             "user": current_user,
@@ -142,6 +151,7 @@ async def finance_page(
             "chart_data": chart_data,
             "recent_expenses": recent_expenses,
             "expense_categories": EXPENSE_CATEGORIES,
+            "cash_shifts": cash_shifts,
             "now": now,
         })
     except Exception as e:

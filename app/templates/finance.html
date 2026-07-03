@@ -123,6 +123,44 @@
         {% endfor %}
       </div>
     </div>
+
+    <div class="fin-card" style="margin-top:1rem">
+      <h2>{{ _("Кассовые смены (Z-отчёты)") }}</h2>
+      {% if cash_shifts %}
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:.82rem">
+          <thead>
+            <tr style="color:var(--muted);text-transform:uppercase;font-size:.68rem;letter-spacing:.04em">
+              <th style="text-align:left;padding:.4rem .5rem">{{ _("Открыта") }}</th>
+              <th style="text-align:left;padding:.4rem .5rem">{{ _("Закрыта") }}</th>
+              <th style="text-align:right;padding:.4rem .5rem">{{ _("Наличные") }}</th>
+              <th style="text-align:right;padding:.4rem .5rem">{{ _("Карта") }}</th>
+              <th style="text-align:right;padding:.4rem .5rem">{{ _("Ожидалось") }}</th>
+              <th style="text-align:right;padding:.4rem .5rem">{{ _("Факт") }}</th>
+              <th style="text-align:right;padding:.4rem .5rem">{{ _("Расхождение") }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for s in cash_shifts %}
+            <tr style="border-top:1px solid rgba(255,255,255,.05)">
+              <td style="padding:.45rem .5rem">{{ s.opened_at.strftime('%d.%m %H:%M') }}<br><span style="color:var(--muted);font-size:.72rem">{{ s.opened_by }}</span></td>
+              <td style="padding:.45rem .5rem">{% if s.closed_at %}{{ s.closed_at.strftime('%d.%m %H:%M') }}{% else %}<span style="color:var(--success)">{{ _("открыта") }}</span>{% endif %}</td>
+              <td style="text-align:right;padding:.45rem .5rem">{{ "{:,.0f}".format(s.cash_sales) if s.cash_sales is not none else '—' }}</td>
+              <td style="text-align:right;padding:.45rem .5rem">{{ "{:,.0f}".format(s.card_sales) if s.card_sales is not none else '—' }}</td>
+              <td style="text-align:right;padding:.45rem .5rem">{{ "{:,.0f}".format(s.expected_cash) if s.expected_cash is not none else '—' }}</td>
+              <td style="text-align:right;padding:.45rem .5rem">{{ "{:,.0f}".format(s.closing_cash_actual) if s.closing_cash_actual is not none else '—' }}</td>
+              <td style="text-align:right;padding:.45rem .5rem;{% if s.difference is not none and s.difference|float != 0 %}color:#f87171;font-weight:600{% elif s.difference is not none %}color:var(--success){% endif %}">
+                {% if s.difference is not none %}{{ "{:+,.0f}".format(s.difference) }}{% else %}—{% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <p style="color:var(--muted);font-size:.875rem;padding:.5rem 0">{{ _("Смены открываются на экране кассы. Открытие и закрытие с пересчётом наличных — главный контроль кассовой дисциплины.") }}</p>
+      {% endif %}
+    </div>
   </div>
 
   <div class="add-expense-panel">

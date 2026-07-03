@@ -47,6 +47,20 @@
   <div id="offline-queue-badge" style="display:none; align-items:center; gap:.5rem; background:rgba(200,140,50,.12); border:1px solid rgba(200,140,50,.35); color:#E8A33D; border-radius:20px; padding:.35rem .9rem; font-size:.8rem">
     ⏳ {{ _("В очереди офлайн:") }} <strong id="offline-queue-count">0</strong>
   </div>
+  <div id="shift-widget" style="display:none; align-items:center; gap:.6rem; font-size:.8rem"></div>
+</div>
+
+<!-- Cash shift open/close modal -->
+<div id="shift-modal" class="modal" style="display:none">
+  <div class="modal-overlay" onclick="closeShiftModal()"></div>
+  <div class="modal-content" style="max-width:420px">
+    <h2 class="modal-title" id="shift-modal-title"></h2>
+    <div id="shift-modal-body"></div>
+    <div class="form-row" style="margin-top:1rem">
+      <button type="button" id="shift-modal-ok" class="btn-primary"></button>
+      <button type="button" onclick="closeShiftModal()" class="btn-secondary">{{ _("Отмена") }}</button>
+    </div>
+  </div>
 </div>
 
 <div class="filters">
@@ -133,6 +147,19 @@
     offlineMenu: {{ _("Офлайн-режим: меню из локальной копии") | tojson }},
     offlineNoCache: {{ _("Нет связи и нет локальной копии меню. Подключитесь к интернету один раз.") | tojson }},
     optRequired: {{ _("Выберите «{g}»") | tojson }},
+    shiftOpen: {{ _("Смена открыта с") | tojson }},
+    shiftNone: {{ _("Смена не открыта") | tojson }},
+    shiftOpenBtn: {{ _("Открыть смену") | tojson }},
+    shiftClose: {{ _("Закрыть смену") | tojson }},
+    shiftOpeningCash: {{ _("Наличные в кассе на начало (₸)") | tojson }},
+    shiftActualCash: {{ _("Фактические наличные в кассе (₸)") | tojson }},
+    shiftOpened: {{ _("Смена открыта") | tojson }},
+    shiftError: {{ _("Ошибка смены") | tojson }},
+    zCash: {{ _("Продажи наличными") | tojson }},
+    zCard: {{ _("Продажи картой") | tojson }},
+    zOrders: {{ _("Оплаченных заказов") | tojson }},
+    zExpected: {{ _("Ожидается в кассе") | tojson }},
+    zDiff: {{ _("Расхождение") | tojson }},
   };
   let _menuItems = [];
   let _cart = {}; // menu_item_id -> {item, qty}
@@ -477,9 +504,94 @@
     }
   }
 
+  // ── Cash shift widget ────────────────────────────────────────────────
+  let _shift = null;
+
+  async function refreshShift() {
+    const venueId = document.getElementById('venue-select').value;
+    const w = document.getElementById('shift-widget');
+    if (!venueId) { w.style.display = 'none'; return; }
+    try {
+      const res = await fetch('/api/cash-shifts/current?venue_id=' + venueId, { credentials: 'include' });
+      if (!res.ok) { w.style.display = 'none'; return; }
+      _shift = (await res.json()).shift;
+      w.style.display = 'flex';
+      if (_shift) {
+        const t = new Date(_shift.opened_at).toLocaleTimeString(LOCALE, {hour:'2-digit', minute:'2-digit'});
+        w.innerHTML = `<span style="color:var(--success)">● ${T.shiftOpen} ${t}</span>
+          <button class="btn-secondary" style="font-size:.75rem;padding:.35rem .7rem" onclick="openShiftModal('close')">${T.shiftClose}</button>`;
+      } else {
+        w.innerHTML = `<span style="color:var(--muted)">○ ${T.shiftNone}</span>
+          <button class="btn-secondary" style="font-size:.75rem;padding:.35rem .7rem" onclick="openShiftModal('open')">${T.shiftOpenBtn}</button>`;
+      }
+    } catch (e) { w.style.display = 'none'; }
+  }
+
+  function openShiftModal(mode) {
+    const title = document.getElementById('shift-modal-title');
+    const body = document.getElementById('shift-modal-body');
+    const ok = document.getElementById('shift-modal-ok');
+    if (mode === 'open') {
+      title.textContent = T.shiftOpenBtn;
+      body.innerHTML = `<div class="form-group"><label style="font-size:.8rem;color:var(--muted)">${T.shiftOpeningCash}</label>
+        <input type="number" id="shift-cash-input" min="0" step="0.01" value="0" style="width:100%"></div>`;
+      ok.textContent = T.shiftOpenBtn;
+      ok.onclick = async () => {
+        const res = await fetch('/api/cash-shifts/open', {
+          method: 'POST', credentials: 'include',
+          headers: {'Content-Type':'application/json','Authorization':'Bearer '+token()},
+          body: JSON.stringify({
+            venue_id: document.getElementById('venue-select').value,
+            opening_cash: parseFloat(document.getElementById('shift-cash-input').value) || 0,
+          }),
+        });
+        if (res.ok) { closeShiftModal(); refreshShift(); notify.success(T.shiftOpened); }
+        else { const d = await res.json().catch(()=>({})); notify.error(d.detail || T.shiftError); }
+      };
+    } else {
+      title.textContent = T.shiftClose;
+      body.innerHTML = `<div class="form-group"><label style="font-size:.8rem;color:var(--muted)">${T.shiftActualCash}</label>
+        <input type="number" id="shift-cash-input" min="0" step="0.01" style="width:100%"></div>
+        <div id="zreport" style="font-size:.85rem;color:var(--muted)"></div>`;
+      ok.textContent = T.shiftClose;
+      ok.onclick = async () => {
+        const res = await fetch('/api/cash-shifts/' + _shift.id + '/close', {
+          method: 'POST', credentials: 'include',
+          headers: {'Content-Type':'application/json','Authorization':'Bearer '+token()},
+          body: JSON.stringify({
+            closing_cash_actual: parseFloat(document.getElementById('shift-cash-input').value) || 0,
+          }),
+        });
+        if (res.ok) {
+          const s = (await res.json()).shift;
+          const diff = s.difference;
+          const diffColor = Math.abs(diff) < 0.01 ? 'var(--success)' : '#f87171';
+          document.getElementById('zreport').innerHTML = `
+            <div style="border-top:1px solid var(--border);margin-top:.75rem;padding-top:.75rem;display:grid;gap:.3rem">
+              <div style="display:flex;justify-content:space-between"><span>${T.zCash}</span><strong>${s.cash_sales.toLocaleString(LOCALE)} ₸</strong></div>
+              <div style="display:flex;justify-content:space-between"><span>${T.zCard}</span><strong>${s.card_sales.toLocaleString(LOCALE)} ₸</strong></div>
+              <div style="display:flex;justify-content:space-between"><span>${T.zOrders}</span><strong>${s.orders_count}</strong></div>
+              <div style="display:flex;justify-content:space-between"><span>${T.zExpected}</span><strong>${s.expected_cash.toLocaleString(LOCALE)} ₸</strong></div>
+              <div style="display:flex;justify-content:space-between;color:${diffColor}"><span>${T.zDiff}</span><strong>${diff > 0 ? '+' : ''}${diff.toLocaleString(LOCALE)} ₸</strong></div>
+            </div>`;
+          ok.style.display = 'none';
+          refreshShift();
+        } else { const d = await res.json().catch(()=>({})); notify.error(d.detail || T.shiftError); }
+      };
+    }
+    ok.style.display = '';
+    document.getElementById('shift-modal').style.display = 'flex';
+  }
+
+  function closeShiftModal() {
+    document.getElementById('shift-modal').style.display = 'none';
+  }
+
   // Single-venue networks: the venue is pre-selected server-side — load it right away.
   if (document.getElementById('venue-select').value) loadMenu();
   renderQueueBadge();
   flushQueue();
+  refreshShift();
+  document.getElementById('venue-select').addEventListener('change', refreshShift);
 </script>
 {% endblock %}

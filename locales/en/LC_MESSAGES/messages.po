@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-03 04:40+0000\n"
+"POT-Creation-Date: 2026-07-03 04:46+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -583,6 +583,12 @@ msgstr "Orders"
 msgid "Заказы, склад, смены"
 msgstr "Orders, inventory, shifts"
 
+msgid "Закрыта"
+msgstr "Closed"
+
+msgid "Закрыть смену"
+msgstr "Close shift"
+
 msgid "Занят"
 msgstr "Occupied"
 
@@ -649,6 +655,9 @@ msgstr "POS on a tablet, kitchen display, QR menu for guests — it just works."
 
 msgid "Кассир"
 msgstr "Cashier"
+
+msgid "Кассовые смены (Z-отчёты)"
+msgstr "Cash shifts (Z-reports)"
 
 msgid "Категория"
 msgstr "Category"
@@ -795,6 +804,9 @@ msgstr "Name"
 
 msgid "Наличные"
 msgstr "Cash"
+
+msgid "Наличные в кассе на начало (₸)"
+msgstr "Opening cash in drawer (₸)"
 
 msgid "Написать в поддержку"
 msgstr "Contact support"
@@ -971,6 +983,12 @@ msgstr "Overall NPS"
 msgid "Ожидает"
 msgstr "Pending"
 
+msgid "Ожидается в кассе"
+msgstr "Expected in drawer"
+
+msgid "Ожидалось"
+msgstr "Expected"
+
 msgid "Онлайн"
 msgstr "Online"
 
@@ -1006,6 +1024,9 @@ msgstr "Paying now — the receipt is issued immediately"
 msgid "Оплачен"
 msgstr "Paid"
 
+msgid "Оплаченных заказов"
+msgstr "Paid orders"
+
 msgid "Оставьте пустым — отправим приглашение на email"
 msgstr "Leave blank — we'll send an email invite"
 
@@ -1029,6 +1050,12 @@ msgstr "No reviews yet"
 
 msgid "Отзывы"
 msgstr "Reviews"
+
+msgid "Открыта"
+msgstr "Opened"
+
+msgid "Открыть смену"
+msgstr "Open shift"
 
 msgid "Отлично"
 msgstr "Excellent"
@@ -1120,6 +1147,9 @@ msgstr "Failed to place order"
 
 msgid "Ошибка регистрации"
 msgstr "Registration error"
+
+msgid "Ошибка смены"
+msgstr "Shift error"
 
 msgid "Ошибка соединения"
 msgstr "Connection error"
@@ -1349,6 +1379,12 @@ msgstr "Provider"
 msgid "Программа лояльности"
 msgstr "Loyalty program"
 
+msgid "Продажи картой"
+msgstr "Card sales"
+
+msgid "Продажи наличными"
+msgstr "Cash sales"
+
 msgid "Продление:"
 msgstr "Renews:"
 
@@ -1395,6 +1431,9 @@ msgstr "Expenses"
 
 msgid "Расходы по категориям"
 msgstr "Expenses by category"
+
+msgid "Расхождение"
+msgstr "Difference"
 
 msgid ""
 "Регистрируясь, вы подтверждаете, что представляете юридическое лицо или "
@@ -1494,11 +1533,27 @@ msgstr "Copy"
 msgid "Скрыто"
 msgstr "Hidden"
 
+msgid "Смена не открыта"
+msgstr "Shift not open"
+
+msgid "Смена открыта"
+msgstr "Shift opened"
+
+msgid "Смена открыта с"
+msgstr "Shift open since"
+
 msgid "Смены"
 msgstr "Shifts"
 
 msgid "Смены и персонал"
 msgstr "Shifts and staff"
+
+msgid ""
+"Смены открываются на экране кассы. Открытие и закрытие с пересчётом "
+"наличных — главный контроль кассовой дисциплины."
+msgstr ""
+"Shifts are opened on the POS screen. Opening and closing with a cash "
+"recount is the primary cash-discipline control."
 
 msgid "Сначала выберите заведение"
 msgstr "Select a venue first"
@@ -1713,6 +1768,12 @@ msgstr "Terms of Service"
 msgid "Условия использования — RestOS"
 msgstr "Terms of Service — RestOS"
 
+msgid "Факт"
+msgstr "Actual"
+
+msgid "Фактические наличные в кассе (₸)"
+msgstr "Actual cash in drawer (₸)"
+
 msgid "Финансы"
 msgstr "Finance"
 
@@ -1847,6 +1908,9 @@ msgstr "required choice"
 
 msgid "отзывов"
 msgstr "reviews"
+
+msgid "открыта"
+msgstr "open"
 
 msgid "пароль"
 msgstr "password"

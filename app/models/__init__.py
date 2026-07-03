@@ -16,6 +16,7 @@ from app.models.subscription import Subscription
 from app.models.recipe import Recipe
 from app.models.audit_log import AdminAuditLog
 from app.models.promo import PromoCode
+from app.models.cash_shift import CashShift
 
 __all__ = [
     "Network", "Venue", "User", "Guest",
@@ -29,4 +30,5 @@ __all__ = [
     "Recipe",
     "AdminAuditLog",
     "PromoCode",
+    "CashShift",
 ]

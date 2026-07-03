@@ -14,7 +14,7 @@ from sqlalchemy import text
 from app.config import settings
 from app.database import engine
 from app.models import *  # noqa: F401,F403 — registers all models with Base
-from app.routers import auth, dashboard, venues, menu, orders, guests, analytics, staff, settings as settings_router, inventory, finance, shifts, bot_api, online_order, billing, platform_admin, pos, legal
+from app.routers import auth, dashboard, venues, menu, orders, guests, analytics, staff, settings as settings_router, inventory, finance, shifts, bot_api, online_order, billing, platform_admin, pos, legal, cash_shifts
 from app.services.cleanup_service import stale_order_cleanup_loop
 from app.templates_env import templates
 
@@ -147,6 +147,7 @@ app.include_router(billing.router)
 app.include_router(platform_admin.router)
 app.include_router(pos.router)
 app.include_router(legal.router)
+app.include_router(cash_shifts.router)
 
 
 def _wants_html(request: Request) -> bool:
