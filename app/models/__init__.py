@@ -14,7 +14,7 @@ from app.models.shift import Shift
 from app.models.broadcast import Broadcast
 from app.models.subscription import Subscription
 from app.models.recipe import Recipe
-from app.models.audit_log import AdminAuditLog
+from app.models.audit_log import AdminAuditLog, StaffAuditLog
 from app.models.promo import PromoCode
 from app.models.cash_shift import CashShift
 from app.models.purchasing import Supplier, PurchaseInvoice, PurchaseInvoiceLine
@@ -29,7 +29,7 @@ __all__ = [
     "Broadcast",
     "Subscription",
     "Recipe",
-    "AdminAuditLog",
+    "AdminAuditLog", "StaffAuditLog",
     "PromoCode",
     "CashShift",
     "Supplier", "PurchaseInvoice", "PurchaseInvoiceLine",

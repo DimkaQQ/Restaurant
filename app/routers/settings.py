@@ -193,6 +193,8 @@ async def create_user(
             venue_id=venue_id,
         )
         db.add(new_user)
+        from app.services.audit import log_action
+        log_action(db, current_user.network_id, current_user.email, "user_created", f"{email} ({role})")
         await db.commit()
         await db.refresh(new_user)
 
@@ -240,6 +242,8 @@ async def delete_user(
             raise HTTPException(status_code=404, detail="Пользователь не найден")
 
         await db.delete(target)
+        from app.services.audit import log_action
+        log_action(db, current_user.network_id, current_user.email, "user_deleted", target.email if hasattr(target, "email") else str(user_id))
         await db.commit()
         return {"message": "Удалено"}
     except HTTPException:
@@ -575,6 +579,8 @@ async def create_promo(
         code=code, type=ptype, value=value, max_uses=max_uses,
     )
     db.add(promo)
+    from app.services.audit import log_action
+    log_action(db, current_user.network_id, current_user.email, "promo_created", f"{code}: {ptype} {value}")
     await db.commit()
     return {"id": str(promo.id), "code": promo.code}
 
@@ -613,3 +619,26 @@ async def delete_promo(
     await db.delete(promo)
     await db.commit()
     return {"ok": True}
+
+
+# ── Staff audit log viewer ───────────────────────────────────────────────
+
+@router.get("/audit", response_class=HTMLResponse)
+async def settings_audit_page(
+    request: Request,
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    _require_owner(current_user)
+    from app.models.audit_log import StaffAuditLog
+    entries = (await db.execute(
+        select(StaffAuditLog)
+        .where(StaffAuditLog.network_id == current_user.network_id)
+        .order_by(StaffAuditLog.created_at.desc())
+        .limit(200)
+    )).scalars().all()
+    return templates.TemplateResponse("settings_audit.html", {
+        "request": request,
+        "user": current_user,
+        "entries": entries,
+    })

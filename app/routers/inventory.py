@@ -203,6 +203,8 @@ async def delete_ingredient(
         )).scalar_one_or_none()
         if not item:
             raise HTTPException(status_code=404, detail="Позиция не найдена")
+        from app.services.audit import log_action
+        log_action(db, current_user.network_id, current_user.email, "ingredient_deleted", item.name)
         await db.delete(item)
         await db.commit()
         return {"message": "Удалено"}

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-03 05:01+0000\n"
+"POT-Creation-Date: 2026-07-03 05:07+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -480,8 +480,14 @@ msgstr "Date"
 msgid "Дашборд"
 msgstr "Dashboard"
 
+msgid "Действие"
+msgstr "Action"
+
 msgid "Десятки вкладок, нужны тренинги"
 msgstr "Dozens of tabs, training required"
+
+msgid "Детали"
+msgstr "Details"
 
 msgid "Динамика отзывов (30 дней)"
 msgstr "Review trend (30 days)"
@@ -555,6 +561,12 @@ msgstr "Unit"
 
 msgid "Если такой email зарегистрирован, мы отправили ссылку для сброса пароля."
 msgstr "If that email is registered, we sent a password reset link."
+
+msgid "Журнал"
+msgstr "Journal"
+
+msgid "Журнал действий"
+msgstr "Action journal"
 
 msgid "Забыли пароль?"
 msgstr "Forgot password?"
@@ -690,6 +702,9 @@ msgstr ""
 "Legacy restaurant systems were built for big chains. For a small coffee "
 "shop they add complexity, not control."
 
+msgid "Когда"
+msgstr "When"
+
 msgid "Код"
 msgstr "Code"
 
@@ -719,6 +734,12 @@ msgstr "Cart is empty"
 
 msgid "Критично"
 msgstr "Critical"
+
+msgid "Кто"
+msgstr "Who"
+
+msgid "Кто удалил, отменил или дал скидку — последние 200 записей"
+msgstr "Who deleted, cancelled, or gave a discount — last 200 records"
 
 msgid "Кухня"
 msgstr "Kitchen"
@@ -1090,6 +1111,9 @@ msgstr "Excellent"
 msgid "Отмена"
 msgstr "Cancel"
 
+msgid "Отменил заказ"
+msgstr "Cancelled an order"
+
 msgid "Отменить заказ"
 msgstr "Cancel order"
 
@@ -1307,6 +1331,13 @@ msgstr "Search by name or phone..."
 msgid "Поиск по названию..."
 msgstr "Search by name..."
 
+msgid ""
+"Пока пусто. Здесь появятся удаления, отмены заказов, скидки и изменения "
+"пользователей."
+msgstr ""
+"Empty for now. Deletions, order cancellations, discounts, and user "
+"changes will appear here."
+
 msgid "Политика конфиденциальности"
 msgstr "Privacy Policy"
 
@@ -1363,6 +1394,9 @@ msgstr "Link Telegram (for waitstaff)"
 
 msgid "Пригласите сотрудника"
 msgstr "Invite a staff member"
+
+msgid "Применил скидку"
+msgstr "Applied a discount"
 
 msgid "Примечание"
 msgstr "Note"
@@ -1627,6 +1661,12 @@ msgstr "I agree to the"
 msgid "Создайте заведение"
 msgstr "Create a venue"
 
+msgid "Создал пользователя"
+msgstr "Created a user"
+
+msgid "Создал промокод"
+msgstr "Created a promo code"
+
 msgid "Создать"
 msgstr "Sign up"
 
@@ -1783,6 +1823,15 @@ msgid ""
 msgstr ""
 "You don't have any venues yet. Add your first one — it takes less than a "
 "minute."
+
+msgid "Удалил ингредиент"
+msgstr "Deleted an ingredient"
+
+msgid "Удалил позицию меню"
+msgstr "Deleted a menu item"
+
+msgid "Удалил пользователя"
+msgstr "Deleted a user"
 
 msgid "Удалить"
 msgstr "Delete"

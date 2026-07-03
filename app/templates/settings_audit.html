@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}{{ _("Журнал действий") }} — RestOS{% endblock %}
+
+{% block content %}
+{% include "partials/settings_tabs.html" %}
+<div class="page-header">
+  <h1 class="page-title">{{ _("Журнал действий") }}</h1>
+  <span class="muted" style="font-size:.85rem">{{ _("Кто удалил, отменил или дал скидку — последние 200 записей") }}</span>
+</div>
+
+{% set action_labels = {
+  "menu_item_deleted": _("Удалил позицию меню"),
+  "order_cancelled": _("Отменил заказ"),
+  "discount_applied": _("Применил скидку"),
+  "ingredient_deleted": _("Удалил ингредиент"),
+  "user_created": _("Создал пользователя"),
+  "user_deleted": _("Удалил пользователя"),
+  "promo_created": _("Создал промокод"),
+} %}
+
+{% if entries %}
+<div class="table-wrapper">
+<table class="data-table">
+  <thead>
+    <tr><th>{{ _("Когда") }}</th><th>{{ _("Кто") }}</th><th>{{ _("Действие") }}</th><th>{{ _("Детали") }}</th></tr>
+  </thead>
+  <tbody>
+    {% for e in entries %}
+    <tr>
+      <td style="white-space:nowrap">{{ e.created_at.strftime('%d.%m.%Y %H:%M') }}</td>
+      <td>{{ e.user_email }}</td>
+      <td>{{ action_labels.get(e.action, e.action) }}</td>
+      <td class="muted">{{ e.detail or '—' }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% else %}
+<div class="card" style="text-align:center; padding:2.5rem; color:var(--muted)">
+  {{ _("Пока пусто. Здесь появятся удаления, отмены заказов, скидки и изменения пользователей.") }}
+</div>
+{% endif %}
+{% endblock %}

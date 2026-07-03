@@ -80,6 +80,12 @@ async def place_pos_order(
         guest = await get_or_create_walkin_guest(current_user.network_id, db)
         data.source = "pos"
         order = await create_order(data, guest, db, changed_by=current_user.email)
+        if data.discount_type and data.discount_value:
+            from app.services.audit import log_action
+            unit = "%" if data.discount_type == "percent" else "₸"
+            log_action(db, current_user.network_id, current_user.email, "discount_applied",
+                       f"#{str(order.id)[:8].upper()}: скидка {data.discount_value}{unit}")
+            await db.commit()
         # Counter-service: cashier took payment right at the register.
         if data.payment_method:
             order = await pay_order(order.id, data.payment_method, db, changed_by=current_user.email)
