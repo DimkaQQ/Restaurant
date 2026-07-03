@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-02 22:18+0000\n"
+"POT-Creation-Date: 2026-07-03 04:40+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -169,6 +169,9 @@ msgstr "Administrator"
 msgid "Адрес"
 msgstr "Address"
 
+msgid "Активен"
+msgstr "Active"
+
 msgid "Активна"
 msgstr "Active"
 
@@ -195,6 +198,9 @@ msgstr "No card required. Cancel anytime."
 
 msgid "Без программистов и интеграторов"
 msgstr "No engineers or integrators"
+
+msgid "Без скидки"
+msgstr "No discount"
 
 msgid "Безлимит заведений"
 msgstr "Unlimited venues"
@@ -250,6 +256,9 @@ msgstr "Move back"
 
 msgid "Визиты"
 msgstr "Visits"
+
+msgid "Включить"
+msgstr "Enable"
 
 msgid "Владелец"
 msgstr "Owner"
@@ -345,6 +354,12 @@ msgstr "On-site technician visit"
 
 msgid "Выйти"
 msgstr "Log out"
+
+msgid "Выключен"
+msgstr "Disabled"
+
+msgid "Выключить"
+msgstr "Disable"
 
 msgid "Выполненных заказов сегодня ещё нет"
 msgstr "No completed orders yet today"
@@ -580,6 +595,9 @@ msgstr "Launch in 15 minutes"
 msgid "Зарегистрируйтесь"
 msgstr "Sign up"
 
+msgid "Значение"
+msgstr "Value"
+
 msgid "Инвентаризация"
 msgstr "Inventory count"
 
@@ -592,6 +610,9 @@ msgstr ""
 
 msgid "Интуитивно — бариста разберётся за 10 минут"
 msgstr "Intuitive — a barista learns it in 10 minutes"
+
+msgid "Использован"
+msgstr "Used"
 
 msgid "Использование"
 msgstr "Usage"
@@ -645,6 +666,9 @@ msgstr ""
 "Legacy restaurant systems were built for big chains. For a small coffee "
 "shop they add complexity, not control."
 
+msgid "Код"
+msgstr "Code"
+
 msgid "Кол-во"
 msgstr "Qty"
 
@@ -677,6 +701,9 @@ msgstr "Kitchen"
 
 msgid "Кухонный дисплей (KDS)"
 msgstr "Kitchen display (KDS)"
+
+msgid "Лимит использований"
+msgstr "Usage limit"
 
 msgid "Лицензии + модули + внедрение"
 msgstr "Licenses + modules + implementation"
@@ -1205,6 +1232,9 @@ msgstr "Confirmed"
 msgid "Подтверждён"
 msgstr "Confirmed"
 
+msgid "Подытог"
+msgstr "Subtotal"
+
 msgid "Позже"
 msgstr "Later"
 
@@ -1325,6 +1355,17 @@ msgstr "Renews:"
 msgid "Прозрачные цены"
 msgstr "Transparent pricing"
 
+msgid "Промокодов пока нет. Создайте первый — гости смогут вводить его в QR-меню."
+msgstr ""
+"No promo codes yet. Create the first one — guests can enter it in the QR "
+"menu."
+
+msgid "Промокоды"
+msgstr "Promo codes"
+
+msgid "Процент"
+msgstr "Percent"
+
 msgid "Прочее"
 msgstr "Other"
 
@@ -1336,6 +1377,9 @@ msgstr "Empty"
 
 msgid "Работает на любом планшете"
 msgstr "Runs on any tablet"
+
+msgid "Работают в QR-меню для гостей"
+msgstr "Work in the guest QR menu"
 
 msgid "Рассылки"
 msgstr "Broadcasts"
@@ -1418,6 +1462,15 @@ msgstr "Service:"
 
 msgid "Скачать все данные сети в формате JSON"
 msgstr "Download all network data as JSON"
+
+msgid "Скидка"
+msgstr "Discount"
+
+msgid "Скидка %"
+msgstr "Discount %"
+
+msgid "Скидка ₸"
+msgstr "Discount ₸"
 
 msgid "Склад"
 msgstr "Inventory"
@@ -1597,6 +1650,9 @@ msgstr ""
 "Technical data: IP address, browser type — for security and abuse "
 "prevention (e.g. rate limiting on sign-in)."
 
+msgid "Тип"
+msgstr "Type"
+
 msgid "Токен:"
 msgstr "Token:"
 
@@ -1618,6 +1674,9 @@ msgstr "Delete this item?"
 
 msgid "Удалить пользователя?"
 msgstr "Delete this user?"
+
+msgid "Удалить промокод?"
+msgstr "Delete this promo code?"
 
 msgid "Удалить рассылку?"
 msgstr "Delete this broadcast?"
@@ -1722,6 +1781,9 @@ msgstr "Export data"
 
 msgid "Язык получателей"
 msgstr "Recipient language"
+
+msgid "без лимита"
+msgstr "no limit"
 
 msgid "в базе"
 msgstr "in the database"

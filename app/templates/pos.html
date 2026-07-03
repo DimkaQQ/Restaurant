@@ -75,6 +75,20 @@
       <input type="text" id="table-number" placeholder="{{ _('Например, 5') }}">
     </div>
     <div id="cart-lines"><p class="empty-state" style="padding:.5rem 0">{{ _("Корзина пуста") }}</p></div>
+    <div class="form-group" style="margin-top:.5rem">
+      <div style="display:flex; gap:.4rem; align-items:center">
+        <select id="discount-type" onchange="renderCart()" style="background:var(--black);border:1px solid var(--border);color:var(--white);padding:.4rem;border-radius:6px;font-size:.8rem">
+          <option value="">{{ _("Без скидки") }}</option>
+          <option value="percent">{{ _("Скидка %") }}</option>
+          <option value="amount">{{ _("Скидка ₸") }}</option>
+        </select>
+        <input type="number" id="discount-value" min="0" step="0.01" placeholder="0" oninput="renderCart()"
+          style="width:90px;background:var(--black);border:1px solid var(--border);color:var(--white);padding:.4rem;border-radius:6px;font-size:.8rem">
+      </div>
+    </div>
+    <div class="pos-total" id="subtotal-row" style="display:none;font-size:.85rem;font-weight:400;color:var(--muted)">
+      <span>{{ _("Подытог") }}</span><span id="cart-subtotal">0 ₸</span>
+    </div>
     <div class="pos-total"><span>{{ _("Итого") }}</span><span id="cart-total">0 ₸</span></div>
     <div class="form-group">
       <label style="font-size:.8rem;color:var(--muted)">{{ _("Оплата") }}</label>
@@ -328,7 +342,20 @@
         </div>
       `;
     }).join('');
-    document.getElementById('cart-total').textContent = total.toLocaleString(LOCALE) + ' ₸';
+    // Staff discount (server recomputes authoritatively; this is just display)
+    const dType = document.getElementById('discount-type').value;
+    const dValue = parseFloat(document.getElementById('discount-value').value) || 0;
+    const subtotalRow = document.getElementById('subtotal-row');
+    let finalTotal = total;
+    if (dType && dValue > 0) {
+      const off = dType === 'percent' ? total * Math.min(dValue, 100) / 100 : Math.min(dValue, total);
+      finalTotal = total - off;
+      document.getElementById('cart-subtotal').textContent = total.toLocaleString(LOCALE) + ' ₸';
+      subtotalRow.style.display = 'flex';
+    } else {
+      subtotalRow.style.display = 'none';
+    }
+    document.getElementById('cart-total').textContent = finalTotal.toLocaleString(LOCALE) + ' ₸';
     submitBtn.disabled = false;
   }
 
@@ -416,11 +443,15 @@
       table_id: _selectedTableId || null,
       table_number: _selectedTableId ? null : (document.getElementById('table-number').value || null),
       payment_method: _payMethod,
+      discount_type: document.getElementById('discount-type').value || null,
+      discount_value: parseFloat(document.getElementById('discount-value').value) || null,
       client_order_id: (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(36).slice(2)),
     };
     const clearCart = () => {
       _cart = {};
       document.getElementById('table-number').value = '';
+      document.getElementById('discount-type').value = '';
+      document.getElementById('discount-value').value = '';
       renderCart();
     };
     try {

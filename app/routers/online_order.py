@@ -97,6 +97,7 @@ class OnlineOrderSubmit(BaseModel):
     table_number: str | None = None
     notes: str | None = None
     guest_lang: str | None = None
+    promo_code: str | None = None
 
 
 @router.post("/order/{venue_id}/submit")
@@ -163,6 +164,7 @@ async def submit_online_order(
         notes=data.notes,
         table_number=data.table_number,
         source="online",
+        promo_code=data.promo_code,
     )
 
     try:

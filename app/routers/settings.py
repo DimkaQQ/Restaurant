@@ -511,3 +511,105 @@ async def unlink_telegram(
     current_user.bot_link_token = None
     await db.commit()
     return {"ok": True}
+
+
+# ── Promo codes ──────────────────────────────────────────────────────────
+
+@router.get("/promos", response_class=HTMLResponse)
+async def settings_promos_page(
+    request: Request,
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    _require_owner(current_user)
+    from app.models.promo import PromoCode
+    promos = (await db.execute(
+        select(PromoCode)
+        .where(PromoCode.network_id == current_user.network_id)
+        .order_by(PromoCode.created_at.desc())
+    )).scalars().all()
+    return templates.TemplateResponse("settings_promos.html", {
+        "request": request,
+        "user": current_user,
+        "promos": promos,
+    })
+
+
+@router.post("/api/promos")
+async def create_promo(
+    request: Request,
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    _require_owner(current_user)
+    from app.models.promo import PromoCode
+    from decimal import Decimal as _Dec
+    body = await request.json()
+    code = (body.get("code") or "").strip().upper()
+    ptype = body.get("type")
+    try:
+        value = _Dec(str(body.get("value")))
+    except Exception:
+        raise HTTPException(status_code=400, detail="Неверное значение скидки")
+    if not code or len(code) > 50:
+        raise HTTPException(status_code=400, detail="Введите код (до 50 символов)")
+    if ptype not in ("percent", "amount") or value <= 0:
+        raise HTTPException(status_code=400, detail="Неверный тип или значение скидки")
+    if ptype == "percent" and value > 100:
+        raise HTTPException(status_code=400, detail="Процент не может превышать 100")
+    max_uses = body.get("max_uses")
+    if max_uses is not None:
+        try:
+            max_uses = int(max_uses) or None
+        except (TypeError, ValueError):
+            max_uses = None
+
+    duplicate = (await db.execute(
+        select(PromoCode).where(PromoCode.network_id == current_user.network_id, PromoCode.code == code)
+    )).scalar_one_or_none()
+    if duplicate:
+        raise HTTPException(status_code=400, detail="Такой код уже существует")
+
+    promo = PromoCode(
+        id=uuid.uuid4(), network_id=current_user.network_id,
+        code=code, type=ptype, value=value, max_uses=max_uses,
+    )
+    db.add(promo)
+    await db.commit()
+    return {"id": str(promo.id), "code": promo.code}
+
+
+@router.patch("/api/promos/{promo_id}")
+async def toggle_promo(
+    promo_id: uuid.UUID,
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    _require_owner(current_user)
+    from app.models.promo import PromoCode
+    promo = (await db.execute(
+        select(PromoCode).where(PromoCode.id == promo_id, PromoCode.network_id == current_user.network_id)
+    )).scalar_one_or_none()
+    if not promo:
+        raise HTTPException(status_code=404, detail="Промокод не найден")
+    promo.active = not promo.active
+    await db.commit()
+    return {"active": promo.active}
+
+
+@router.delete("/api/promos/{promo_id}")
+async def delete_promo(
+    promo_id: uuid.UUID,
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    _require_owner(current_user)
+    from app.models.promo import PromoCode
+    promo = (await db.execute(
+        select(PromoCode).where(PromoCode.id == promo_id, PromoCode.network_id == current_user.network_id)
+    )).scalar_one_or_none()
+    if not promo:
+        raise HTTPException(status_code=404, detail="Промокод не найден")
+    await db.delete(promo)
+    await db.commit()
+    return {"ok": True}

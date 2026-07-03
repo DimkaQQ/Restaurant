@@ -73,6 +73,10 @@
       {% endfor %}
     </div>
     <div class="divider"></div>
+    {% if order.discount_type and order.subtotal_amount %}
+    <div class="item-row"><span class="item-name">{{ _("Подытог") }}</span><span>{{ "{:,.0f}".format(order.subtotal_amount) }} ₸</span></div>
+    <div class="item-row"><span class="item-name">{{ _("Скидка") }}{% if order.promo_code %} ({{ order.promo_code }}){% elif order.discount_type == 'percent' %} ({{ "{:g}".format(order.discount_value) }}%){% endif %}</span><span>−{{ "{:,.0f}".format(order.subtotal_amount - order.total_amount) }} ₸</span></div>
+    {% endif %}
     <div class="total-row"><span>{{ _("Итого") }}</span><span>{{ "{:,.0f}".format(order.total_amount) }} ₸</span></div>
     {% if order.payment_method %}
     <div class="meta-row" style="margin-top:.3rem">

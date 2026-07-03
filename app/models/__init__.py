@@ -15,6 +15,7 @@ from app.models.broadcast import Broadcast
 from app.models.subscription import Subscription
 from app.models.recipe import Recipe
 from app.models.audit_log import AdminAuditLog
+from app.models.promo import PromoCode
 
 __all__ = [
     "Network", "Venue", "User", "Guest",
@@ -27,4 +28,5 @@ __all__ = [
     "Subscription",
     "Recipe",
     "AdminAuditLog",
+    "PromoCode",
 ]

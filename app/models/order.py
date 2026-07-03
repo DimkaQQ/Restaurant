@@ -15,6 +15,12 @@ class Order(Base):
     staff_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("staff.id"), nullable=True, index=True)
     status: Mapped[str] = mapped_column(String(50), default="new", index=True)
     total_amount: Mapped[Decimal] = mapped_column(Numeric(10, 2), default=0)
+    # Discount: total_amount is always the final charged amount;
+    # subtotal_amount preserves the pre-discount sum for receipts/reports.
+    subtotal_amount: Mapped[Decimal | None] = mapped_column(Numeric(10, 2), nullable=True)
+    discount_type: Mapped[str | None] = mapped_column(String(10), nullable=True)   # percent | amount
+    discount_value: Mapped[Decimal | None] = mapped_column(Numeric(10, 2), nullable=True)
+    promo_code: Mapped[str | None] = mapped_column(String(50), nullable=True)
     points_earned: Mapped[int] = mapped_column(Integer, default=0)
     notes: Mapped[str | None] = mapped_column(Text)
     table_number: Mapped[str | None] = mapped_column(String(20), nullable=True)

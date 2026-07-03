@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block title %}{{ _("Промокоды") }} — RestOS{% endblock %}
+
+{% block head %}
+<style>
+.promo-form { display:flex; gap:.5rem; flex-wrap:wrap; align-items:flex-end; margin-bottom:1.5rem; }
+.promo-form .fg { display:flex; flex-direction:column; gap:.25rem; }
+.promo-form label { font-size:.75rem; color:var(--muted); }
+.promo-form input, .promo-form select {
+  background:var(--black); border:1px solid var(--border); color:var(--white);
+  padding:.5rem .75rem; border-radius:6px; font-size:.875rem;
+}
+.promo-table { width:100%; border-collapse:collapse; background:var(--card); border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+.promo-table th, .promo-table td { text-align:left; padding:.6rem .9rem; font-size:.85rem; border-bottom:1px solid rgba(255,255,255,.05); }
+.promo-table th { color:var(--muted); text-transform:uppercase; font-size:.7rem; letter-spacing:.04em; }
+.promo-table tr:last-child td { border-bottom:none; }
+.promo-code-cell { font-family:monospace; font-weight:700; color:var(--gold); }
+.promo-off { opacity:.45; }
+</style>
+{% endblock %}
+
+{% block content %}
+{% include "partials/settings_tabs.html" %}
+<div class="page-header">
+  <h1 class="page-title">{{ _("Промокоды") }}</h1>
+  <span class="muted" style="font-size:.85rem">{{ _("Работают в QR-меню для гостей") }}</span>
+</div>
+
+<div class="promo-form">
+  <div class="fg">
+    <label>{{ _("Код") }}</label>
+    <input type="text" id="p-code" placeholder="WELCOME10" style="text-transform:uppercase; width:140px">
+  </div>
+  <div class="fg">
+    <label>{{ _("Тип") }}</label>
+    <select id="p-type">
+      <option value="percent">{{ _("Процент") }}</option>
+      <option value="amount">{{ _("Сумма (₸)") }}</option>
+    </select>
+  </div>
+  <div class="fg">
+    <label>{{ _("Значение") }}</label>
+    <input type="number" id="p-value" min="0" step="0.01" placeholder="10" style="width:90px">
+  </div>
+  <div class="fg">
+    <label>{{ _("Лимит использований") }}</label>
+    <input type="number" id="p-max" min="1" placeholder="{{ _('без лимита') }}" style="width:120px">
+  </div>
+  <button class="btn-primary" onclick="createPromo()">{{ _("Создать") }}</button>
+</div>
+
+{% if promos %}
+<table class="promo-table">
+  <thead>
+    <tr>
+      <th>{{ _("Код") }}</th><th>{{ _("Скидка") }}</th><th>{{ _("Использован") }}</th><th>{{ _("Статус") }}</th><th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for p in promos %}
+    <tr class="{% if not p.active %}promo-off{% endif %}" id="promo-{{ p.id }}">
+      <td class="promo-code-cell">{{ p.code }}</td>
+      <td>{% if p.type == 'percent' %}{{ "{:g}".format(p.value) }}%{% else %}{{ "{:,.0f}".format(p.value) }} ₸{% endif %}</td>
+      <td>{{ p.used_count }}{% if p.max_uses %} / {{ p.max_uses }}{% endif %}</td>
+      <td>{% if p.active %}<span class="badge badge-active">{{ _("Активен") }}</span>{% else %}<span class="badge badge-launch">{{ _("Выключен") }}</span>{% endif %}</td>
+      <td style="white-space:nowrap">
+        <button class="btn-secondary" style="font-size:.75rem;padding:.35rem .6rem" onclick="togglePromo('{{ p.id }}')">{% if p.active %}{{ _("Выключить") }}{% else %}{{ _("Включить") }}{% endif %}</button>
+        <button class="btn-icon-danger" onclick="deletePromo('{{ p.id }}')">✕</button>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<div class="card" style="text-align:center; padding:2.5rem; color:var(--muted)">
+  {{ _("Промокодов пока нет. Создайте первый — гости смогут вводить его в QR-меню.") }}
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+const T = {
+  error: {{ _("Ошибка") | tojson }},
+  deleteConfirm: {{ _("Удалить промокод?") | tojson }},
+};
+
+async function createPromo() {
+  const body = {
+    code: document.getElementById('p-code').value,
+    type: document.getElementById('p-type').value,
+    value: document.getElementById('p-value').value,
+    max_uses: document.getElementById('p-max').value || null,
+  };
+  const res = await fetch('/settings/api/promos', {
+    method: 'POST', credentials: 'include',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(body),
+  });
+  if (res.ok) location.reload();
+  else {
+    const d = await res.json().catch(() => ({}));
+    notify.error(d.detail || T.error);
+  }
+}
+
+async function togglePromo(id) {
+  const res = await fetch('/settings/api/promos/' + id, { method: 'PATCH', credentials: 'include' });
+  if (res.ok) location.reload();
+  else notify.error(T.error);
+}
+
+async function deletePromo(id) {
+  if (!(await notify.confirm(T.deleteConfirm, {danger: true}))) return;
+  const res = await fetch('/settings/api/promos/' + id, { method: 'DELETE', credentials: 'include' });
+  if (res.ok) document.getElementById('promo-' + id)?.remove();
+  else notify.error(T.error);
+}
+</script>
+{% endblock %}

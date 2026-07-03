@@ -126,6 +126,46 @@ async def create_order(data: OrderCreate, guest: Guest, db: AsyncSession, change
             )
         )
 
+    # ── Discounts ────────────────────────────────────────────────────────
+    # Two mutually exclusive paths: a staff-applied discount (POS) or a
+    # guest promo code. Amounts are always recomputed server-side.
+    subtotal = total
+    discount_type = getattr(data, 'discount_type', None)
+    discount_value = getattr(data, 'discount_value', None)
+    promo_code_used = None
+
+    raw_promo = (getattr(data, 'promo_code', None) or "").strip().upper()
+    if raw_promo:
+        from app.models.promo import PromoCode
+        from app.models.venue import Venue as VenueModel
+        network_id = (await db.execute(
+            select(VenueModel.network_id).where(VenueModel.id == data.venue_id)
+        )).scalar_one()
+        promo = (await db.execute(
+            select(PromoCode)
+            .where(PromoCode.network_id == network_id, PromoCode.code == raw_promo)
+            .with_for_update()
+        )).scalar_one_or_none()
+        now = datetime.now(timezone.utc)
+        if (not promo or not promo.active
+                or (promo.expires_at is not None and promo.expires_at < now)
+                or (promo.max_uses is not None and promo.used_count >= promo.max_uses)):
+            raise ValueError("Промокод недействителен")
+        discount_type, discount_value = promo.type, promo.value
+        promo.used_count += 1
+        promo_code_used = promo.code
+
+    if discount_type:
+        if discount_type not in ("percent", "amount") or not discount_value or discount_value <= 0:
+            raise ValueError("Неверная скидка")
+        if discount_type == "percent":
+            if discount_value > 100:
+                raise ValueError("Скидка не может превышать 100%")
+            off = (subtotal * discount_value / Decimal("100")).quantize(Decimal("0.01"))
+        else:
+            off = min(discount_value, subtotal)
+        total = subtotal - off
+
     is_walkin = guest.phone == WALKIN_MARKER
     points = 0 if is_walkin else calculate_points_earned(total)
     order = Order(
@@ -134,6 +174,10 @@ async def create_order(data: OrderCreate, guest: Guest, db: AsyncSession, change
         guest_id=guest.id,
         status="new",
         total_amount=total,
+        subtotal_amount=subtotal if discount_type else None,
+        discount_type=discount_type,
+        discount_value=discount_value,
+        promo_code=promo_code_used,
         points_earned=points,
         notes=data.notes,
         table_number=table.label if table else getattr(data, 'table_number', None),

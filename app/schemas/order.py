@@ -25,6 +25,11 @@ class OrderCreate(BaseModel):
     payment_method: str | None = None
     # Idempotency key for offline-queued orders (client-generated UUID).
     client_order_id: str | None = Field(None, max_length=64)
+    # Staff-applied discount (POS only — the online endpoint never passes these).
+    discount_type: str | None = None   # percent | amount
+    discount_value: Decimal | None = Field(None, gt=0)
+    # Guest promo code (validated server-side against the network's codes).
+    promo_code: str | None = Field(None, max_length=50)
 
 
 class OrderItemOut(BaseModel):
@@ -53,6 +58,10 @@ class OrderOut(BaseModel):
     guest_id: uuid.UUID
     status: str
     total_amount: Decimal
+    subtotal_amount: Decimal | None = None
+    discount_type: str | None = None
+    discount_value: Decimal | None = None
+    promo_code: str | None = None
     points_earned: int
     notes: str | None
     table_number: str | None = None
