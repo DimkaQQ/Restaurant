@@ -135,6 +135,10 @@ async def create_order(data: OrderCreate, guest: Guest, db: AsyncSession, change
     promo_code_used = None
 
     raw_promo = (getattr(data, 'promo_code', None) or "").strip().upper()
+    if raw_promo and discount_type:
+        # Two discount paths at once would silently override each other —
+        # make the caller pick one so the receipt is unambiguous.
+        raise ValueError("Укажите либо скидку, либо промокод — не оба сразу")
     if raw_promo:
         from app.models.promo import PromoCode
         from app.models.venue import Venue as VenueModel
@@ -262,6 +266,50 @@ async def _deduct_inventory_for_order(order: Order, db: AsyncSession) -> None:
         ))
 
 
+def _apply_cancellation_side_effects(order: Order, changed_by: str, db: AsyncSession) -> None:
+    """Everything that must happen whenever an order becomes cancelled,
+    regardless of which endpoint did it: mark paid money as refunded and
+    reverse loyalty points. (Visit reversal needs a query — see callers.)"""
+    # A paid order that gets cancelled means the money went back to the
+    # guest. Mark it refunded so revenue, Z-reports and analytics (which all
+    # filter on payment_status == "paid") stop counting it.
+    if order.payment_status == "paid":
+        order.payment_status = "refunded"
+        db.add(OrderStatusLog(
+            id=uuid.uuid4(),
+            order_id=order.id,
+            old_status="paid",
+            new_status="refunded",
+            changed_by=changed_by,
+        ))
+        logger.info("Order %s marked refunded on cancellation by %s", order.id, changed_by)
+
+    guest = order.guest
+    if guest and guest.phone != WALKIN_MARKER and order.points_earned and order.points_earned > 0:
+        points_to_reverse = min(order.points_earned, guest.total_points or 0)
+        if points_to_reverse > 0:
+            guest.total_points -= points_to_reverse
+            db.add(PointsTransaction(
+                id=uuid.uuid4(),
+                guest_id=guest.id,
+                venue_id=order.venue_id,
+                amount=-points_to_reverse,
+                reason=f"Отмена заказа #{str(order.id)[:8].upper()}",
+            ))
+            logger.info("Reversed %d points for guest %s on order cancellation", points_to_reverse, guest.id)
+
+
+async def _remove_visit_for_order(order: Order, db: AsyncSession) -> None:
+    """Cancelled orders shouldn't count as guest visits."""
+    if not order.guest or order.guest.phone == WALKIN_MARKER:
+        return
+    visit = (await db.execute(select(Visit).where(Visit.order_id == order.id))).scalar_one_or_none()
+    if visit:
+        await db.delete(visit)
+        if order.guest.total_visits and order.guest.total_visits > 0:
+            order.guest.total_visits -= 1
+
+
 async def update_order_status(
     order_id: uuid.UUID,
     new_status: str,
@@ -297,6 +345,10 @@ async def update_order_status(
 
     if new_status == "done":
         await _deduct_inventory_for_order(order, db)
+
+    if new_status == "cancelled":
+        _apply_cancellation_side_effects(order, changed_by, db)
+        await _remove_visit_for_order(order, db)
 
     if order.table_id and new_status in ("done", "cancelled"):
         await _sync_table_status(order.table_id, db)
@@ -400,28 +452,8 @@ async def cancel_order(
         changed_by=changed_by,
     ))
 
-    # Reverse points earned on this order to prevent farming
-    if order.points_earned and order.points_earned > 0 and order.guest:
-        guest = order.guest
-        points_to_reverse = min(order.points_earned, guest.total_points or 0)
-        if points_to_reverse > 0:
-            guest.total_points -= points_to_reverse
-            db.add(PointsTransaction(
-                id=uuid.uuid4(),
-                guest_id=guest.id,
-                venue_id=order.venue_id,
-                amount=-points_to_reverse,
-                reason=f"Отмена заказа #{str(order.id)[:8].upper()}",
-            ))
-            logger.info("Reversed %d points for guest %s on order cancellation", points_to_reverse, guest.id)
-
-    # Reverse visit counter — cancelled orders shouldn't count as visits
-    if order.guest:
-        visit = (await db.execute(select(Visit).where(Visit.order_id == order_id))).scalar_one_or_none()
-        if visit:
-            await db.delete(visit)
-            if order.guest.total_visits and order.guest.total_visits > 0:
-                order.guest.total_visits -= 1
+    _apply_cancellation_side_effects(order, changed_by, db)
+    await _remove_visit_for_order(order, db)
 
     if order.table_id:
         await _sync_table_status(order.table_id, db)

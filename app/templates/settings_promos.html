@@ -46,6 +46,10 @@
     <label>{{ _("Лимит использований") }}</label>
     <input type="number" id="p-max" min="1" placeholder="{{ _('без лимита') }}" style="width:120px">
   </div>
+  <div class="fg">
+    <label>{{ _("Действует до") }}</label>
+    <input type="date" id="p-expires" style="width:150px">
+  </div>
   <button class="btn-primary" onclick="createPromo()">{{ _("Создать") }}</button>
 </div>
 
@@ -53,7 +57,7 @@
 <table class="promo-table">
   <thead>
     <tr>
-      <th>{{ _("Код") }}</th><th>{{ _("Скидка") }}</th><th>{{ _("Использован") }}</th><th>{{ _("Статус") }}</th><th></th>
+      <th>{{ _("Код") }}</th><th>{{ _("Скидка") }}</th><th>{{ _("Использован") }}</th><th>{{ _("Действует до") }}</th><th>{{ _("Статус") }}</th><th></th>
     </tr>
   </thead>
   <tbody>
@@ -62,6 +66,7 @@
       <td class="promo-code-cell">{{ p.code }}</td>
       <td>{% if p.type == 'percent' %}{{ "{:g}".format(p.value) }}%{% else %}{{ "{:,.0f}".format(p.value) }} ₸{% endif %}</td>
       <td>{{ p.used_count }}{% if p.max_uses %} / {{ p.max_uses }}{% endif %}</td>
+      <td>{% if p.expires_at %}{{ p.expires_at.strftime('%d.%m.%Y') }}{% else %}<span class="muted">—</span>{% endif %}</td>
       <td>{% if p.active %}<span class="badge badge-active">{{ _("Активен") }}</span>{% else %}<span class="badge badge-launch">{{ _("Выключен") }}</span>{% endif %}</td>
       <td style="white-space:nowrap">
         <button class="btn-secondary" style="font-size:.75rem;padding:.35rem .6rem" onclick="togglePromo('{{ p.id }}')">{% if p.active %}{{ _("Выключить") }}{% else %}{{ _("Включить") }}{% endif %}</button>
@@ -91,6 +96,7 @@ async function createPromo() {
     type: document.getElementById('p-type').value,
     value: document.getElementById('p-value').value,
     max_uses: document.getElementById('p-max').value || null,
+    expires_at: document.getElementById('p-expires').value || null,
   };
   const res = await fetch('/settings/api/promos', {
     method: 'POST', credentials: 'include',

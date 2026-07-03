@@ -91,13 +91,13 @@ class OnlineOrderItem(BaseModel):
 
 
 class OnlineOrderSubmit(BaseModel):
-    items: list[OnlineOrderItem]
-    guest_name: str | None = None
-    guest_phone: str | None = None
-    table_number: str | None = None
-    notes: str | None = None
+    items: list[OnlineOrderItem] = Field(..., min_length=1, max_length=50)
+    guest_name: str | None = Field(None, max_length=100)
+    guest_phone: str | None = Field(None, max_length=32)
+    table_number: str | None = Field(None, max_length=32)
+    notes: str | None = Field(None, max_length=500)
     guest_lang: str | None = None
-    promo_code: str | None = None
+    promo_code: str | None = Field(None, max_length=50)
 
 
 @router.post("/order/{venue_id}/submit")
@@ -124,7 +124,8 @@ async def submit_online_order(
     # to Guest.language so it's remembered for future bot broadcasts/orders,
     # since this page has no login to read an existing preference from.
     guest = None
-    if data.guest_phone:
+    guest_name_clean = (data.guest_name or "").strip() or None
+    if data.guest_phone and data.guest_phone.strip():
         phone_clean = data.guest_phone.strip()
         guest = (await db.execute(
             select(Guest).where(Guest.phone == phone_clean, Guest.network_id == venue.network_id)
@@ -133,7 +134,7 @@ async def submit_online_order(
             guest = Guest(
                 id=uuid.uuid4(),
                 network_id=venue.network_id,
-                name=data.guest_name or strings["guest"],
+                name=guest_name_clean or strings["guest"],
                 phone=phone_clean,
                 language=lang or "ru",
             )
@@ -145,7 +146,7 @@ async def submit_online_order(
         guest = Guest(
             id=uuid.uuid4(),
             network_id=venue.network_id,
-            name=data.guest_name or strings["online_guest"],
+            name=guest_name_clean or strings["online_guest"],
             phone=None,
             language=lang or "ru",
         )
@@ -229,11 +230,18 @@ async def queue_board_data(
     venue_id: uuid.UUID,
     db: AsyncSession = Depends(get_db),
 ):
-    """Order numbers only — safe to show on a public screen."""
+    """Order numbers only — safe to show on a public screen. Limited to the
+    last 24h so an order stuck in "confirmed" days ago doesn't haunt the TV."""
+    from datetime import datetime, timedelta, timezone
     from app.models.order import Order
+    since = datetime.now(timezone.utc) - timedelta(hours=24)
     rows = (await db.execute(
         select(Order.id, Order.status)
-        .where(Order.venue_id == venue_id, Order.status.in_(["confirmed", "preparing", "ready"]))
+        .where(
+            Order.venue_id == venue_id,
+            Order.status.in_(["confirmed", "preparing", "ready"]),
+            Order.created_at >= since,
+        )
         .order_by(Order.created_at)
         .limit(40)
     )).all()

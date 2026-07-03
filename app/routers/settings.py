@@ -567,6 +567,15 @@ async def create_promo(
             max_uses = int(max_uses) or None
         except (TypeError, ValueError):
             max_uses = None
+    expires_at = None
+    if body.get("expires_at"):
+        from datetime import datetime as _dt, time as _time, timezone as _tz
+        try:
+            # Date from the form → the code works through the end of that day.
+            d = _dt.strptime(str(body["expires_at"]), "%Y-%m-%d").date()
+            expires_at = _dt.combine(d, _time.max).replace(tzinfo=_tz.utc)
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Неверная дата окончания")
 
     duplicate = (await db.execute(
         select(PromoCode).where(PromoCode.network_id == current_user.network_id, PromoCode.code == code)
@@ -576,7 +585,7 @@ async def create_promo(
 
     promo = PromoCode(
         id=uuid.uuid4(), network_id=current_user.network_id,
-        code=code, type=ptype, value=value, max_uses=max_uses,
+        code=code, type=ptype, value=value, max_uses=max_uses, expires_at=expires_at,
     )
     db.add(promo)
     from app.services.audit import log_action

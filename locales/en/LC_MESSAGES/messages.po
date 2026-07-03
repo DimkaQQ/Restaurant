@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-03 21:00+0000\n"
+"POT-Creation-Date: 2026-07-03 21:24+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -501,6 +501,9 @@ msgstr "Dashboard"
 
 msgid "Действие"
 msgstr "Action"
+
+msgid "Действует до"
+msgstr "Valid until"
 
 msgid "Десятки вкладок, нужны тренинги"
 msgstr "Dozens of tabs, training required"

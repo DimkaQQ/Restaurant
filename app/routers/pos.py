@@ -5,6 +5,7 @@ import uuid
 from fastapi import APIRouter, Depends, HTTPException, Request, Query
 from fastapi.responses import HTMLResponse
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
@@ -79,12 +80,31 @@ async def place_pos_order(
 
         guest = await get_or_create_walkin_guest(current_user.network_id, db)
         data.source = "pos"
-        order = await create_order(data, guest, db, changed_by=current_user.email)
-        if data.discount_type and data.discount_value:
+        try:
+            order = await create_order(data, guest, db, changed_by=current_user.email)
+        except IntegrityError:
+            # Two retries of the same offline-queued order raced past the
+            # dedup check; the unique index on client_order_id caught it —
+            # return the row the winner inserted.
+            await db.rollback()
+            if data.client_order_id:
+                from sqlalchemy.orm import selectinload
+                from app.models.order import Order
+                existing = (await db.execute(
+                    select(Order)
+                    .options(selectinload(Order.items), selectinload(Order.guest))
+                    .where(Order.client_order_id == data.client_order_id)
+                )).scalar_one_or_none()
+                if existing and existing.venue_id in accessible_ids:
+                    return existing
+            raise
+        # Log the discount actually applied (server-side), not the raw request.
+        if order.discount_type:
             from app.services.audit import log_action
-            unit = "%" if data.discount_type == "percent" else "₸"
+            unit = "%" if order.discount_type == "percent" else "₸"
+            what = f"промокод {order.promo_code}" if order.promo_code else "скидка"
             log_action(db, current_user.network_id, current_user.email, "discount_applied",
-                       f"#{str(order.id)[:8].upper()}: скидка {data.discount_value}{unit}")
+                       f"#{str(order.id)[:8].upper()}: {what} {order.discount_value}{unit}")
             await db.commit()
         # Counter-service: cashier took payment right at the register.
         if data.payment_method:
@@ -97,6 +117,8 @@ async def place_pos_order(
         if order.payment_status == "paid":
             await dispatch_event(db, current_user.network_id, "order.paid", payload)
         return order
+    except HTTPException:
+        raise
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
