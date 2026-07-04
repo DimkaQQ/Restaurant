@@ -13,6 +13,10 @@ class Order(Base):
     venue_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("venues.id"))  # indexed via composite ix_orders_venue_status (migration 001)
     guest_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("guests.id"), index=True)
     staff_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("staff.id"), nullable=True, index=True)
+    # Which login account (waiter/cashier) placed the order. waiter_name is a
+    # display snapshot so cards render without joining users.
+    waiter_user_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("users.id", ondelete="SET NULL"), nullable=True, index=True)
+    waiter_name: Mapped[str | None] = mapped_column(String(100), nullable=True)
     status: Mapped[str] = mapped_column(String(50), default="new", index=True)
     total_amount: Mapped[Decimal] = mapped_column(Numeric(10, 2), default=0)
     # Discount: total_amount is always the final charged amount;

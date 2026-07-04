@@ -64,6 +64,8 @@ async def main():
     dp["staff_user"] = None  # set per-request by middleware
     dp["bot_api_secret"] = BOT_API_SECRET
 
+    from bot.handlers.staff_notify import staff_notify_loop
+    asyncio.create_task(staff_notify_loop(bot, API_URL, NETWORK_ID))
     asyncio.create_task(broadcast.broadcast_loop(bot, API_URL, NETWORK_ID))
     asyncio.create_task(broadcast.review_loop(bot, API_URL, NETWORK_ID))
     asyncio.create_task(daily_report.daily_report_loop(bot, API_URL, NETWORK_ID))

@@ -99,7 +99,11 @@ async def place_pos_order(
         guest = await get_or_create_walkin_guest(current_user.network_id, db)
         data.source = "pos"
         try:
-            order = await create_order(data, guest, db, changed_by=current_user.email)
+            order = await create_order(
+                data, guest, db, changed_by=current_user.email,
+                waiter_user_id=current_user.id,
+                waiter_name=current_user.email.split("@")[0],
+            )
         except IntegrityError:
             # Two retries of the same offline-queued order raced past the
             # dedup check; the unique index on client_order_id caught it —

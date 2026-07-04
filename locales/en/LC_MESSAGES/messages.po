@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-04 13:20+0000\n"
+"POT-Creation-Date: 2026-07-04 13:35+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -867,6 +867,9 @@ msgstr "Modifiers"
 
 msgid "Модификаторы:"
 msgstr "Modifiers:"
+
+msgid "Мои"
+msgstr "Mine"
 
 msgid "Мои столы"
 msgstr "My tables"

@@ -347,3 +347,54 @@ async def test_move_order_to_another_table(client: AsyncClient):
     by_label = {t["label"]: t["status"] for t in tables}
     assert by_label["1"] == "free"
     assert by_label["2"] == "occupied"
+
+
+async def test_waiter_assignment_and_ready_notification(client: AsyncClient, db):
+    """Order carries the waiter who placed it; kitchen marking it ready
+    queues a Telegram notification for that waiter."""
+    h, venue_id, item_id = await _setup(client)
+    order = (await client.post("/api/pos/order", headers=h, json={
+        "venue_id": venue_id,
+        "items": [{"menu_item_id": item_id, "quantity": 1}],
+        "table_number": "3",
+    })).json()
+    assert order["waiter_name"]
+    assert order["waiter_user_id"]
+
+    # link telegram to the user who placed the order
+    from sqlalchemy import text as sql
+    await db.execute(sql("UPDATE users SET telegram_id = 777001 WHERE id = :uid"),
+                     {"uid": order["waiter_user_id"]})
+    await db.commit()
+
+    for st in ("confirmed", "preparing", "ready"):
+        resp = await client.patch(f"/api/orders/{order['id']}/status", headers=h, json={"status": st})
+        assert resp.status_code == 200, resp.text
+
+    # the bot polls the outbox and gets the message once
+    from app.models.venue import Venue as V
+    from sqlalchemy import select as sel
+    network_id = (await db.execute(sql("SELECT network_id FROM venues WHERE id = :v"), {"v": venue_id})).scalar()
+    resp = await client.get(f"/api/bot/notifications?network_id={network_id}", headers={"X-Bot-Secret": "test-bot-secret"})
+    assert resp.status_code == 200
+    msgs = resp.json()
+    assert len(msgs) == 1
+    assert msgs[0]["telegram_id"] == 777001
+    assert "Стол 3" in msgs[0]["text"]
+    # marked delivered — second poll is empty
+    resp = await client.get(f"/api/bot/notifications?network_id={network_id}", headers={"X-Bot-Secret": "test-bot-secret"})
+    assert resp.json() == []
+
+
+async def test_no_notification_without_linked_telegram(client: AsyncClient, db):
+    h, venue_id, item_id = await _setup(client)
+    order = (await client.post("/api/pos/order", headers=h, json={
+        "venue_id": venue_id,
+        "items": [{"menu_item_id": item_id, "quantity": 1}],
+    })).json()
+    for st in ("confirmed", "preparing", "ready"):
+        await client.patch(f"/api/orders/{order['id']}/status", headers=h, json={"status": st})
+    from sqlalchemy import text as sql
+    network_id = (await db.execute(sql("SELECT network_id FROM venues WHERE id = :v"), {"v": venue_id})).scalar()
+    resp = await client.get(f"/api/bot/notifications?network_id={network_id}", headers={"X-Bot-Secret": "test-bot-secret"})
+    assert resp.json() == []

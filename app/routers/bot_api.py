@@ -329,7 +329,10 @@ async def create_staff_order(
     )
 
     try:
-        order = await create_order(order_data, guest, db, changed_by=staff.email)
+        order = await create_order(
+            order_data, guest, db, changed_by=staff.email,
+            waiter_user_id=staff.id, waiter_name=staff.email.split("@")[0],
+        )
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -401,6 +404,38 @@ async def get_broadcasts(
     if output:
         await db.commit()
     return output
+
+
+@router.get("/notifications")
+async def get_pending_notifications(
+    network_id: uuid.UUID,
+    db: AsyncSession = Depends(get_db),
+) -> list[dict[str, Any]]:
+    """Staff notification outbox (e.g. «стол 3 готов» for the waiter). Rows
+    are marked delivered as they're handed out; stale ones (>1 day) are
+    skipped so a bot that was down doesn't spam old alerts."""
+    from datetime import timedelta
+    from app.models.bot_notification import BotNotification
+    cutoff = datetime.now(timezone.utc) - timedelta(days=1)
+    rows = (await db.execute(
+        select(BotNotification)
+        .where(
+            BotNotification.network_id == network_id,
+            BotNotification.delivered_at == None,  # noqa: E711
+            BotNotification.created_at >= cutoff,
+        )
+        .order_by(BotNotification.created_at)
+        .limit(100)
+        .with_for_update(skip_locked=True)
+    )).scalars().all()
+    now = datetime.now(timezone.utc)
+    out = []
+    for n in rows:
+        n.delivered_at = now
+        out.append({"telegram_id": n.telegram_id, "text": n.text})
+    if out:
+        await db.commit()
+    return out
 
 
 @router.get("/guest-ids")

@@ -96,6 +96,10 @@
 
   <!-- My orders -->
   <div class="w-section" id="pane-orders" style="display:none">
+    <div style="display:flex; gap:.4rem; margin-bottom:.75rem">
+      <button class="w-cat active" id="flt-mine" onclick="setOrdersFilter('mine')">{{ _("Мои") }}</button>
+      <button class="w-cat" id="flt-all" onclick="setOrdersFilter('all')">{{ _("Все") }}</button>
+    </div>
     <div id="w-orders"><p class="empty">{{ _("Загрузка…") }}</p></div>
   </div>
 
@@ -129,6 +133,7 @@
 <script>
 const token = () => localStorage.getItem('access_token');
 const LOCALE = {{ ('en-US' if locale == 'en' else 'ru-RU') | tojson }};
+const MY_ID = {{ user.id | string | tojson }};
 const T = {
   pickTable: {{ _("Сначала выберите стол") | tojson }},
   sent: {{ _("Заказ отправлен на кухню") | tojson }},
@@ -353,13 +358,21 @@ async function sendOrder() {
 }
 
 // ── My orders ──
+let _ordersFilter = 'mine';
+function setOrdersFilter(f) {
+  _ordersFilter = f;
+  document.getElementById('flt-mine').classList.toggle('active', f === 'mine');
+  document.getElementById('flt-all').classList.toggle('active', f === 'all');
+  loadOrders();
+}
 async function loadOrders() {
   const vid = document.getElementById('venue-select').value;
   if (!vid) return;
   try {
     const res = await fetch('/api/orders/live?venue_id=' + vid, {credentials:'include'});
     if (!res.ok) return;
-    const orders = await res.json();
+    let orders = await res.json();
+    if (_ordersFilter === 'mine') orders = orders.filter(o => o.waiter_user_id === MY_ID);
     document.getElementById('orders-count').textContent = orders.length ? '· ' + orders.length : '';
     const el = document.getElementById('w-orders');
     if (!orders.length) { el.innerHTML = `<p class="empty">${T.noOrders}</p>`; return; }
@@ -367,6 +380,7 @@ async function loadOrders() {
       <div class="w-order">
         <div class="w-order-head">
           <span class="w-order-table">${o.table_number ? T.table + ' ' + esc(o.table_number) : '#' + o.id.slice(0,8).toUpperCase()}</span>
+          ${o.waiter_name && _ordersFilter === 'all' ? `<span class="w-badge">${esc(o.waiter_name)}</span>` : ''}
           <span class="w-badge st-${o.status}">${ST_LABEL[o.status] || o.status}</span>
           ${o.payment_status !== 'paid' ? `<span class="w-badge unpaid">${T.unpaid}</span>` : ''}
           <span style="margin-left:auto; font-weight:700">${parseFloat(o.total_amount).toLocaleString(LOCALE)} ₸</span>

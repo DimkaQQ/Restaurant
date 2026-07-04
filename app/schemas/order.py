@@ -77,6 +77,8 @@ class OrderOut(BaseModel):
     payment_status: str = "unpaid"
     paid_at: datetime | None = None
     payment_method: str | None = None
+    waiter_user_id: uuid.UUID | None = None
+    waiter_name: str | None = None
     fiscal_status: str | None = None
     fiscal_check_number: str | None = None
     fiscal_ticket_url: str | None = None

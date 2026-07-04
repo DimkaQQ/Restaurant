@@ -19,6 +19,7 @@ from app.models.promo import PromoCode
 from app.models.cash_shift import CashShift
 from app.models.purchasing import Supplier, PurchaseInvoice, PurchaseInvoiceLine
 from app.models.api_key import ApiKey, WebhookSubscription
+from app.models.bot_notification import BotNotification
 
 __all__ = [
     "Network", "Venue", "User", "Guest",
@@ -35,4 +36,5 @@ __all__ = [
     "CashShift",
     "Supplier", "PurchaseInvoice", "PurchaseInvoiceLine",
     "ApiKey", "WebhookSubscription",
+    "BotNotification",
 ]

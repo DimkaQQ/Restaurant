@@ -15,7 +15,7 @@
       {% endif %}
       <span class="order-time">{{ order.created_at.strftime('%H:%M') }}</span>
     </div>
-    <div class="order-guest">{{ order.guest.name if order.guest and order.guest.name else _("Гость") }}</div>
+    <div class="order-guest">{{ order.guest.name if order.guest and order.guest.name else _("Гость") }}{% if order.waiter_name %} <span style="color:var(--muted)">· {{ order.waiter_name }}</span>{% endif %}</div>
     <div class="order-items">
       {% for item in order.items %}
       <span class="order-item">{{ item.name }}{% if item.modifiers %} ({{ item.modifiers }}){% endif %} × {{ item.quantity }}</span>

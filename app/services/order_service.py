@@ -68,7 +68,14 @@ async def get_or_create_walkin_guest(network_id: uuid.UUID, db: AsyncSession) ->
     return guest
 
 
-async def create_order(data: OrderCreate, guest: Guest, db: AsyncSession, changed_by: str = "bot") -> Order:
+async def create_order(
+    data: OrderCreate,
+    guest: Guest,
+    db: AsyncSession,
+    changed_by: str = "bot",
+    waiter_user_id: uuid.UUID | None = None,
+    waiter_name: str | None = None,
+) -> Order:
     table = None
     table_id = getattr(data, 'table_id', None)
     if table_id:
@@ -208,6 +215,8 @@ async def create_order(data: OrderCreate, guest: Guest, db: AsyncSession, change
         table_id=table.id if table else None,
         source=getattr(data, 'source', None) or 'bot',
         client_order_id=getattr(data, 'client_order_id', None),
+        waiter_user_id=waiter_user_id,
+        waiter_name=waiter_name,
         items=order_items,
     )
     db.add(order)
@@ -450,6 +459,29 @@ async def _remove_visit_for_order(order: Order, db: AsyncSession) -> None:
             order.guest.total_visits -= 1
 
 
+async def _notify_waiter_ready(order: Order, db: AsyncSession) -> None:
+    """Queue a Telegram message for the waiter who placed the order: the
+    kitchen marked it ready. Delivered by the bot's poll loop. No-op when
+    the waiter hasn't linked Telegram."""
+    if not order.waiter_user_id:
+        return
+    from app.models.user import User
+    waiter = (await db.execute(
+        select(User).where(User.id == order.waiter_user_id)
+    )).scalar_one_or_none()
+    if not waiter or not waiter.telegram_id or not order.venue:
+        return
+    from app.models.bot_notification import BotNotification
+    where = f"Стол {order.table_number}" if order.table_number else f"Заказ #{str(order.id)[:8].upper()}"
+    items = ", ".join(f"{i.name} ×{i.quantity}" for i in order.items[:6])
+    db.add(BotNotification(
+        id=uuid.uuid4(),
+        network_id=order.venue.network_id,
+        telegram_id=waiter.telegram_id,
+        text=f"🔔 {where} — заказ готов, можно забирать с кухни.\n{items}",
+    ))
+
+
 async def update_order_status(
     order_id: uuid.UUID,
     new_status: str,
@@ -485,6 +517,9 @@ async def update_order_status(
 
     if new_status == "done":
         await _deduct_inventory_for_order(order, db)
+
+    if new_status == "ready":
+        await _notify_waiter_ready(order, db)
 
     if new_status == "cancelled":
         _apply_cancellation_side_effects(order, changed_by, db)
