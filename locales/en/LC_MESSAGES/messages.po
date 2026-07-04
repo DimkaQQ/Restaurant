@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-04 12:18+0000\n"
+"POT-Creation-Date: 2026-07-04 13:01+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -182,6 +182,14 @@ msgstr ""
 msgid "Telegram ID менеджера"
 msgstr "Manager Telegram ID"
 
+#, python-brace-format
+msgid "«{n}» снова в продаже"
+msgstr "\"{n}\" is back on sale"
+
+#, python-brace-format
+msgid "«{n}» убрана из продажи"
+msgstr "\"{n}\" removed from sale"
+
 msgid "Автоматически, в облаке"
 msgstr "Automatic, in the cloud"
 
@@ -223,6 +231,9 @@ msgstr "No card required. Cancel anytime."
 
 msgid "Без программистов и интеграторов"
 msgstr "No engineers or integrators"
+
+msgid "Без сдачи"
+msgstr "Exact amount"
 
 msgid "Без скидки"
 msgstr "No discount"
@@ -269,6 +280,9 @@ msgstr "Enter a quantity"
 
 msgid "Введите название заведения"
 msgstr "Enter venue name"
+
+msgid "Введите название и цену"
+msgstr "Enter a name and a price"
 
 msgid "Введите текст выше..."
 msgstr "Type the text above..."
@@ -868,6 +882,9 @@ msgstr ""
 "Press the button — AI will analyze 28 days of sales, menu, and stock and "
 "give concrete recommendations."
 
+msgid "Назад"
+msgstr "Back"
+
 msgid "Назад ко входу"
 msgstr "Back to sign in"
 
@@ -903,6 +920,9 @@ msgstr "e.g. 5"
 
 msgid "Например, Кофейня на Абая"
 msgstr "e.g. Coffee shop on Abay St."
+
+msgid "Например: пакет, доставка"
+msgstr "E.g.: bag, delivery"
 
 msgid ""
 "Настоящие условия регулируют использование платформы RestOS (далее — "
@@ -950,6 +970,9 @@ msgstr "Week"
 
 msgid "Недостача"
 msgstr "Shortage"
+
+msgid "Некоторые позиции больше недоступны и не были добавлены"
+msgstr "Some items are no longer available and were skipped"
 
 msgid "Необязательно"
 msgstr "Optional"
@@ -1331,6 +1354,9 @@ msgstr "By venue"
 msgid "Повреждение"
 msgstr "Damage"
 
+msgid "Повторить последний заказ"
+msgstr "Repeat last order"
+
 msgid "Подключены в Telegram"
 msgstr "Connected via Telegram"
 
@@ -1364,8 +1390,14 @@ msgstr "Items in stock"
 msgid "Позиция"
 msgstr "Item"
 
+msgid "Позиция в стоп-листе"
+msgstr "Item is stop-listed"
+
 msgid "Поиск по имени или телефону..."
 msgstr "Search by name or phone..."
+
+msgid "Поиск по меню…"
+msgstr "Search the menu…"
 
 msgid "Поиск по названию..."
 msgstr "Search by name..."
@@ -1388,6 +1420,12 @@ msgstr "Privacy Policy →"
 
 msgid "Полный вид →"
 msgstr "Full view →"
+
+msgid "Получено меньше суммы заказа"
+msgstr "Received less than the total"
+
+msgid "Получено от гостя (₸)"
+msgstr "Received from guest (₸)"
 
 msgid "Получить рекомендации"
 msgstr "Get recommendations"
@@ -1452,6 +1490,9 @@ msgstr "Take orders"
 msgid "Принять"
 msgstr "Accept"
 
+msgid "Принять наличные"
+msgstr "Accept cash"
+
 msgid "Принять оплату:"
 msgstr "Take payment:"
 
@@ -1511,6 +1552,9 @@ msgstr "Renews:"
 
 msgid "Прозрачные цены"
 msgstr "Transparent pricing"
+
+msgid "Произвольная позиция"
+msgstr "Custom item"
 
 msgid "Промокодов пока нет. Создайте первый — гости смогут вводить его в QR-меню."
 msgstr ""
@@ -1576,6 +1620,11 @@ msgstr "Tablet mode"
 msgid "Режим планшета ↗"
 msgstr "Tablet mode ↗"
 
+msgid ""
+"Режим стоп-листа: нажмите на позицию, чтобы убрать её из продажи или "
+"вернуть."
+msgstr "Stop-list mode: tap an item to pull it from sale or bring it back."
+
 msgid "Роль"
 msgstr "Role"
 
@@ -1603,6 +1652,9 @@ msgstr "Back online: orders sent — {n}"
 
 msgid "Сгенерировать ссылку"
 msgstr "Generate link"
+
+msgid "Сдача"
+msgstr "Change"
 
 msgid "Себестоимость"
 msgstr "Cost"
@@ -1832,6 +1884,12 @@ msgstr "No tables yet"
 
 msgid "Столы"
 msgstr "Tables"
+
+msgid "Стоп"
+msgstr "Stopped"
+
+msgid "Стоп-лист"
+msgstr "Stop-list"
 
 msgid "Страница не найдена"
 msgstr "Page not found"
@@ -2110,6 +2168,9 @@ msgstr "Privacy Policy"
 
 msgid "получ."
 msgstr "recip."
+
+msgid "своя цена"
+msgstr "custom price"
 
 msgid "ссылка"
 msgstr "link"

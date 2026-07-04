@@ -5,9 +5,14 @@ import uuid
 
 
 class OrderItemCreate(BaseModel):
-    menu_item_id: uuid.UUID
+    # None = free-form line ("Прочее" on the POS): staff types a name and a
+    # price for something not in the menu. Only staff endpoints allow it.
+    menu_item_id: uuid.UUID | None = None
     quantity: int = Field(..., ge=1)
     comment: str | None = None
+    # Free-form line fields (used only when menu_item_id is None)
+    name: str | None = Field(None, max_length=100)
+    price: Decimal | None = Field(None, ge=0, le=10_000_000)
     # Chosen modifier option ids — validated server-side against the item's
     # groups; their price deltas are added to the line price.
     modifier_option_ids: list[uuid.UUID] = []

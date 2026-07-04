@@ -78,7 +78,7 @@ async def create_order(data: OrderCreate, guest: Guest, db: AsyncSession, change
         if not table:
             raise ValueError("Стол не найден в этом заведении")
 
-    item_ids = [i.menu_item_id for i in data.items]
+    item_ids = [i.menu_item_id for i in data.items if i.menu_item_id]
     result = await db.execute(
         select(MenuItem).where(MenuItem.id.in_(item_ids), MenuItem.venue_id == data.venue_id)
     )
@@ -100,6 +100,26 @@ async def create_order(data: OrderCreate, guest: Guest, db: AsyncSession, change
     total = Decimal("0")
     order_items = []
     for item_data in data.items:
+        if item_data.menu_item_id is None:
+            # Free-form line ("Прочее"): staff-entered name and price, for
+            # things not in the menu. Guest-facing endpoints require a real
+            # menu_item_id in their schemas and can never reach this branch.
+            if data.source not in ("pos", "staff"):
+                raise ValueError("Произвольные позиции доступны только персоналу")
+            free_name = (item_data.name or "").strip()
+            if not free_name or item_data.price is None:
+                raise ValueError("Для произвольной позиции нужны название и цена")
+            line_price = Decimal(item_data.price)
+            total += line_price * item_data.quantity
+            order_items.append(OrderItem(
+                id=uuid.uuid4(),
+                menu_item_id=None,
+                quantity=item_data.quantity,
+                price=line_price,
+                name=free_name,
+                comment=getattr(item_data, 'comment', None),
+            ))
+            continue
         menu_item = menu_items.get(item_data.menu_item_id)
         if not menu_item or not menu_item.is_available:
             raise ValueError(f"Позиция {item_data.menu_item_id} недоступна")

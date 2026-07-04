@@ -243,3 +243,40 @@ async def test_dashboard_cancel_reverses_guest_points_and_visits(client: AsyncCl
     guest_after = next(g for g in guests if g.get("phone") == "+77001234567")
     assert guest_after["total_points"] == 0
     assert guest_after["total_visits"] == 0
+
+
+async def test_pos_free_form_line(client: AsyncClient):
+    """POS can sell an off-menu item (a bag, delivery fee) with a typed
+    name and price."""
+    h, venue_id, item_id = await _setup(client)
+    resp = await client.post("/api/pos/order", headers=h, json={
+        "venue_id": venue_id,
+        "items": [
+            {"menu_item_id": item_id, "quantity": 1},
+            {"menu_item_id": None, "name": "Пакет", "price": 50, "quantity": 2},
+        ],
+        "payment_method": "cash",
+    })
+    assert resp.status_code == 200, resp.text
+    order = resp.json()
+    assert float(order["total_amount"]) == 1000 + 100
+    names = {i["name"] for i in order["items"]}
+    assert "Пакет" in names
+
+
+async def test_free_form_line_requires_name_and_price(client: AsyncClient):
+    h, venue_id, _ = await _setup(client)
+    resp = await client.post("/api/pos/order", headers=h, json={
+        "venue_id": venue_id,
+        "items": [{"menu_item_id": None, "name": "  ", "price": 50, "quantity": 1}],
+    })
+    assert resp.status_code == 400
+
+
+async def test_guest_qr_cannot_send_free_form_line(client: AsyncClient):
+    """The public endpoint's schema requires a real menu_item_id."""
+    h, venue_id, _ = await _setup(client)
+    resp = await client.post(f"/order/{venue_id}/submit", json={
+        "items": [{"menu_item_id": None, "name": "Хак", "price": 1, "quantity": 1}],
+    })
+    assert resp.status_code == 422

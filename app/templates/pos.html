@@ -25,6 +25,7 @@
 .pos-table-chip.occupied { border-color:#f87171; color:#f87171; }
 .pos-table-chip.reserved { border-color:#fbbf24; color:#fbbf24; }
 .pos-table-chip.selected { background:var(--gold); color:#000; border-color:var(--gold); }
+.pos-item-stopped { opacity:.45; }
 .pos-opt-chip {
   padding:.5rem .8rem; min-height:38px; border-radius:8px;
   border:1px solid var(--border); background:none; color:var(--white);
@@ -67,6 +68,13 @@
 
 <div class="pos-layout">
   <div>
+    <div style="display:flex; gap:.5rem; align-items:center; margin-bottom:.6rem">
+      <input type="search" id="pos-search" placeholder="{{ _('Поиск по меню…') }}" oninput="onSearch()" autocomplete="off"
+        style="flex:1; background:var(--card); border:1px solid var(--border); color:var(--white); padding:.55rem .8rem; border-radius:8px; font-size:.9rem">
+      <button type="button" id="stoplist-btn" class="btn-secondary" onclick="toggleStopMode()"
+        style="font-size:.78rem; padding:.5rem .8rem; white-space:nowrap">{{ _("Стоп-лист") }}</button>
+    </div>
+    <p id="stoplist-hint" style="display:none; font-size:.78rem; color:#f87171; margin:0 0 .5rem">{{ _("Режим стоп-листа: нажмите на позицию, чтобы убрать её из продажи или вернуть.") }}</p>
     <div class="pos-cats" id="pos-cats"></div>
     <div class="pos-grid" id="pos-grid"><p class="empty-state">{{ _("Выберите заведение") }}</p></div>
   </div>
@@ -107,13 +115,55 @@
 <!-- Payment method dialog: shown only when the cashier takes money now -->
 <div id="pay-modal" class="modal" style="display:none">
   <div class="modal-overlay" onclick="closePayModal()"></div>
-  <div class="modal-content" style="max-width:360px">
+  <div class="modal-content" style="max-width:380px">
     <h2 class="modal-title">{{ _("Оплата") }}</h2>
-    <p style="color:var(--muted); font-size:.85rem; margin:.25rem 0 1rem">{{ _("Итого") }}: <strong id="pay-modal-total" style="color:var(--white)"></strong></p>
-    <div style="display:flex; flex-direction:column; gap:.5rem">
-      <button type="button" class="btn-primary" style="width:100%" onclick="submitOrder('cash')">{{ _("Наличные") }}</button>
+    <p style="color:var(--muted); font-size:.85rem; margin:.25rem 0 1rem">{{ _("Итого") }}: <strong id="pay-modal-total" style="color:var(--white); font-size:1.05rem"></strong></p>
+    <div id="pay-methods" style="display:flex; flex-direction:column; gap:.5rem">
+      <button type="button" class="btn-primary" style="width:100%" onclick="showCashPanel()">{{ _("Наличные") }}</button>
       <button type="button" class="btn-primary" style="width:100%" onclick="submitOrder('card')">{{ _("Карта") }}</button>
       <button type="button" class="btn-secondary" style="width:100%" onclick="closePayModal()">{{ _("Отмена") }}</button>
+    </div>
+    <!-- Cash: the register does the change math, not the cashier's head -->
+    <div id="cash-panel" style="display:none">
+      <div class="form-group">
+        <label style="font-size:.8rem;color:var(--muted)">{{ _("Получено от гостя (₸)") }}</label>
+        <input type="number" id="cash-received" min="0" inputmode="numeric" oninput="updateChange()" style="width:100%; font-size:1.1rem">
+      </div>
+      <div style="display:flex; gap:.4rem; flex-wrap:wrap; margin-bottom:.75rem" id="cash-quick"></div>
+      <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:1rem">
+        <span style="color:var(--muted); font-size:.9rem">{{ _("Сдача") }}</span>
+        <strong id="change-amount" style="font-size:1.5rem">—</strong>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:.5rem">
+        <button type="button" class="btn-primary" style="width:100%" id="cash-confirm" onclick="confirmCash()" disabled>{{ _("Принять наличные") }}</button>
+        <button type="button" class="btn-secondary" style="width:100%" onclick="backToMethods()">{{ _("Назад") }}</button>
+      </div>
+    </div>
+    <!-- After a cash sale: change stays on screen until dismissed -->
+    <div id="change-done" style="display:none; text-align:center; padding:.5rem 0">
+      <p style="color:var(--muted); margin-bottom:.25rem">{{ _("Сдача") }}</p>
+      <p id="change-done-amount" style="font-size:2.4rem; font-weight:700; margin-bottom:1rem"></p>
+      <button type="button" class="btn-primary" style="width:100%" onclick="closePayModal()">{{ _("Готово") }}</button>
+    </div>
+  </div>
+</div>
+
+<!-- Free-form line: sell something that isn't in the menu -->
+<div id="free-modal" class="modal" style="display:none">
+  <div class="modal-overlay" onclick="closeFreeItemModal()"></div>
+  <div class="modal-content" style="max-width:360px">
+    <h2 class="modal-title">{{ _("Произвольная позиция") }}</h2>
+    <div class="form-group" style="margin-top:.75rem">
+      <label style="font-size:.8rem;color:var(--muted)">{{ _("Название") }}</label>
+      <input type="text" id="free-name" maxlength="100" placeholder="{{ _('Например: пакет, доставка') }}" style="width:100%">
+    </div>
+    <div class="form-group">
+      <label style="font-size:.8rem;color:var(--muted)">{{ _("Цена (₸)") }}</label>
+      <input type="number" id="free-price" min="0" inputmode="numeric" style="width:100%">
+    </div>
+    <div class="form-row" style="margin-top:1rem">
+      <button type="button" class="btn-primary" onclick="confirmFreeItem()">{{ _("В корзину") }}</button>
+      <button type="button" class="btn-secondary" onclick="closeFreeItemModal()">{{ _("Отмена") }}</button>
     </div>
   </div>
 </div>
@@ -159,6 +209,17 @@
     zOrders: {{ _("Оплаченных заказов") | tojson }},
     zExpected: {{ _("Ожидается в кассе") | tojson }},
     zDiff: {{ _("Расхождение") | tojson }},
+    stopBadge: {{ _("Стоп") | tojson }},
+    inStopList: {{ _("Позиция в стоп-листе") | tojson }},
+    stopAdded: {{ _("«{n}» убрана из продажи") | tojson }},
+    stopRemoved: {{ _("«{n}» снова в продаже") | tojson }},
+    freeItem: {{ _("Прочее") | tojson }},
+    freeItemHint: {{ _("своя цена") | tojson }},
+    freeItemRequired: {{ _("Введите название и цену") | tojson }},
+    notEnoughCash: {{ _("Получено меньше суммы заказа") | tojson }},
+    noChange: {{ _("Без сдачи") | tojson }},
+    repeatLast: {{ _("Повторить последний заказ") | tojson }},
+    repeatMissing: {{ _("Некоторые позиции больше недоступны и не были добавлены") | tojson }},
   };
   let _menuItems = [];
   let _cart = {}; // menu_item_id -> {item, qty}
@@ -180,7 +241,7 @@
         fetch('/api/pos/tables?venue_id=' + venueId, { credentials: 'include' }),
       ]);
       if (menuRes.status === 401) { location.href = '/auth/login'; return; }
-      _menuItems = (await menuRes.json()).filter(i => i.is_available);
+      _menuItems = await menuRes.json();
       const tables = tablesRes.ok ? await tablesRes.json() : [];
       // Snapshot for offline mode: the register keeps working without Wi-Fi.
       localStorage.setItem('pos_menu_' + venueId, JSON.stringify(_menuItems));
@@ -232,20 +293,67 @@
       cats.map(c => `<button class="pos-cat-chip" onclick="renderGrid('${esc(c)}', this)">${esc(c)}</button>`).join('');
   }
 
+  let _activeCat = null;
+  let _stopMode = false;
+
+  function onSearch() { renderGrid(_activeCat, null); }
+
+  function toggleStopMode() {
+    _stopMode = !_stopMode;
+    const btn = document.getElementById('stoplist-btn');
+    btn.style.borderColor = _stopMode ? '#f87171' : '';
+    btn.style.color = _stopMode ? '#f87171' : '';
+    document.getElementById('stoplist-hint').style.display = _stopMode ? '' : 'none';
+    renderGrid(_activeCat, null);
+  }
+
+  async function toggleStop(itemId) {
+    const item = _menuItems.find(i => i.id === itemId);
+    if (!item) return;
+    const res = await fetch('/api/menu/' + itemId, {
+      method: 'PATCH', credentials: 'include',
+      headers: {'Content-Type':'application/json','Authorization':'Bearer '+token()},
+      body: JSON.stringify({is_available: !item.is_available}),
+    });
+    if (res.status === 401) { location.href = '/auth/login'; return; }
+    if (!res.ok) { notify.error(T.orderError); return; }
+    item.is_available = !item.is_available;
+    const venueId = document.getElementById('venue-select').value;
+    localStorage.setItem('pos_menu_' + venueId, JSON.stringify(_menuItems));
+    notify.info(item.is_available ? T.stopRemoved.replace('{n}', item.name) : T.stopAdded.replace('{n}', item.name));
+    renderGrid(_activeCat, null);
+  }
+
   function renderGrid(category, btn) {
+    _activeCat = category;
     if (btn) {
       document.querySelectorAll('.pos-cat-chip').forEach(c => c.classList.remove('active'));
       btn.classList.add('active');
     }
-    const items = category ? _menuItems.filter(i => i.category === category) : _menuItems;
+    const q = (document.getElementById('pos-search').value || '').trim().toLowerCase();
+    // A search always looks through the whole menu — hunting through
+    // category tabs is exactly the thing the search box exists to avoid.
+    let items = q
+      ? _menuItems.filter(i => i.name.toLowerCase().includes(q))
+      : (category ? _menuItems.filter(i => i.category === category) : _menuItems);
+    // Available first; stopped items stay visible (grayed) so the cashier
+    // can answer "а это у вас есть?" without switching screens.
+    items = [...items.filter(i => i.is_available), ...items.filter(i => !i.is_available)];
     const grid = document.getElementById('pos-grid');
-    if (!items.length) { grid.innerHTML = '<p class="empty-state">' + T.menuEmpty + '</p>'; return; }
+    const freeTile = (!q && !_stopMode) ? `
+      <div class="pos-item" onclick="openFreeItemModal()" style="border-style:dashed; color:var(--muted)">
+        <div class="pos-item-name">+ ${T.freeItem}</div>
+        <div class="pos-item-price" style="color:var(--muted)">${T.freeItemHint}</div>
+      </div>` : '';
+    if (!items.length && !freeTile) { grid.innerHTML = '<p class="empty-state">' + T.menuEmpty + '</p>'; return; }
     grid.innerHTML = items.map(i => `
-      <div class="pos-item" onclick="addToCart('${esc(i.id)}')">
+      <div class="pos-item${i.is_available ? '' : ' pos-item-stopped'}"
+           onclick="${_stopMode ? `toggleStop('${esc(i.id)}')` : (i.is_available ? `addToCart('${esc(i.id)}')` : `notify.info(T.inStopList)`)}">
         <div class="pos-item-name">${esc(i.name)}</div>
         <div class="pos-item-price">${parseFloat(i.price).toLocaleString(LOCALE)} ₸</div>
+        ${i.is_available ? '' : `<div style="font-size:.7rem;color:#f87171;margin-top:.2rem">${T.stopBadge}</div>`}
       </div>
-    `).join('');
+    `).join('') + freeTile;
   }
 
   function addToCart(itemId) {
@@ -349,11 +457,34 @@
     document.getElementById('btn-pay-later').disabled = !on;
   }
 
+  function repeatLastOrder() {
+    const venueId = document.getElementById('venue-select').value;
+    const snapshot = JSON.parse(localStorage.getItem('pos_last_order_' + venueId) || 'null');
+    if (!snapshot) return;
+    let skipped = false;
+    snapshot.forEach(l => {
+      if (l.custom) {
+        const key = 'free|' + l.name + '|' + l.unitPrice;
+        _cart[key] = { item: { id: null, name: l.name }, qty: l.qty, optionIds: [], optionNames: [], unitPrice: l.unitPrice, custom: true };
+        return;
+      }
+      const item = _menuItems.find(i => i.id === l.id);
+      if (!item || !item.is_available) { skipped = true; return; }
+      const key = l.id + '|' + (l.optionIds || []).slice().sort().join(',');
+      _cart[key] = { item, qty: l.qty, optionIds: l.optionIds || [], optionNames: l.optionNames || [], unitPrice: l.unitPrice };
+    });
+    if (skipped) notify.info(T.repeatMissing);
+    renderCart();
+  }
+
   function renderCart() {
     const lines = Object.entries(_cart);
     const linesEl = document.getElementById('cart-lines');
     if (!lines.length) {
-      linesEl.innerHTML = '<p class="empty-state" style="padding:.5rem 0">' + T.cartEmpty + '</p>';
+      const venueId = document.getElementById('venue-select').value;
+      const hasLast = venueId && localStorage.getItem('pos_last_order_' + venueId);
+      linesEl.innerHTML = '<p class="empty-state" style="padding:.5rem 0">' + T.cartEmpty + '</p>' +
+        (hasLast ? `<button type="button" class="btn-secondary" style="width:100%; font-size:.8rem" onclick="repeatLastOrder()">${T.repeatLast}</button>` : '');
       document.getElementById('cart-total').textContent = '0 ₸';
       setSubmitEnabled(false);
       return;
@@ -394,12 +525,89 @@
     setSubmitEnabled(true);
   }
 
+  function _cartTotalNum() {
+    return Object.values(_cart).reduce((s, l) => s + l.unitPrice * l.qty, 0) - _discountOff();
+  }
+  function _discountOff() {
+    const dType = document.getElementById('discount-type').value;
+    const dValue = parseFloat(document.getElementById('discount-value').value) || 0;
+    const total = Object.values(_cart).reduce((s, l) => s + l.unitPrice * l.qty, 0);
+    if (!dType || dValue <= 0) return 0;
+    return dType === 'percent' ? total * Math.min(dValue, 100) / 100 : Math.min(dValue, total);
+  }
+
   function openPayModal() {
     document.getElementById('pay-modal-total').textContent = document.getElementById('cart-total').textContent;
+    document.getElementById('pay-methods').style.display = 'flex';
+    document.getElementById('cash-panel').style.display = 'none';
+    document.getElementById('change-done').style.display = 'none';
     document.getElementById('pay-modal').style.display = 'flex';
   }
   function closePayModal() {
     document.getElementById('pay-modal').style.display = 'none';
+  }
+
+  // ── Cash: received amount → change, computed by the register ──
+  const BILLS = [1000, 2000, 5000, 10000, 20000];
+  function showCashPanel() {
+    document.getElementById('pay-methods').style.display = 'none';
+    document.getElementById('cash-panel').style.display = '';
+    const total = _cartTotalNum();
+    // Quick buttons: exact amount, then the bills a guest would realistically hand over
+    const quick = [total, ...BILLS.filter(b => b > total).slice(0, 3)];
+    document.getElementById('cash-quick').innerHTML = quick.map((v, i) => `
+      <button type="button" class="btn-secondary" style="font-size:.82rem; padding:.45rem .7rem"
+        onclick="document.getElementById('cash-received').value=${v};updateChange()">
+        ${i === 0 ? T.noChange : v.toLocaleString(LOCALE)}
+      </button>`).join('');
+    const input = document.getElementById('cash-received');
+    input.value = '';
+    updateChange();
+    input.focus();
+  }
+  function backToMethods() {
+    document.getElementById('cash-panel').style.display = 'none';
+    document.getElementById('pay-methods').style.display = 'flex';
+  }
+  function updateChange() {
+    const total = _cartTotalNum();
+    const received = parseFloat(document.getElementById('cash-received').value) || 0;
+    const el = document.getElementById('change-amount');
+    const btn = document.getElementById('cash-confirm');
+    if (!received) { el.textContent = '—'; el.style.color = ''; btn.disabled = true; return; }
+    const change = received - total;
+    el.textContent = change.toLocaleString(LOCALE) + ' ₸';
+    el.style.color = change < 0 ? '#f87171' : 'var(--success)';
+    btn.disabled = change < 0;
+  }
+  let _pendingChange = null;
+  function confirmCash() {
+    const total = _cartTotalNum();
+    const received = parseFloat(document.getElementById('cash-received').value) || 0;
+    if (received < total) { notify.error(T.notEnoughCash); return; }
+    _pendingChange = received - total;
+    submitOrder('cash');
+  }
+
+  // ── Free-form line ("Прочее") ──
+  function openFreeItemModal() {
+    document.getElementById('free-name').value = '';
+    document.getElementById('free-price').value = '';
+    document.getElementById('free-modal').style.display = 'flex';
+    document.getElementById('free-name').focus();
+  }
+  function closeFreeItemModal() {
+    document.getElementById('free-modal').style.display = 'none';
+  }
+  function confirmFreeItem() {
+    const name = document.getElementById('free-name').value.trim();
+    const price = parseFloat(document.getElementById('free-price').value);
+    if (!name || isNaN(price) || price < 0) { notify.error(T.freeItemRequired); return; }
+    const key = 'free|' + name + '|' + price;
+    if (_cart[key]) _cart[key].qty += 1;
+    else _cart[key] = { item: { id: null, name }, qty: 1, optionIds: [], optionNames: [], unitPrice: price, custom: true };
+    closeFreeItemModal();
+    renderCart();
   }
 
   // ── Offline order queue ──────────────────────────────────────────────
@@ -465,12 +673,19 @@
   setInterval(flushQueue, 15000);
 
   async function submitOrder(method) {
-    closePayModal();
     const venueId = document.getElementById('venue-select').value;
-    const items = Object.values(_cart).map(({ item, qty, optionIds }) => ({
-      menu_item_id: item.id, quantity: qty, modifier_option_ids: optionIds || [],
-    }));
+    const items = Object.values(_cart).map(({ item, qty, optionIds, custom, unitPrice }) => (
+      custom
+        ? { menu_item_id: null, name: item.name, price: unitPrice, quantity: qty }
+        : { menu_item_id: item.id, quantity: qty, modifier_option_ids: optionIds || [] }
+    ));
     if (!items.length) return;
+    // Keep the cart around for one-tap repeat (regulars order the same thing)
+    const cartSnapshot = Object.values(_cart).map(l => ({
+      id: l.item.id, name: l.item.name, qty: l.qty,
+      optionIds: l.optionIds || [], optionNames: l.optionNames || [],
+      custom: !!l.custom, unitPrice: l.unitPrice,
+    }));
     setSubmitEnabled(false);
     const body = {
       venue_id: venueId,
@@ -493,18 +708,35 @@
       const res = await postOrder(body);
       if (res.status === 401) { location.href = '/auth/login'; return; }
       if (res.ok) {
+        localStorage.setItem('pos_last_order_' + venueId, JSON.stringify(cartSnapshot));
         clearCart();
         loadMenu();
         notify.success(method ? T.orderSentPaid : T.orderSent);
+        // Cash sale: leave the change on screen until the cashier dismisses it
+        if (method === 'cash' && _pendingChange !== null && _pendingChange > 0) {
+          document.getElementById('pay-methods').style.display = 'none';
+          document.getElementById('cash-panel').style.display = 'none';
+          document.getElementById('change-done').style.display = '';
+          document.getElementById('change-done-amount').textContent = _pendingChange.toLocaleString(LOCALE) + ' ₸';
+          document.getElementById('pay-modal').style.display = 'flex';
+        } else {
+          closePayModal();
+        }
+        _pendingChange = null;
       } else {
+        closePayModal();
+        _pendingChange = null;
         const err = await res.json().catch(() => ({}));
         notify.error(err.detail || T.orderError);
       }
     } catch (e) {
       // Network down: queue the order — it will sync automatically.
+      closePayModal();
+      _pendingChange = null;
       const q = getQueue();
       q.push(body);
       setQueue(q);
+      localStorage.setItem('pos_last_order_' + venueId, JSON.stringify(cartSnapshot));
       clearCart();
       notify.info(T.orderQueued);
     } finally {
