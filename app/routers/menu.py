@@ -50,7 +50,9 @@ async def _check_venue_owner(venue_id: uuid.UUID, user: User, db: AsyncSession) 
     venue = result.scalar_one_or_none()
     if not venue:
         raise HTTPException(status_code=404, detail="Заведение не найдено")
-    if user.role != "owner" and user.venue_id != venue_id:
+    # Owners and managers manage the whole network's menu (incl. the POS
+    # stop-list); other staff only their pinned venue.
+    if user.role not in ("owner", "manager") and user.venue_id != venue_id:
         raise HTTPException(status_code=403, detail="Нет доступа к этому заведению")
     return venue
 
@@ -58,15 +60,25 @@ async def _check_venue_owner(venue_id: uuid.UUID, user: User, db: AsyncSession) 
 @router.get("/{venue_id}", response_model=list[MenuItemOut])
 async def list_menu(
     venue_id: uuid.UUID,
+    current_user: User = Depends(get_current_user_dep),
     db: AsyncSession = Depends(get_db),
 ):
+    """Staff menu listing (incl. hidden/stop-listed items). The guest QR page
+    renders its own filtered menu server-side and never calls this."""
     try:
+        venue = (await db.execute(
+            select(Venue).where(Venue.id == venue_id, Venue.network_id == current_user.network_id)
+        )).scalar_one_or_none()
+        if not venue:
+            raise HTTPException(status_code=404, detail="Заведение не найдено")
         result = await db.execute(
             select(MenuItem)
             .options(selectinload(MenuItem.modifier_groups).selectinload(ModifierGroup.options))
             .where(MenuItem.venue_id == venue_id)
         )
         return result.scalars().all()
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error("List menu error: %s", e)
         raise HTTPException(status_code=500, detail="Ошибка загрузки меню")

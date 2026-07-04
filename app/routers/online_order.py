@@ -94,7 +94,7 @@ class OnlineOrderSubmit(BaseModel):
     items: list[OnlineOrderItem] = Field(..., min_length=1, max_length=50)
     guest_name: str | None = Field(None, max_length=100)
     guest_phone: str | None = Field(None, max_length=32)
-    table_number: str | None = Field(None, max_length=32)
+    table_number: str | None = Field(None, max_length=20)  # matches the DB column
     notes: str | None = Field(None, max_length=500)
     guest_lang: str | None = None
     promo_code: str | None = Field(None, max_length=50)

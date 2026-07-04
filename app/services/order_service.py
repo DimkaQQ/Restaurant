@@ -284,7 +284,8 @@ async def move_order_table(
         order.table_number = table.label
     else:
         order.table_id = None
-        order.table_number = (table_number or "").strip() or None
+        # the column is String(20) — truncate rather than 500 on long input
+        order.table_number = (table_number or "").strip()[:20] or None
 
     if old_table_id:
         await _sync_table_status(old_table_id, db)

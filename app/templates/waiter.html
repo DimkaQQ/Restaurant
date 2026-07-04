@@ -152,8 +152,9 @@ const T = {
   stConfirmed: {{ _("Подтверждён") | tojson }},
   stPreparing: {{ _("Готовится") | tojson }},
   stReady: {{ _("Готово!") | tojson }},
+  stDone: {{ _("Выдан") | tojson }},
 };
-const ST_LABEL = { new: T.stNew, confirmed: T.stConfirmed, preparing: T.stPreparing, ready: T.stReady };
+const ST_LABEL = { new: T.stNew, confirmed: T.stConfirmed, preparing: T.stPreparing, ready: T.stReady, done: T.stDone };
 
 let _menu = [], _tables = [], _cart = {}, _tableId = null, _cat = null;
 

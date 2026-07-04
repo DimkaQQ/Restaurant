@@ -21,8 +21,8 @@ class OrderItemCreate(BaseModel):
 class OrderCreate(BaseModel):
     venue_id: uuid.UUID
     items: list[OrderItemCreate] = Field(..., min_length=1)
-    notes: str | None = None
-    table_number: str | None = None
+    notes: str | None = Field(None, max_length=1000)
+    table_number: str | None = Field(None, max_length=20)  # matches the DB column
     table_id: uuid.UUID | None = None
     source: str | None = None
     # Counter-service flow: take payment at order time (cash/card/mobile).

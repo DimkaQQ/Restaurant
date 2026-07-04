@@ -103,7 +103,7 @@ async def process_staff_password(message: Message, state: FSMContext, api_url: s
 async def back_to_staff_menu(callback: CallbackQuery, staff_user: dict | None, lang: str):
     if staff_user:
         await callback.message.edit_text(
-            f"👨‍💼 Меню сотрудника",
+            "👨‍💼 Меню сотрудника",
             reply_markup=staff_menu_keyboard(lang),
         )
     else:

@@ -168,7 +168,7 @@ async def back_to_main(
     await callback.answer()
     if staff_user:
         await callback.message.edit_text(
-            f"👨‍💼 Меню сотрудника",
+            "👨‍💼 Меню сотрудника",
             reply_markup=staff_menu_keyboard(lang),
         )
         return

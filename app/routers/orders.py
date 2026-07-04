@@ -29,10 +29,19 @@ async def live_orders(
     try:
         accessible_ids = await get_accessible_venue_ids(current_user, db)
         filter_ids = [venue_id] if venue_id and venue_id in accessible_ids else accessible_ids
+        from sqlalchemy import or_, and_
         stmt = (
             select(Order)
             .options(selectinload(Order.items), selectinload(Order.guest))
-            .where(Order.venue_id.in_(filter_ids), Order.status.in_(["new", "confirmed", "preparing", "ready"]))
+            .where(
+                Order.venue_id.in_(filter_ids),
+                or_(
+                    Order.status.in_(["new", "confirmed", "preparing", "ready"]),
+                    # served but not paid: the waiter still needs it on his
+                    # phone to collect payment (same rule as the orders board)
+                    and_(Order.status == "done", Order.payment_status == "unpaid"),
+                ),
+            )
             .order_by(Order.created_at.desc())
         )
         result = await db.execute(stmt)

@@ -398,3 +398,57 @@ async def test_no_notification_without_linked_telegram(client: AsyncClient, db):
     network_id = (await db.execute(sql("SELECT network_id FROM venues WHERE id = :v"), {"v": venue_id})).scalar()
     resp = await client.get(f"/api/bot/notifications?network_id={network_id}", headers={"X-Bot-Secret": "test-bot-secret"})
     assert resp.json() == []
+
+
+async def test_menu_listing_requires_auth_and_own_network(client: AsyncClient):
+    """Full menu (incl. stop-listed items) must not be readable anonymously
+    or across tenants."""
+    h1, venue1, _ = await _setup(client)
+    client.cookies.clear()  # register/login set an auth cookie — drop it
+    resp = await client.get(f"/api/menu/{venue1}")
+    assert resp.status_code == 401
+
+    reg2 = await register_network(client)
+    h2 = auth_headers(reg2["token"])
+    resp = await client.get(f"/api/menu/{venue1}", headers=h2)
+    assert resp.status_code == 404
+
+
+async def test_served_unpaid_order_stays_on_waiter_screen(client: AsyncClient):
+    """'Выдать' before payment must not hide the order from /live —
+    the waiter still needs to collect money."""
+    h, venue_id, item_id = await _setup(client)
+    order = (await client.post("/api/pos/order", headers=h, json={
+        "venue_id": venue_id,
+        "items": [{"menu_item_id": item_id, "quantity": 1}],
+    })).json()
+    for st in ("confirmed", "preparing", "ready", "done"):
+        await client.patch(f"/api/orders/{order['id']}/status", headers=h, json={"status": st})
+    live = (await client.get(f"/api/orders/live?venue_id={venue_id}", headers=h)).json()
+    assert order["id"] in {o["id"] for o in live}
+    # once paid, it leaves the live board
+    await client.post(f"/api/orders/{order['id']}/pay", headers=h, data={"method": "cash"})
+    live = (await client.get(f"/api/orders/live?venue_id={venue_id}", headers=h)).json()
+    assert order["id"] not in {o["id"] for o in live}
+
+
+async def test_concurrent_shift_open_only_one_wins(client: AsyncClient):
+    """DB-level guarantee: two racing opens can't both create a shift."""
+    import asyncio
+    h, venue_id, _ = await _setup(client)
+    r1, r2 = await asyncio.gather(
+        client.post("/api/cash-shifts/open", headers=h, json={"venue_id": venue_id, "opening_cash": 0}),
+        client.post("/api/cash-shifts/open", headers=h, json={"venue_id": venue_id, "opening_cash": 0}),
+    )
+    codes = sorted([r1.status_code, r2.status_code])
+    assert codes == [200, 400], (r1.text, r2.text)
+
+
+async def test_long_table_number_rejected_not_500(client: AsyncClient):
+    h, venue_id, item_id = await _setup(client)
+    resp = await client.post("/api/pos/order", headers=h, json={
+        "venue_id": venue_id,
+        "items": [{"menu_item_id": item_id, "quantity": 1}],
+        "table_number": "X" * 50,
+    })
+    assert resp.status_code == 422

@@ -109,13 +109,14 @@
 
   // ── Split the check ──
   let _splitOrderId = null;
+  function escSplit(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
   function splitOrderModal(orderId) {
     _splitOrderId = orderId;
     const items = JSON.parse(document.getElementById('items-' + orderId).textContent);
     document.getElementById('split-items').innerHTML = items.map(i => `
       <label style="display:flex; align-items:center; gap:.6rem; font-size:.9rem; cursor:pointer">
-        <input type="checkbox" value="${i.id}" data-sum="${i.price * i.qty}" onchange="updateSplitTotal()">
-        <span style="flex:1">${i.name} × ${i.qty}</span>
+        <input type="checkbox" value="${escSplit(i.id)}" data-sum="${i.price * i.qty}" onchange="updateSplitTotal()">
+        <span style="flex:1">${escSplit(i.name)} × ${i.qty}</span>
         <span style="color:var(--muted)">${(i.price * i.qty).toLocaleString(LOCALE)} ₸</span>
       </label>`).join('');
     updateSplitTotal();

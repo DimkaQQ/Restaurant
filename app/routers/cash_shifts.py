@@ -9,6 +9,7 @@ from decimal import Decimal
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from pydantic import BaseModel, Field
 from sqlalchemy import select, func
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
@@ -88,7 +89,13 @@ async def open_shift(
         opened_by=current_user.email, opening_cash=data.opening_cash,
     )
     db.add(shift)
-    await db.commit()
+    try:
+        await db.commit()
+    except IntegrityError:
+        # Two cashiers raced past the check — the partial unique index
+        # (one open shift per venue) caught the second insert.
+        await db.rollback()
+        raise HTTPException(status_code=400, detail="Смена уже открыта")
     await db.refresh(shift)
     logger.info("Cash shift opened at venue %s by %s", data.venue_id, current_user.email)
     return {"shift": _shift_out(shift)}
