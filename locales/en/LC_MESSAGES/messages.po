@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-04 13:01+0000\n"
+"POT-Creation-Date: 2026-07-04 13:20+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -217,6 +217,9 @@ msgstr "Active orders"
 msgid "Активных заведений"
 msgstr "Active venues"
 
+msgid "Активных заказов нет"
+msgstr "No active orders"
+
 msgid "Анализируем…"
 msgstr "Analyzing…"
 
@@ -259,6 +262,9 @@ msgstr "Reserved"
 
 msgid "Быстрый старт"
 msgstr "Quick start"
+
+msgid "В заказ"
+msgstr "Add"
 
 msgid "В корзину"
 msgstr "Add to cart"
@@ -635,6 +641,9 @@ msgstr "Loading orders..."
 msgid "Загрузка..."
 msgstr "Loading..."
 
+msgid "Загрузка…"
+msgstr "Loading…"
+
 msgid "Задайте новый пароль"
 msgstr "Set a new password"
 
@@ -646,6 +655,9 @@ msgstr "Order paid and sent to the kitchen"
 
 msgid "Заказ отправлен на кухню"
 msgstr "Order sent to the kitchen"
+
+msgid "Заказ перенесён"
+msgstr "Order moved"
 
 msgid "Заказов сегодня"
 msgstr "Orders today"
@@ -676,6 +688,9 @@ msgstr "Sign up"
 
 msgid "Значение"
 msgstr "Value"
+
+msgid "Или номер стола вручную"
+msgstr "Or type a table number"
 
 msgid "Инвентаризация"
 msgstr "Inventory count"
@@ -772,6 +787,9 @@ msgstr "Write-off quantity"
 msgid "Комментарий"
 msgstr "Comment"
 
+msgid "Комментарий кухне (необязательно)"
+msgstr "Note for the kitchen (optional)"
+
 msgid "Конец"
 msgstr "End"
 
@@ -783,6 +801,12 @@ msgstr "Cart is empty"
 
 msgid "Критично"
 msgstr "Critical"
+
+msgid "Крупно"
+msgstr "Large"
+
+msgid "Крупные кнопки для планшета"
+msgstr "Large buttons for tablets"
 
 msgid "Кто"
 msgstr "Who"
@@ -843,6 +867,9 @@ msgstr "Modifiers"
 
 msgid "Модификаторы:"
 msgstr "Modifiers:"
+
+msgid "Мои столы"
+msgstr "My tables"
 
 msgid "Мой ресторан"
 msgstr "My Restaurant"
@@ -1041,8 +1068,14 @@ msgstr "New"
 msgid "Новый"
 msgstr "New"
 
+msgid "Новый заказ"
+msgstr "New order"
+
 msgid "Новый пароль"
 msgstr "New password"
+
+msgid "Новый чек"
+msgstr "New check"
 
 msgid ""
 "Новым аккаунтам предоставляется бесплатный пробный период 14 дней. По "
@@ -1188,8 +1221,16 @@ msgstr "Cancel this order?"
 msgid "Отменён"
 msgstr "Cancelled"
 
+msgid ""
+"Отметьте позиции, которые уйдут в отдельный чек — его можно оплатить "
+"отдельно."
+msgstr "Tick the lines that go to a separate check — it can be paid on its own."
+
 msgid "Отозвать ключ?"
 msgstr "Revoke this key?"
+
+msgid "Отправить на кухню"
+msgstr "Send to kitchen"
 
 msgid "Отправить письмо повторно"
 msgstr "Resend email"
@@ -1318,6 +1359,12 @@ msgstr "Password (optional)"
 
 msgid "Пароль кассы"
 msgstr "Kassa password"
+
+msgid "Перенести"
+msgstr "Move"
+
+msgid "Перенести на другой стол"
+msgstr "Move to another table"
 
 msgid "Персонал"
 msgstr "Staff"
@@ -1550,6 +1597,9 @@ msgstr "Cash sales"
 msgid "Продление:"
 msgstr "Renews:"
 
+msgid "Продолжить выбор"
+msgstr "Keep browsing"
+
 msgid "Прозрачные цены"
 msgstr "Transparent pricing"
 
@@ -1581,6 +1631,12 @@ msgstr "Runs on any tablet"
 
 msgid "Работают в QR-меню для гостей"
 msgstr "Work in the guest QR menu"
+
+msgid "Разделить"
+msgstr "Split"
+
+msgid "Разделить чек"
+msgstr "Split the check"
 
 msgid "Рассылки"
 msgstr "Broadcasts"
@@ -1748,6 +1804,9 @@ msgstr "Select a venue first"
 
 msgid "Сначала выберите заведение (не «Все заведения»)"
 msgstr "First pick a venue (not \"All venues\")"
+
+msgid "Сначала выберите стол"
+msgstr "Pick a table first"
 
 msgid "Сначала добавьте заведение"
 msgstr "Add a venue first"
@@ -2055,6 +2114,9 @@ msgstr "Receipt"
 msgid "Чек пробит"
 msgstr "Receipt issued"
 
+msgid "Чек разделён"
+msgstr "Check split"
+
 msgid "Чт"
 msgstr "Thu"
 
@@ -2076,6 +2138,9 @@ msgstr ""
 msgid "Экран кухни ↗"
 msgstr "Kitchen screen ↗"
 
+msgid "Экран официанта ↗"
+msgstr "Waiter screen ↗"
+
 msgid "Экспорт данных"
 msgstr "Export data"
 
@@ -2084,6 +2149,9 @@ msgstr "Recipient language"
 
 msgid "без лимита"
 msgstr "no limit"
+
+msgid "без стола"
+msgstr "no table"
 
 msgid "в базе"
 msgstr "in the database"
@@ -2162,6 +2230,9 @@ msgstr "password"
 
 msgid "подключено"
 msgstr "connected"
+
+msgid "позиций:"
+msgstr "items:"
 
 msgid "политикой конфиденциальности"
 msgstr "Privacy Policy"

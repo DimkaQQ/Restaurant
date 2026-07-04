@@ -7,6 +7,7 @@
   <div style="display:flex;gap:1rem;align-items:center;">
     <span class="live-badge">● LIVE</span>
     <a href="/kitchen" target="_blank" style="color:var(--muted);font-size:.85rem;text-decoration:none;white-space:nowrap;">{{ _("Экран кухни ↗") }}</a>
+    <a href="/waiter" target="_blank" style="color:var(--muted);font-size:.85rem;text-decoration:none;white-space:nowrap;">{{ _("Экран официанта ↗") }}</a>
     <a href="/pos" class="btn-primary" style="text-decoration:none;">{{ _("+ Новый заказ") }}</a>
   </div>
 </div>
@@ -24,7 +25,49 @@
   <div class="loading">{{ _("Загрузка заказов...") }}</div>
 </div>
 
+<!-- Move order to another table -->
+<div id="move-modal" class="modal" style="display:none">
+  <div class="modal-overlay" onclick="closeMoveModal()"></div>
+  <div class="modal-content" style="max-width:400px">
+    <h2 class="modal-title">{{ _("Перенести на другой стол") }}</h2>
+    <div id="move-tables" style="display:flex; flex-wrap:wrap; gap:.4rem; margin:.75rem 0"></div>
+    <div class="form-group">
+      <label style="font-size:.8rem;color:var(--muted)">{{ _("Или номер стола вручную") }}</label>
+      <input type="text" id="move-table-number" style="width:100%">
+    </div>
+    <div class="form-row" style="margin-top:.75rem">
+      <button type="button" class="btn-primary" onclick="confirmMove(null)">{{ _("Перенести") }}</button>
+      <button type="button" class="btn-secondary" onclick="closeMoveModal()">{{ _("Отмена") }}</button>
+    </div>
+  </div>
+</div>
+
+<!-- Split the check: pick lines for the second check -->
+<div id="split-modal" class="modal" style="display:none">
+  <div class="modal-overlay" onclick="closeSplitModal()"></div>
+  <div class="modal-content" style="max-width:420px">
+    <h2 class="modal-title">{{ _("Разделить чек") }}</h2>
+    <p style="color:var(--muted); font-size:.82rem; margin:.25rem 0 .75rem">{{ _("Отметьте позиции, которые уйдут в отдельный чек — его можно оплатить отдельно.") }}</p>
+    <div id="split-items" style="display:flex; flex-direction:column; gap:.4rem; max-height:300px; overflow-y:auto"></div>
+    <div style="display:flex; justify-content:space-between; margin:.75rem 0 0; font-size:.9rem">
+      <span style="color:var(--muted)">{{ _("Новый чек") }}</span>
+      <strong id="split-total">0 ₸</strong>
+    </div>
+    <div class="form-row" style="margin-top:.75rem">
+      <button type="button" class="btn-primary" id="split-confirm" onclick="confirmSplit()" disabled>{{ _("Разделить") }}</button>
+      <button type="button" class="btn-secondary" onclick="closeSplitModal()">{{ _("Отмена") }}</button>
+    </div>
+  </div>
+</div>
+
 <script>
+  const OT = {
+    error: {{ _("Ошибка") | tojson }},
+    moved: {{ _("Заказ перенесён") | tojson }},
+    splitDone: {{ _("Чек разделён") | tojson }},
+  };
+  const LOCALE = {{ ('en-US' if locale == 'en' else 'ru-RU') | tojson }};
+
   function reloadOrders() {
     const venueId = document.getElementById('venue-filter').value;
     const url = '/partials/orders' + (venueId ? '?venue_id=' + venueId : '');
@@ -33,5 +76,69 @@
 
   reloadOrders();
   setInterval(reloadOrders, 8000);
+
+  // ── Move to another table ──
+  let _moveOrderId = null;
+  async function moveOrderModal(orderId, venueId) {
+    _moveOrderId = orderId;
+    document.getElementById('move-table-number').value = '';
+    const wrap = document.getElementById('move-tables');
+    wrap.innerHTML = '';
+    try {
+      const res = await fetch('/api/pos/tables?venue_id=' + venueId, {credentials: 'include'});
+      if (res.ok) {
+        const tables = await res.json();
+        wrap.innerHTML = tables.map(t =>
+          `<button type="button" class="btn-secondary" style="font-size:.85rem; padding:.45rem .8rem${t.status === 'occupied' ? ';opacity:.55' : ''}"
+             onclick="confirmMove('${t.id}')">${t.label}</button>`).join('');
+      }
+    } catch (e) {}
+    document.getElementById('move-modal').style.display = 'flex';
+  }
+  function closeMoveModal() { document.getElementById('move-modal').style.display = 'none'; }
+  async function confirmMove(tableId) {
+    const body = tableId ? {table_id: tableId} : {table_number: document.getElementById('move-table-number').value};
+    const res = await fetch('/api/orders/' + _moveOrderId + '/table', {
+      method: 'PATCH', credentials: 'include',
+      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('access_token')},
+      body: JSON.stringify(body),
+    });
+    if (res.ok) { closeMoveModal(); notify.success(OT.moved); reloadOrders(); }
+    else { const d = await res.json().catch(() => ({})); notify.error(d.detail || OT.error); }
+  }
+
+  // ── Split the check ──
+  let _splitOrderId = null;
+  function splitOrderModal(orderId) {
+    _splitOrderId = orderId;
+    const items = JSON.parse(document.getElementById('items-' + orderId).textContent);
+    document.getElementById('split-items').innerHTML = items.map(i => `
+      <label style="display:flex; align-items:center; gap:.6rem; font-size:.9rem; cursor:pointer">
+        <input type="checkbox" value="${i.id}" data-sum="${i.price * i.qty}" onchange="updateSplitTotal()">
+        <span style="flex:1">${i.name} × ${i.qty}</span>
+        <span style="color:var(--muted)">${(i.price * i.qty).toLocaleString(LOCALE)} ₸</span>
+      </label>`).join('');
+    updateSplitTotal();
+    document.getElementById('split-modal').style.display = 'flex';
+  }
+  function closeSplitModal() { document.getElementById('split-modal').style.display = 'none'; }
+  function updateSplitTotal() {
+    const boxes = [...document.querySelectorAll('#split-items input:checked')];
+    const all = document.querySelectorAll('#split-items input').length;
+    const sum = boxes.reduce((s, b) => s + parseFloat(b.dataset.sum), 0);
+    document.getElementById('split-total').textContent = sum.toLocaleString(LOCALE) + ' ₸';
+    // must move at least one line and leave at least one behind
+    document.getElementById('split-confirm').disabled = !boxes.length || boxes.length === all;
+  }
+  async function confirmSplit() {
+    const ids = [...document.querySelectorAll('#split-items input:checked')].map(b => b.value);
+    const res = await fetch('/api/orders/' + _splitOrderId + '/split', {
+      method: 'POST', credentials: 'include',
+      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('access_token')},
+      body: JSON.stringify({item_ids: ids}),
+    });
+    if (res.ok) { closeSplitModal(); notify.success(OT.splitDone); reloadOrders(); }
+    else { const d = await res.json().catch(() => ({})); notify.error(d.detail || OT.error); }
+  }
 </script>
 {% endblock %}

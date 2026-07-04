@@ -71,6 +71,13 @@
         class="btn-cancel"
       >{{ _("Отмена") }}</button>
       {% endif %}
+      {% if order.status != 'cancelled' and not (order.status == 'done' and order.payment_status == 'paid') %}
+      <button type="button" class="btn-status" onclick='moveOrderModal("{{ order.id }}", "{{ order.venue_id }}")' title="{{ _('Перенести на другой стол') }}">{{ _("Стол") }}</button>
+      {% endif %}
+      {% if order.payment_status == 'unpaid' and order.status != 'cancelled' and not order.discount_type and order.items|length > 1 %}
+      <button type="button" class="btn-status" onclick='splitOrderModal("{{ order.id }}")' title="{{ _('Разделить чек') }}">{{ _("Разделить") }}</button>
+      <script type="application/json" id="items-{{ order.id }}">[{% for i in order.items %}{"id":{{ i.id|string|tojson }},"name":{{ i.name|tojson }},"qty":{{ i.quantity }},"price":{{ i.price|float }}}{% if not loop.last %},{% endif %}{% endfor %}]</script>
+      {% endif %}
       <a href="/orders/{{ order.id }}/receipt" target="_blank" class="btn-status" title="{{ _('Печать чека') }}" style="text-decoration:none">{{ _("Чек") }}</a>
     </div>
   </div>

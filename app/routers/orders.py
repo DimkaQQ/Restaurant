@@ -161,6 +161,78 @@ async def get_order(
 # main.py meant dashboard.py's always won) until this note replaced it.
 
 
+async def _check_network_order(order_id: uuid.UUID, current_user: User, db: AsyncSession) -> Order:
+    order = (await db.execute(
+        select(Order).join(Venue).where(Order.id == order_id, Venue.network_id == current_user.network_id)
+    )).scalar_one_or_none()
+    if not order:
+        raise HTTPException(status_code=404, detail="Заказ не найден")
+    return order
+
+
+@router.patch("/{order_id}/table", response_model=OrderOut)
+async def move_table_endpoint(
+    order_id: uuid.UUID,
+    body: dict,
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    """Move an order to a different table (or a free-text table number)."""
+    try:
+        await _check_network_order(order_id, current_user, db)
+        from app.services.order_service import move_order_table
+        table_id = body.get("table_id")
+        return await move_order_table(
+            order_id, db,
+            table_id=uuid.UUID(table_id) if table_id else None,
+            table_number=body.get("table_number"),
+            changed_by=current_user.email,
+        )
+    except HTTPException:
+        raise
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logger.error("Move table error: %s", e)
+        raise HTTPException(status_code=500, detail="Ошибка переноса заказа")
+
+
+@router.post("/{order_id}/split", response_model=list[OrderOut])
+async def split_order_endpoint(
+    order_id: uuid.UUID,
+    body: dict,
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    """Split selected order lines into a separate check. Returns both orders
+    (remaining first, split-off second) so the UI can render them."""
+    try:
+        await _check_network_order(order_id, current_user, db)
+        from app.services.order_service import split_order
+        item_ids = [uuid.UUID(str(i)) for i in (body.get("item_ids") or [])]
+        kept, split_off = await split_order(order_id, item_ids, db, changed_by=current_user.email)
+        split_off_id, split_total = split_off.id, split_off.total_amount
+        from app.services.audit import log_action
+        log_action(db, current_user.network_id, current_user.email, "order_split",
+                   f"#{str(order_id)[:8].upper()} → #{str(split_off_id)[:8].upper()} на {split_total} ₸")
+        await db.commit()
+        # commit expires ORM state — reload with eager items/guest for serialization
+        rows = (await db.execute(
+            select(Order)
+            .options(selectinload(Order.items), selectinload(Order.guest))
+            .where(Order.id.in_([order_id, split_off_id]))
+        )).scalars().all()
+        by_id = {o.id: o for o in rows}
+        return [by_id[order_id], by_id[split_off_id]]
+    except HTTPException:
+        raise
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logger.error("Split order error: %s", e)
+        raise HTTPException(status_code=500, detail="Ошибка разделения чека")
+
+
 @router.post("/{order_id}/cancel", response_model=OrderOut)
 async def cancel_order_endpoint(
     order_id: uuid.UUID,

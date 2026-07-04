@@ -280,3 +280,70 @@ async def test_guest_qr_cannot_send_free_form_line(client: AsyncClient):
         "items": [{"menu_item_id": None, "name": "Хак", "price": 1, "quantity": 1}],
     })
     assert resp.status_code == 422
+
+
+async def test_split_order_moves_lines_and_totals(client: AsyncClient):
+    h, venue_id, latte = await _setup(client)
+    cake = (await client.post(
+        f"/api/menu/{venue_id}", json={"name": "Чизкейк", "price": 1900}, headers=h
+    )).json()["id"]
+    order = (await client.post("/api/pos/order", headers=h, json={
+        "venue_id": venue_id,
+        "items": [{"menu_item_id": latte, "quantity": 2}, {"menu_item_id": cake, "quantity": 1}],
+        "table_number": "5",
+    })).json()
+    cake_line = next(i for i in order["items"] if i["name"] == "Чизкейк")
+
+    resp = await client.post(f"/api/orders/{order['id']}/split", headers=h,
+                             json={"item_ids": [cake_line["id"]]})
+    assert resp.status_code == 200, resp.text
+    kept, split_off = resp.json()
+    assert float(kept["total_amount"]) == 2000.0
+    assert float(split_off["total_amount"]) == 1900.0
+    assert split_off["table_number"] == "5"
+    assert {i["name"] for i in split_off["items"]} == {"Чизкейк"}
+    # each check pays separately
+    pay = await client.post(f"/api/orders/{split_off['id']}/pay", headers=h,
+                            data={"method": "cash"})
+    assert pay.status_code == 200
+
+
+async def test_split_paid_or_discounted_order_rejected(client: AsyncClient):
+    h, venue_id, latte = await _setup(client)
+    paid = await _paid_order(client, h, venue_id, latte, qty=2)
+    line = paid["items"][0]["id"]
+    resp = await client.post(f"/api/orders/{paid['id']}/split", headers=h, json={"item_ids": [line]})
+    assert resp.status_code == 400
+
+    disc = (await client.post("/api/pos/order", headers=h, json={
+        "venue_id": venue_id,
+        "items": [{"menu_item_id": latte, "quantity": 2}],
+        "discount_type": "percent", "discount_value": 10,
+    })).json()
+    resp = await client.post(f"/api/orders/{disc['id']}/split", headers=h,
+                             json={"item_ids": [disc["items"][0]["id"]]})
+    assert resp.status_code == 400
+
+
+async def test_move_order_to_another_table(client: AsyncClient):
+    h, venue_id, latte = await _setup(client)
+    t1 = (await client.post("/settings/api/tables", headers=h,
+                            json={"venue_id": venue_id, "label": "1", "seats": 2})).json()
+    t2 = (await client.post("/settings/api/tables", headers=h,
+                            json={"venue_id": venue_id, "label": "2", "seats": 2})).json()
+    order = (await client.post("/api/pos/order", headers=h, json={
+        "venue_id": venue_id,
+        "items": [{"menu_item_id": latte, "quantity": 1}],
+        "table_id": t1["id"],
+    })).json()
+    resp = await client.patch(f"/api/orders/{order['id']}/table", headers=h,
+                              json={"table_id": t2["id"]})
+    assert resp.status_code == 200, resp.text
+    moved = resp.json()
+    assert moved["table_id"] == t2["id"]
+    assert moved["table_number"] == "2"
+    # old table freed, new occupied
+    tables = (await client.get(f"/api/pos/tables?venue_id={venue_id}", headers=h)).json()
+    by_label = {t["label"]: t["status"] for t in tables}
+    assert by_label["1"] == "free"
+    assert by_label["2"] == "occupied"

@@ -243,6 +243,126 @@ async def create_order(data: OrderCreate, guest: Guest, db: AsyncSession, change
     return result.scalar_one()
 
 
+async def move_order_table(
+    order_id: uuid.UUID,
+    db: AsyncSession,
+    table_id: uuid.UUID | None = None,
+    table_number: str | None = None,
+    changed_by: str = "staff",
+) -> Order:
+    """Move an active order to another table (guests changed seats, or the
+    waiter picked the wrong table). Frees the old table if nothing else is
+    on it and occupies the new one."""
+    order = (await db.execute(
+        select(Order)
+        .options(selectinload(Order.items), selectinload(Order.guest))
+        .where(Order.id == order_id)
+        .with_for_update()
+    )).scalar_one_or_none()
+    if not order:
+        raise ValueError("Заказ не найден")
+    if order.status == "cancelled" or (order.status == "done" and order.payment_status == "paid"):
+        raise ValueError("Закрытый заказ нельзя перенести")
+
+    old_table_id = order.table_id
+    if table_id:
+        table = (await db.execute(
+            select(Table).where(Table.id == table_id, Table.venue_id == order.venue_id)
+        )).scalar_one_or_none()
+        if not table:
+            raise ValueError("Стол не найден в этом заведении")
+        order.table_id = table.id
+        order.table_number = table.label
+    else:
+        order.table_id = None
+        order.table_number = (table_number or "").strip() or None
+
+    if old_table_id:
+        await _sync_table_status(old_table_id, db)
+    if order.table_id:
+        await _sync_table_status(order.table_id, db)
+    logger.info("Order %s moved to table %s by %s", order.id, order.table_number, changed_by)
+    await db.commit()
+    # commit expires ORM state — reload eagerly for response serialization
+    return (await db.execute(
+        select(Order).options(selectinload(Order.items), selectinload(Order.guest)).where(Order.id == order_id)
+    )).scalar_one()
+
+
+async def split_order(
+    order_id: uuid.UUID,
+    item_ids: list[uuid.UUID],
+    db: AsyncSession,
+    changed_by: str = "staff",
+) -> tuple[Order, Order]:
+    """Split selected lines into a separate order (guests at one table paying
+    apart). Only for unpaid, undiscounted orders — a discount makes the money
+    split ambiguous. Loyalty points move proportionally, no double credit."""
+    order = (await db.execute(
+        select(Order)
+        .options(selectinload(Order.items), selectinload(Order.guest))
+        .where(Order.id == order_id)
+        .with_for_update()
+    )).scalar_one_or_none()
+    if not order:
+        raise ValueError("Заказ не найден")
+    if order.payment_status != "unpaid":
+        raise ValueError("Оплаченный заказ нельзя разделить")
+    if order.status == "cancelled":
+        raise ValueError("Отменённый заказ нельзя разделить")
+    if order.discount_type or order.promo_code:
+        raise ValueError("Заказ со скидкой нельзя разделить — сначала уберите скидку")
+
+    wanted = set(item_ids)
+    moving = [i for i in order.items if i.id in wanted]
+    if not moving:
+        raise ValueError("Выберите позиции для отделения")
+    if len(moving) == len(order.items):
+        raise ValueError("Нельзя отделить все позиции — в чеке должно что-то остаться")
+
+    new_total = sum((i.price * i.quantity for i in moving), Decimal("0"))
+    old_total = order.total_amount
+
+    # Points were credited at creation from the full total: move a
+    # proportional share to the new order so a later cancellation of either
+    # part reverses the right amount. The guest's balance doesn't change.
+    new_points = 0
+    if order.points_earned and old_total > 0:
+        new_points = int(order.points_earned * new_total / old_total)
+
+    new_order = Order(
+        id=uuid.uuid4(),
+        venue_id=order.venue_id,
+        guest_id=order.guest_id,
+        status=order.status,
+        total_amount=new_total,
+        points_earned=new_points,
+        notes=order.notes,
+        table_number=order.table_number,
+        table_id=order.table_id,
+        source=order.source,
+    )
+    db.add(new_order)
+    await db.flush()
+    for i in moving:
+        i.order_id = new_order.id
+    order.total_amount = old_total - new_total
+    order.points_earned = (order.points_earned or 0) - new_points
+
+    db.add(OrderStatusLog(
+        id=uuid.uuid4(), order_id=new_order.id, old_status=None,
+        new_status=order.status, changed_by=f"split:{changed_by}",
+    ))
+    logger.info("Order %s split by %s: %s ₸ moved to %s", order.id, changed_by, new_total, new_order.id)
+    await db.commit()
+
+    async def _reload(oid):
+        return (await db.execute(
+            select(Order).options(selectinload(Order.items), selectinload(Order.guest)).where(Order.id == oid)
+        )).scalar_one()
+    return await _reload(order.id), await _reload(new_order.id)
+
+
 async def _deduct_inventory_for_order(order: Order, db: AsyncSession) -> None:
     """Auto-deduct ingredient stock per the tech card (Recipe) when an order completes.
     Best-effort: goes negative rather than blocking order completion on missing stock."""

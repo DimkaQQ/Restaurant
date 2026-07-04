@@ -53,6 +53,24 @@ async def pos_page(
     })
 
 
+@router.get("/waiter", response_class=HTMLResponse)
+async def waiter_page(
+    request: Request,
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    """Phone-first waiter screen: table → dishes → send. Nothing else."""
+    accessible_ids = await get_accessible_venue_ids(current_user, db)
+    venues = (await db.execute(
+        select(Venue).where(Venue.id.in_(accessible_ids), Venue.is_active == True).order_by(Venue.name)  # noqa: E712
+    )).scalars().all()
+    return templates.TemplateResponse("waiter.html", {
+        "request": request,
+        "user": current_user,
+        "venues": venues,
+    })
+
+
 @router.post("/api/pos/order", response_model=OrderOut)
 async def place_pos_order(
     data: OrderCreate,

@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="{{ locale }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ _("Официант") }} — RestOS</title>
+  <link rel="stylesheet" href="/static/fonts/fonts.css">
+  <link rel="manifest" href="/static/manifest.json">
+  <meta name="theme-color" content="#0D0D0D">
+  <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+  <link rel="apple-touch-icon" href="/static/apple-touch-icon.png">
+  <link rel="stylesheet" href="/static/css/main.css?v=9">
+  <script src="/static/js/notify.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body { background:var(--black); display:block; font-family:'Inter',sans-serif; padding-bottom:76px; }
+    .w-header { display:flex; align-items:center; justify-content:space-between; gap:.5rem; padding:.7rem 1rem; background:var(--card); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:50; }
+    .w-title { font-weight:700; font-size:1rem; }
+    .w-venue select { max-width:170px; font-size:.85rem; }
+    .w-tabs { display:flex; background:var(--card); border-bottom:1px solid var(--border); }
+    .w-tab { flex:1; padding:.8rem; text-align:center; background:none; border:none; color:var(--muted); font-size:.95rem; font-weight:600; cursor:pointer; border-bottom:2px solid transparent; }
+    .w-tab.active { color:var(--gold); border-bottom-color:var(--gold); }
+    .w-section { padding:1rem; }
+    .w-label { font-size:.78rem; color:var(--muted); margin:.25rem 0 .5rem; text-transform:uppercase; letter-spacing:.04em; }
+    .w-tables { display:grid; grid-template-columns:repeat(auto-fill, minmax(72px,1fr)); gap:.5rem; }
+    .w-table { padding:.9rem .25rem; text-align:center; border-radius:10px; border:1px solid var(--border); background:var(--card); color:var(--white); font-size:1.05rem; font-weight:600; cursor:pointer; }
+    .w-table.occupied { border-color:rgba(248,113,113,.5); color:#f87171; }
+    .w-table.selected { background:var(--gold); color:#000; border-color:var(--gold); }
+    .w-search { width:100%; background:var(--card); border:1px solid var(--border); color:var(--white); padding:.7rem .9rem; border-radius:10px; font-size:1rem; margin-bottom:.6rem; }
+    .w-cats { display:flex; gap:.4rem; overflow-x:auto; padding-bottom:.4rem; margin-bottom:.5rem; scrollbar-width:none; }
+    .w-cats::-webkit-scrollbar { display:none; }
+    .w-cat { flex-shrink:0; padding:.45rem .9rem; border-radius:999px; border:1px solid var(--border); background:none; color:var(--muted); font-size:.85rem; cursor:pointer; white-space:nowrap; }
+    .w-cat.active { border-color:var(--gold); color:var(--gold); }
+    .w-item { display:flex; align-items:center; gap:.75rem; padding:.8rem .9rem; background:var(--card); border:1px solid var(--border); border-radius:10px; margin-bottom:.5rem; }
+    .w-item-name { flex:1; font-size:.95rem; }
+    .w-item-price { color:var(--muted); font-size:.85rem; white-space:nowrap; }
+    .w-item-add { width:42px; height:42px; border-radius:10px; border:1px solid var(--gold); background:none; color:var(--gold); font-size:1.4rem; line-height:1; cursor:pointer; flex-shrink:0; }
+    .w-item-qty { display:flex; align-items:center; gap:.5rem; }
+    .w-item-qty button { width:38px; height:38px; border-radius:10px; border:1px solid var(--border); background:none; color:var(--white); font-size:1.2rem; cursor:pointer; }
+    .w-cart-bar { position:fixed; left:0; right:0; bottom:0; padding:.7rem 1rem calc(.7rem + env(safe-area-inset-bottom)); background:var(--gold); color:#000; display:none; align-items:center; justify-content:space-between; font-weight:700; font-size:1rem; cursor:pointer; z-index:60; }
+    .w-cart-bar.visible { display:flex; }
+    .w-sheet { position:fixed; left:0; right:0; bottom:0; background:var(--card); border-top:1px solid var(--border); border-radius:16px 16px 0 0; padding:1rem 1rem calc(1rem + env(safe-area-inset-bottom)); transform:translateY(105%); transition:transform .2s; z-index:70; max-height:85vh; overflow-y:auto; }
+    .w-sheet.visible { transform:none; }
+    .w-overlay { position:fixed; inset:0; background:rgba(0,0,0,.6); display:none; z-index:65; }
+    .w-overlay.visible { display:block; }
+    .w-cart-line { display:flex; align-items:center; gap:.6rem; padding:.5rem 0; border-bottom:1px solid rgba(255,255,255,.05); font-size:.92rem; }
+    .w-order { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:.9rem; margin-bottom:.75rem; }
+    .w-order-head { display:flex; align-items:center; gap:.5rem; margin-bottom:.4rem; flex-wrap:wrap; }
+    .w-order-table { font-weight:700; font-size:1.05rem; }
+    .w-badge { font-size:.72rem; padding:.15rem .55rem; border-radius:999px; border:1px solid var(--border); color:var(--muted); }
+    .w-badge.st-new { color:#60a5fa; border-color:rgba(96,165,250,.4); }
+    .w-badge.st-confirmed { color:#a78bfa; border-color:rgba(167,139,250,.4); }
+    .w-badge.st-preparing { color:#fb923c; border-color:rgba(251,146,60,.4); }
+    .w-badge.st-ready { color:#4ade80; border-color:rgba(74,222,128,.4); }
+    .w-badge.unpaid { color:#fbbf24; border-color:rgba(251,191,36,.4); }
+    .w-order-items { color:var(--muted); font-size:.85rem; line-height:1.5; margin-bottom:.6rem; }
+    .w-order-actions { display:flex; gap:.5rem; flex-wrap:wrap; }
+    .w-btn { padding:.6rem .9rem; min-height:44px; border-radius:10px; border:1px solid var(--border); background:none; color:var(--white); font-size:.88rem; cursor:pointer; }
+    .w-btn.primary { background:var(--gold); border-color:var(--gold); color:#000; font-weight:600; }
+    .big-btn { width:100%; padding:1rem; border-radius:12px; font-size:1.05rem; font-weight:700; }
+    .opt-chip { padding:.55rem .9rem; border-radius:10px; border:1px solid var(--border); background:none; color:var(--white); font-size:.9rem; cursor:pointer; }
+    .opt-chip.active { border-color:var(--gold); color:var(--gold); background:rgba(200,168,75,.12); }
+    .empty { color:var(--muted); text-align:center; padding:2rem 1rem; font-size:.9rem; }
+  </style>
+</head>
+<body>
+  <div class="w-header">
+    <span class="w-title">{{ _("Официант") }}</span>
+    <div class="w-venue">
+      {% if venues | length > 1 %}
+      <select id="venue-select" class="select-input" onchange="init()">
+        {% for v in venues %}<option value="{{ v.id }}">{{ v.name }}</option>{% endfor %}
+      </select>
+      {% else %}
+      <span style="color:var(--muted); font-size:.85rem">{{ venues[0].name if venues else '' }}</span>
+      <select id="venue-select" style="display:none">
+        {% for v in venues %}<option value="{{ v.id }}" selected>{{ v.name }}</option>{% endfor %}
+      </select>
+      {% endif %}
+    </div>
+  </div>
+  <div class="w-tabs">
+    <button class="w-tab active" id="tab-new" onclick="showTab('new')">{{ _("Новый заказ") }}</button>
+    <button class="w-tab" id="tab-orders" onclick="showTab('orders')">{{ _("Мои столы") }} <span id="orders-count"></span></button>
+  </div>
+
+  <!-- New order -->
+  <div class="w-section" id="pane-new">
+    <div class="w-label">{{ _("Стол") }}</div>
+    <div class="w-tables" id="w-tables"></div>
+    <div class="w-label" style="margin-top:1rem">{{ _("Меню") }}</div>
+    <input type="search" class="w-search" id="w-search" placeholder="{{ _('Поиск по меню…') }}" oninput="renderMenu()" autocomplete="off">
+    <div class="w-cats" id="w-cats"></div>
+    <div id="w-menu"></div>
+  </div>
+
+  <!-- My orders -->
+  <div class="w-section" id="pane-orders" style="display:none">
+    <div id="w-orders"><p class="empty">{{ _("Загрузка…") }}</p></div>
+  </div>
+
+  <!-- Cart bar + sheet -->
+  <div class="w-cart-bar" id="cart-bar" onclick="openCart()">
+    <span id="cart-count-label"></span>
+    <span id="cart-total-label"></span>
+  </div>
+  <div class="w-overlay" id="w-overlay" onclick="closeSheets()"></div>
+  <div class="w-sheet" id="cart-sheet">
+    <div class="w-label">{{ _("Заказ") }} · <span id="cart-table-label"></span></div>
+    <div id="cart-lines"></div>
+    <div style="display:flex; justify-content:space-between; font-weight:700; font-size:1.1rem; margin:.75rem 0">
+      <span>{{ _("Итого") }}</span><span id="cart-sheet-total"></span>
+    </div>
+    <div class="form-group">
+      <input type="text" id="w-comment" placeholder="{{ _('Комментарий кухне (необязательно)') }}" class="w-search" style="margin:0">
+    </div>
+    <button class="w-btn primary big-btn" style="margin-top:.5rem" onclick="sendOrder()">{{ _("Отправить на кухню") }}</button>
+    <button class="w-btn big-btn" style="margin-top:.5rem" onclick="closeSheets()">{{ _("Продолжить выбор") }}</button>
+  </div>
+
+  <!-- Modifier picker -->
+  <div class="w-sheet" id="opt-sheet">
+    <div class="w-label" id="opt-name"></div>
+    <div id="opt-groups"></div>
+    <button class="w-btn primary big-btn" style="margin-top:.75rem" onclick="confirmOpts()">{{ _("В заказ") }}</button>
+    <button class="w-btn big-btn" style="margin-top:.5rem" onclick="closeSheets()">{{ _("Отмена") }}</button>
+  </div>
+
+<script>
+const token = () => localStorage.getItem('access_token');
+const LOCALE = {{ ('en-US' if locale == 'en' else 'ru-RU') | tojson }};
+const T = {
+  pickTable: {{ _("Сначала выберите стол") | tojson }},
+  sent: {{ _("Заказ отправлен на кухню") | tojson }},
+  error: {{ _("Ошибка") | tojson }},
+  cartEmpty: {{ _("Корзина пуста") | tojson }},
+  items: {{ _("позиций:") | tojson }},
+  noTable: {{ _("без стола") | tojson }},
+  table: {{ _("Стол") | tojson }},
+  optRequired: {{ _("Выберите «{g}»") | tojson }},
+  serve: {{ _("Выдать") | tojson }},
+  cash: {{ _("Наличные") | tojson }},
+  card: {{ _("Карта") | tojson }},
+  unpaid: {{ _("Не оплачен") | tojson }},
+  noOrders: {{ _("Активных заказов нет") | tojson }},
+  stNew: {{ _("Новый") | tojson }},
+  stConfirmed: {{ _("Подтверждён") | tojson }},
+  stPreparing: {{ _("Готовится") | tojson }},
+  stReady: {{ _("Готово!") | tojson }},
+};
+const ST_LABEL = { new: T.stNew, confirmed: T.stConfirmed, preparing: T.stPreparing, ready: T.stReady };
+
+let _menu = [], _tables = [], _cart = {}, _tableId = null, _cat = null;
+
+function esc(s) { return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+async function init() {
+  const vid = document.getElementById('venue-select').value;
+  if (!vid) return;
+  _cart = {}; _tableId = null;
+  const [mRes, tRes] = await Promise.all([
+    fetch('/api/menu/' + vid, {credentials:'include'}),
+    fetch('/api/pos/tables?venue_id=' + vid, {credentials:'include'}),
+  ]);
+  if (mRes.status === 401) { location.href = '/auth/login'; return; }
+  _menu = (await mRes.json()).filter(i => i.is_available);
+  _tables = tRes.ok ? await tRes.json() : [];
+  renderTables(); renderCats(); renderMenu(); updateCartBar();
+  loadOrders();
+}
+
+function renderTables() {
+  const el = document.getElementById('w-tables');
+  if (!_tables.length) {
+    el.innerHTML = '<input type="text" class="w-search" id="free-table" placeholder="{{ _('Номер стола') }}" style="grid-column:1/-1">';
+    return;
+  }
+  el.innerHTML = _tables.map(t => `
+    <div class="w-table ${t.status}${_tableId === t.id ? ' selected' : ''}" onclick="pickTable('${t.id}')">${esc(t.label)}</div>
+  `).join('');
+}
+function pickTable(id) { _tableId = (_tableId === id) ? null : id; renderTables(); }
+
+function renderCats() {
+  const cats = [...new Set(_menu.map(i => i.category).filter(Boolean))];
+  document.getElementById('w-cats').innerHTML =
+    `<button class="w-cat${!_cat ? ' active' : ''}" onclick="setCat(null)">{{ _("Все") }}</button>` +
+    cats.map(c => `<button class="w-cat${_cat === c ? ' active' : ''}" onclick="setCat(${JSON.stringify(c).replace(/"/g,'&quot;')})">${esc(c)}</button>`).join('');
+}
+function setCat(c) { _cat = c; renderCats(); renderMenu(); }
+
+function qtyOf(itemId) {
+  return Object.values(_cart).filter(l => l.item.id === itemId).reduce((s, l) => s + l.qty, 0);
+}
+
+function renderMenu() {
+  const q = (document.getElementById('w-search').value || '').trim().toLowerCase();
+  const items = q ? _menu.filter(i => i.name.toLowerCase().includes(q))
+                  : (_cat ? _menu.filter(i => i.category === _cat) : _menu);
+  document.getElementById('w-menu').innerHTML = items.map(i => {
+    const n = qtyOf(i.id);
+    return `<div class="w-item">
+      <span class="w-item-name">${esc(i.name)}</span>
+      <span class="w-item-price">${parseFloat(i.price).toLocaleString(LOCALE)} ₸</span>
+      ${n ? `<div class="w-item-qty">
+          <button onclick="decItem('${i.id}')">−</button><span>${n}</span>
+          <button onclick="addItem('${i.id}')">+</button></div>`
+        : `<button class="w-item-add" onclick="addItem('${i.id}')">+</button>`}
+    </div>`;
+  }).join('') || '<p class="empty">{{ _("Ничего не найдено") }}</p>';
+}
+
+function addItem(id) {
+  const item = _menu.find(i => i.id === id);
+  if (!item) return;
+  if (item.modifier_groups && item.modifier_groups.length) { openOpts(item); return; }
+  addLine(item, [], []);
+}
+function decItem(id) {
+  const keys = Object.keys(_cart).filter(k => _cart[k].item.id === id);
+  const k = keys[keys.length - 1];
+  if (!k) return;
+  _cart[k].qty -= 1;
+  if (_cart[k].qty <= 0) delete _cart[k];
+  renderMenu(); updateCartBar(); renderCartSheet();
+}
+function addLine(item, optIds, optNames) {
+  const key = item.id + '|' + optIds.slice().sort().join(',');
+  if (_cart[key]) _cart[key].qty += 1;
+  else {
+    let unit = parseFloat(item.price);
+    const all = (item.modifier_groups || []).flatMap(g => g.options);
+    optIds.forEach(oid => { const o = all.find(x => x.id === oid); if (o) unit += parseFloat(o.price_delta); });
+    _cart[key] = { item, qty: 1, optIds, optNames, unit };
+  }
+  renderMenu(); updateCartBar();
+}
+
+// ── Modifier picker ──
+let _optItem = null;
+function openOpts(item) {
+  _optItem = item;
+  document.getElementById('opt-name').textContent = item.name;
+  document.getElementById('opt-groups').innerHTML = item.modifier_groups.map((g, gi) => `
+    <div style="margin-bottom:.75rem">
+      <div style="font-size:.8rem;color:var(--muted);margin-bottom:.4rem">${esc(g.name)}${g.required ? ' *' : ''}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:.4rem">
+        ${g.options.map(o => `<button type="button" class="opt-chip" data-gi="${gi}" data-oid="${o.id}"
+          onclick="toggleOpt(this, ${g.multi})">${esc(o.name)}${parseFloat(o.price_delta) ? ' +' + parseFloat(o.price_delta) : ''}</button>`).join('')}
+      </div>
+    </div>`).join('');
+  item.modifier_groups.forEach((g, gi) => {
+    if (g.required && !g.multi) {
+      const f = document.querySelector(`#opt-groups .opt-chip[data-gi="${gi}"]`);
+      if (f) f.classList.add('active');
+    }
+  });
+  document.getElementById('w-overlay').classList.add('visible');
+  document.getElementById('opt-sheet').classList.add('visible');
+}
+function toggleOpt(btn, multi) {
+  if (multi) { btn.classList.toggle('active'); return; }
+  const gi = btn.dataset.gi;
+  const was = btn.classList.contains('active');
+  document.querySelectorAll(`#opt-groups .opt-chip[data-gi="${gi}"]`).forEach(b => b.classList.remove('active'));
+  if (!was || _optItem.modifier_groups[gi].required) btn.classList.add('active');
+}
+function confirmOpts() {
+  const chosen = [...document.querySelectorAll('#opt-groups .opt-chip.active')];
+  for (let gi = 0; gi < _optItem.modifier_groups.length; gi++) {
+    const g = _optItem.modifier_groups[gi];
+    if (g.required && !chosen.some(b => b.dataset.gi == gi)) { notify.error(T.optRequired.replace('{g}', g.name)); return; }
+  }
+  const ids = chosen.map(b => b.dataset.oid);
+  const names = chosen.map(b => _optItem.modifier_groups[b.dataset.gi].options.find(o => o.id === b.dataset.oid).name);
+  closeSheets();
+  addLine(_optItem, ids, names);
+}
+
+// ── Cart ──
+function cartCount() { return Object.values(_cart).reduce((s, l) => s + l.qty, 0); }
+function cartTotal() { return Object.values(_cart).reduce((s, l) => s + l.unit * l.qty, 0); }
+function updateCartBar() {
+  const bar = document.getElementById('cart-bar');
+  const n = cartCount();
+  bar.classList.toggle('visible', n > 0);
+  document.getElementById('cart-count-label').textContent = T.items + ' ' + n;
+  document.getElementById('cart-total-label').textContent = cartTotal().toLocaleString(LOCALE) + ' ₸';
+}
+function openCart() {
+  renderCartSheet();
+  document.getElementById('w-overlay').classList.add('visible');
+  document.getElementById('cart-sheet').classList.add('visible');
+}
+function closeSheets() {
+  document.getElementById('w-overlay').classList.remove('visible');
+  document.querySelectorAll('.w-sheet').forEach(s => s.classList.remove('visible'));
+}
+function renderCartSheet() {
+  const t = _tables.find(x => x.id === _tableId);
+  const freeInput = document.getElementById('free-table');
+  document.getElementById('cart-table-label').textContent =
+    t ? (T.table + ' ' + t.label) : (freeInput && freeInput.value ? T.table + ' ' + freeInput.value : T.noTable);
+  document.getElementById('cart-lines').innerHTML = Object.entries(_cart).map(([k, l]) => `
+    <div class="w-cart-line">
+      <span style="flex:1">${esc(l.item.name)}${l.optNames.length ? `<br><small style="color:var(--muted)">${esc(l.optNames.join(' · '))}</small>` : ''}</span>
+      <div class="w-item-qty">
+        <button onclick="chgLine('${esc(k)}', -1)">−</button><span>${l.qty}</span>
+        <button onclick="chgLine('${esc(k)}', 1)">+</button>
+      </div>
+      <span style="min-width:64px; text-align:right">${(l.unit * l.qty).toLocaleString(LOCALE)} ₸</span>
+    </div>`).join('') || `<p class="empty">${T.cartEmpty}</p>`;
+  document.getElementById('cart-sheet-total').textContent = cartTotal().toLocaleString(LOCALE) + ' ₸';
+}
+function chgLine(k, d) {
+  if (!_cart[k]) return;
+  _cart[k].qty += d;
+  if (_cart[k].qty <= 0) delete _cart[k];
+  renderCartSheet(); renderMenu(); updateCartBar();
+  if (!cartCount()) closeSheets();
+}
+
+async function sendOrder() {
+  const vid = document.getElementById('venue-select').value;
+  const items = Object.values(_cart).map(l => ({ menu_item_id: l.item.id, quantity: l.qty, modifier_option_ids: l.optIds }));
+  if (!items.length) return;
+  const freeInput = document.getElementById('free-table');
+  if (_tables.length && !_tableId) { notify.error(T.pickTable); return; }
+  const body = {
+    venue_id: vid, items,
+    table_id: _tableId,
+    table_number: _tableId ? null : (freeInput ? freeInput.value || null : null),
+    notes: document.getElementById('w-comment').value || null,
+    client_order_id: (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(36).slice(2)),
+  };
+  const res = await fetch('/api/pos/order', {
+    method: 'POST', credentials: 'include',
+    headers: {'Content-Type':'application/json','Authorization':'Bearer '+token()},
+    body: JSON.stringify(body),
+  });
+  if (res.status === 401) { location.href = '/auth/login'; return; }
+  if (res.ok) {
+    _cart = {}; _tableId = null;
+    document.getElementById('w-comment').value = '';
+    closeSheets(); renderTables(); renderMenu(); updateCartBar();
+    notify.success(T.sent);
+    loadOrders();
+    showTab('orders');
+  } else {
+    const d = await res.json().catch(() => ({}));
+    notify.error(d.detail || T.error);
+  }
+}
+
+// ── My orders ──
+async function loadOrders() {
+  const vid = document.getElementById('venue-select').value;
+  if (!vid) return;
+  try {
+    const res = await fetch('/api/orders/live?venue_id=' + vid, {credentials:'include'});
+    if (!res.ok) return;
+    const orders = await res.json();
+    document.getElementById('orders-count').textContent = orders.length ? '· ' + orders.length : '';
+    const el = document.getElementById('w-orders');
+    if (!orders.length) { el.innerHTML = `<p class="empty">${T.noOrders}</p>`; return; }
+    el.innerHTML = orders.map(o => `
+      <div class="w-order">
+        <div class="w-order-head">
+          <span class="w-order-table">${o.table_number ? T.table + ' ' + esc(o.table_number) : '#' + o.id.slice(0,8).toUpperCase()}</span>
+          <span class="w-badge st-${o.status}">${ST_LABEL[o.status] || o.status}</span>
+          ${o.payment_status !== 'paid' ? `<span class="w-badge unpaid">${T.unpaid}</span>` : ''}
+          <span style="margin-left:auto; font-weight:700">${parseFloat(o.total_amount).toLocaleString(LOCALE)} ₸</span>
+        </div>
+        <div class="w-order-items">${o.items.map(i => esc(i.name) + (i.modifiers ? ' (' + esc(i.modifiers) + ')' : '') + ' × ' + i.quantity).join(' · ')}</div>
+        <div class="w-order-actions">
+          ${o.status === 'ready' ? `<button class="w-btn primary" onclick="setStatus('${o.id}','done')">${T.serve}</button>` : ''}
+          ${o.payment_status !== 'paid' ? `
+            <button class="w-btn" onclick="payOrder('${o.id}','cash')">${T.cash}</button>
+            <button class="w-btn" onclick="payOrder('${o.id}','card')">${T.card}</button>` : ''}
+        </div>
+      </div>`).join('');
+  } catch (e) {}
+}
+async function setStatus(id, status) {
+  const res = await fetch('/api/orders/' + id + '/status', {
+    method: 'PATCH', credentials: 'include',
+    headers: {'Content-Type':'application/json','Authorization':'Bearer '+token()},
+    body: JSON.stringify({status}),
+  });
+  if (res.ok) loadOrders(); else notify.error(T.error);
+}
+async function payOrder(id, method) {
+  const res = await fetch('/api/orders/' + id + '/pay', {
+    method: 'POST', credentials: 'include',
+    headers: {'Content-Type':'application/x-www-form-urlencoded','Authorization':'Bearer '+token()},
+    body: 'method=' + method,
+  });
+  if (res.ok) loadOrders(); else notify.error(T.error);
+}
+
+function showTab(name) {
+  document.getElementById('tab-new').classList.toggle('active', name === 'new');
+  document.getElementById('tab-orders').classList.toggle('active', name === 'orders');
+  document.getElementById('pane-new').style.display = name === 'new' ? '' : 'none';
+  document.getElementById('pane-orders').style.display = name === 'orders' ? '' : 'none';
+  if (name === 'orders') loadOrders();
+}
+
+init();
+setInterval(loadOrders, 10000);
+</script>
+</body>
+</html>

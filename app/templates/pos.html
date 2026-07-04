@@ -26,6 +26,13 @@
 .pos-table-chip.reserved { border-color:#fbbf24; color:#fbbf24; }
 .pos-table-chip.selected { background:var(--gold); color:#000; border-color:var(--gold); }
 .pos-item-stopped { opacity:.45; }
+/* Rush-hour mode: bigger touch targets for tablets on a stand */
+body.pos-big .pos-grid { grid-template-columns:repeat(auto-fill, minmax(180px, 1fr)); }
+body.pos-big .pos-item { padding:1.4rem 1rem; }
+body.pos-big .pos-item-name { font-size:1.1rem; }
+body.pos-big .pos-item-price { font-size:1rem; }
+body.pos-big .pos-cat-chip { font-size:1rem; padding:.6rem 1.1rem; }
+body.pos-big .btn-primary, body.pos-big .btn-secondary { min-height:52px; font-size:1rem; }
 .pos-opt-chip {
   padding:.5rem .8rem; min-height:38px; border-radius:8px;
   border:1px solid var(--border); background:none; color:var(--white);
@@ -73,6 +80,9 @@
         style="flex:1; background:var(--card); border:1px solid var(--border); color:var(--white); padding:.55rem .8rem; border-radius:8px; font-size:.9rem">
       <button type="button" id="stoplist-btn" class="btn-secondary" onclick="toggleStopMode()"
         style="font-size:.78rem; padding:.5rem .8rem; white-space:nowrap">{{ _("Стоп-лист") }}</button>
+      <button type="button" id="bigmode-btn" class="btn-secondary" onclick="toggleBigMode()"
+        title="{{ _('Крупные кнопки для планшета') }}"
+        style="font-size:.78rem; padding:.5rem .8rem; white-space:nowrap">{{ _("Крупно") }}</button>
     </div>
     <p id="stoplist-hint" style="display:none; font-size:.78rem; color:#f87171; margin:0 0 .5rem">{{ _("Режим стоп-листа: нажмите на позицию, чтобы убрать её из продажи или вернуть.") }}</p>
     <div class="pos-cats" id="pos-cats"></div>
@@ -830,6 +840,20 @@
 
   function closeShiftModal() {
     document.getElementById('shift-modal').style.display = 'none';
+  }
+
+  // ── Big-buttons mode (tablet on a stand, rush hour) ──
+  function toggleBigMode() {
+    const on = document.body.classList.toggle('pos-big');
+    localStorage.setItem('pos_big_mode', on ? '1' : '');
+    const b = document.getElementById('bigmode-btn');
+    b.style.borderColor = on ? 'var(--gold)' : '';
+    b.style.color = on ? 'var(--gold)' : '';
+  }
+  if (localStorage.getItem('pos_big_mode')) {
+    document.body.classList.add('pos-big');
+    const b = document.getElementById('bigmode-btn');
+    b.style.borderColor = 'var(--gold)'; b.style.color = 'var(--gold)';
   }
 
   // Single-venue networks: the venue is pre-selected server-side — load it right away.
