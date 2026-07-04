@@ -20,7 +20,7 @@
   <meta name="twitter:description" content="{{ _('RestOS — приём заказов, кухонный дисплей, склад, смены персонала, программа лояльности и фискализация чеков в одной панели. 14 дней бесплатно.') }}">
   <meta name="twitter:image" content="{{ public_url }}/static/og-image.png">
   <link rel="stylesheet" href="/static/fonts/fonts.css">
-  <link rel="stylesheet" href="/static/css/main.css?v=9">
+  <link rel="stylesheet" href="/static/css/main.css?v=10">
   <style>
     body.landing-body { display: block; background: var(--black); }
     .lnd-nav {
@@ -31,6 +31,15 @@
     .lnd-nav-links a { color: var(--muted); text-decoration: none; font-size: .88rem; }
     .lnd-nav-links a:hover { color: var(--white); }
     .lnd-nav-links .btn-primary { padding: .55rem 1.1rem; font-size: .85rem; color: var(--black); }
+    @media (max-width: 760px) {
+      .lnd-nav { padding: 1rem; }
+      /* the page is one scroll anyway — anchor links add nothing on a phone */
+      .lnd-nav-links a[href^="#"] { display: none; }
+      .lnd-nav-links { gap: .9rem; }
+      .lnd-nav-links .btn-primary { display: none; }
+      .lnd-hero { padding: 2.5rem 1.25rem 2rem; }
+      .lnd-hero h1 { font-size: 2rem; }
+    }
 
     .lnd-hero { max-width: 780px; margin: 0 auto; padding: 4rem 1.5rem 3rem; text-align: center; }
     .lnd-hero h1 { font-family: 'Instrument Serif', serif; font-size: 2.8rem; line-height: 1.15; margin-bottom: 1.25rem; }
