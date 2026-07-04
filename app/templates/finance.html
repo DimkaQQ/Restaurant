@@ -5,7 +5,7 @@
 <script src="/static/vendor/chart-4.4.3.umd.min.js"></script>
 <style>
 .fin-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem; flex-wrap:wrap; gap:1rem; }
-.fin-header h1 { font-family:'Instrument Serif',serif; font-size:1.6rem; font-weight:400; }
+.fin-header h1 { font-size:1.35rem; font-weight:600; letter-spacing:-0.01em; }
 .fin-controls { display:flex; gap:.75rem; flex-wrap:wrap; align-items:center; }
 .period-tabs { display:flex; background:var(--card); border:1px solid var(--border); border-radius:8px; overflow:hidden; }
 .period-tab { padding:.4rem .9rem; font-size:.8rem; cursor:pointer; border:none; background:none; color:var(--muted); transition:all .15s; }
@@ -60,9 +60,9 @@
       {% endfor %}
     </div>
     <a href="/finance/export/sales.csv?period={{ period }}{% if selected_venue_id %}&venue_id={{ selected_venue_id }}{% endif %}"
-       class="btn-secondary" style="font-size:.78rem;padding:.4rem .7rem;text-decoration:none" title="{{ _('CSV для бухгалтерии') }}">⬇ {{ _("Продажи CSV") }}</a>
+       class="btn-secondary" style="font-size:.78rem;padding:.4rem .7rem;text-decoration:none" title="{{ _('CSV для бухгалтерии') }}">{{ _("Продажи CSV") }}</a>
     <a href="/finance/export/expenses.csv?period={{ period }}{% if selected_venue_id %}&venue_id={{ selected_venue_id }}{% endif %}"
-       class="btn-secondary" style="font-size:.78rem;padding:.4rem .7rem;text-decoration:none" title="{{ _('CSV для бухгалтерии') }}">⬇ {{ _("Расходы CSV") }}</a>
+       class="btn-secondary" style="font-size:.78rem;padding:.4rem .7rem;text-decoration:none" title="{{ _('CSV для бухгалтерии') }}">{{ _("Расходы CSV") }}</a>
   </div>
 </div>
 

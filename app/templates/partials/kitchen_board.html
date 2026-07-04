@@ -16,13 +16,13 @@
   <div class="kds-card-top">
     <span class="kds-order-id">#{{ order.id | string | truncate(8, True, '') }}</span>
     {% if order.venue %}<span class="kds-venue-tag">{{ order.venue.name.split('—')[-1].strip() }}</span>{% endif %}
-    <a href="/orders/{{ order.id }}/receipt" target="_blank" title="{{ _('Печать талона') }}" style="text-decoration:none">🖨</a>
+    <a href="/orders/{{ order.id }}/receipt" target="_blank" title="{{ _('Печать талона') }}" style="text-decoration:none">{{ _("Талон") }}</a>
     <span class="kds-elapsed {% if mins < 10 %}fast{% elif mins < 20 %}medium{% else %}slow{% endif %}">{{ mins }} {{ _("мин") }}</span>
   </div>
   {% if order.table_number or order.source == 'online' or order.payment_status != 'paid' %}
   <div style="font-size:.78rem;color:var(--muted);margin-bottom:.5rem">
     {% if order.table_number %}📍 {{ _("Стол") }} {{ order.table_number }}{% endif %}
-    {% if order.source == 'online' %} · 🌐 {{ _("Онлайн") }}{% elif order.source == 'staff' %} · 👨‍💼 {{ _("Официант") }}{% elif order.source == 'pos' %} · 💳 {{ _("Касса") }}{% endif %}
+    {% if order.source == 'online' %} · {{ _("Онлайн") }}{% elif order.source == 'staff' %} · {{ _("Официант") }}{% elif order.source == 'pos' %} · {{ _("Касса") }}{% endif %}
     {% if order.payment_status != 'paid' %} · <span style="color:#E8A33D">{{ _("не оплачен") }}</span>{% endif %}
   </div>
   {% endif %}
@@ -36,7 +36,7 @@
     <div style="font-size:.78rem;color:var(--gold);padding-left:.5rem;margin-top:-.25rem">{{ item.modifiers }}</div>
     {% endif %}
     {% if item.comment %}
-    <div style="font-size:.75rem;color:var(--muted);padding-left:.5rem;margin-top:-.25rem">💬 {{ item.comment }}</div>
+    <div style="font-size:.75rem;color:var(--muted);padding-left:.5rem;margin-top:-.25rem;font-style:italic">{{ item.comment }}</div>
     {% endif %}
     {% endfor %}
     {% if order.notes %}

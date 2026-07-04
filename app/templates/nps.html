@@ -52,7 +52,7 @@
   </div>
   <div class="stat-card">
     <span class="stat-label">{{ _("Средняя оценка") }}</span>
-    <span class="stat-value gold">{{ avg_rating }} ⭐</span>
+    <span class="stat-value gold">{{ avg_rating }} ★</span>
   </div>
 </div>
 
@@ -73,7 +73,7 @@
     <div class="venue-card-name">{{ vc.name }}</div>
     <div class="venue-card-row">
       <span class="venue-card-label">{{ _("Средняя оценка") }}</span>
-      <span class="stars-display">{{ vc.avg_rating }} ⭐</span>
+      <span class="stars-display">{{ vc.avg_rating }} ★</span>
     </div>
     <div class="venue-card-row">
       <span class="venue-card-label">{{ _("Отзывов") }}</span>
@@ -109,7 +109,7 @@
         <td>{{ rev.venue }}</td>
         <td>{{ rev.guest_name }}</td>
         <td>
-          {% for i in range(rev.rating) %}⭐{% endfor %}
+          {% for i in range(rev.rating) %}★{% endfor %}
         </td>
         <td class="comment-cell">{{ rev.comment or '—' }}</td>
       </tr>
@@ -120,7 +120,7 @@
 </div>
 {% else %}
 <div class="card" style="text-align:center; padding:2.5rem; color:var(--muted)">
-  {{ _("Негативных отзывов пока нет 🎉") }}
+  {{ _("Негативных отзывов пока нет") }}
 </div>
 {% endif %}
 {% endblock %}

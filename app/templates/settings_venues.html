@@ -103,7 +103,7 @@
 
     <hr style="border-color:var(--border); margin:1.25rem 0">
     <div class="venue-settings-name" style="font-size:0.95rem">
-      🧾 {{ _("Фискализация (ОФД)") }}
+      {{ _("Фискализация (ОФД)") }}
       {% if venue.fiscal_provider %}<span style="color:#4ade80; font-size:0.75rem; font-weight:400">— {{ _("подключено") }} ({{ venue.fiscal_provider }})</span>{% endif %}
     </div>
     <div class="form-row">
@@ -151,7 +151,7 @@ async function createVenue() {
   const address = document.getElementById('new-venue-address').value.trim();
   const resEl = document.getElementById('new-venue-result');
   if (!name) {
-    resEl.textContent = '❌ ' + T.nameRequired;
+    resEl.textContent = T.nameRequired;
     resEl.className = 'save-result err';
     return;
   }
@@ -170,11 +170,11 @@ async function createVenue() {
       location.reload();
     } else {
       const err = await resp.json().catch(() => ({}));
-      resEl.textContent = '❌ ' + (err.detail || T.error);
+      resEl.textContent = (err.detail || T.error);
       resEl.className = 'save-result err';
     }
   } catch (e) {
-    resEl.textContent = '❌ ' + T.connectionError;
+    resEl.textContent = T.connectionError;
     resEl.className = 'save-result err';
   }
 }
@@ -197,15 +197,15 @@ async function saveVenue(venueId) {
       body: JSON.stringify({ gis_url: gisUrl || null, manager_telegram_id: mgrId }),
     });
     if (resp.ok) {
-      resEl.textContent = '✅ ' + T.saved;
+      resEl.textContent = T.saved;
       resEl.className = 'save-result ok';
     } else {
       const err = await resp.json().catch(() => ({}));
-      resEl.textContent = '❌ ' + (err.detail || T.error);
+      resEl.textContent = (err.detail || T.error);
       resEl.className = 'save-result err';
     }
   } catch (e) {
-    resEl.textContent = '❌ ' + T.connectionError;
+    resEl.textContent = T.connectionError;
     resEl.className = 'save-result err';
   }
   setTimeout(() => { resEl.textContent = ''; }, 4000);
@@ -237,16 +237,16 @@ async function saveFiscal(venueId) {
       body: JSON.stringify(body),
     });
     if (resp.ok) {
-      resEl.textContent = '✅ ' + T.saved;
+      resEl.textContent = T.saved;
       resEl.className = 'save-result ok';
       setTimeout(() => location.reload(), 800);
     } else {
       const err = await resp.json().catch(() => ({}));
-      resEl.textContent = '❌ ' + (err.detail || T.error);
+      resEl.textContent = (err.detail || T.error);
       resEl.className = 'save-result err';
     }
   } catch (e) {
-    resEl.textContent = '❌ ' + T.connectionError;
+    resEl.textContent = T.connectionError;
     resEl.className = 'save-result err';
   }
 }

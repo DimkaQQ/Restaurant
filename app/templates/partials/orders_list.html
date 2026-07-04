@@ -24,11 +24,11 @@
     {% if order.fiscal_status %}
     <div class="order-fiscal">
       {% if order.fiscal_status == 'issued' %}
-        <span style="color:#4ade80">🧾 {{ _("Чек пробит") }} {% if order.fiscal_ticket_url %}(<a href="{{ order.fiscal_ticket_url }}" target="_blank" rel="noopener">{{ _("ссылка") }}</a>){% endif %}</span>
+        <span style="color:#4ade80">{{ _("Чек пробит") }} {% if order.fiscal_ticket_url %}(<a href="{{ order.fiscal_ticket_url }}" target="_blank" rel="noopener">{{ _("ссылка") }}</a>){% endif %}</span>
       {% elif order.fiscal_status == 'pending' %}
-        <span style="color:var(--muted)">🧾 {{ _("Фискализация…") }}</span>
+        <span style="color:var(--muted)">{{ _("Фискализация…") }}</span>
       {% elif order.fiscal_status == 'failed' %}
-        <span style="color:#f87171" title="{{ order.fiscal_error }}">🧾 {{ _("Ошибка фискализации") }}</span>
+        <span style="color:#f87171" title="{{ order.fiscal_error }}">{{ _("Ошибка фискализации") }}</span>
       {% endif %}
     </div>
     {% endif %}
@@ -41,14 +41,14 @@
         hx-target="closest .order-card"
         hx-swap="outerHTML"
         class="btn-pay"
-      >💵 {{ _("Наличные") }}</button>
+      >{{ _("Наличные") }}</button>
       <button
         hx-post="/api/orders/{{ order.id }}/pay"
         hx-vals='{"method": "card"}'
         hx-target="closest .order-card"
         hx-swap="outerHTML"
         class="btn-pay"
-      >💳 {{ _("Карта") }}</button>
+      >{{ _("Карта") }}</button>
     </div>
     {% endif %}
     <div class="order-footer">
@@ -71,7 +71,7 @@
         class="btn-cancel"
       >{{ _("Отмена") }}</button>
       {% endif %}
-      <a href="/orders/{{ order.id }}/receipt" target="_blank" class="btn-status" title="{{ _('Печать чека') }}" style="text-decoration:none">🖨</a>
+      <a href="/orders/{{ order.id }}/receipt" target="_blank" class="btn-status" title="{{ _('Печать чека') }}" style="text-decoration:none">{{ _("Чек") }}</a>
     </div>
   </div>
   {% endfor %}

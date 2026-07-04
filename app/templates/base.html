@@ -105,7 +105,7 @@
   <main class="main-content">
     {% if user is defined and user and not user.email_verified %}
     <div id="verify-email-banner" style="background:rgba(200,168,75,.12); border:1px solid var(--border); border-radius:8px; padding:.75rem 1rem; margin-bottom:1.25rem; display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap; font-size:.85rem">
-      <span>📧 {{ _("Подтвердите email") }} ({{ user.email }}), {{ _("чтобы обезопасить аккаунт.") }}</span>
+      <span>{{ _("Подтвердите email") }} ({{ user.email }}), {{ _("чтобы обезопасить аккаунт.") }}</span>
       <button onclick="resendVerification(this)" style="background:none; border:1px solid var(--gold); color:var(--gold); border-radius:6px; padding:.35rem .8rem; font-size:.8rem; cursor:pointer">{{ _("Отправить письмо повторно") }}</button>
     </div>
     <script>

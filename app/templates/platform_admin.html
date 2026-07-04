@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="/static/css/main.css?v=9">
   <style>
     body { background:var(--black); padding:2rem; font-family:'Inter',sans-serif; }
-    h1 { font-family:'Instrument Serif',serif; font-weight:400; font-size:1.8rem; margin-bottom:1.5rem; }
+    h1 { font-weight:600; font-size:1.4rem; letter-spacing:-0.01em; margin-bottom:1.5rem; }
     .kpis { display:flex; gap:1rem; margin-bottom:2rem; flex-wrap:wrap; }
     .kpi { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:1rem 1.5rem; }
     .kpi-label { font-size:.72rem; text-transform:uppercase; color:var(--muted); margin-bottom:.3rem; }
@@ -36,7 +36,7 @@
 </head>
 <body>
   <h1>RestOS · Platform Admin</h1>
-  <div class="top-nav"><a href="/platform/admin/audit">📋 Журнал действий администратора →</a></div>
+  <div class="top-nav"><a href="/platform/admin/audit">Журнал действий администратора →</a></div>
 
   <div class="kpis">
     <div class="kpi"><div class="kpi-label">MRR</div><div class="kpi-value">${{ mrr }}</div></div>

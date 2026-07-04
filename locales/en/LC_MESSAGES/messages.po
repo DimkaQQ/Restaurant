@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-03 21:43+0000\n"
+"POT-Creation-Date: 2026-07-04 12:18+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -257,6 +257,9 @@ msgstr "Queued offline:"
 
 msgid "В панель управления"
 msgstr "Go to dashboard"
+
+msgid "В работу — оплата потом"
+msgstr "Send to kitchen — pay later"
 
 msgid "Вариант"
 msgstr "Option"
@@ -939,8 +942,8 @@ msgstr ""
 msgid "Негативные отзывы"
 msgstr "Negative reviews"
 
-msgid "Негативных отзывов пока нет 🎉"
-msgstr "No negative reviews yet 🎉"
+msgid "Негативных отзывов пока нет"
+msgstr "No negative reviews yet"
 
 msgid "Неделя"
 msgstr "Week"
@@ -1102,14 +1105,11 @@ msgstr "Payment"
 msgid "Оплата аренды за июнь"
 msgstr "June rent payment"
 
-msgid "Оплата будет принята позже — на экране заказов"
-msgstr "Payment will be taken later — on the orders screen"
-
 msgid "Оплата не прошла"
 msgstr "Payment failed"
 
-msgid "Оплата сейчас — чек пробьётся сразу"
-msgstr "Paying now — the receipt is issued immediately"
+msgid "Оплатить"
+msgstr "Take payment"
 
 msgid "Оплачен"
 msgstr "Paid"
@@ -1201,9 +1201,6 @@ msgstr "Place your first order in POS"
 
 msgid "Оформить"
 msgstr "Subscribe"
-
-msgid "Оформить заказ"
-msgstr "Place order"
 
 msgid "Оценка"
 msgstr "Rating"
@@ -1360,9 +1357,6 @@ msgstr "Confirmed"
 
 msgid "Подытог"
 msgstr "Subtotal"
-
-msgid "Позже"
-msgstr "Later"
 
 msgid "Позиций на складе"
 msgstr "Items in stock"
@@ -1853,6 +1847,9 @@ msgstr "Queue board ↗"
 
 msgid "Такой страницы не существует или она была перемещена."
 msgstr "This page doesn't exist or has been moved."
+
+msgid "Талон"
+msgstr "Ticket"
 
 msgid "Текст сообщения"
 msgstr "Message text"

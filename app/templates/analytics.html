@@ -107,9 +107,9 @@
 </div>
 
 {% if user.role == 'owner' %}
-<div class="panel" style="margin-top:1.5rem; border-color:rgba(200,168,75,.35)">
+<div class="panel" style="margin-top:1.5rem">
   <div class="panel-header">
-    <h2 class="panel-title">🤖 {{ _("AI-инсайты") }}</h2>
+    <h2 class="panel-title">{{ _("AI-инсайты") }}</h2>
     <button class="btn-secondary" id="insights-btn" onclick="loadInsights()" style="font-size:.78rem;padding:.4rem .8rem">{{ _("Получить рекомендации") }}</button>
   </div>
   <div id="insights-body" style="font-size:.9rem; line-height:1.65; color:var(--muted)">

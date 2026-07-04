@@ -26,7 +26,7 @@
 </div>
 
 <div class="api-card">
-  <h2>🔑 {{ _("API-ключи") }}</h2>
+  <h2>{{ _("API-ключи") }}</h2>
   <p class="hint">{{ _("Доступ к данным для интеграций (только чтение): GET /api/v1/venues, /api/v1/menu, /api/v1/orders с заголовком X-API-Key.") }}</p>
   <div class="inline-form">
     <input type="text" id="key-name" placeholder="{{ _('Название (например, «BI-отчёты»)') }}" style="flex:1;min-width:200px">
@@ -55,7 +55,7 @@
 </div>
 
 <div class="api-card">
-  <h2>🪝 {{ _("Вебхуки") }}</h2>
+  <h2>{{ _("Вебхуки") }}</h2>
   <p class="hint">{{ _("RestOS отправит подписанный POST (HMAC-SHA256, заголовок X-RestOS-Signature) на ваш URL при событиях заказа.") }}</p>
   <div class="inline-form">
     <input type="url" id="hook-url" placeholder="https://example.com/webhook" style="flex:1;min-width:240px">
