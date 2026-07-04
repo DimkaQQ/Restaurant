@@ -93,7 +93,7 @@ async def inventory_page(
             "request": request,
             "user": current_user,
             "venues": venues,
-            "selected_venue_id": str(venue_id) if venue_id and venue_id in accessible_ids else "",
+            "selected_venue_id": str(venue_id) if venue_id and venue_id in accessible_ids else (str(venues[0].id) if len(venues) == 1 else ""),
             "ingredients": ingredients,
             "total_value": total_value,
             "low_stock_count": len(low_stock),
@@ -128,7 +128,7 @@ async def inventory_tablet(
         return templates.TemplateResponse("inventory_tablet.html", {
             "request": request,
             "venues": venues,
-            "selected_venue_id": str(venue_id) if venue_id and venue_id in accessible_ids else "",
+            "selected_venue_id": str(venue_id) if venue_id and venue_id in accessible_ids else (str(venues[0].id) if len(venues) == 1 else ""),
             "ingredients": ingredients,
         })
     except Exception as e:

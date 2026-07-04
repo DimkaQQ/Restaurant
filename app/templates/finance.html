@@ -224,6 +224,13 @@ const T = {
 const LOCALE = {{ ('en-US' if locale == 'en' else 'ru-RU') | tojson }};
 const chartData = {{ chart_data | tojson }};
 
+// Adaptive money labels: 850 → 850, 12 400 → 12.4K, 3 200 000 → 3.2 млн
+function fmtMoney(v) {
+  if (Math.abs(v) >= 1_000_000) return (v/1_000_000).toFixed(1).replace(/\.0$/,'') + ' ' + T.million;
+  if (Math.abs(v) >= 1_000) return (v/1_000).toFixed(1).replace(/\.0$/,'') + 'K';
+  return String(Math.round(v));
+}
+
 const ctx = document.getElementById('pl-chart').getContext('2d');
 new Chart(ctx, {
   type: 'bar',
@@ -256,17 +263,17 @@ new Chart(ctx, {
       legend: { labels: { color: '#9ca3af', font: { size: 11 } } },
       tooltip: {
         callbacks: {
-          label: item => `${item.dataset.label}: ${(item.parsed.y/1_000_000).toFixed(2)} ${T.million} ₸`,
+          label: item => `${item.dataset.label}: ${item.parsed.y.toLocaleString(LOCALE)} ₸`,
           footer: items => {
             const total = items.reduce((s, i) => s + i.parsed.y, 0);
-            return `${T.revenue}: ${(total/1_000_000).toFixed(2)} ${T.million} ₸`;
+            return `${T.revenue}: ${total.toLocaleString(LOCALE)} ₸`;
           }
         }
       }
     },
     scales: {
       x: { stacked: true, ticks: { color: '#6b7280' }, grid: { color: 'rgba(255,255,255,0.04)' } },
-      y: { stacked: true, ticks: { color: '#6b7280', callback: v => (v/1_000_000).toFixed(1)+' '+T.million }, grid: { color: 'rgba(255,255,255,0.04)' } },
+      y: { stacked: true, ticks: { color: '#6b7280', callback: v => fmtMoney(v) }, grid: { color: 'rgba(255,255,255,0.04)' } },
     }
   }
 });

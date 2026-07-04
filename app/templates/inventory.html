@@ -17,11 +17,11 @@
 .category-chip { background:rgba(255,255,255,.05); border:1px solid var(--border); border-radius:20px; padding:.2rem .65rem; font-size:.78rem; cursor:pointer; transition:all .15s; }
 .category-chip.active, .category-chip:hover { background:rgba(200,168,75,.15); border-color:var(--gold); color:var(--gold); }
 .inv-table { width:100%; border-collapse:collapse; }
-.inv-table th { font-size:.72rem; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); padding:.6rem 1rem; text-align:left; border-bottom:1px solid var(--border); white-space:nowrap; }
-.inv-table td { padding:.65rem 1rem; border-bottom:1px solid rgba(255,255,255,.04); font-size:.875rem; vertical-align:middle; white-space:nowrap; }
+.inv-table th { font-size:.72rem; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); padding:.6rem .7rem; text-align:left; border-bottom:1px solid var(--border); white-space:nowrap; }
+.inv-table td { padding:.65rem .7rem; border-bottom:1px solid rgba(255,255,255,.04); font-size:.875rem; vertical-align:middle; white-space:nowrap; }
 .inv-table tr:last-child td { border-bottom:none; }
 .inv-table tr:hover td { background:rgba(255,255,255,.02); }
-.stock-bar-wrap { width:100px; background:rgba(255,255,255,.07); border-radius:4px; height:6px; overflow:hidden; }
+.stock-bar-wrap { width:64px; background:rgba(255,255,255,.07); border-radius:4px; height:6px; overflow:hidden; }
 .stock-bar { height:100%; border-radius:4px; transition:width .3s; }
 .stock-ok { background:#22c55e; }
 .stock-warning { background:#f59e0b; }
@@ -40,8 +40,8 @@
 .form-group input, .form-group select { width:100%; background:var(--black); border:1px solid var(--border); color:var(--white); padding:.5rem .75rem; border-radius:6px; font-size:.875rem; box-sizing:border-box; }
 .form-group input:focus, .form-group select:focus { outline:none; border-color:var(--gold); }
 .form-row-2 { display:grid; grid-template-columns:1fr 1fr; gap:.5rem; }
-.qty-controls { display:flex; gap:.5rem; }
-.qty-controls button { flex:1; font-size:.8rem; padding:.4rem; min-height:36px; border-radius:6px; cursor:pointer; border:1px solid var(--border); background:var(--black); color:var(--white); transition:all .15s; }
+.qty-controls { display:flex; gap:.4rem; justify-content:flex-end; }
+.qty-controls button { font-size:.78rem; padding:.35rem .55rem; min-height:34px; border-radius:6px; cursor:pointer; border:1px solid var(--border); background:var(--black); color:var(--white); transition:all .15s; white-space:nowrap; }
 .qty-controls .btn-add { border-color:rgba(34,197,94,.4); color:#4ade80; }
 .qty-controls .btn-add:hover { background:rgba(34,197,94,.1); }
 .qty-controls .btn-rem { border-color:rgba(239,68,68,.4); color:#f87171; }

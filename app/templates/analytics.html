@@ -182,7 +182,7 @@ const chartDefaults = {
   plugins: { legend: { labels: { color: '#F7F5F0', font: { family: 'Inter' } } } },
   scales: {
     x: { ticks: { color: muted, maxRotation: 45 }, grid: { color: 'rgba(200,168,75,0.08)' } },
-    y: { ticks: { color: muted, callback: v => v >= 1000000 ? (v/1000000).toFixed(1)+'M' : v >= 1000 ? (v/1000).toFixed(0)+'K' : v }, grid: { color: 'rgba(200,168,75,0.08)' } },
+    y: { ticks: { color: muted, callback: v => v >= 1000000 ? (v/1000000).toFixed(1).replace(/\.0$/,'')+'M' : v >= 1000 ? (v/1000).toFixed(1).replace(/\.0$/,'')+'K' : v }, grid: { color: 'rgba(200,168,75,0.08)' } },
   },
 };
 

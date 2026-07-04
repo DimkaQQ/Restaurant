@@ -353,6 +353,7 @@ const ITEM_MAP = {};
 Object.values(MENU_CATS).forEach(items => items.forEach(i => { ITEM_MAP[i.id] = i; }));
 const T = {
   cartEmpty: {{ t.cart_empty | tojson }},
+  addComment: {{ t.add_wish | tojson }},
   placingOrder: {{ t.placing_order | tojson }},
   orderError: {{ t.order_error | tojson }},
   connectionError: {{ t.connection_error | tojson }},
@@ -415,10 +416,9 @@ function addLine(item, optionIds, optionNames) {
       const o = allOpts.find(x => x.id === oid);
       if (o) unit += o.price_delta;
     });
+    // Comments are opt-in via the 💬 button in the cart — auto-prompting on
+    // every add was two modals back-to-back for items with modifiers.
     cart.push({ key, id: item.id, name: item.name, price: unit, qty: 1, comment: null, optionIds, optionNames });
-    pendingCommentKey = key;
-    document.getElementById('commentInput').value = '';
-    document.getElementById('commentModal').classList.add('visible');
   }
   saveCart();
   updateCartUI();
@@ -502,6 +502,14 @@ function removeItem(id) {
   if (lines.length) removeLine(lines[lines.length - 1].key);
 }
 
+function openComment(key) {
+  const line = getLine(key);
+  if (!line) return;
+  pendingCommentKey = key;
+  document.getElementById('commentInput').value = line.comment || '';
+  document.getElementById('commentModal').classList.add('visible');
+}
+
 function saveComment() {
   const text = document.getElementById('commentInput').value.trim();
   if (pendingCommentKey) {
@@ -559,7 +567,9 @@ function updateCartUI() {
       <div class="cart-item-name">
         ${esc(i.name)}
         ${i.optionNames && i.optionNames.length ? `<span class="cart-item-comment">${esc(i.optionNames.join(' · '))}</span>` : ''}
-        ${i.comment ? `<span class="cart-item-comment">💬 ${esc(i.comment)}</span>` : ''}
+        <span class="cart-item-comment" onclick="openComment('${esc(i.key)}')" style="cursor:pointer">
+          💬 ${i.comment ? esc(i.comment) : T.addComment}
+        </span>
       </div>
       <div class="cart-item-qty">
         <button class="qty-btn" onclick="removeLine('${esc(i.key)}')">−</button>

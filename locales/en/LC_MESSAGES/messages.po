@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-03 21:24+0000\n"
+"POT-Creation-Date: 2026-07-03 21:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -1720,6 +1720,9 @@ msgstr "I agree to the"
 
 msgid "Создайте заведение"
 msgstr "Create a venue"
+
+msgid "Создал API-ключ"
+msgstr "Created API key"
 
 msgid "Создал пользователя"
 msgstr "Created a user"

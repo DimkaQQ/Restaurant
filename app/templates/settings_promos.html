@@ -64,7 +64,7 @@
     {% for p in promos %}
     <tr class="{% if not p.active %}promo-off{% endif %}" id="promo-{{ p.id }}">
       <td class="promo-code-cell">{{ p.code }}</td>
-      <td>{% if p.type == 'percent' %}{{ "{:g}".format(p.value) }}%{% else %}{{ "{:,.0f}".format(p.value) }} ₸{% endif %}</td>
+      <td>{% if p.type == 'percent' %}{{ "{:g}".format(p.value | float) }}%{% else %}{{ "{:,.0f}".format(p.value) }} ₸{% endif %}</td>
       <td>{{ p.used_count }}{% if p.max_uses %} / {{ p.max_uses }}{% endif %}</td>
       <td>{% if p.expires_at %}{{ p.expires_at.strftime('%d.%m.%Y') }}{% else %}<span class="muted">—</span>{% endif %}</td>
       <td>{% if p.active %}<span class="badge badge-active">{{ _("Активен") }}</span>{% else %}<span class="badge badge-launch">{{ _("Выключен") }}</span>{% endif %}</td>

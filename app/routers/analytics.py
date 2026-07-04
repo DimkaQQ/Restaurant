@@ -72,10 +72,13 @@ async def analytics_page(
         )).all()
         top_items_data = [{"name": r.name, "qty": int(r.total_qty)} for r in top_items]
 
+        # The anonymous walk-in bucket isn't a loyal guest — hide it.
+        from app.services.order_service import WALKIN_MARKER
         loyal_guests = (await db.execute(
             select(Guest)
             .join(Order, Order.guest_id == Guest.id)
-            .where(Order.venue_id.in_(venue_ids))
+            .where(Order.venue_id.in_(venue_ids),
+                   (Guest.phone.is_(None)) | (Guest.phone != WALKIN_MARKER))
             .group_by(Guest.id)
             .order_by(Guest.total_visits.desc())
             .limit(10)
