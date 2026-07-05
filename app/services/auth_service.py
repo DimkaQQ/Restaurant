@@ -33,6 +33,9 @@ def create_access_token(data: dict) -> str:
 
 def create_refresh_token(data: dict) -> str:
     payload = data.copy()
+    # typ marks this as a refresh token: it can only be exchanged for a new
+    # access token, never used directly as one (see get_current_user).
+    payload["typ"] = "refresh"
     payload["exp"] = datetime.now(timezone.utc) + timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS)
     return jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 
@@ -48,11 +51,36 @@ async def get_current_user(token: str, db: AsyncSession) -> User | None:
     payload = decode_token(token)
     if not payload:
         return None
+    # A refresh token is not a session: it may only pass through the
+    # explicit exchange path (refresh_session), never authenticate directly.
+    if payload.get("typ") == "refresh":
+        return None
     user_id = payload.get("sub")
     if not user_id:
         return None
     result = await db.execute(select(User).where(User.id == uuid.UUID(user_id)))
-    return result.scalar_one_or_none()
+    user = result.scalar_one_or_none()
+    # Version check: bumping user.token_version (password reset, forced
+    # logout) instantly revokes every token minted before the bump.
+    if user and payload.get("ver", 0) != (user.token_version or 0):
+        return None
+    return user
+
+
+async def refresh_session(refresh_token: str, db: AsyncSession) -> tuple[User, str] | None:
+    """Exchange a valid refresh token for a fresh access token. Returns
+    (user, new_access_token) or None. Keeps workstation tablets logged in
+    without long-lived access tokens."""
+    payload = decode_token(refresh_token)
+    if not payload or payload.get("typ") != "refresh":
+        return None
+    user_id = payload.get("sub")
+    if not user_id:
+        return None
+    user = (await db.execute(select(User).where(User.id == uuid.UUID(user_id)))).scalar_one_or_none()
+    if not user or payload.get("ver", 0) != (user.token_version or 0):
+        return None
+    return user, create_access_token({"sub": str(user.id), "ver": user.token_version or 0})
 
 
 async def register_network(name: str, slug: str, email: str, password: str, db: AsyncSession) -> User:

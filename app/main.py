@@ -52,6 +52,42 @@ _CSRF_EXEMPT_PREFIXES = ("/billing/webhook", "/api/bot", "/health")
 
 
 @app.middleware("http")
+async def silent_session_refresh(request: Request, call_next):
+    """Access tokens are deliberately short-lived (30 min). When one expires
+    but the httpOnly refresh cookie is still valid, mint a fresh access token
+    transparently: inject it into this request and set the cookie on the
+    response. This is what keeps a register/kitchen tablet logged in for
+    weeks without ever holding a long-lived access token."""
+    new_access = None
+    access = request.cookies.get("access_token")
+    refresh = request.cookies.get("refresh_token")
+    has_auth_header = bool(request.headers.get("authorization"))
+    if refresh and not has_auth_header:
+        from app.services.auth_service import decode_token
+        payload = decode_token(access) if access else None
+        if not payload or payload.get("typ") == "refresh":
+            from app.database import AsyncSessionLocal
+            from app.services.auth_service import refresh_session
+            async with AsyncSessionLocal() as db:
+                refreshed = await refresh_session(refresh, db)
+            if refreshed:
+                _, new_access = refreshed
+                # make THIS request authenticated too, not just the next one
+                request.scope["headers"] = list(request.scope["headers"]) + [
+                    (b"authorization", b"Bearer " + new_access.encode())
+                ]
+    response = await call_next(request)
+    if new_access:
+        response.set_cookie(
+            key="access_token", value=new_access,
+            httponly=True, samesite="lax",
+            secure=settings.PUBLIC_URL.startswith("https://"),
+            max_age=60 * settings.ACCESS_TOKEN_EXPIRE_MINUTES,
+        )
+    return response
+
+
+@app.middleware("http")
 async def csrf_origin_check(request: Request, call_next):
     # SameSite=Lax already blocks the cookie on cross-site POST/PUT/PATCH/DELETE
     # in modern browsers, but this is cheap defense-in-depth for older/edge-case
@@ -63,7 +99,9 @@ async def csrf_origin_check(request: Request, call_next):
         settings.CSRF_ENABLED
         and request.method in ("POST", "PUT", "PATCH", "DELETE")
         and not request.headers.get("authorization")
-        and request.cookies.get("access_token")
+        # either auth cookie counts: silent refresh can authenticate a
+        # request from the refresh cookie alone, so it must be CSRF-checked too
+        and (request.cookies.get("access_token") or request.cookies.get("refresh_token"))
         and not any(request.url.path.startswith(p) for p in _CSRF_EXEMPT_PREFIXES)
     ):
         origin = request.headers.get("origin") or request.headers.get("referer")

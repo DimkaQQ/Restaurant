@@ -155,3 +155,55 @@ async def test_owner_not_affected_by_workstation_lock(client: AsyncClient):
     for page in ["/dashboard", "/pos", "/waiter", "/kitchen", "/menu"]:
         resp = await client.get(page, headers={**h, "Accept": "text/html"})
         assert resp.status_code == 200, (page, resp.status_code)
+
+
+async def test_login_lockout_after_five_failures(client: AsyncClient):
+    reg = await register_network(client)
+    email = reg["email"]
+    for _ in range(5):
+        resp = await client.post("/auth/login", json={"email": email, "password": "wrong-pass"})
+        assert resp.status_code == 401
+    # 6th attempt — locked even with the CORRECT password
+    resp = await client.post("/auth/login", json={"email": email, "password": "supersecret123"})
+    assert resp.status_code == 429
+    # the lockout lands in the audit journal
+    owner_h = auth_headers(reg["token"])
+    page = (await client.get("/settings/audit", headers=owner_h)).text
+    assert "login_locked" in page or "заблокирован" in page
+
+
+async def test_password_reset_revokes_old_sessions(client: AsyncClient, db):
+    reg = await register_network(client)
+    h = auth_headers(reg["token"])
+    client.cookies.clear()
+    assert (await client.get("/api/venues/", headers=h)).status_code == 200
+
+    # simulate a password reset bumping token_version
+    from sqlalchemy import text as sql
+    await db.execute(sql("UPDATE users SET token_version = token_version + 1 WHERE email = :e"),
+                     {"e": reg["email"]})
+    await db.commit()
+    resp = await client.get("/api/venues/", headers=h)
+    assert resp.status_code == 401
+
+
+async def test_refresh_token_cannot_be_used_as_access_token(client: AsyncClient):
+    """A stolen refresh cookie value must not authenticate API calls directly."""
+    reg = await register_network(client)
+    refresh = client.cookies.get("refresh_token")
+    assert refresh
+    client.cookies.clear()
+    resp = await client.get("/api/venues/", headers={"Authorization": f"Bearer {refresh}"})
+    assert resp.status_code == 401
+
+
+async def test_silent_refresh_keeps_workstation_logged_in(client: AsyncClient):
+    """Expired access cookie + valid refresh cookie → the page still opens
+    and a fresh access token is set."""
+    reg = await register_network(client)
+    refresh = client.cookies.get("refresh_token")
+    client.cookies.clear()
+    client.cookies.set("refresh_token", refresh)
+    resp = await client.get("/dashboard", headers={"Accept": "text/html"})
+    assert resp.status_code == 200
+    assert "access_token" in resp.headers.get("set-cookie", "")

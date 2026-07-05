@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime
-from sqlalchemy import String, DateTime, ForeignKey, func, BigInteger, Boolean
+from sqlalchemy import String, DateTime, ForeignKey, func, BigInteger, Boolean, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.database import Base
 
@@ -17,6 +17,11 @@ class User(Base):
     telegram_id: Mapped[int | None] = mapped_column(BigInteger, unique=True, nullable=True)
     bot_link_token: Mapped[str | None] = mapped_column(String(64), unique=True, nullable=True)
     email_verified: Mapped[bool] = mapped_column(Boolean, default=False)
+    # Brute-force lockout (per account, complements the per-IP rate limit)
+    failed_logins: Mapped[int] = mapped_column(Integer, default=0)
+    locked_until: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    # Bumping revokes every outstanding JWT for this user (password reset etc.)
+    token_version: Mapped[int] = mapped_column(Integer, default=0)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     network: Mapped["Network"] = relationship("Network", back_populates="users")

@@ -74,8 +74,8 @@ async def register(request: Request, data: NetworkCreate, response: Response, db
 
     await _send_verification_email(user)
 
-    access_token = create_access_token({"sub": str(user.id)})
-    refresh_token = create_refresh_token({"sub": str(user.id)})
+    access_token = create_access_token({"sub": str(user.id), "ver": 0})
+    refresh_token = create_refresh_token({"sub": str(user.id), "ver": 0})
 
     response.set_cookie(
         key="refresh_token",
@@ -99,12 +99,39 @@ async def register(request: Request, data: NetworkCreate, response: Response, db
 @router.post("/login")
 @limiter.limit("10/minute")
 async def login(request: Request, data: LoginRequest, response: Response, db: AsyncSession = Depends(get_db)):
+    from datetime import datetime, timedelta, timezone
+    from sqlalchemy import select as _select
+    from app.models.user import User as _User
+
+    # Per-account lockout: 5 wrong passwords → 15 minutes. The per-IP rate
+    # limit alone doesn't stop an attacker rotating IPs against one email.
+    account = (await db.execute(_select(_User).where(_User.email == data.email))).scalar_one_or_none()
+    now = datetime.now(timezone.utc)
+    if account and account.locked_until and account.locked_until > now:
+        raise HTTPException(status_code=429, detail="Слишком много попыток входа. Попробуйте через 15 минут.")
+
     user = await authenticate_user(data.email, data.password, db)
     if not user:
+        if account:
+            account.failed_logins = (account.failed_logins or 0) + 1
+            if account.failed_logins >= 5:
+                account.locked_until = now + timedelta(minutes=15)
+                account.failed_logins = 0
+                from app.services.audit import log_action
+                log_action(db, account.network_id, account.email, "login_locked",
+                           "5 неверных паролей подряд — вход заблокирован на 15 минут")
+                logger.warning("Account %s locked after repeated failed logins", account.email)
+            await db.commit()
         raise HTTPException(status_code=401, detail="Неверный email или пароль")
 
-    access_token = create_access_token({"sub": str(user.id)})
-    refresh_token = create_refresh_token({"sub": str(user.id)})
+    if user.failed_logins or user.locked_until:
+        user.failed_logins = 0
+        user.locked_until = None
+        await db.commit()
+
+    ver = user.token_version or 0
+    access_token = create_access_token({"sub": str(user.id), "ver": ver})
+    refresh_token = create_refresh_token({"sub": str(user.id), "ver": ver})
 
     response.set_cookie(
         key="refresh_token",
@@ -168,8 +195,13 @@ async def reset_password(request: Request, data: PasswordResetConfirm, db: Async
     if not user:
         raise HTTPException(status_code=400, detail="Ссылка недействительна или устарела")
     user.hashed_password = hash_password(data.password)
+    # Revoke every session on every device: anyone holding an old token
+    # (a stolen phone, a fired employee's tablet) is logged out immediately.
+    user.token_version = (user.token_version or 0) + 1
+    user.failed_logins = 0
+    user.locked_until = None
     await db.commit()
-    logger.info("Password reset for user %s", user.email)
+    logger.info("Password reset for user %s (all sessions revoked)", user.email)
     return {"message": "Пароль обновлён"}
 
 

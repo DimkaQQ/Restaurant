@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 
-from fastapi import Depends, HTTPException, status, Request
+from fastapi import Depends, HTTPException, status, Request, Response
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -67,9 +67,10 @@ def require_role(min_role: str):
     a bare error page."""
     async def _dep(
         request: Request,
+        response: Response,
         db: AsyncSession = Depends(get_db),
     ) -> User:
-        user = await get_current_user_dep(request, db)
+        user = await get_current_user_dep(request, response, db)
         if not role_at_least(user, min_role):
             if _wants_html(request):
                 raise HTTPException(status_code=status.HTTP_307_TEMPORARY_REDIRECT, headers={"Location": "/dashboard"})
@@ -119,20 +120,36 @@ async def get_user_from_request(request: Request, db: AsyncSession) -> User | No
 
 async def get_current_user_dep(
     request: Request,
+    response: Response,
     db: AsyncSession = Depends(get_db),
 ) -> User:
     token = _extract_token(request)
+    user = await get_current_user(token, db) if token else None
 
-    if not token:
-        if _wants_html(request):
-            raise HTTPException(status_code=status.HTTP_307_TEMPORARY_REDIRECT, headers={"Location": "/auth/login"})
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Не авторизован")
+    if not user:
+        # Silent session renewal: the short-lived access token expired, but
+        # the httpOnly refresh cookie is still valid — mint a new access
+        # token in place. This is what keeps a register/kitchen tablet
+        # logged in for weeks without long-lived access tokens.
+        refresh_cookie = request.cookies.get("refresh_token")
+        if refresh_cookie:
+            from app.services.auth_service import refresh_session
+            refreshed = await refresh_session(refresh_cookie, db)
+            if refreshed:
+                user, new_access = refreshed
+                if response is not None:
+                    from app.config import settings as _settings
+                    response.set_cookie(
+                        key="access_token", value=new_access,
+                        httponly=True, samesite="lax",
+                        secure=_settings.PUBLIC_URL.startswith("https://"),
+                        max_age=60 * _settings.ACCESS_TOKEN_EXPIRE_MINUTES,
+                    )
 
-    user = await get_current_user(token, db)
     if not user:
         if _wants_html(request):
             raise HTTPException(status_code=status.HTTP_307_TEMPORARY_REDIRECT, headers={"Location": "/auth/login"})
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Недействительный токен")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Недействительный токен" if token else "Не авторизован")
 
     await _check_subscription(user, request, db)
     _job_screen_gate(user, request)
@@ -144,7 +161,7 @@ async def get_current_user_optional(
     db: AsyncSession = Depends(get_db),
 ) -> User | None:
     try:
-        return await get_current_user_dep(request, db)
+        return await get_current_user_dep(request, None, db)
     except HTTPException:
         return None
 
