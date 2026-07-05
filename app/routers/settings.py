@@ -172,6 +172,9 @@ async def create_user(
             password = secrets.token_urlsafe(24)
         if role not in ("manager", "cashier", "administrator", "waiter", "kitchen"):
             raise HTTPException(status_code=400, detail="Некорректная роль")
+        pin = str(body.get("pin") or "").strip()
+        if pin and (not pin.isdigit() or not (4 <= len(pin) <= 6)):
+            raise HTTPException(status_code=400, detail="PIN — от 4 до 6 цифр")
 
         existing = (await db.execute(
             select(User).where(User.email == email, User.network_id == current_user.network_id)
@@ -196,6 +199,7 @@ async def create_user(
             network_id=current_user.network_id,
             email=email,
             hashed_password=hash_password(password),
+            pin_hash=hash_password(pin) if pin else None,
             role=role,
             venue_id=venue_id,
         )
@@ -633,6 +637,46 @@ async def delete_promo(
     if not promo:
         raise HTTPException(status_code=404, detail="Промокод не найден")
     await db.delete(promo)
+    await db.commit()
+    return {"ok": True}
+
+
+@router.post("/users/{user_id}/pin")
+async def set_user_pin(
+    user_id: uuid.UUID,
+    request: Request,
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    """Owner sets/changes/clears an employee's station PIN. Uniqueness within
+    the network is enforced so a PIN always identifies exactly one person."""
+    _require_owner(current_user)
+    body = await request.json()
+    pin = str(body.get("pin") or "").strip()
+    target = (await db.execute(
+        select(User).where(User.id == user_id, User.network_id == current_user.network_id)
+    )).scalar_one_or_none()
+    if not target:
+        raise HTTPException(status_code=404, detail="Пользователь не найден")
+    if not pin:
+        target.pin_hash = None
+        await db.commit()
+        return {"ok": True, "cleared": True}
+    if not pin.isdigit() or not (4 <= len(pin) <= 6):
+        raise HTTPException(status_code=400, detail="PIN — от 4 до 6 цифр")
+    # collision check: the switch matches by PIN alone, so it must be unique
+    from app.services.auth_service import verify_password as _verify
+    others = (await db.execute(select(User).where(
+        User.network_id == current_user.network_id,
+        User.id != user_id,
+        User.pin_hash != None,  # noqa: E711
+    ))).scalars().all()
+    if any(_verify(pin, u.pin_hash) for u in others):
+        raise HTTPException(status_code=409, detail="Такой PIN уже занят другим сотрудником")
+    target.pin_hash = hash_password(pin)
+    from app.services.audit import log_action
+    log_action(db, current_user.network_id, current_user.email, "pin_set",
+               f"Установлен PIN для {target.email}")
     await db.commit()
     return {"ok": True}
 

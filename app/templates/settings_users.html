@@ -198,6 +198,7 @@
         {% endif %}
       </div>
     </div>
+    <button class="btn-secondary" style="font-size:.72rem;padding:.3rem .55rem" onclick="setPin('{{ u.id }}')" title="{{ _('PIN для смены сотрудника на станции') }}">PIN{% if u.pin_hash %} ●{% endif %}</button>
     {% if u.id != user.id %}
     <button class="btn-delete-user" onclick="deleteUser('{{ u.id }}')">✕</button>
     {% endif %}
@@ -233,6 +234,10 @@
       </select>
     </div>
     <div class="form-group">
+      <label>{{ _("PIN для станции (необязательно, 4–6 цифр)") }}</label>
+      <input type="text" name="pin" inputmode="numeric" maxlength="6" placeholder="{{ _('Для быстрой смены сотрудника на планшете') }}">
+    </div>
+    <div class="form-group">
       <label>{{ _("Заведение (необязательно)") }}</label>
       <select name="venue_id">
         <option value="">{{ _("Все заведения") }}</option>
@@ -245,6 +250,31 @@
       <button type="submit" class="btn-primary">{{ _("Добавить") }}</button>
     </div>
   </form>
+</div>
+
+<div class="add-user-section" style="margin-top:1.5rem">
+  <h2>{{ _("Двухфакторная аутентификация (ваш аккаунт)") }}</h2>
+  {% if user.totp_enabled %}
+  <p style="font-size:.85rem;color:var(--success);margin-bottom:1rem">{{ _("2FA включена: при входе нужен код из приложения.") }}</p>
+  <div class="form-row" style="gap:.5rem">
+    <input type="text" id="totp-off-code" inputmode="numeric" maxlength="6" placeholder="{{ _('Код из приложения') }}" style="max-width:160px">
+    <button class="btn-secondary" onclick="disable2fa()">{{ _("Отключить 2FA") }}</button>
+  </div>
+  {% else %}
+  <p style="font-size:.85rem;color:var(--muted);margin-bottom:1rem;line-height:1.5">
+    {{ _("Дополнительная защита входа: пароль + код из приложения (Google Authenticator, 1Password и т.п.).") }}
+  </p>
+  <div id="totp-setup" style="display:none;background:rgba(200,168,75,.08);border:1px solid rgba(200,168,75,.2);border-radius:8px;padding:.875rem;margin-bottom:1rem">
+    <div style="font-size:.8rem;color:var(--muted);margin-bottom:.4rem">{{ _("1. Добавьте секрет в приложение-аутентификатор:") }}</div>
+    <div id="totp-secret" style="font-family:monospace;font-size:1rem;color:var(--gold);letter-spacing:.08em;word-break:break-all;margin-bottom:.75rem"></div>
+    <div style="font-size:.8rem;color:var(--muted);margin-bottom:.4rem">{{ _("2. Введите код из приложения для подтверждения:") }}</div>
+    <div class="form-row" style="gap:.5rem">
+      <input type="text" id="totp-code" inputmode="numeric" maxlength="6" placeholder="123456" style="max-width:140px">
+      <button class="btn-primary" onclick="confirm2fa()">{{ _("Подтвердить") }}</button>
+    </div>
+  </div>
+  <button class="btn-primary" id="totp-start-btn" onclick="enroll2fa()">{{ _("Включить 2FA") }}</button>
+  {% endif %}
 </div>
 
 <div class="add-user-section" style="margin-top:1.5rem">
@@ -301,6 +331,7 @@ document.getElementById('add-user-form').addEventListener('submit', async (e) =>
     email: fd.get('email'),
     password: fd.get('password'),
     role: fd.get('role'),
+    pin: fd.get('pin') || null,
     venue_id: fd.get('venue_id') || null,
   };
 
@@ -325,6 +356,51 @@ document.getElementById('add-user-form').addEventListener('submit', async (e) =>
 
 const BOT_NAME = '{{ bot_name }}';
 let generatedLink = '';
+async function setPin(userId) {
+  const pin = prompt({{ _("PIN сотрудника (4–6 цифр). Пусто — удалить PIN.") | tojson }});
+  if (pin === null) return;
+  const res = await fetch('/settings/users/' + userId + '/pin', {
+    method: 'POST', credentials: 'include',
+    headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('access_token')},
+    body: JSON.stringify({pin: pin.trim()}),
+  });
+  if (res.ok) location.reload();
+  else { const d = await res.json().catch(() => ({})); notify.error(d.detail || {{ _("Ошибка") | tojson }}); }
+}
+
+async function enroll2fa() {
+  const res = await fetch('/auth/2fa/enroll', {
+    method: 'POST', credentials: 'include',
+    headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('access_token')},
+    body: '{}',
+  });
+  if (!res.ok) { notify.error({{ _("Ошибка") | tojson }}); return; }
+  const d = await res.json();
+  document.getElementById('totp-secret').textContent = d.secret;
+  document.getElementById('totp-setup').style.display = '';
+  document.getElementById('totp-start-btn').style.display = 'none';
+}
+
+async function confirm2fa() {
+  const res = await fetch('/auth/2fa/confirm', {
+    method: 'POST', credentials: 'include',
+    headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('access_token')},
+    body: JSON.stringify({code: document.getElementById('totp-code').value}),
+  });
+  if (res.ok) { notify.success({{ _("2FA включена") | tojson }}); location.reload(); }
+  else { const d = await res.json().catch(() => ({})); notify.error(d.detail || {{ _("Ошибка") | tojson }}); }
+}
+
+async function disable2fa() {
+  const res = await fetch('/auth/2fa/disable', {
+    method: 'POST', credentials: 'include',
+    headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('access_token')},
+    body: JSON.stringify({code: document.getElementById('totp-off-code').value}),
+  });
+  if (res.ok) { notify.success({{ _("2FA отключена") | tojson }}); location.reload(); }
+  else { const d = await res.json().catch(() => ({})); notify.error(d.detail || {{ _("Ошибка") | tojson }}); }
+}
+
 async function generateBotLink() {
   const btn = document.getElementById('gen-link-btn');
   btn.disabled = true; btn.textContent = T.generating;

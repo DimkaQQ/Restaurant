@@ -2,7 +2,7 @@ from app.templates_env import templates
 import logging
 
 from fastapi import APIRouter, Depends, HTTPException, Response, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -121,8 +121,39 @@ async def login(request: Request, data: LoginRequest, response: Response, db: As
                 log_action(db, account.network_id, account.email, "login_locked",
                            "5 неверных паролей подряд — вход заблокирован на 15 минут")
                 logger.warning("Account %s locked after repeated failed logins", account.email)
+                # Wake the owner up in Telegram — repeated wrong passwords on
+                # a staff account is worth a human look.
+                owner = (await db.execute(_select(_User).where(
+                    _User.network_id == account.network_id,
+                    _User.role == "owner",
+                    _User.telegram_id != None,  # noqa: E711
+                ))).scalars().first()
+                if owner:
+                    from app.models.bot_notification import BotNotification
+                    import uuid as _uuid
+                    db.add(BotNotification(
+                        id=_uuid.uuid4(), network_id=account.network_id,
+                        telegram_id=owner.telegram_id,
+                        text=(f"⚠️ Аккаунт {account.email} заблокирован на 15 минут: "
+                              "5 неверных паролей подряд. Если это не ваш сотрудник — смените ему пароль."),
+                    ))
             await db.commit()
         raise HTTPException(status_code=401, detail="Неверный email или пароль")
+
+    # Second factor: with 2FA enabled the correct password alone is not
+    # enough — no cookies are issued until a valid app code arrives.
+    if user.totp_enabled and user.totp_secret:
+        from app.services.totp import verify_code
+        if not data.totp_code:
+            return JSONResponse(status_code=401, content={
+                "detail": "Введите код из приложения-аутентификатора",
+                "totp_required": True,
+            })
+        if not verify_code(user.totp_secret, data.totp_code):
+            return JSONResponse(status_code=401, content={
+                "detail": "Неверный код подтверждения",
+                "totp_required": True,
+            })
 
     if user.failed_logins or user.locked_until:
         user.failed_logins = 0
@@ -150,6 +181,121 @@ async def login(request: Request, data: LoginRequest, response: Response, db: As
         max_age=60 * settings.ACCESS_TOKEN_EXPIRE_MINUTES,
     )
     return TokenResponse(access_token=access_token)
+
+
+@router.post("/pin-switch")
+@limiter.limit("15/minute")
+async def pin_switch(request: Request, response: Response, db: AsyncSession = Depends(get_db)):
+    """iiko-style operator switch on a shared station tablet: the device is
+    already authenticated under some floor account; an employee enters their
+    personal PIN and the session becomes theirs. Deliberately NOT an
+    internet-facing login — without an existing session it's a 401, so a
+    4-6 digit PIN never guards the front door, only the switch."""
+    from datetime import datetime, timedelta, timezone
+    from sqlalchemy import select as _select
+    from app.models.user import User as _User
+    from app.routers.deps import get_current_user_dep
+    from app.services.auth_service import verify_password as _verify
+
+    current = await get_current_user_dep(request, response, db)
+    now = datetime.now(timezone.utc)
+    # Brute-force guard: failures count against the STATION account.
+    if current.locked_until and current.locked_until > now:
+        raise HTTPException(status_code=429, detail="Слишком много неверных PIN. Подождите 15 минут.")
+
+    body = await request.json()
+    pin = str(body.get("pin") or "").strip()
+    if not pin.isdigit() or not (4 <= len(pin) <= 6):
+        raise HTTPException(status_code=400, detail="PIN — от 4 до 6 цифр")
+
+    candidates = (await db.execute(_select(_User).where(
+        _User.network_id == current.network_id,
+        _User.pin_hash != None,  # noqa: E711
+    ))).scalars().all()
+    target = next((u for u in candidates if _verify(pin, u.pin_hash)), None)
+
+    if not target:
+        current.failed_logins = (current.failed_logins or 0) + 1
+        if current.failed_logins >= 5:
+            current.locked_until = now + timedelta(minutes=15)
+            current.failed_logins = 0
+            from app.services.audit import log_action
+            log_action(db, current.network_id, current.email, "pin_locked",
+                       "5 неверных PIN подряд на станции — смена сотрудника заблокирована на 15 минут")
+        await db.commit()
+        raise HTTPException(status_code=401, detail="Неверный PIN")
+
+    if current.failed_logins:
+        current.failed_logins = 0
+        await db.commit()
+
+    ver = target.token_version or 0
+    access_token = create_access_token({"sub": str(target.id), "ver": ver})
+    refresh_token = create_refresh_token({"sub": str(target.id), "ver": ver})
+    for key, value, age in (
+        ("refresh_token", refresh_token, 60 * 60 * 24 * 30),
+        ("access_token", access_token, 60 * settings.ACCESS_TOKEN_EXPIRE_MINUTES),
+    ):
+        response.set_cookie(key=key, value=value, httponly=True, samesite="lax",
+                            secure=_COOKIE_SECURE, max_age=age)
+    from app.services.audit import log_action
+    log_action(db, current.network_id, target.email, "pin_switch",
+               f"Смена сотрудника на станции: {current.email} → {target.email}")
+    await db.commit()
+    return {"ok": True, "email": target.email, "role": target.role,
+            "name": target.email.split("@")[0], "access_token": access_token}
+
+
+# ── TOTP 2FA (owner's account) ───────────────────────────────────────────
+
+@router.post("/2fa/enroll")
+async def totp_enroll(request: Request, db: AsyncSession = Depends(get_db)):
+    """Generate a provisional secret. 2FA only turns on after /2fa/confirm
+    proves the authenticator app actually has it."""
+    from app.routers.deps import get_current_user_dep
+    from app.services.totp import generate_secret, provisioning_uri
+    user = await get_current_user_dep(request, None, db)
+    if user.totp_enabled:
+        raise HTTPException(status_code=400, detail="2FA уже включена")
+    secret = generate_secret()
+    user.totp_secret = secret
+    await db.commit()
+    return {"secret": secret, "otpauth": provisioning_uri(secret, user.email)}
+
+
+@router.post("/2fa/confirm")
+async def totp_confirm(request: Request, db: AsyncSession = Depends(get_db)):
+    from app.routers.deps import get_current_user_dep
+    from app.services.totp import verify_code
+    user = await get_current_user_dep(request, None, db)
+    body = await request.json()
+    if not user.totp_secret:
+        raise HTTPException(status_code=400, detail="Сначала запросите секрет")
+    if not verify_code(user.totp_secret, str(body.get("code") or "")):
+        raise HTTPException(status_code=400, detail="Неверный код — проверьте время на телефоне")
+    user.totp_enabled = True
+    from app.services.audit import log_action
+    log_action(db, user.network_id, user.email, "totp_enabled", "Включена двухфакторная аутентификация")
+    await db.commit()
+    return {"ok": True}
+
+
+@router.post("/2fa/disable")
+async def totp_disable(request: Request, db: AsyncSession = Depends(get_db)):
+    from app.routers.deps import get_current_user_dep
+    from app.services.totp import verify_code
+    user = await get_current_user_dep(request, None, db)
+    body = await request.json()
+    if not user.totp_enabled:
+        raise HTTPException(status_code=400, detail="2FA не включена")
+    if not verify_code(user.totp_secret, str(body.get("code") or "")):
+        raise HTTPException(status_code=400, detail="Неверный код")
+    user.totp_enabled = False
+    user.totp_secret = None
+    from app.services.audit import log_action
+    log_action(db, user.network_id, user.email, "totp_disabled", "Отключена двухфакторная аутентификация")
+    await db.commit()
+    return {"ok": True}
 
 
 @router.post("/logout")

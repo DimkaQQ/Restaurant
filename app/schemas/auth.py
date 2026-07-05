@@ -12,6 +12,7 @@ class NetworkCreate(BaseModel):
 class LoginRequest(BaseModel):
     email: EmailStr
     password: str
+    totp_code: str | None = None  # required when the account has 2FA enabled
 
 
 class PasswordResetRequest(BaseModel):

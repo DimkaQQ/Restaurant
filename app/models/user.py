@@ -22,6 +22,11 @@ class User(Base):
     locked_until: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     # Bumping revokes every outstanding JWT for this user (password reset etc.)
     token_version: Mapped[int] = mapped_column(Integer, default=0)
+    # Station PIN (bcrypt hash): switch the acting employee on a shared tablet
+    pin_hash: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    # TOTP 2FA: secret is provisional until the first code is confirmed
+    totp_secret: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    totp_enabled: Mapped[bool] = mapped_column(Boolean, default=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     network: Mapped["Network"] = relationship("Network", back_populates="users")

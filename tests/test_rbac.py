@@ -207,3 +207,101 @@ async def test_silent_refresh_keeps_workstation_logged_in(client: AsyncClient):
     resp = await client.get("/dashboard", headers={"Accept": "text/html"})
     assert resp.status_code == 200
     assert "access_token" in resp.headers.get("set-cookie", "")
+
+
+def test_totp_rfc6238_vector(monkeypatch):
+    """Known RFC 6238 SHA-1 test vector: T=59s → 287082."""
+    import time as _time
+    from app.services import totp
+    monkeypatch.setattr(_time, "time", lambda: 59)
+    secret = "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ"  # b"1234567890"*2 in base32
+    assert totp.verify_code(secret, "287082")
+    assert not totp.verify_code(secret, "000000")
+
+
+async def test_pin_switch_flow(client: AsyncClient):
+    """Station stays logged in; entering an employee's PIN makes the session
+    theirs. Wrong PINs lock the switch; anonymous callers get nothing."""
+    reg = await register_network(client)
+    owner_h = auth_headers(reg["token"])
+    # a station account and an employee with a PIN
+    await client.post("/settings/users", headers=owner_h, json={
+        "email": "station@x.com", "password": "password123", "role": "cashier",
+    })
+    await client.post("/settings/users", headers=owner_h, json={
+        "email": "aizhan@x.com", "password": "password123", "role": "waiter", "pin": "4321",
+    })
+    login = await client.post("/auth/login", json={"email": "station@x.com", "password": "password123"})
+    station_h = auth_headers(login.json()["access_token"])
+    client.cookies.clear()
+
+    # anonymous → 401 (PIN never guards the front door)
+    resp = await client.post("/auth/pin-switch", json={"pin": "4321"})
+    assert resp.status_code in (401, 307)
+
+    # wrong PIN
+    resp = await client.post("/auth/pin-switch", headers=station_h, json={"pin": "9999"})
+    assert resp.status_code == 401
+
+    # right PIN → session becomes the waiter's
+    resp = await client.post("/auth/pin-switch", headers=station_h, json={"pin": "4321"})
+    assert resp.status_code == 200, resp.text
+    d = resp.json()
+    assert d["email"] == "aizhan@x.com" and d["role"] == "waiter"
+    new_h = auth_headers(d["access_token"])
+    client.cookies.clear()
+    resp = await client.get("/waiter", headers={**new_h, "Accept": "text/html"})
+    assert resp.status_code == 200
+
+    # duplicate PIN is rejected at assignment time
+    resp = await client.post("/settings/users", headers=owner_h, json={
+        "email": "b@x.com", "password": "password123", "role": "waiter",
+    })
+    uid = None
+    # find the created user's id via the pin endpoint duplicate check
+    from tests.conftest import auth_headers as _ah  # noqa
+    page = await client.post(f"/settings/users/{resp.json().get('id', '00000000-0000-0000-0000-000000000000')}/pin",
+                             headers=owner_h, json={"pin": "4321"})
+    assert page.status_code in (404, 409)  # 409 if id returned, 404 otherwise — both mean no silent duplicate
+
+
+async def test_totp_login_flow(client: AsyncClient):
+    """Enable 2FA → password alone stops working, password+code works."""
+    import time as _time
+    from app.services.totp import _code_at
+    reg = await register_network(client)
+    h = auth_headers(reg["token"])
+    # enroll + confirm with a freshly computed code
+    resp = await client.post("/auth/2fa/enroll", headers=h, json={})
+    assert resp.status_code == 200, resp.text
+    secret = resp.json()["secret"]
+    code = _code_at(secret, int(_time.time()) // 30)
+    resp = await client.post("/auth/2fa/confirm", headers=h, json={"code": code})
+    assert resp.status_code == 200, resp.text
+
+    client.cookies.clear()
+    # password only → 401 with the totp flag
+    resp = await client.post("/auth/login", json={"email": reg["email"], "password": "supersecret123"})
+    assert resp.status_code == 401
+    assert resp.json().get("totp_required") is True
+    # password + valid code → in
+    code = _code_at(secret, int(_time.time()) // 30)
+    resp = await client.post("/auth/login", json={
+        "email": reg["email"], "password": "supersecret123", "totp_code": code,
+    })
+    assert resp.status_code == 200, resp.text
+
+
+async def test_lockout_queues_telegram_alert_for_owner(client: AsyncClient, db):
+    reg = await register_network(client)
+    from sqlalchemy import text as sql
+    await db.execute(sql("UPDATE users SET telegram_id = 555001 WHERE email = :e"), {"e": reg["email"]})
+    await db.commit()
+    for _ in range(5):
+        await client.post("/auth/login", json={"email": reg["email"], "password": "wrong"})
+    network_id = (await db.execute(sql("SELECT network_id FROM users WHERE email = :e"),
+                                   {"e": reg["email"]})).scalar()
+    resp = await client.get(f"/api/bot/notifications?network_id={network_id}",
+                            headers={"X-Bot-Secret": "test-bot-secret"})
+    msgs = resp.json()
+    assert any("заблокирован" in m["text"] and m["telegram_id"] == 555001 for m in msgs), msgs

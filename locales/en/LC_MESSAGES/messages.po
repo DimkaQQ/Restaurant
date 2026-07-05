@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-05 06:24+0000\n"
+"POT-Creation-Date: 2026-07-05 18:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -64,6 +64,9 @@ msgstr "+₸"
 msgid "1 заведение"
 msgstr "1 venue"
 
+msgid "1. Добавьте секрет в приложение-аутентификатор:"
+msgstr "1. Add the secret to your authenticator app:"
+
 msgid "1. Какие данные мы собираем"
 msgstr "1. What data we collect"
 
@@ -79,11 +82,23 @@ msgstr "14 days free, no card required. Get started in 2 minutes."
 msgid "15 минут, сами"
 msgstr "15 minutes, on your own"
 
+msgid "2. Введите код из приложения для подтверждения:"
+msgstr "2. Enter the code from the app to confirm:"
+
 msgid "2. Для чего используются данные"
 msgstr "2. What the data is used for"
 
 msgid "2. Пробный период и оплата"
 msgstr "2. Trial period and billing"
+
+msgid "2FA включена"
+msgstr "2FA enabled"
+
+msgid "2FA включена: при входе нужен код из приложения."
+msgstr "2FA is on: signing in requires a code from your app."
+
+msgid "2FA отключена"
+msgstr "2FA disabled"
 
 msgid "2GIS ссылки и Telegram менеджеров"
 msgstr "2GIS links and manager Telegram IDs"
@@ -139,6 +154,15 @@ msgid ""
 msgstr ""
 "P&L, expenses, revenue by venue, guest NPS — the full business picture in"
 " one place."
+
+msgid "PIN для смены сотрудника на станции"
+msgstr "PIN for switching the operator at a station"
+
+msgid "PIN для станции (необязательно, 4–6 цифр)"
+msgstr "Station PIN (optional, 4–6 digits)"
+
+msgid "PIN сотрудника (4–6 цифр). Пусто — удалить PIN."
+msgstr "Employee PIN (4–6 digits). Empty — remove the PIN."
 
 msgid ""
 "RestOS обрабатывает персональные данные владельцев ресторанов, их "
@@ -310,6 +334,9 @@ msgstr "Visits"
 
 msgid "Включить"
 msgstr "Enable"
+
+msgid "Включить 2FA"
+msgstr "Enable 2FA"
 
 msgid "Владелец"
 msgstr "Owner"
@@ -522,6 +549,9 @@ msgstr "Date"
 msgid "Дашборд"
 msgstr "Dashboard"
 
+msgid "Двухфакторная аутентификация (ваш аккаунт)"
+msgstr "Two-factor authentication (your account)"
+
 msgid "Действие"
 msgstr "Action"
 
@@ -536,6 +566,9 @@ msgstr "Details"
 
 msgid "Динамика отзывов (30 дней)"
 msgstr "Review trend (30 days)"
+
+msgid "Для быстрой смены сотрудника на планшете"
+msgstr "For quick operator switching on the tablet"
 
 msgid ""
 "Для предоставления функций Сервиса (приём заказов, кухонный дисплей, "
@@ -588,6 +621,13 @@ msgstr "Add tables"
 
 msgid "Добавьте хотя бы одну строку с количеством"
 msgstr "Add at least one line with a quantity"
+
+msgid ""
+"Дополнительная защита входа: пароль + код из приложения (Google "
+"Authenticator, 1Password и т.п.)."
+msgstr ""
+"Extra sign-in protection: password + a code from an app (Google "
+"Authenticator, 1Password, etc.)."
 
 msgid ""
 "Доступ к данным для интеграций (только чтение): GET /api/v1/venues, "
@@ -771,6 +811,12 @@ msgstr "When"
 
 msgid "Код"
 msgstr "Code"
+
+msgid "Код из приложения"
+msgstr "Code from the app"
+
+msgid "Код из приложения-аутентификатора"
+msgstr "Code from your authenticator app"
 
 msgid "Кол-во"
 msgstr "Qty"
@@ -992,6 +1038,9 @@ msgstr ""
 "The card charge failed. Update your payment method — access stays on, "
 "Stripe will retry automatically."
 
+msgid "Неверный PIN"
+msgstr "Wrong PIN"
+
 msgid "Негативные отзывы"
 msgstr "Negative reviews"
 
@@ -1202,6 +1251,9 @@ msgstr "No reviews yet"
 
 msgid "Отзывы"
 msgstr "Reviews"
+
+msgid "Отключить 2FA"
+msgstr "Disable 2FA"
 
 msgid "Открыта"
 msgstr "Opened"
@@ -1794,6 +1846,12 @@ msgstr "Shift opened"
 
 msgid "Смена открыта с"
 msgstr "Shift open since"
+
+msgid "Смена сотрудника"
+msgstr "Switch operator"
+
+msgid "Смена сотрудника по PIN"
+msgstr "Switch operator by PIN"
 
 msgid "Смены"
 msgstr "Shifts"

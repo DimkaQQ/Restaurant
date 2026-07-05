@@ -83,6 +83,9 @@ body.pos-big .btn-primary, body.pos-big .btn-secondary { min-height:52px; font-s
         style="flex:1; background:var(--card); border:1px solid var(--border); color:var(--white); padding:.55rem .8rem; border-radius:8px; font-size:.9rem">
       <button type="button" id="stoplist-btn" class="btn-secondary" onclick="toggleStopMode()"
         style="font-size:.78rem; padding:.5rem .8rem; white-space:nowrap">{{ _("Стоп-лист") }}</button>
+      <button type="button" class="btn-secondary" onclick="openPinModal()"
+        title="{{ _('Смена сотрудника по PIN') }}"
+        style="font-size:.78rem; padding:.5rem .8rem; white-space:nowrap">{{ _("Сотрудник") }}</button>
       <button type="button" id="bigmode-btn" class="btn-secondary" onclick="toggleBigMode()"
         title="{{ _('Крупные кнопки для планшета') }}"
         style="font-size:.78rem; padding:.5rem .8rem; white-space:nowrap">{{ _("Крупно") }}</button>
@@ -178,6 +181,25 @@ body.pos-big .btn-primary, body.pos-big .btn-secondary { min-height:52px; font-s
       <button type="button" class="btn-primary" onclick="confirmFreeItem()">{{ _("В корзину") }}</button>
       <button type="button" class="btn-secondary" onclick="closeFreeItemModal()">{{ _("Отмена") }}</button>
     </div>
+  </div>
+</div>
+
+
+<!-- Operator switch: enter a personal PIN, session becomes that employee's -->
+<div id="pin-modal" class="modal" style="display:none">
+  <div class="modal-overlay" onclick="closePinModal()"></div>
+  <div class="modal-content" style="max-width:300px; text-align:center">
+    <h2 class="modal-title">{{ _("Смена сотрудника") }}</h2>
+    <div id="pin-dots" style="font-size:1.6rem; letter-spacing:.4em; min-height:2.2rem; margin:.5rem 0; color:var(--gold)"></div>
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:.5rem">
+      {% for d in [1,2,3,4,5,6,7,8,9] %}
+      <button type="button" class="btn-secondary" style="min-height:56px; font-size:1.3rem" onclick="pinDigit('{{ d }}')">{{ d }}</button>
+      {% endfor %}
+      <button type="button" class="btn-secondary" style="min-height:56px" onclick="pinClear()">⌫</button>
+      <button type="button" class="btn-secondary" style="min-height:56px; font-size:1.3rem" onclick="pinDigit('0')">0</button>
+      <button type="button" class="btn-primary" style="min-height:56px" onclick="pinSubmit()">OK</button>
+    </div>
+    <button type="button" class="btn-secondary" style="width:100%; margin-top:.6rem" onclick="closePinModal()">{{ _("Отмена") }}</button>
   </div>
 </div>
 
@@ -843,6 +865,32 @@ body.pos-big .btn-primary, body.pos-big .btn-secondary { min-height:52px; font-s
 
   function closeShiftModal() {
     document.getElementById('shift-modal').style.display = 'none';
+  }
+
+
+  // ── Operator switch by PIN ──
+  let _pin = '';
+  function openPinModal() { _pin = ''; renderPinDots(); document.getElementById('pin-modal').style.display = 'flex'; }
+  function closePinModal() { document.getElementById('pin-modal').style.display = 'none'; }
+  function renderPinDots() { document.getElementById('pin-dots').textContent = '●'.repeat(_pin.length) || ' '; }
+  function pinDigit(d) { if (_pin.length < 6) { _pin += d; renderPinDots(); } }
+  function pinClear() { _pin = _pin.slice(0, -1); renderPinDots(); }
+  async function pinSubmit() {
+    if (_pin.length < 4) return;
+    const res = await fetch('/auth/pin-switch', {
+      method: 'POST', credentials: 'include',
+      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + (localStorage.getItem('access_token') || '')},
+      body: JSON.stringify({pin: _pin}),
+    });
+    _pin = ''; renderPinDots();
+    if (res.ok) {
+      const d = await res.json();
+      localStorage.setItem('access_token', d.access_token);
+      location.reload();
+    } else {
+      const d = await res.json().catch(() => ({}));
+      notify.error(d.detail || {{ _("Неверный PIN") | tojson }});
+    }
   }
 
   // ── Big-buttons mode (tablet on a stand, rush hour) ──

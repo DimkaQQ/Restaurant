@@ -37,6 +37,10 @@
           <label>{{ _("Пароль") }}</label>
           <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="current-password" required>
         </div>
+        <div class="form-group" id="totp-group" style="display:none">
+          <label for="totp">{{ _("Код из приложения-аутентификатора") }}</label>
+          <input type="text" id="totp" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="123 456">
+        </div>
         <button type="submit" class="btn-primary btn-full">{{ _("Войти") }}</button>
       </form>
       <p class="auth-subtitle" style="margin-top:1rem">
@@ -59,6 +63,7 @@
         body: JSON.stringify({
           email: document.getElementById('email').value,
           password: document.getElementById('password').value,
+          totp_code: document.getElementById('totp').value || null,
         }),
         credentials: 'include',
       });
@@ -71,6 +76,13 @@
         try {
           const data = await res.json();
           msg = data.detail || msg;
+          if (data.totp_required) {
+            const g = document.getElementById('totp-group');
+            const first = g.style.display === 'none';
+            g.style.display = '';
+            document.getElementById('totp').focus();
+            if (first) { err.textContent = msg; err.style.display = 'block'; return; }
+          }
         } catch {}
         err.textContent = msg;
         err.style.display = 'block';
