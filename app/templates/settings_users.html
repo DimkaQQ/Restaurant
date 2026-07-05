@@ -186,6 +186,8 @@
           {% if u.role == "owner" %}{{ _("Владелец") }}
           {% elif u.role == "manager" %}{{ _("Менеджер") }}
           {% elif u.role == "cashier" %}{{ _("Кассир") }}
+          {% elif u.role == "waiter" %}{{ _("Официант") }}
+          {% elif u.role == "kitchen" %}{{ _("Кухня") }}
           {% elif u.role == "administrator" %}{{ _("Администратор") }}
           {% else %}{{ u.role }}{% endif %}
         </span>
@@ -226,6 +228,8 @@
         <option value="manager">{{ _("Менеджер") }}</option>
         <option value="administrator">{{ _("Администратор") }}</option>
         <option value="cashier">{{ _("Кассир") }}</option>
+        <option value="waiter">{{ _("Официант (только приём заказов)") }}</option>
+        <option value="kitchen">{{ _("Кухня (только экран кухни)") }}</option>
       </select>
     </div>
     <div class="form-group">

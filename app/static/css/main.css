@@ -84,6 +84,13 @@ body {
 }
 
 .nav-link svg { width: 18px; height: 18px; flex-shrink: 0; }
+.nav-group-label {
+  padding: 1rem 1.5rem 0.35rem;
+  font-size: 0.68rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
 .nav-link:hover { color: var(--white); background: var(--gold-dim); }
 .nav-link.active { color: var(--gold); border-left: 2px solid var(--gold); }
 

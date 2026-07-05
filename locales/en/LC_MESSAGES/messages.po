@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-05 05:13+0000\n"
+"POT-Creation-Date: 2026-07-05 06:24+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -817,6 +817,9 @@ msgstr "Who deleted, cancelled, or gave a discount — last 200 records"
 msgid "Кухня"
 msgstr "Kitchen"
 
+msgid "Кухня (только экран кухни)"
+msgstr "Kitchen (kitchen screen only)"
+
 msgid "Кухонный дисплей (KDS)"
 msgstr "Kitchen display (KDS)"
 
@@ -1252,6 +1255,9 @@ msgstr "Sending…"
 
 msgid "Официант"
 msgstr "Waiter"
+
+msgid "Официант (только приём заказов)"
+msgstr "Waiter (order taking only)"
 
 msgid ""
 "Официант, кухня и касса видят заказ в реальном времени. Столы, статусы, "
@@ -1928,6 +1934,9 @@ msgstr "Sign-in link (one-time use):"
 
 msgid "Ссылка недействительна или устарела"
 msgstr "The link is invalid or has expired"
+
+msgid "Станции"
+msgstr "Stations"
 
 msgid "Статус"
 msgstr "Status"

@@ -170,7 +170,7 @@ async def create_user(
         if send_invite:
             import secrets
             password = secrets.token_urlsafe(24)
-        if role not in ("manager", "cashier", "administrator"):
+        if role not in ("manager", "cashier", "administrator", "waiter", "kitchen"):
             raise HTTPException(status_code=400, detail="Некорректная роль")
 
         existing = (await db.execute(

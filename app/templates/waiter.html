@@ -77,6 +77,8 @@
         {% for v in venues %}<option value="{{ v.id }}" selected>{{ v.name }}</option>{% endfor %}
       </select>
       {% endif %}
+      <a href="#" onclick="event.preventDefault(); fetch('/auth/logout', {method:'POST'}).then(() => { localStorage.removeItem('access_token'); location.href='/auth/login'; })"
+         style="color:var(--muted); font-size:.8rem; text-decoration:none; margin-left:.6rem">{{ _("Выйти") }}</a>
     </div>
   </div>
   <div class="w-tabs">

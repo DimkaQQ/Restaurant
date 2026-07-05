@@ -21,13 +21,40 @@ def _wants_html(request: Request) -> bool:
 
 # ── Role-based access ─────────────────────────────────────────────────────
 # One linear hierarchy: each level includes everything below it.
-#   cashier        — the register and the floor: POS, waiter screen, orders,
-#                    kitchen, cash shifts, stock intake/write-off, stop-list
+#   waiter/kitchen/cashier — floor jobs (level 1). Same API rights: orders,
+#                    cash shifts, stock intake/write-off, stop-list. They
+#                    differ in WHICH SCREEN they live on (see JOB_HOME):
+#                    each job role is locked to its own workstation screen.
 #   manager        — + menu editing, guests, analytics, staff & schedules,
 #                    goods receipts (invoices)
 #   administrator  — + finances (P&L, expenses, CSV), broadcasts
 #   owner          — + settings: venues, users, promos, API, billing
-ROLE_LEVEL = {"cashier": 1, "manager": 2, "administrator": 3, "owner": 4}
+ROLE_LEVEL = {"waiter": 1, "kitchen": 1, "cashier": 1, "manager": 2, "administrator": 3, "owner": 4}
+
+# Workstation lock: a job-role account opens ONLY its screen (plus what the
+# job genuinely needs). Any other page silently redirects home — a tablet at
+# the register can't wander into the back office by a stray tap.
+JOB_HOME = {"cashier": "/pos", "waiter": "/waiter", "kitchen": "/kitchen"}
+JOB_ALLOWED_PREFIXES = {
+    # the register also serves/collects payment from the orders board
+    "cashier": ("/pos", "/orders", "/waiter", "/kitchen", "/partials"),
+    "waiter": ("/waiter",),
+    "kitchen": ("/kitchen", "/partials"),
+}
+
+
+def _job_screen_gate(user: User, request: Request) -> None:
+    """For job roles, redirect any HTML page outside their workstation back
+    to their home screen. APIs are untouched (guarded by _wants_html)."""
+    home = JOB_HOME.get(user.role)
+    if not home or not _wants_html(request):
+        return
+    path = request.url.path
+    allowed = JOB_ALLOWED_PREFIXES[user.role]
+    # receipts/tickets print from any station
+    if path.endswith("/receipt") or path.startswith(allowed) or path.startswith("/auth"):
+        return
+    raise HTTPException(status_code=status.HTTP_307_TEMPORARY_REDIRECT, headers={"Location": home})
 
 
 def role_at_least(user: User, min_role: str) -> bool:
@@ -108,6 +135,7 @@ async def get_current_user_dep(
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Недействительный токен")
 
     await _check_subscription(user, request, db)
+    _job_screen_gate(user, request)
     return user
 
 
