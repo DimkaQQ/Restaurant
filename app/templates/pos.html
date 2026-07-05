@@ -4,7 +4,10 @@
 {% block head %}
 <style>
 .pos-layout { display:grid; grid-template-columns:1fr 340px; gap:1.5rem; align-items:start; }
-@media(max-width:900px){ .pos-layout{grid-template-columns:1fr;} }
+/* Tablets are the register's home: keep the cart beside the grid down to
+   phone widths, just narrower. Only true phones stack. */
+@media(max-width:1024px){ .pos-layout{grid-template-columns:1fr 300px; gap:1rem;} }
+@media(max-width:700px){ .pos-layout{grid-template-columns:1fr;} }
 .pos-cats { display:flex; gap:.5rem; flex-wrap:wrap; margin-bottom:1rem; }
 .pos-cat-chip { padding:.4rem .9rem; min-height:36px; border-radius:20px; border:1px solid var(--border); color:var(--muted); background:none; cursor:pointer; font-size:.82rem; }
 .pos-cat-chip.active { background:rgba(200,168,75,.15); border-color:var(--gold); color:var(--gold); }

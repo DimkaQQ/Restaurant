@@ -19,6 +19,38 @@ def _wants_html(request: Request) -> bool:
     return "text/html" in accept
 
 
+# ── Role-based access ─────────────────────────────────────────────────────
+# One linear hierarchy: each level includes everything below it.
+#   cashier        — the register and the floor: POS, waiter screen, orders,
+#                    kitchen, cash shifts, stock intake/write-off, stop-list
+#   manager        — + menu editing, guests, analytics, staff & schedules,
+#                    goods receipts (invoices)
+#   administrator  — + finances (P&L, expenses, CSV), broadcasts
+#   owner          — + settings: venues, users, promos, API, billing
+ROLE_LEVEL = {"cashier": 1, "manager": 2, "administrator": 3, "owner": 4}
+
+
+def role_at_least(user: User, min_role: str) -> bool:
+    return ROLE_LEVEL.get(user.role, 0) >= ROLE_LEVEL[min_role]
+
+
+def require_role(min_role: str):
+    """Dependency factory: `Depends(require_role("manager"))` returns the
+    current user or raises 403. HTML requests get redirected home instead of
+    a bare error page."""
+    async def _dep(
+        request: Request,
+        db: AsyncSession = Depends(get_db),
+    ) -> User:
+        user = await get_current_user_dep(request, db)
+        if not role_at_least(user, min_role):
+            if _wants_html(request):
+                raise HTTPException(status_code=status.HTTP_307_TEMPORARY_REDIRECT, headers={"Location": "/dashboard"})
+            raise HTTPException(status_code=403, detail="Недостаточно прав для этого раздела")
+        return user
+    return _dep
+
+
 async def _check_subscription(user: User, request: Request, db: AsyncSession) -> None:
     if any(request.url.path.startswith(p) for p in _BILLING_EXEMPT_PREFIXES):
         return

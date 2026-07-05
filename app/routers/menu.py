@@ -43,16 +43,22 @@ async def _load_item_with_modifiers(item_id: uuid.UUID, db: AsyncSession) -> Men
     )).scalar_one()
 
 
-async def _check_venue_owner(venue_id: uuid.UUID, user: User, db: AsyncSession) -> Venue:
+async def _check_venue_owner(
+    venue_id: uuid.UUID, user: User, db: AsyncSession, min_role: str = "manager",
+) -> Venue:
+    """Menu editing is manager+; pass min_role="cashier" for the stop-list
+    (availability toggle), which the floor staff needs mid-shift. A user
+    pinned to a venue can only touch that venue's menu either way."""
+    from app.routers.deps import role_at_least
     result = await db.execute(
         select(Venue).where(Venue.id == venue_id, Venue.network_id == user.network_id)
     )
     venue = result.scalar_one_or_none()
     if not venue:
         raise HTTPException(status_code=404, detail="Заведение не найдено")
-    # Owners and managers manage the whole network's menu (incl. the POS
-    # stop-list); other staff only their pinned venue.
-    if user.role not in ("owner", "manager") and user.venue_id != venue_id:
+    if not role_at_least(user, min_role):
+        raise HTTPException(status_code=403, detail="Недостаточно прав")
+    if user.venue_id and user.venue_id != venue_id and user.role != "owner":
         raise HTTPException(status_code=403, detail="Нет доступа к этому заведению")
     return venue
 
@@ -116,8 +122,13 @@ async def update_item(
         item = result.scalar_one_or_none()
         if not item:
             raise HTTPException(status_code=404, detail="Позиция не найдена")
-        await _check_venue_owner(item.venue_id, current_user, db)
-        for field, value in data.model_dump(exclude_none=True).items():
+        fields = data.model_dump(exclude_none=True)
+        # The stop-list (availability only) is a floor-staff action; anything
+        # else — price, name, category — needs a manager.
+        only_stoplist = set(fields.keys()) <= {"is_available"}
+        await _check_venue_owner(item.venue_id, current_user, db,
+                                 min_role="cashier" if only_stoplist else "manager")
+        for field, value in fields.items():
             setattr(item, field, value)
         await db.commit()
         return await _load_item_with_modifiers(item.id, db)

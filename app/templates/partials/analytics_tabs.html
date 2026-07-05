@@ -11,5 +11,7 @@
 <div class="analytics-tabs">
   <a href="/analytics/" class="analytics-tab {% if request.url.path == '/analytics/' %}active{% endif %}">{{ _("Обзор") }}</a>
   <a href="/analytics/nps" class="analytics-tab {% if request.url.path == '/analytics/nps' %}active{% endif %}">NPS</a>
+  {% if user.role in ("owner", "administrator") %}
   <a href="/finance" class="analytics-tab {% if request.url.path == '/finance' %}active{% endif %}">{{ _("Финансы") }}</a>
+  {% endif %}
 </div>

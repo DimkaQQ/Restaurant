@@ -15,7 +15,7 @@ from app.models.shift import Shift
 from app.models.staff import Staff
 from app.models.venue import Venue
 from app.models.user import User
-from app.routers.deps import get_current_user_dep, get_accessible_venue_ids
+from app.routers.deps import get_current_user_dep, get_accessible_venue_ids, require_role
 
 router = APIRouter(tags=["shifts"])
 logger = logging.getLogger(__name__)
@@ -39,7 +39,7 @@ async def shifts_page(
     request: Request,
     venue_id: uuid.UUID | None = Query(None),
     week_offset: int = Query(0),
-    current_user: User = Depends(get_current_user_dep),
+    current_user: User = Depends(require_role("manager")),
     db: AsyncSession = Depends(get_db),
 ):
     try:
@@ -106,7 +106,7 @@ async def shifts_page(
 @router.post("/api/shifts")
 async def create_shift(
     data: ShiftCreate,
-    current_user: User = Depends(get_current_user_dep),
+    current_user: User = Depends(require_role("manager")),
     db: AsyncSession = Depends(get_db),
 ):
     try:
@@ -139,7 +139,7 @@ async def create_shift(
 async def update_shift_status(
     shift_id: uuid.UUID,
     data: ShiftStatusUpdate,
-    current_user: User = Depends(get_current_user_dep),
+    current_user: User = Depends(require_role("manager")),
     db: AsyncSession = Depends(get_db),
 ):
     try:
@@ -166,7 +166,7 @@ async def update_shift_status(
 @router.delete("/api/shifts/{shift_id}")
 async def delete_shift(
     shift_id: uuid.UUID,
-    current_user: User = Depends(get_current_user_dep),
+    current_user: User = Depends(require_role("manager")),
     db: AsyncSession = Depends(get_db),
 ):
     try:

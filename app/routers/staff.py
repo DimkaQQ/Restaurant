@@ -14,7 +14,7 @@ from app.models.staff import Staff
 from app.models.review import Review
 from app.models.venue import Venue
 from app.models.user import User
-from app.routers.deps import get_current_user_dep, get_accessible_venue_ids
+from app.routers.deps import get_current_user_dep, get_accessible_venue_ids, require_role
 
 router = APIRouter(prefix="/staff", tags=["staff"])
 logger = logging.getLogger(__name__)
@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 async def staff_page(
     request: Request,
     venue_id: uuid.UUID | None = Query(None),
-    current_user: User = Depends(get_current_user_dep),
+    current_user: User = Depends(require_role("manager")),
     db: AsyncSession = Depends(get_db),
 ):
     try:
@@ -71,7 +71,7 @@ async def staff_page(
 async def staff_reviews(
     request: Request,
     staff_id: uuid.UUID,
-    current_user: User = Depends(get_current_user_dep),
+    current_user: User = Depends(require_role("manager")),
     db: AsyncSession = Depends(get_db),
 ):
     try:

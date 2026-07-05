@@ -8,7 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
 from app.models.guest import Guest
 from app.models.user import User
-from app.routers.deps import get_current_user_dep
+from app.routers.deps import get_current_user_dep, require_role
 from app.schemas.guest import GuestCreate, GuestOut
 from app.services.ai_service import get_guest_recommendation
 from app.services.order_service import WALKIN_MARKER
@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 async def list_guests(
     search: str | None = Query(None),
     limit: int = Query(50, le=200),
-    current_user: User = Depends(get_current_user_dep),
+    current_user: User = Depends(require_role("manager")),
     db: AsyncSession = Depends(get_db),
 ):
     try:
@@ -45,7 +45,7 @@ async def list_guests(
 @router.get("/{guest_id}", response_model=GuestOut)
 async def get_guest(
     guest_id: uuid.UUID,
-    current_user: User = Depends(get_current_user_dep),
+    current_user: User = Depends(require_role("manager")),
     db: AsyncSession = Depends(get_db),
 ):
     try:
@@ -66,7 +66,7 @@ async def get_guest(
 @router.post("/", response_model=GuestOut)
 async def create_or_get_guest(
     data: GuestCreate,
-    current_user: User = Depends(get_current_user_dep),
+    current_user: User = Depends(require_role("manager")),
     db: AsyncSession = Depends(get_db),
 ):
     try:
@@ -92,7 +92,7 @@ async def create_or_get_guest(
 async def guest_recommendation(
     guest_id: uuid.UUID,
     venue_id: uuid.UUID = Query(...),
-    current_user: User = Depends(get_current_user_dep),
+    current_user: User = Depends(require_role("manager")),
     db: AsyncSession = Depends(get_db),
 ):
     try:

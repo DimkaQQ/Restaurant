@@ -674,6 +674,24 @@ select option { background: var(--card); }
 /* ── Tablet range: cheap Android tablets / iPad in portrait or landscape.
    Sidebar stays visible (unlike phones) but narrower, so POS/kitchen/menu
    grids get real breathing room instead of losing 220px to nav text. ── */
+/* ══════════════════════════════════════════════════════════════════════
+   RESPONSIVE SYSTEM — the whole app uses these four tiers.
+   Chosen to cover the devices a cafe actually runs on:
+
+     > 1024px         desktop / laptop / iPad Pro landscape — full layout
+     769–1024px       tablets (iPad 768–834pt, Android 800–1024) — narrower
+                      sidebar, POS keeps its side cart (see pos.html)
+     481–768px        tablet portrait & large phones — sidebar becomes a
+                      drawer behind the burger, single-column boards
+     ≤ 480px          phones (360/390/414 are the common CSS widths) —
+                      compact paddings, stacked forms, bottom-sheet modals
+
+   Rules of thumb when adding new UI:
+   - wide tables: wrap in .table-wrapper (overflow-x auto), never shrink text
+   - grids: repeat(auto-fill, minmax(...)) so they collapse on their own
+   - action rows: flex-wrap:wrap — buttons drop lines, never clip
+   ══════════════════════════════════════════════════════════════════════ */
+
 @media (min-width: 769px) and (max-width: 1024px) {
   :root { --sidebar-w: 180px; }
   .sidebar-logo { padding: 1.25rem 1rem; }

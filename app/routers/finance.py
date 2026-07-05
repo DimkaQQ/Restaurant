@@ -15,7 +15,7 @@ from app.models.finance import Expense, EXPENSE_CATEGORIES
 from app.models.order import Order
 from app.models.venue import Venue
 from app.models.user import User
-from app.routers.deps import get_current_user_dep, get_accessible_venue_ids
+from app.routers.deps import get_current_user_dep, get_accessible_venue_ids, require_role
 
 router = APIRouter(tags=["finance"])
 logger = logging.getLogger(__name__)
@@ -34,7 +34,7 @@ async def finance_page(
     request: Request,
     venue_id: uuid.UUID | None = Query(None),
     period: str = Query("month"),
-    current_user: User = Depends(get_current_user_dep),
+    current_user: User = Depends(require_role("administrator")),
     db: AsyncSession = Depends(get_db),
 ):
     try:
@@ -162,7 +162,7 @@ async def finance_page(
 @router.post("/api/expenses")
 async def create_expense(
     data: ExpenseCreate,
-    current_user: User = Depends(get_current_user_dep),
+    current_user: User = Depends(require_role("administrator")),
     db: AsyncSession = Depends(get_db),
 ):
     try:
@@ -191,7 +191,7 @@ async def create_expense(
 @router.delete("/api/expenses/{expense_id}")
 async def delete_expense(
     expense_id: uuid.UUID,
-    current_user: User = Depends(get_current_user_dep),
+    current_user: User = Depends(require_role("administrator")),
     db: AsyncSession = Depends(get_db),
 ):
     try:
@@ -230,7 +230,7 @@ async def export_csv(
     kind: str,
     period: str = Query("month"),
     venue_id: uuid.UUID | None = Query(None),
-    current_user: User = Depends(get_current_user_dep),
+    current_user: User = Depends(require_role("administrator")),
     db: AsyncSession = Depends(get_db),
 ):
     """Sales / expenses export for the accountant. utf-8-sig + ';' delimiter

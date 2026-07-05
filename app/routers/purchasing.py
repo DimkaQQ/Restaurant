@@ -17,7 +17,7 @@ from app.database import get_db
 from app.models.inventory import Ingredient
 from app.models.purchasing import Supplier, PurchaseInvoice, PurchaseInvoiceLine
 from app.models.user import User
-from app.routers.deps import get_current_user_dep, get_accessible_venue_ids
+from app.routers.deps import get_current_user_dep, get_accessible_venue_ids, require_role
 
 router = APIRouter(prefix="/api/purchasing", tags=["purchasing"])
 logger = logging.getLogger(__name__)
@@ -61,7 +61,7 @@ def _invoice_out(inv: PurchaseInvoice) -> dict:
 @router.post("/invoices")
 async def post_invoice(
     data: InvoiceIn,
-    current_user: User = Depends(get_current_user_dep),
+    current_user: User = Depends(require_role("manager")),
     db: AsyncSession = Depends(get_db),
 ):
     accessible = await get_accessible_venue_ids(current_user, db)
@@ -134,7 +134,7 @@ async def post_invoice(
 async def list_invoices(
     venue_id: uuid.UUID | None = Query(None),
     limit: int = Query(30, le=100),
-    current_user: User = Depends(get_current_user_dep),
+    current_user: User = Depends(require_role("manager")),
     db: AsyncSession = Depends(get_db),
 ):
     accessible = await get_accessible_venue_ids(current_user, db)
@@ -151,7 +151,7 @@ async def list_invoices(
 
 @router.get("/suppliers")
 async def list_suppliers(
-    current_user: User = Depends(get_current_user_dep),
+    current_user: User = Depends(require_role("manager")),
     db: AsyncSession = Depends(get_db),
 ):
     suppliers = (await db.execute(

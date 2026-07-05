@@ -42,6 +42,13 @@ class BroadcastCreate(BaseModel):
 
 
 
+def _require_admin(current_user: User) -> None:
+    """Administrator or owner — broadcasts and other venue-администратор tasks."""
+    from app.routers.deps import role_at_least
+    if not role_at_least(current_user, "administrator"):
+        raise HTTPException(status_code=403, detail="Недостаточно прав")
+
+
 def _require_owner(current_user: User) -> None:
     if current_user.role != "owner":
         raise HTTPException(status_code=403, detail="Доступ запрещён: только для владельца")
@@ -259,7 +266,7 @@ async def broadcasts_page(
     current_user: User = Depends(get_current_user_dep),
     db: AsyncSession = Depends(get_db),
 ):
-    _require_owner(current_user)
+    _require_admin(current_user)
     broadcasts = (await db.execute(
         select(Broadcast)
         .where(Broadcast.network_id == current_user.network_id)
@@ -293,7 +300,7 @@ async def create_broadcast_api(
     current_user: User = Depends(get_current_user_dep),
     db: AsyncSession = Depends(get_db),
 ):
-    _require_owner(current_user)
+    _require_admin(current_user)
     if not data.message.strip():
         raise HTTPException(status_code=400, detail="Сообщение не может быть пустым")
     bc = Broadcast(

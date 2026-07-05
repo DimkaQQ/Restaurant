@@ -70,6 +70,7 @@
 {% endif %}
 
 <div class="stats-grid">
+  {% if user.role != "cashier" %}
   <div class="stat-card">
     <span class="stat-label">{{ _("Выручка сегодня") }}</span>
     <span class="stat-value gold">{{ today_revenue | money }} ₸</span>
@@ -78,6 +79,7 @@
     <span class="stat-label">{{ _("Всего выручки") }}</span>
     <span class="stat-value">{{ total_revenue | money }} ₸</span>
   </div>
+  {% endif %}
   <div class="stat-card">
     <span class="stat-label">{{ _("Заказов сегодня") }}</span>
     <span class="stat-value">{{ orders_today }}</span>
