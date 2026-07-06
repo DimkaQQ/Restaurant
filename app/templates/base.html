@@ -11,7 +11,8 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-192.png">
   <link rel="alternate icon" href="/static/favicon.ico">
   <link rel="apple-touch-icon" href="/static/apple-touch-icon.png">
-  <link rel="stylesheet" href="/static/css/main.css?v=11">
+  <link rel="stylesheet" href="/static/css/main.css?v=12">
+  <script>if (localStorage.getItem('sb_hidden') === '1') document.documentElement.classList.add('sb-hidden');</script>
   <style>
     /* sidebar scroll — grid layout guarantee */
     .sidebar {
@@ -125,6 +126,9 @@
       <button onclick="logout()" class="btn-logout">{{ _("Выйти") }}</button>
     </div>
   </nav>
+  <button type="button" class="sb-toggle" onclick="toggleDesktopSidebar()" aria-label="{{ _('Скрыть или показать меню') }}" title="{{ _('Скрыть или показать меню') }}">
+    <span class="sb-toggle-hide">‹</span><span class="sb-toggle-show">›</span>
+  </button>
   <main class="main-content">
     {% if user is defined and user and not user.email_verified %}
     <div id="verify-email-banner" style="background:rgba(200,168,75,.12); border:1px solid var(--border); border-radius:8px; padding:.75rem 1rem; margin-bottom:1.25rem; display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap; font-size:.85rem">
@@ -154,6 +158,10 @@
   {% endif %}
 
   <script>
+    function toggleDesktopSidebar() {
+      var hidden = document.documentElement.classList.toggle('sb-hidden');
+      localStorage.setItem('sb_hidden', hidden ? '1' : '0');
+    }
     function toggleSidebar() {
       var sb = document.getElementById('sidebar');
       var ov = document.getElementById('sidebar-overlay');

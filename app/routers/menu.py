@@ -122,7 +122,12 @@ async def update_item(
         item = result.scalar_one_or_none()
         if not item:
             raise HTTPException(status_code=404, detail="Позиция не найдена")
-        fields = data.model_dump(exclude_none=True)
+        # exclude_unset (not exclude_none): an explicit null must reach the DB
+        # for nullable fields — it's how a category/description is detached.
+        fields = data.model_dump(exclude_unset=True)
+        for f in ("name", "price", "is_available"):
+            if f in fields and fields[f] is None:
+                fields.pop(f)
         # The stop-list (availability only) is a floor-staff action; anything
         # else — price, name, category — needs a manager.
         only_stoplist = set(fields.keys()) <= {"is_available"}

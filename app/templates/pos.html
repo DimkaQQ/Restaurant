@@ -86,6 +86,10 @@ body.pos-big .ipos-paybtn { min-height:64px; font-size:1.3rem; }
   font-size:.85rem; cursor:pointer; transition:all .15s;
 }
 .pos-opt-chip.active { background:rgba(200,168,75,.18); border-color:var(--gold); color:var(--gold); font-weight:600; }
+
+/* the register's bottom bar owns the bottom-left corner — park the
+   sidebar chevron mid-edge here instead */
+.sb-toggle { bottom: auto; top: 50%; margin-top: -14px; }
 </style>
 {% endblock %}
 

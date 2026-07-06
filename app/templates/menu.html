@@ -36,13 +36,31 @@
   color: var(--muted); font-size: .8rem; cursor: pointer; transition: all .15s;
 }
 .menu-recipe-btn:hover { border-color: var(--gold); color: var(--gold); background: rgba(200,168,75,0.14); }
+.cat-tabs { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1rem; }
+.cat-tab {
+  padding: .45rem .9rem; min-height: 36px; border-radius: 8px;
+  border: 1px solid var(--border); background: var(--card); color: var(--muted);
+  font-size: .85rem; cursor: pointer; white-space: nowrap;
+}
+.cat-tab.active { background: var(--gold); border-color: var(--gold); color: #000; font-weight: 600; }
+.cat-tab.cat-add { border-style: dashed; }
+.cat-row { display: flex; gap: .5rem; align-items: center; margin-bottom: .5rem; }
+.cat-row input { flex: 1; }
+.menu-edit-btn {
+  background: none; border: 1px solid var(--border); border-radius: 6px;
+  color: var(--muted); cursor: pointer; padding: .25rem .55rem; font-size: .8rem;
+}
+.menu-edit-btn:hover { color: var(--gold); border-color: var(--gold); }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="page-header">
   <h1 class="page-title">{{ _("Меню") }}</h1>
-  <button onclick="openAddModal()" class="btn-primary">{{ _("+ Добавить позицию") }}</button>
+  <div style="display:flex; gap:.5rem; flex-wrap:wrap">
+    <button onclick="openCatManageModal()" class="btn-secondary">{{ _("Категории") }}</button>
+    <button onclick="openAddModal()" class="btn-primary">{{ _("+ Добавить позицию") }}</button>
+  </div>
 </div>
 
 <div class="filters">
@@ -53,6 +71,8 @@
     {% endfor %}
   </select>
 </div>
+
+<div id="cat-tabs" class="cat-tabs" style="display:none"></div>
 
 <div id="menu-grid" class="menu-grid">
   <p class="empty-state">{{ _("Выберите заведение") }}</p>
@@ -66,12 +86,58 @@
       <div class="form-group"><label>{{ _("Название") }}</label><input type="text" name="name" required></div>
       <div class="form-group"><label>{{ _("Описание") }}</label><textarea name="description" rows="2"></textarea></div>
       <div class="form-group"><label>{{ _("Цена (₸)") }}</label><input type="number" name="price" step="0.01" required></div>
-      <div class="form-group"><label>{{ _("Категория") }}</label><input type="text" name="category"></div>
+      <div class="form-group"><label>{{ _("Категория") }}</label><input type="text" name="category" list="cat-datalist" placeholder="{{ _('Выберите или введите новую') }}"></div>
+      <datalist id="cat-datalist"></datalist>
       <div class="form-row">
         <button type="submit" class="btn-primary">{{ _("Добавить") }}</button>
         <button type="button" onclick="closeModal()" class="btn-secondary">{{ _("Отмена") }}</button>
       </div>
     </form>
+  </div>
+</div>
+
+<div id="edit-modal" class="modal" style="display:none">
+  <div class="modal-overlay" onclick="closeEditModal()"></div>
+  <div class="modal-content">
+    <h2 class="modal-title">{{ _("Редактировать позицию") }}</h2>
+    <form id="edit-form">
+      <div class="form-group"><label>{{ _("Название") }}</label><input type="text" name="name" required></div>
+      <div class="form-group"><label>{{ _("Описание") }}</label><textarea name="description" rows="2"></textarea></div>
+      <div class="form-group"><label>{{ _("Цена (₸)") }}</label><input type="number" name="price" step="0.01" required></div>
+      <div class="form-group"><label>{{ _("Категория") }}</label><input type="text" name="category" list="cat-datalist"></div>
+      <div class="form-row">
+        <button type="submit" class="btn-primary">{{ _("Сохранить") }}</button>
+        <button type="button" onclick="closeEditModal()" class="btn-secondary">{{ _("Отмена") }}</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="newcat-modal" class="modal" style="display:none">
+  <div class="modal-overlay" onclick="closeNewCatModal()"></div>
+  <div class="modal-content" style="max-width:400px">
+    <h2 class="modal-title">{{ _("Новая категория") }}</h2>
+    <form id="newcat-form">
+      <div class="form-group"><label>{{ _("Название категории") }}</label><input type="text" id="newcat-name" required maxlength="100"></div>
+      <p style="color:var(--muted);font-size:.8rem;margin-bottom:.75rem">{{ _("Категория появится в кассе и QR-меню, как только в ней будет хотя бы одна позиция.") }}</p>
+      <div class="form-row">
+        <button type="submit" class="btn-primary">{{ _("Создать") }}</button>
+        <button type="button" onclick="closeNewCatModal()" class="btn-secondary">{{ _("Отмена") }}</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="cat-modal" class="modal" style="display:none">
+  <div class="modal-overlay" onclick="closeCatManageModal()"></div>
+  <div class="modal-content" style="max-width:480px">
+    <h2 class="modal-title">{{ _("Категории") }}</h2>
+    <p style="color:var(--muted);font-size:.8rem;margin-bottom:.75rem">{{ _("Переименование меняет категорию у всех позиций. «Убрать» оставляет позиции без категории, ничего не удаляя.") }}</p>
+    <div id="cat-rows"></div>
+    <div class="form-row" style="margin-top:1rem">
+      <button type="button" onclick="saveCategories()" class="btn-primary">{{ _("Сохранить") }}</button>
+      <button type="button" onclick="closeCatManageModal()" class="btn-secondary">{{ _("Отмена") }}</button>
+    </div>
   </div>
 </div>
 
@@ -127,23 +193,66 @@
     modMulti: {{ _("можно несколько") | tojson }},
     modAddOption: {{ _("+ вариант") | tojson }},
     modSaveError: {{ _("Ошибка сохранения модификаторов") | tojson }},
+    allCats: {{ _("Все") | tojson }},
+    addCat: {{ _("+ Категория") | tojson }},
+    noCats: {{ _("Категорий пока нет") | tojson }},
+    removeCat: {{ _("Убрать") | tojson }},
+    catEmpty: {{ _("пока пусто") | tojson }},
+    itemsWord: {{ _("поз.") | tojson }},
+    saveError: {{ _("Ошибка сохранения") | tojson }},
   };
 
   function esc(s) {
     return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
+  let _items = [];
+  let _filterCat = null;          // null = all, '' = no category, string = category
+  let _draftCats = [];            // categories created but not yet used by any item
+
   async function loadMenu() {
     const venueId = document.getElementById('venue-select').value;
     if (!venueId) return;
     const res = await fetch('/api/menu/' + venueId, { credentials: 'include' });
     if (res.status === 401) { location.href = '/auth/login'; return; }
-    const items = await res.json();
-    renderMenu(items, venueId);
+    _items = await res.json();
+    renderCatTabs();
+    renderMenu();
   }
 
-  function renderMenu(items, venueId) {
+  function categories() {
+    const cats = [...new Set(_items.map(i => i.category).filter(Boolean))];
+    _draftCats.forEach(c => { if (!cats.includes(c)) cats.push(c); });
+    return cats.sort((a, b) => a.localeCompare(b, LOCALE));
+  }
+
+  function renderCatTabs() {
+    const wrap = document.getElementById('cat-tabs');
+    const cats = categories();
+    wrap.style.display = 'flex';
+    const count = c => _items.filter(i => i.category === c).length;
+    wrap.innerHTML = [
+      `<button type="button" class="cat-tab ${_filterCat === null ? 'active' : ''}" onclick="setCatFilter(null)">${T.allCats} (${_items.length})</button>`,
+      ...cats.map(c => {
+        const n = count(c);
+        return `<button type="button" class="cat-tab ${_filterCat === c ? 'active' : ''}" onclick="setCatFilter(${JSON.stringify(c).replace(/"/g, '&quot;')})">${esc(c)} (${n || T.catEmpty})</button>`;
+      }),
+      `<button type="button" class="cat-tab cat-add" onclick="openNewCatModal()">${T.addCat}</button>`,
+    ].join('');
+    // keep the datalist for the add/edit forms in sync
+    document.getElementById('cat-datalist').innerHTML =
+      cats.map(c => `<option value="${esc(c)}">`).join('');
+  }
+
+  function setCatFilter(cat) {
+    _filterCat = cat;
+    renderCatTabs();
+    renderMenu();
+  }
+
+  function renderMenu() {
     const grid = document.getElementById('menu-grid');
+    const items = _filterCat === null ? _items : _items.filter(i => i.category === _filterCat);
     if (!items.length) { grid.innerHTML = '<p class="empty-state">' + T.menuEmpty + '</p>'; return; }
     grid.innerHTML = items.map(item => `
       <div class="menu-card ${!item.is_available ? 'unavailable' : ''}">
@@ -165,7 +274,10 @@
               <span class="toggle-track"></span>
               <span class="toggle-label">${item.is_available ? T.available : T.hidden}</span>
             </label>
-            <button onclick="deleteItem('${esc(item.id)}')" class="btn-icon-danger">✕</button>
+            <div style="display:flex; gap:.4rem">
+              <button onclick="openEditModal('${esc(item.id)}')" class="menu-edit-btn" title="{{ _('Редактировать') }}">✎</button>
+              <button onclick="deleteItem('${esc(item.id)}')" class="btn-icon-danger">✕</button>
+            </div>
           </div>
           <button onclick="openRecipeModal('${esc(item.id)}', '${esc(item.name)}')" class="menu-recipe-btn">
             ${T.recipeLabel}
@@ -363,10 +475,138 @@
     document.getElementById('mod-modal').style.display = 'none';
   }
 
-  function openAddModal() {
+  function openAddModal(presetCategory) {
     const venueId = document.getElementById('venue-select').value;
     if (!venueId) { notify.error(T.selectVenueFirst); return; }
+    const form = document.getElementById('add-form');
+    // preselect the active tab's category (or an explicitly passed one)
+    const cat = typeof presetCategory === 'string' ? presetCategory : (_filterCat || '');
+    form.elements.category.value = cat;
     document.getElementById('add-modal').style.display = 'flex';
+    form.elements.name.focus();
+  }
+
+  // ── Edit item ──
+  let _editItemId = null;
+
+  function openEditModal(itemId) {
+    const item = _items.find(i => i.id === itemId);
+    if (!item) return;
+    _editItemId = itemId;
+    const form = document.getElementById('edit-form');
+    form.elements.name.value = item.name;
+    form.elements.description.value = item.description || '';
+    form.elements.price.value = parseFloat(item.price);
+    form.elements.category.value = item.category || '';
+    document.getElementById('edit-modal').style.display = 'flex';
+  }
+
+  function closeEditModal() {
+    document.getElementById('edit-modal').style.display = 'none';
+  }
+
+  document.getElementById('edit-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const data = {
+      name: fd.get('name').trim(),
+      description: fd.get('description').trim() || null,
+      price: parseFloat(fd.get('price')),
+      category: fd.get('category').trim() || null,
+    };
+    const res = await fetch('/api/menu/' + _editItemId, {
+      method: 'PATCH',
+      credentials: 'include',
+      headers: {'Content-Type':'application/json','Authorization':'Bearer '+token()},
+      body: JSON.stringify(data),
+    });
+    if (res.ok) { closeEditModal(); loadMenu(); }
+    else if (res.status === 401) { location.href = '/auth/login'; }
+    else {
+      const err = await res.json().catch(() => ({}));
+      notify.error(err.detail || T.saveError);
+    }
+  });
+
+  // ── New category ──
+  function openNewCatModal() {
+    const venueId = document.getElementById('venue-select').value;
+    if (!venueId) { notify.error(T.selectVenueFirst); return; }
+    document.getElementById('newcat-modal').style.display = 'flex';
+    document.getElementById('newcat-name').focus();
+  }
+
+  function closeNewCatModal() {
+    document.getElementById('newcat-modal').style.display = 'none';
+    document.getElementById('newcat-form').reset();
+  }
+
+  document.getElementById('newcat-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('newcat-name').value.trim();
+    if (!name) return;
+    if (!_draftCats.includes(name)) _draftCats.push(name);
+    closeNewCatModal();
+    renderCatTabs();
+    setCatFilter(name);
+    // a category only persists once an item uses it — offer the first item right away
+    openAddModal(name);
+  });
+
+  // ── Manage categories (rename / detach) ──
+  function openCatManageModal() {
+    const cats = categories();
+    const rows = document.getElementById('cat-rows');
+    if (!cats.length) {
+      rows.innerHTML = '<p class="empty-state" style="padding:.5rem 0">' + T.noCats + '</p>';
+    } else {
+      rows.innerHTML = cats.map(c => {
+        const n = _items.filter(i => i.category === c).length;
+        return `<div class="cat-row" data-old="${esc(c)}">
+          <input type="text" class="cat-new-name" value="${esc(c)}" maxlength="100">
+          <span style="color:var(--muted);font-size:.78rem;white-space:nowrap">${n} ${T.itemsWord}</span>
+          <button type="button" class="btn-icon-danger" title="${T.removeCat}" onclick="this.closest('.cat-row').classList.toggle('cat-removed'); this.closest('.cat-row').querySelector('input').disabled = this.closest('.cat-row').classList.contains('cat-removed'); this.closest('.cat-row').style.opacity = this.closest('.cat-row').classList.contains('cat-removed') ? .45 : 1">✕</button>
+        </div>`;
+      }).join('');
+    }
+    document.getElementById('cat-modal').style.display = 'flex';
+  }
+
+  function closeCatManageModal() {
+    document.getElementById('cat-modal').style.display = 'none';
+  }
+
+  async function saveCategories() {
+    const changes = [];   // {old, next}: next === null → detach items from category
+    document.querySelectorAll('#cat-rows .cat-row').forEach(row => {
+      const oldName = row.dataset.old;
+      if (row.classList.contains('cat-removed')) { changes.push({ old: oldName, next: null }); return; }
+      const next = row.querySelector('.cat-new-name').value.trim();
+      if (next && next !== oldName) changes.push({ old: oldName, next });
+    });
+    for (const ch of changes) {
+      const affected = _items.filter(i => i.category === ch.old);
+      for (const item of affected) {
+        const res = await fetch('/api/menu/' + item.id, {
+          method: 'PATCH',
+          credentials: 'include',
+          headers: {'Content-Type':'application/json','Authorization':'Bearer '+token()},
+          body: JSON.stringify({ category: ch.next }),
+        });
+        if (res.status === 401) { location.href = '/auth/login'; return; }
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          notify.error(err.detail || T.saveError);
+          return;
+        }
+      }
+      // keep drafts in sync with renames/removals
+      _draftCats = _draftCats.filter(c => c !== ch.old);
+      if (ch.next && !_draftCats.includes(ch.next)) _draftCats.push(ch.next);
+    }
+    if (_filterCat !== null) _filterCat = null;
+    closeCatManageModal();
+    loadMenu();
   }
 
   function closeModal() {

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-05 18:05+0000\n"
+"POT-Creation-Date: 2026-07-06 19:11+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -39,6 +39,9 @@ msgstr "+ Add table"
 
 msgid "+ Ингредиент"
 msgstr "+ Ingredient"
+
+msgid "+ Категория"
+msgstr "+ Category"
 
 msgid "+ Новая накладная"
 msgstr "+ New invoice"
@@ -415,6 +418,9 @@ msgstr "Choose \"{g}\""
 msgid "Выберите заведение"
 msgstr "Select a venue"
 
+msgid "Выберите или введите новую"
+msgstr "Pick one or type a new one"
+
 msgid "Выбрать..."
 msgstr "Choose..."
 
@@ -763,6 +769,9 @@ msgstr "Today's history"
 msgid "Итого"
 msgstr "Total"
 
+msgid "К оплате"
+msgstr "Pay"
+
 msgid "Казахстан"
 msgstr "Kazakhstan"
 
@@ -787,8 +796,21 @@ msgstr "Cashier"
 msgid "Кассовые смены (Z-отчёты)"
 msgstr "Cash shifts (Z-reports)"
 
+msgid "Категории"
+msgstr "Categories"
+
+msgid "Категорий пока нет"
+msgstr "No categories yet"
+
 msgid "Категория"
 msgstr "Category"
+
+msgid ""
+"Категория появится в кассе и QR-меню, как только в ней будет хотя бы одна"
+" позиция."
+msgstr ""
+"The category will appear in the POS and QR menu as soon as it has at "
+"least one item."
 
 msgid "Квартал"
 msgstr "Quarter"
@@ -976,6 +998,9 @@ msgstr "Name (e.g. \"BI reports\")"
 msgid "Название группы"
 msgstr "Group name"
 
+msgid "Название категории"
+msgstr "Category name"
+
 msgid "Название сети / ресторана"
 msgstr "Restaurant / network name"
 
@@ -1108,6 +1133,9 @@ msgstr "Low stock"
 msgid "Ничего не найдено"
 msgstr "Nothing found"
 
+msgid "Новая категория"
+msgstr "New category"
+
 msgid "Новая накладная"
 msgstr "New invoice"
 
@@ -1218,9 +1246,6 @@ msgstr "June rent payment"
 
 msgid "Оплата не прошла"
 msgstr "Payment failed"
-
-msgid "Оплатить"
-msgstr "Take payment"
 
 msgid "Оплачен"
 msgstr "Paid"
@@ -1375,6 +1400,9 @@ msgstr "Connection error"
 msgid "Ошибка создания пользователя"
 msgstr "Failed to create user"
 
+msgid "Ошибка сохранения"
+msgstr "Save error"
+
 msgid "Ошибка сохранения модификаторов"
 msgstr "Failed to save modifiers"
 
@@ -1420,6 +1448,13 @@ msgstr "Password (optional)"
 
 msgid "Пароль кассы"
 msgstr "Kassa password"
+
+msgid ""
+"Переименование меняет категорию у всех позиций. «Убрать» оставляет "
+"позиции без категории, ничего не удаляя."
+msgstr ""
+"Renaming changes the category on all its items. \"Remove\" leaves items "
+"uncategorized without deleting anything."
 
 msgid "Перенести"
 msgstr "Move"
@@ -1731,6 +1766,12 @@ msgstr ""
 "responsible for safeguarding your credentials and for actions taken under"
 " your account."
 
+msgid "Редактировать"
+msgstr "Edit"
+
+msgid "Редактировать позицию"
+msgstr "Edit item"
+
 msgid "Режим планшета"
 msgstr "Tablet mode"
 
@@ -1837,6 +1878,9 @@ msgstr "Copy the key now — it is shown only once:"
 
 msgid "Скрыто"
 msgstr "Hidden"
+
+msgid "Скрыть или показать меню"
+msgstr "Hide or show the sidebar"
 
 msgid "Смена не открыта"
 msgstr "Shift not open"
@@ -2077,6 +2121,9 @@ msgstr ""
 "You don't have any venues yet. Add your first one — it takes less than a "
 "minute."
 
+msgid "Убрать"
+msgstr "Remove"
+
 msgid "Удалил ингредиент"
 msgstr "Deleted an ingredient"
 
@@ -2301,8 +2348,14 @@ msgstr "password"
 msgid "подключено"
 msgstr "connected"
 
+msgid "поз."
+msgstr "items"
+
 msgid "позиций:"
 msgstr "items:"
+
+msgid "пока пусто"
+msgstr "empty"
 
 msgid "политикой конфиденциальности"
 msgstr "Privacy Policy"
