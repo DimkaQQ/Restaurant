@@ -66,4 +66,13 @@
     error: (msg) => toast(msg, 'error'),
     confirm: confirmDialog,
   };
+
+  // Shared HTML-escaper for JS-rendered markup (single source — templates
+  // must not carry their own copies). Escapes quotes of both kinds so the
+  // result is safe inside any quoted attribute. NOTE: this is for HTML
+  // contexts only; never build JS string literals in onclick from user
+  // data — pass ids/indexes and look the object up instead.
+  window.esc = (s) => (s == null ? '' : String(s))
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 })();

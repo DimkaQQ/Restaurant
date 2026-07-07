@@ -4,7 +4,7 @@ import uuid
 import os
 
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -16,8 +16,8 @@ from app.models.user import User
 from app.models.venue import Venue
 from app.routers.deps import get_current_user_dep
 from app.schemas.menu import (
-    MenuItemCreate, MenuItemOut, MenuItemUpdate, RecipeLineIn, RecipeLineOut,
-    ModifierGroupIn, ModifierGroupOut,
+    CategoryRename, MenuItemCreate, MenuItemOut, MenuItemUpdate,
+    RecipeLineIn, RecipeLineOut, ModifierGroupIn, ModifierGroupOut,
 )
 
 UPLOAD_DIR = "app/static/uploads/menu"
@@ -124,10 +124,12 @@ async def update_item(
             raise HTTPException(status_code=404, detail="Позиция не найдена")
         # exclude_unset (not exclude_none): an explicit null must reach the DB
         # for nullable fields — it's how a category/description is detached.
-        fields = data.model_dump(exclude_unset=True)
-        for f in ("name", "price", "is_available"):
-            if f in fields and fields[f] is None:
-                fields.pop(f)
+        # Nulls for non-nullable columns are dropped (derived from the model,
+        # so a future NOT NULL column is covered automatically).
+        fields = {
+            f: v for f, v in data.model_dump(exclude_unset=True).items()
+            if v is not None or MenuItem.__table__.columns[f].nullable
+        }
         # The stop-list (availability only) is a floor-staff action; anything
         # else — price, name, category — needs a manager.
         only_stoplist = set(fields.keys()) <= {"is_available"}
@@ -142,6 +144,29 @@ async def update_item(
     except Exception as e:
         logger.error("Update menu item error: %s", e)
         raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.post("/{venue_id}/category-rename")
+async def rename_category(
+    venue_id: uuid.UUID,
+    data: CategoryRename,
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    """Rename a category across all its items in one atomic UPDATE (next=null
+    detaches the items instead). The per-item PATCH loop this replaces could
+    fail halfway and leave the venue with two half-categories."""
+    await _check_venue_owner(venue_id, current_user, db)
+    result = await db.execute(
+        update(MenuItem)
+        .where(MenuItem.venue_id == venue_id, MenuItem.category == data.old)
+        .values(category=data.next)
+    )
+    from app.services.audit import log_action
+    log_action(db, current_user.network_id, current_user.email, "menu_category_renamed",
+               f"{data.old} → {data.next or '—'} ({result.rowcount} поз.)")
+    await db.commit()
+    return {"updated": result.rowcount}
 
 
 @router.delete("/{item_id}")

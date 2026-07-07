@@ -87,9 +87,13 @@ body.pos-big .ipos-paybtn { min-height:64px; font-size:1.3rem; }
 }
 .pos-opt-chip.active { background:rgba(200,168,75,.18); border-color:var(--gold); color:var(--gold); font-weight:600; }
 
-/* the register's bottom bar owns the bottom-left corner — park the
-   sidebar chevron mid-edge here instead */
-.sb-toggle { bottom: auto; top: 50%; margin-top: -14px; }
+/* the floating chevron would sit over the check panel here — the register
+   gets its sidebar toggle as a regular button in the top tool strip */
+.sb-toggle { display: none; }
+.ipos-sbbtn { min-width: 40px; }
+html:not(.sb-hidden) .ipos-sbbtn .sb-toggle-show,
+html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
+@media (max-width:768px){ .ipos-sbbtn { display:none; } } /* drawer + hamburger there */
 </style>
 {% endblock %}
 
@@ -97,6 +101,9 @@ body.pos-big .ipos-paybtn { min-height:64px; font-size:1.3rem; }
 <div class="ipos">
 
   <div class="ipos-top">
+    <button type="button" class="btn-secondary ipos-tool ipos-sbbtn" onclick="toggleDesktopSidebar()" title="{{ _('Скрыть или показать меню') }}">
+      <span class="sb-toggle-hide">‹</span><span class="sb-toggle-show">›</span>
+    </button>
     <span class="ipos-title">{{ _("Касса") }}</span>
     <select id="venue-select" onchange="loadMenu()" class="select-input">
       <option value="">{{ _("Выберите заведение") }}</option>
@@ -314,9 +321,7 @@ body.pos-big .ipos-paybtn { min-height:64px; font-size:1.3rem; }
   let _cart = {}; // menu_item_id -> {item, qty}
   let _selectedTableId = null;
 
-  function esc(s) {
-    return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  }
+  // esc() is the shared helper from notify.js
 
   async function loadMenu() {
     const venueId = document.getElementById('venue-select').value;
@@ -375,11 +380,15 @@ body.pos-big .ipos-paybtn { min-height:64px; font-size:1.3rem; }
     if (_selectedTableId) btn.classList.add('selected');
   }
 
+  let _catList = [];
+
   function renderCats() {
-    const cats = [...new Set(_menuItems.map(i => i.category).filter(Boolean))];
+    // onclick refers to _catList by index — a category name is user data and
+    // must never be inlined into a JS string literal (apostrophes break it).
+    _catList = [...new Set(_menuItems.map(i => i.category).filter(Boolean))];
     const el = document.getElementById('pos-cats');
     el.innerHTML = `<button class="pos-cat-chip active" onclick="renderGrid(null, this)">${T.all}</button>` +
-      cats.map(c => `<button class="pos-cat-chip" onclick="renderGrid('${esc(c)}', this)">${esc(c)}</button>`).join('');
+      _catList.map((c, i) => `<button class="pos-cat-chip" onclick="renderGrid(_catList[${i}], this)">${esc(c)}</button>`).join('');
   }
 
   let _activeCat = null;
@@ -566,6 +575,13 @@ body.pos-big .ipos-paybtn { min-height:64px; font-size:1.3rem; }
     renderCart();
   }
 
+  // The check total is mirrored on the pay button — one setter so the two
+  // can never disagree.
+  function setTotals(text) {
+    document.getElementById('cart-total').textContent = text;
+    document.getElementById('paybtn-total').textContent = text;
+  }
+
   function renderCart() {
     const lines = Object.entries(_cart);
     const linesEl = document.getElementById('cart-lines');
@@ -574,8 +590,7 @@ body.pos-big .ipos-paybtn { min-height:64px; font-size:1.3rem; }
       const hasLast = venueId && localStorage.getItem('pos_last_order_' + venueId);
       linesEl.innerHTML = '<p class="empty-state" style="padding:.5rem 0">' + T.cartEmpty + '</p>' +
         (hasLast ? `<button type="button" class="btn-secondary" style="width:100%; font-size:.8rem" onclick="repeatLastOrder()">${T.repeatLast}</button>` : '');
-      document.getElementById('cart-total').textContent = '0 ₸';
-      document.getElementById('paybtn-total').textContent = '0 ₸';
+      setTotals('0 ₸');
       setSubmitEnabled(false);
       return;
     }
@@ -590,7 +605,7 @@ body.pos-big .ipos-paybtn { min-height:64px; font-size:1.3rem; }
             <span>${qty}</span>
             <button type="button" onclick="changeQty('${esc(id)}', 1)">+</button>
           </div>
-          <span class="pos-line-sum">${(unitPrice * qty).toLocaleString(LOCALE)}</span>
+          <span class="pos-line-sum">${(unitPrice * qty).toLocaleString(LOCALE)} ₸</span>
         </div>
       `;
     }).join('');
@@ -612,8 +627,7 @@ body.pos-big .ipos-paybtn { min-height:64px; font-size:1.3rem; }
     } else {
       subtotalRow.style.display = 'none';
     }
-    document.getElementById('cart-total').textContent = finalTotal.toLocaleString(LOCALE) + ' ₸';
-    document.getElementById('paybtn-total').textContent = finalTotal.toLocaleString(LOCALE) + ' ₸';
+    setTotals(finalTotal.toLocaleString(LOCALE) + ' ₸');
     setSubmitEnabled(true);
   }
 

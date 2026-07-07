@@ -4,21 +4,26 @@ import uuid
 
 
 class MenuItemCreate(BaseModel):
-    name: str
+    name: str = Field(..., min_length=1, max_length=255)
     description: str | None = None
     price: Decimal = Field(..., gt=0)
-    category: str | None = None
+    category: str | None = Field(None, max_length=100)  # DB column is String(100)
     is_available: bool = True
     image_url: str | None = None
 
 
 class MenuItemUpdate(BaseModel):
-    name: str | None = None
+    name: str | None = Field(None, min_length=1, max_length=255)
     description: str | None = None
     price: Decimal | None = Field(None, gt=0)
-    category: str | None = None
+    category: str | None = Field(None, max_length=100)
     is_available: bool | None = None
     image_url: str | None = None
+
+
+class CategoryRename(BaseModel):
+    old: str = Field(..., min_length=1, max_length=100)
+    next: str | None = Field(None, min_length=1, max_length=100)
 
 
 class ModifierOptionOut(BaseModel):

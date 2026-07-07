@@ -452,3 +452,41 @@ async def test_long_table_number_rejected_not_500(client: AsyncClient):
         "table_number": "X" * 50,
     })
     assert resp.status_code == 422
+
+
+async def test_category_rename_bulk_and_detach(client: AsyncClient):
+    """One atomic UPDATE renames a category across all items; next=null
+    detaches them; items in other categories are untouched."""
+    h, venue_id, _ = await _setup(client)
+    for name, cat in [("Латте 2", "Кофе"), ("Капучино", "Кофе"), ("Чизкейк", "Десерты")]:
+        r = await client.post(f"/api/menu/{venue_id}",
+                              json={"name": name, "price": 1000, "category": cat}, headers=h)
+        assert r.status_code == 200, r.text
+
+    resp = await client.post(f"/api/menu/{venue_id}/category-rename",
+                             json={"old": "Кофе", "next": "Напитки"}, headers=h)
+    assert resp.status_code == 200, resp.text
+    assert resp.json()["updated"] == 2
+    cats = [i["category"] for i in (await client.get(f"/api/menu/{venue_id}", headers=h)).json()]
+    assert cats.count("Напитки") == 2 and cats.count("Десерты") == 1 and "Кофе" not in cats
+
+    resp = await client.post(f"/api/menu/{venue_id}/category-rename",
+                             json={"old": "Десерты", "next": None}, headers=h)
+    assert resp.status_code == 200 and resp.json()["updated"] == 1
+    cats = [i["category"] for i in (await client.get(f"/api/menu/{venue_id}", headers=h)).json()]
+    assert cats.count(None) >= 1 and "Десерты" not in cats
+
+
+async def test_category_detach_via_patch_null(client: AsyncClient):
+    """PATCH with explicit category:null must clear it (exclude_unset), while
+    an explicit name:null is dropped, not written."""
+    h, venue_id, _ = await _setup(client)
+    item = (await client.post(f"/api/menu/{venue_id}",
+                              json={"name": "Латте 3", "price": 1000, "category": "Кофе"},
+                              headers=h)).json()
+    resp = await client.patch(f"/api/menu/{item['id']}",
+                              json={"category": None, "name": None}, headers=h)
+    assert resp.status_code == 200, resp.text
+    body = resp.json()
+    assert body["category"] is None
+    assert body["name"] == "Латте 3"

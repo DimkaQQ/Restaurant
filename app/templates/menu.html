@@ -86,7 +86,7 @@
       <div class="form-group"><label>{{ _("Название") }}</label><input type="text" name="name" required></div>
       <div class="form-group"><label>{{ _("Описание") }}</label><textarea name="description" rows="2"></textarea></div>
       <div class="form-group"><label>{{ _("Цена (₸)") }}</label><input type="number" name="price" step="0.01" required></div>
-      <div class="form-group"><label>{{ _("Категория") }}</label><input type="text" name="category" list="cat-datalist" placeholder="{{ _('Выберите или введите новую') }}"></div>
+      <div class="form-group"><label>{{ _("Категория") }}</label><input type="text" name="category" list="cat-datalist" maxlength="100" placeholder="{{ _('Выберите или введите новую') }}"></div>
       <datalist id="cat-datalist"></datalist>
       <div class="form-row">
         <button type="submit" class="btn-primary">{{ _("Добавить") }}</button>
@@ -104,7 +104,7 @@
       <div class="form-group"><label>{{ _("Название") }}</label><input type="text" name="name" required></div>
       <div class="form-group"><label>{{ _("Описание") }}</label><textarea name="description" rows="2"></textarea></div>
       <div class="form-group"><label>{{ _("Цена (₸)") }}</label><input type="number" name="price" step="0.01" required></div>
-      <div class="form-group"><label>{{ _("Категория") }}</label><input type="text" name="category" list="cat-datalist"></div>
+      <div class="form-group"><label>{{ _("Категория") }}</label><input type="text" name="category" list="cat-datalist" maxlength="100"></div>
       <div class="form-row">
         <button type="submit" class="btn-primary">{{ _("Сохранить") }}</button>
         <button type="button" onclick="closeEditModal()" class="btn-secondary">{{ _("Отмена") }}</button>
@@ -202,9 +202,7 @@
     saveError: {{ _("Ошибка сохранения") | tojson }},
   };
 
-  function esc(s) {
-    return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  }
+  // esc() is the shared helper from notify.js
 
   let _items = [];
   let _filterCat = null;          // null = all, '' = no category, string = category
@@ -279,10 +277,10 @@
               <button onclick="deleteItem('${esc(item.id)}')" class="btn-icon-danger">✕</button>
             </div>
           </div>
-          <button onclick="openRecipeModal('${esc(item.id)}', '${esc(item.name)}')" class="menu-recipe-btn">
+          <button onclick="openRecipeModal('${esc(item.id)}')" class="menu-recipe-btn">
             ${T.recipeLabel}
           </button>
-          <button onclick="openModModal('${esc(item.id)}', '${esc(item.name)}')" class="menu-recipe-btn">
+          <button onclick="openModModal('${esc(item.id)}')" class="menu-recipe-btn">
             ${T.modifiersLabel}${item.modifier_groups && item.modifier_groups.length ? ' (' + item.modifier_groups.length + ')' : ''}
           </button>
         </div>
@@ -334,9 +332,12 @@
   let _recipeItemId = null;
   let _venueIngredients = [];
 
-  async function openRecipeModal(itemId, itemName) {
+  async function openRecipeModal(itemId) {
+    // name is looked up, not passed through onclick — item names are user
+    // data and must never be inlined into JS string literals
+    const item = _items.find(i => i.id === itemId);
     _recipeItemId = itemId;
-    document.getElementById('recipe-item-name').textContent = itemName;
+    document.getElementById('recipe-item-name').textContent = item ? item.name : '';
     const venueId = document.getElementById('venue-select').value;
 
     const [ingRes, recipeRes] = await Promise.all([
@@ -400,9 +401,10 @@
   // ── Modifiers editor ──
   let _modItemId = null;
 
-  async function openModModal(itemId, itemName) {
+  async function openModModal(itemId) {
+    const item = _items.find(i => i.id === itemId);
     _modItemId = itemId;
-    document.getElementById('mod-item-name').textContent = itemName;
+    document.getElementById('mod-item-name').textContent = item ? item.name : '';
     const res = await fetch('/api/menu/' + itemId + '/modifiers', { credentials: 'include' });
     const groups = res.ok ? await res.json() : [];
     const wrap = document.getElementById('mod-groups');
@@ -565,7 +567,7 @@
         return `<div class="cat-row" data-old="${esc(c)}">
           <input type="text" class="cat-new-name" value="${esc(c)}" maxlength="100">
           <span style="color:var(--muted);font-size:.78rem;white-space:nowrap">${n} ${T.itemsWord}</span>
-          <button type="button" class="btn-icon-danger" title="${T.removeCat}" onclick="this.closest('.cat-row').classList.toggle('cat-removed'); this.closest('.cat-row').querySelector('input').disabled = this.closest('.cat-row').classList.contains('cat-removed'); this.closest('.cat-row').style.opacity = this.closest('.cat-row').classList.contains('cat-removed') ? .45 : 1">✕</button>
+          <button type="button" class="btn-icon-danger" title="${T.removeCat}" onclick="toggleCatRemoved(this)">✕</button>
         </div>`;
       }).join('');
     }
@@ -576,7 +578,15 @@
     document.getElementById('cat-modal').style.display = 'none';
   }
 
+  function toggleCatRemoved(btn) {
+    const row = btn.closest('.cat-row');
+    const removed = row.classList.toggle('cat-removed');
+    row.querySelector('input').disabled = removed;
+    row.style.opacity = removed ? .45 : 1;
+  }
+
   async function saveCategories() {
+    const venueId = document.getElementById('venue-select').value;
     const changes = [];   // {old, next}: next === null → detach items from category
     document.querySelectorAll('#cat-rows .cat-row').forEach(row => {
       const oldName = row.dataset.old;
@@ -584,27 +594,26 @@
       const next = row.querySelector('.cat-new-name').value.trim();
       if (next && next !== oldName) changes.push({ old: oldName, next });
     });
+    // one atomic UPDATE per change server-side — a failure can't leave the
+    // category half-renamed the way a per-item loop could
     for (const ch of changes) {
-      const affected = _items.filter(i => i.category === ch.old);
-      for (const item of affected) {
-        const res = await fetch('/api/menu/' + item.id, {
-          method: 'PATCH',
-          credentials: 'include',
-          headers: {'Content-Type':'application/json','Authorization':'Bearer '+token()},
-          body: JSON.stringify({ category: ch.next }),
-        });
-        if (res.status === 401) { location.href = '/auth/login'; return; }
-        if (!res.ok) {
-          const err = await res.json().catch(() => ({}));
-          notify.error(err.detail || T.saveError);
-          return;
-        }
+      const res = await fetch('/api/menu/' + venueId + '/category-rename', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {'Content-Type':'application/json','Authorization':'Bearer '+token()},
+        body: JSON.stringify(ch),
+      });
+      if (res.status === 401) { location.href = '/auth/login'; return; }
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        notify.error(err.detail || T.saveError);
+        break;   // fall through to reload so the UI reflects what did apply
       }
-      // keep drafts in sync with renames/removals
-      _draftCats = _draftCats.filter(c => c !== ch.old);
-      if (ch.next && !_draftCats.includes(ch.next)) _draftCats.push(ch.next);
+      // rename an unused draft category too; detached/renamed ones re-derive
+      // from the reloaded items
+      _draftCats = _draftCats.map(c => c === ch.old ? ch.next : c).filter(Boolean);
     }
-    if (_filterCat !== null) _filterCat = null;
+    _filterCat = null;
     closeCatManageModal();
     loadMenu();
   }
