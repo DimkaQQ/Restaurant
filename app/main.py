@@ -105,7 +105,16 @@ async def csrf_origin_check(request: Request, call_next):
         and not any(request.url.path.startswith(p) for p in _CSRF_EXEMPT_PREFIXES)
     ):
         origin = request.headers.get("origin") or request.headers.get("referer")
-        if not origin or urlsplit(origin).netloc != _EXPECTED_ORIGIN:
+        origin_host = urlsplit(origin).netloc if origin else ""
+        # Same-origin is judged against the Host the request actually came to,
+        # not only PUBLIC_URL: a browser never lets a page forge Origin, so
+        # Origin == Host is cross-site-safe no matter how the deployment is
+        # addressed (IP:port, second domain, PUBLIC_URL left at its default).
+        # PUBLIC_URL stays as an extra allowed value for proxies that rewrite
+        # Host on the way in.
+        allowed = {_EXPECTED_ORIGIN, request.url.netloc, request.headers.get("host", "")}
+        allowed.discard("")
+        if origin_host not in allowed:
             return JSONResponse(status_code=403, content={"detail": "Запрос отклонён (CSRF-проверка)"})
     return await call_next(request)
 

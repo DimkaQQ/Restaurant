@@ -54,3 +54,29 @@ async def test_bearer_authenticated_mutation_skips_origin_check():
         reg = await register_network(client, name="CSRF Bearer")
         resp = await client.post("/api/venues/", json={"name": "Bearer Venue"}, headers=auth_headers(reg["token"]))
         assert resp.status_code == 200
+
+async def test_origin_matching_request_host_succeeds_even_if_public_url_differs():
+    """The bug that hit real deployments: PUBLIC_URL left at its default
+    (localhost:8000) while the site is opened via IP/domain. Same-origin is
+    now judged against the request's own Host too, so a browser POST with
+    Origin == Host must pass regardless of PUBLIC_URL."""
+    async with await _cookie_client() as client:
+        await client.post("/auth/register", json={
+            "name": "CSRF Test 3", "slug": "csrf-test-3", "email": "csrf3@example.com", "password": "supersecret123",
+        })
+        # base_url is http://test → Host: test; PUBLIC_URL stays localhost:8000
+        resp = await client.post(
+            "/api/venues/", json={"name": "Host Venue"}, headers={"Origin": "http://test"}
+        )
+        assert resp.status_code == 200
+
+
+async def test_cross_site_origin_still_rejected():
+    async with await _cookie_client() as client:
+        await client.post("/auth/register", json={
+            "name": "CSRF Test 4", "slug": "csrf-test-4", "email": "csrf4@example.com", "password": "supersecret123",
+        })
+        resp = await client.post(
+            "/api/venues/", json={"name": "Evil Venue"}, headers={"Origin": "http://evil.example.com"}
+        )
+        assert resp.status_code == 403
