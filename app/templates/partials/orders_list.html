@@ -14,6 +14,27 @@
       <span class="pay-badge pay-badge-unpaid">{{ _("Не оплачен") }}</span>
       {% endif %}
       <span class="order-time">{{ order.created_at.strftime('%H:%M') }}</span>
+      <div class="order-menu-wrap">
+        <button type="button" class="btn-more" onclick="toggleOrderMenu(this)" aria-label="{{ _('Ещё действия') }}">⋯</button>
+        <div class="order-menu">
+          <a href="/orders/{{ order.id }}/receipt" target="_blank">{{ _("Печать чека") }}</a>
+          {% if order.status != 'cancelled' and not (order.status == 'done' and order.payment_status == 'paid') %}
+          <button type="button" onclick='moveOrderModal("{{ order.id }}", "{{ order.venue_id }}")'>{{ _("Перенести на другой стол") }}</button>
+          {% endif %}
+          {% if order.payment_status == 'unpaid' and order.status != 'cancelled' and not order.discount_type and order.items|length > 1 %}
+          <button type="button" onclick='splitOrderModal("{{ order.id }}")'>{{ _("Разделить чек") }}</button>
+          {% endif %}
+          {% if order.status not in ['done', 'cancelled'] %}
+          <button
+            hx-patch="/api/orders/{{ order.id }}/status"
+            hx-vals='{"status": "cancelled"}'
+            hx-target="closest .order-card"
+            hx-swap="outerHTML"
+            class="menu-danger"
+          >{{ _("Отменить заказ") }}</button>
+          {% endif %}
+        </div>
+      </div>
     </div>
     <div class="order-guest">{{ order.guest.name if order.guest and order.guest.name else _("Гость") }}{% if order.waiter_name %} <span style="color:var(--muted)">· {{ order.waiter_name }}</span>{% endif %}</div>
     <div class="order-items">
@@ -32,53 +53,33 @@
       {% endif %}
     </div>
     {% endif %}
-    {% if order.payment_status != 'paid' and order.status != 'cancelled' %}
-    <div class="order-pay-row">
-      <span class="order-pay-label">{{ _("Принять оплату:") }}</span>
-      <button
-        hx-post="/api/orders/{{ order.id }}/pay"
-        hx-vals='{"method": "cash"}'
-        hx-target="closest .order-card"
-        hx-swap="outerHTML"
-        class="btn-pay"
-      >{{ _("Наличные") }}</button>
-      <button
-        hx-post="/api/orders/{{ order.id }}/pay"
-        hx-vals='{"method": "card"}'
-        hx-target="closest .order-card"
-        hx-swap="outerHTML"
-        class="btn-pay"
-      >{{ _("Карта") }}</button>
-    </div>
-    {% endif %}
+    {# One primary status action + «Оплатить» and «⋯» dropdowns — everything
+       secondary lives in the menus so the card stays scannable. #}
     <div class="order-footer">
       <span class="order-total">{{ "{:,.0f}".format(order.total_amount) }} ₸</span>
+      {% if order.payment_status != 'paid' and order.status != 'cancelled' %}
+      <div class="order-menu-wrap">
+        <button type="button" class="btn-pay" onclick="toggleOrderMenu(this)">{{ _("Оплатить") }} ▾</button>
+        <div class="order-menu">
+          <button hx-post="/api/orders/{{ order.id }}/pay" hx-vals='{"method": "cash"}'
+                  hx-target="closest .order-card" hx-swap="outerHTML">{{ _("Наличные") }}</button>
+          <button hx-post="/api/orders/{{ order.id }}/pay" hx-vals='{"method": "card"}'
+                  hx-target="closest .order-card" hx-swap="outerHTML">{{ _("Карта") }}</button>
+        </div>
+      </div>
+      {% endif %}
       {% if next_status.get(order.status) %}
       <button
         hx-patch="/api/orders/{{ order.id }}/status"
         hx-vals='{"status": "{{ next_status[order.status] }}"}'
         hx-target="closest .order-card"
         hx-swap="outerHTML"
-        class="btn-status"
+        class="btn-status btn-next"
       >{{ next_label[order.status] }}</button>
       {% endif %}
-      {% if order.status not in ['done', 'cancelled'] %}
-      <button
-        hx-patch="/api/orders/{{ order.id }}/status"
-        hx-vals='{"status": "cancelled"}'
-        hx-target="closest .order-card"
-        hx-swap="outerHTML"
-        class="btn-cancel"
-      >{{ _("Отмена") }}</button>
-      {% endif %}
-      {% if order.status != 'cancelled' and not (order.status == 'done' and order.payment_status == 'paid') %}
-      <button type="button" class="btn-status" onclick='moveOrderModal("{{ order.id }}", "{{ order.venue_id }}")' title="{{ _('Перенести на другой стол') }}">{{ _("Стол") }}</button>
-      {% endif %}
       {% if order.payment_status == 'unpaid' and order.status != 'cancelled' and not order.discount_type and order.items|length > 1 %}
-      <button type="button" class="btn-status" onclick='splitOrderModal("{{ order.id }}")' title="{{ _('Разделить чек') }}">{{ _("Разделить") }}</button>
       <script type="application/json" id="items-{{ order.id }}">[{% for i in order.items %}{"id":{{ i.id|string|tojson }},"name":{{ i.name|tojson }},"qty":{{ i.quantity }},"price":{{ i.price|float }}}{% if not loop.last %},{% endif %}{% endfor %}]</script>
       {% endif %}
-      <a href="/orders/{{ order.id }}/receipt" target="_blank" class="btn-status" title="{{ _('Печать чека') }}" style="text-decoration:none">{{ _("Чек") }}</a>
     </div>
   </div>
   {% endfor %}

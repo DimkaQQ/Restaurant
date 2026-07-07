@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-06 19:11+0000\n"
+"POT-Creation-Date: 2026-07-07 11:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -660,6 +660,9 @@ msgstr "Unit"
 msgid "Если такой email зарегистрирован, мы отправили ссылку для сброса пароля."
 msgstr "If that email is registered, we sent a password reset link."
 
+msgid "Ещё действия"
+msgstr "More actions"
+
 msgid "Журнал"
 msgstr "Journal"
 
@@ -1247,6 +1250,9 @@ msgstr "June rent payment"
 msgid "Оплата не прошла"
 msgstr "Payment failed"
 
+msgid "Оплатить"
+msgstr "Pay"
+
 msgid "Оплачен"
 msgstr "Paid"
 
@@ -1635,9 +1641,6 @@ msgstr "Accept"
 
 msgid "Принять наличные"
 msgstr "Accept cash"
-
-msgid "Принять оплату:"
-msgstr "Take payment:"
 
 msgid "Приоритетная поддержка"
 msgstr "Priority support"

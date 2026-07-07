@@ -106,7 +106,7 @@ async def test_served_unpaid_order_stays_on_orders_board(client: AsyncClient):
     resp = await client.get("/partials/orders", headers=h)
     assert resp.status_code == 200
     assert oid[:8] in resp.text  # card still visible, awaiting payment
-    assert "Принять оплату" in resp.text
+    assert "Оплатить" in resp.text and "Наличные" in resp.text  # pay dropdown present
 
 
 async def test_offline_queue_idempotency(client: AsyncClient):
