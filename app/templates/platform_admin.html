@@ -8,7 +8,7 @@
   <link rel="alternate icon" href="/static/favicon.ico">
   <link rel="apple-touch-icon" href="/static/apple-touch-icon.png">
   <title>Platform Admin — RestOS</title>
-  <link rel="stylesheet" href="/static/css/main.css?v=14">
+  <link rel="stylesheet" href="/static/css/main.css?v=15">
   <style>
     body { background:var(--black); padding:2rem; font-family:'Inter',sans-serif; }
     h1 { font-weight:600; font-size:1.4rem; letter-spacing:-0.01em; margin-bottom:1.5rem; }
@@ -22,8 +22,8 @@
     tr:last-child td { border-bottom:none; }
     .status-pill { padding:.15rem .55rem; border-radius:12px; font-size:.72rem; font-weight:600; }
     .status-trial { background:color-mix(in srgb, var(--gold) 15%, transparent); color:var(--gold); }
-    .status-active { background:rgba(74,222,128,.15); color:#4ade80; }
-    .status-past_due, .status-suspended, .status-cancelled { background:rgba(239,68,68,.15); color:#f87171; }
+    .status-active { background:color-mix(in srgb, var(--ok) 15%, transparent); color:var(--ok); }
+    .status-past_due, .status-suspended, .status-cancelled { background:rgba(239,68,68,.15); color:var(--bad); }
     .edit-form { display:flex; gap:.35rem; align-items:center; flex-wrap:wrap; }
     .edit-form select, .edit-form input { background:var(--black); border:1px solid var(--border); color:var(--white); padding:.25rem .4rem; border-radius:6px; font-size:.75rem; }
     .edit-form input[type=text] { width:110px; }
@@ -85,7 +85,7 @@
           </form>
           <form method="post" action="/platform/admin/delete-network/{{ r.id }}" onsubmit="return confirmDelete('{{ r.slug }}', this)">
             <input type="hidden" name="confirm_slug" value="">
-            <button type="submit" class="impersonate-btn" style="color:#f87171;border-color:rgba(239,68,68,.4)">🗑 Удалить сеть</button>
+            <button type="submit" class="impersonate-btn" style="color:var(--bad);border-color:rgba(239,68,68,.4)">🗑 Удалить сеть</button>
           </form>
         </td>
       </tr>

@@ -34,8 +34,8 @@
   font-size: 0.85rem;
 }
 .save-result { font-size: 0.8rem; margin-top: 0.4rem; min-height: 1.2em; }
-.save-result.ok { color: #4ade80; }
-.save-result.err { color: #f87171; }
+.save-result.ok { color: var(--ok); }
+.save-result.err { color: var(--bad); }
 </style>
 {% endblock %}
 
@@ -104,7 +104,7 @@
     <hr style="border-color:var(--border); margin:1.25rem 0">
     <div class="venue-settings-name" style="font-size:0.95rem">
       {{ _("Фискализация (ОФД)") }}
-      {% if venue.fiscal_provider %}<span style="color:#4ade80; font-size:0.75rem; font-weight:400">— {{ _("подключено") }} ({{ venue.fiscal_provider }})</span>{% endif %}
+      {% if venue.fiscal_provider %}<span style="color:var(--ok); font-size:0.75rem; font-weight:400">— {{ _("подключено") }} ({{ venue.fiscal_provider }})</span>{% endif %}
     </div>
     <div class="form-row">
       <label>{{ _("Провайдер") }}</label>

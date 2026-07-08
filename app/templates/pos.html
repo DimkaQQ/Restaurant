@@ -41,9 +41,9 @@
 .pos-total { display:flex; justify-content:space-between; font-size:1.25rem; font-weight:700; margin-top:.5rem; }
 .pos-tables { display:flex; flex-wrap:wrap; gap:.4rem; margin-bottom:.35rem; }
 .pos-table-chip { padding:.35rem .7rem; min-height:32px; border-radius:8px; border:1px solid var(--border); background:none; color:var(--white); cursor:pointer; font-size:.8rem; }
-.pos-table-chip.free { border-color:#4ade80; color:#4ade80; }
-.pos-table-chip.occupied { border-color:#f87171; color:#f87171; }
-.pos-table-chip.reserved { border-color:#fbbf24; color:#fbbf24; }
+.pos-table-chip.free { border-color:var(--ok); color:var(--ok); }
+.pos-table-chip.occupied { border-color:var(--bad); color:var(--bad); }
+.pos-table-chip.reserved { border-color:var(--warn); color:var(--warn); }
 .pos-table-chip.selected { background:var(--gold); color:var(--on-accent); border-color:var(--gold); }
 
 /* right: the menu */
@@ -105,14 +105,20 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
       <span class="sb-toggle-hide">‹</span><span class="sb-toggle-show">›</span>
     </button>
     <span class="ipos-title">{{ _("Касса") }}</span>
-    <select id="venue-select" onchange="loadMenu()" class="select-input">
+    <select id="venue-select" onchange="venueChanged()" class="select-input">
       <option value="">{{ _("Выберите заведение") }}</option>
       {% for v in venues %}
       <option value="{{ v.id }}" {% if venues|length == 1 %}selected{% endif %}>{{ v.name }}</option>
       {% endfor %}
     </select>
+    <div id="venue-locked" style="display:none; align-items:center; gap:.35rem">
+      <strong id="venue-locked-name" style="font-size:.95rem"></strong>
+      {% if venues|length > 1 %}
+      <button type="button" class="btn-secondary ipos-tool" onclick="unlockVenue()" title="{{ _('Сменить заведение') }}">✎</button>
+      {% endif %}
+    </div>
     <div id="shift-widget" style="display:none; align-items:center; gap:.6rem; font-size:.8rem"></div>
-    <div id="offline-queue-badge" style="display:none; align-items:center; gap:.5rem; background:rgba(200,140,50,.12); border:1px solid rgba(200,140,50,.35); color:#E8A33D; border-radius:20px; padding:.35rem .9rem; font-size:.8rem">
+    <div id="offline-queue-badge" style="display:none; align-items:center; gap:.5rem; background:color-mix(in srgb, var(--warn) 12%, transparent); border:1px solid color-mix(in srgb, var(--warn) 35%, transparent); color:var(--warn); border-radius:20px; padding:.35rem .9rem; font-size:.8rem">
       ⏳ {{ _("В очереди офлайн:") }} <strong id="offline-queue-count">0</strong>
     </div>
     <span class="ipos-spacer"></span>
@@ -158,7 +164,7 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
       <div class="pos-cats" id="pos-cats"></div>
       <input type="search" id="pos-search" placeholder="{{ _('Поиск по меню…') }}" oninput="onSearch()" autocomplete="off"
         style="background:var(--card); border:1px solid var(--border); color:var(--white); padding:.55rem .8rem; border-radius:8px; font-size:.9rem; margin-bottom:.6rem">
-      <p id="stoplist-hint" style="display:none; font-size:.78rem; color:#f87171; margin:0 0 .5rem">{{ _("Режим стоп-листа: нажмите на позицию, чтобы убрать её из продажи или вернуть.") }}</p>
+      <p id="stoplist-hint" style="display:none; font-size:.78rem; color:var(--bad); margin:0 0 .5rem">{{ _("Режим стоп-листа: нажмите на позицию, чтобы убрать её из продажи или вернуть.") }}</p>
       <div class="ipos-grid-scroll">
         <div class="pos-grid" id="pos-grid"><p class="empty-state">{{ _("Выберите заведение") }}</p></div>
       </div>
@@ -292,6 +298,7 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
     offlineMenu: {{ _("Офлайн-режим: меню из локальной копии") | tojson }},
     offlineNoCache: {{ _("Нет связи и нет локальной копии меню. Подключитесь к интернету один раз.") | tojson }},
     optRequired: {{ _("Выберите «{g}»") | tojson }},
+    switchVenue: {{ _("Сменить заведение? Текущий чек будет очищен, заказы начнут пробиваться в другое заведение.") | tojson }},
     shiftOpen: {{ _("Смена открыта с") | tojson }},
     shiftNone: {{ _("Смена не открыта") | tojson }},
     shiftOpenBtn: {{ _("Открыть смену") | tojson }},
@@ -399,8 +406,8 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
   function toggleStopMode() {
     _stopMode = !_stopMode;
     const btn = document.getElementById('stoplist-btn');
-    btn.style.borderColor = _stopMode ? '#f87171' : '';
-    btn.style.color = _stopMode ? '#f87171' : '';
+    btn.style.borderColor = _stopMode ? 'var(--bad)' : '';
+    btn.style.color = _stopMode ? 'var(--bad)' : '';
     document.getElementById('stoplist-hint').style.display = _stopMode ? '' : 'none';
     renderGrid(_activeCat, null);
   }
@@ -449,7 +456,7 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
            onclick="${_stopMode ? `toggleStop('${esc(i.id)}')` : (i.is_available ? `addToCart('${esc(i.id)}')` : `notify.info(T.inStopList)`)}">
         <div class="pos-item-name">${esc(i.name)}</div>
         <div class="pos-item-price">${parseFloat(i.price).toLocaleString(LOCALE)} ₸</div>
-        ${i.is_available ? '' : `<div style="font-size:.7rem;color:#f87171;margin-top:.2rem">${T.stopBadge}</div>`}
+        ${i.is_available ? '' : `<div style="font-size:.7rem;color:var(--bad);margin-top:.2rem">${T.stopBadge}</div>`}
       </div>
     `).join('') + freeTile;
   }
@@ -683,7 +690,7 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
     if (!received) { el.textContent = '—'; el.style.color = ''; btn.disabled = true; return; }
     const change = received - total;
     el.textContent = change.toLocaleString(LOCALE) + ' ₸';
-    el.style.color = change < 0 ? '#f87171' : 'var(--success)';
+    el.style.color = change < 0 ? 'var(--bad)' : 'var(--success)';
     btn.disabled = change < 0;
   }
   let _pendingChange = null;
@@ -916,7 +923,7 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
         if (res.ok) {
           const s = (await res.json()).shift;
           const diff = s.difference;
-          const diffColor = Math.abs(diff) < 0.01 ? 'var(--success)' : '#f87171';
+          const diffColor = Math.abs(diff) < 0.01 ? 'var(--success)' : 'var(--bad)';
           document.getElementById('zreport').innerHTML = `
             <div style="border-top:1px solid var(--border);margin-top:.75rem;padding-top:.75rem;display:grid;gap:.3rem">
               <div style="display:flex;justify-content:space-between"><span>${T.zCash}</span><strong>${s.cash_sales.toLocaleString(LOCALE)} ₸</strong></div>
@@ -978,8 +985,35 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
     b.style.borderColor = 'var(--gold)'; b.style.color = 'var(--gold)';
   }
 
-  // Single-venue networks: the venue is pre-selected server-side — load it right away.
-  if (document.getElementById('venue-select').value) loadMenu();
+  // The register is pinned to one venue: once chosen, the selector collapses
+  // into a fixed label so a stray tap can't ring an order into another
+  // restaurant. Changing requires an explicit ✎ + confirmation, and the
+  // choice sticks to this device (localStorage) across reloads.
+  function lockVenueUI() {
+    const sel = document.getElementById('venue-select');
+    if (!sel.value) return;
+    document.getElementById('venue-locked-name').textContent = sel.options[sel.selectedIndex].text;
+    sel.style.display = 'none';
+    document.getElementById('venue-locked').style.display = 'flex';
+  }
+  function venueChanged() {
+    const sel = document.getElementById('venue-select');
+    if (!sel.value) return;
+    localStorage.setItem('pos_venue', sel.value);
+    loadMenu();
+    lockVenueUI();
+  }
+  async function unlockVenue() {
+    if (!(await notify.confirm(T.switchVenue))) return;
+    document.getElementById('venue-locked').style.display = 'none';
+    document.getElementById('venue-select').style.display = '';
+  }
+  (function restoreVenue() {
+    const sel = document.getElementById('venue-select');
+    const saved = localStorage.getItem('pos_venue');
+    if (!sel.value && saved && [...sel.options].some(o => o.value === saved)) sel.value = saved;
+    if (sel.value) { loadMenu(); lockVenueUI(); }
+  })();
   renderQueueBadge();
   flushQueue();
   refreshShift();

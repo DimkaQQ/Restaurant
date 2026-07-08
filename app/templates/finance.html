@@ -15,8 +15,8 @@
 .fin-kpi { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:1.25rem 1.5rem; }
 .fin-kpi-label { font-size:.72rem; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); margin-bottom:.35rem; }
 .fin-kpi-value { font-size:clamp(1.1rem,2.2vw,1.8rem); font-weight:700; line-height:1.1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.fin-kpi.profit .fin-kpi-value { color:{% if profit >= 0 %}#4ade80{% else %}#f87171{% endif %}; }
-.fin-kpi.margin .fin-kpi-value { color:{% if margin >= 15 %}#4ade80{% elif margin >= 5 %}#fbbf24{% else %}#f87171{% endif %}; }
+.fin-kpi.profit .fin-kpi-value { color:{% if profit >= 0 %}var(--ok){% else %}var(--bad){% endif %}; }
+.fin-kpi.margin .fin-kpi-value { color:{% if margin >= 15 %}var(--ok){% elif margin >= 5 %}var(--warn){% else %}var(--bad){% endif %}; }
 .fin-layout { display:grid; grid-template-columns:1fr 340px; gap:1.5rem; }
 @media(max-width:1000px){ .fin-layout{grid-template-columns:1fr;} }
 .fin-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:1.25rem; }
@@ -32,7 +32,7 @@
 .expense-info { flex:1; }
 .expense-desc { font-size:.85rem; font-weight:500; }
 .expense-meta { font-size:.75rem; color:var(--muted); margin-top:.1rem; }
-.expense-amount { font-size:.9rem; font-weight:600; color:#f87171; }
+.expense-amount { font-size:.9rem; font-weight:600; color:var(--bad); }
 .btn-del-expense { background:none; border:none; color:var(--muted); cursor:pointer; font-size:.9rem; padding:.2rem; }
 .btn-del-expense:hover { color:#ef4444; }
 .add-expense-panel { align-self:start; position:sticky; top:1rem; }
@@ -73,7 +73,7 @@
   </div>
   <div class="fin-kpi">
     <div class="fin-kpi-label">{{ _("Расходы") }}</div>
-    <div class="fin-kpi-value" style="color:#f87171">{{ "{:,.0f}".format(expenses_total) }} ₸</div>
+    <div class="fin-kpi-value" style="color:var(--bad)">{{ "{:,.0f}".format(expenses_total) }} ₸</div>
   </div>
   <div class="fin-kpi profit">
     <div class="fin-kpi-label">{{ _("Прибыль") }}</div>
@@ -153,7 +153,7 @@
               <td style="text-align:right;padding:.45rem .5rem">{{ "{:,.0f}".format(s.card_sales) if s.card_sales is not none else '—' }}</td>
               <td style="text-align:right;padding:.45rem .5rem">{{ "{:,.0f}".format(s.expected_cash) if s.expected_cash is not none else '—' }}</td>
               <td style="text-align:right;padding:.45rem .5rem">{{ "{:,.0f}".format(s.closing_cash_actual) if s.closing_cash_actual is not none else '—' }}</td>
-              <td style="text-align:right;padding:.45rem .5rem;{% if s.difference is not none and s.difference|float != 0 %}color:#f87171;font-weight:600{% elif s.difference is not none %}color:var(--success){% endif %}">
+              <td style="text-align:right;padding:.45rem .5rem;{% if s.difference is not none and s.difference|float != 0 %}color:var(--bad);font-weight:600{% elif s.difference is not none %}color:var(--success){% endif %}">
                 {% if s.difference is not none %}{{ "{:+,.0f}".format(s.difference) }}{% else %}—{% endif %}
               </td>
             </tr>
@@ -248,7 +248,7 @@ new Chart(ctx, {
       {
         label: T.profit,
         data: chartData.map(d => Math.max(0, d.revenue - d.expenses)),
-        backgroundColor: 'rgba(74,222,128,0.45)',
+        backgroundColor: 'color-mix(in srgb, var(--ok) 45%, transparent)',
         stack: 'pl',
         borderRadius: [4, 4, 0, 0],
         order: 1,

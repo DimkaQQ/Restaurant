@@ -11,7 +11,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-192.png">
   <link rel="alternate icon" href="/static/favicon.ico">
   <link rel="apple-touch-icon" href="/static/apple-touch-icon.png">
-  <link rel="stylesheet" href="/static/css/main.css?v=14">
+  <link rel="stylesheet" href="/static/css/main.css?v=15">
   <script src="/static/vendor/htmx-1.9.12.min.js"></script>
   <script src="/static/js/notify.js?v=3"></script>
   <style>
@@ -141,7 +141,7 @@
     {% endif %}
   </div>
 
-  <div id="kds-offline-banner" style="display:none; background:rgba(200,140,50,.15); border-bottom:2px solid rgba(200,140,50,.5); color:#E8A33D; padding:.5rem 1.25rem; font-size:.85rem; font-weight:600">
+  <div id="kds-offline-banner" style="display:none; background:color-mix(in srgb, var(--warn) 15%, transparent); border-bottom:2px solid color-mix(in srgb, var(--warn) 50%, transparent); color:var(--warn); padding:.5rem 1.25rem; font-size:.85rem; font-weight:600">
     📡 {{ _("Нет связи — экран показывает последние полученные заказы. Обновится автоматически.") }}
   </div>
 

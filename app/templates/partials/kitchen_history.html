@@ -3,11 +3,11 @@
   {% for o in orders %}
   {% set done_ts = o.updated_at.timestamp() if o.updated_at else o.created_at.timestamp() %}
   {% set wait_mins = ((done_ts - o.created_at.timestamp()) / 60) | int %}
-  <div style="background:#171512;border:2px solid #2a2520;border-left:5px solid #4ade80;border-radius:12px;padding:1rem;">
+  <div style="background:#171512;border:2px solid #2a2520;border-left:5px solid var(--ok);border-radius:12px;padding:1rem;">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem;">
       <span style="font-family:monospace;font-size:.95rem;color:rgba(255,255,255,.45);font-weight:600;">#{{ o.id | string | truncate(8, True, '') }}</span>
       {% if o.venue %}<span style="font-size:.75rem;color:var(--muted);background:var(--hover);padding:.15rem .45rem;border-radius:5px;">{{ o.venue.name.split('—')[-1].strip() }}</span>{% endif %}
-      <span style="font-size:.85rem;color:#4ade80;font-weight:600;">{{ o.updated_at.strftime('%H:%M') if o.updated_at else '—' }}</span>
+      <span style="font-size:.85rem;color:var(--ok);font-weight:600;">{{ o.updated_at.strftime('%H:%M') if o.updated_at else '—' }}</span>
     </div>
     <div style="display:flex;flex-direction:column;gap:.35rem;margin-bottom:.6rem;">
       {% for item in o.items %}

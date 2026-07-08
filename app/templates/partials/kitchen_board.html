@@ -23,7 +23,7 @@
   <div style="font-size:.78rem;color:var(--muted);margin-bottom:.5rem">
     {% if order.table_number %}📍 {{ _("Стол") }} {{ order.table_number }}{% endif %}
     {% if order.source == 'online' %} · {{ _("Онлайн") }}{% elif order.source == 'staff' %} · {{ _("Официант") }}{% elif order.source == 'pos' %} · {{ _("Касса") }}{% endif %}
-    {% if order.payment_status != 'paid' %} · <span style="color:#E8A33D">{{ _("не оплачен") }}</span>{% endif %}
+    {% if order.payment_status != 'paid' %} · <span style="color:var(--warn)">{{ _("не оплачен") }}</span>{% endif %}
   </div>
   {% endif %}
   <div class="kds-items">

@@ -9,7 +9,7 @@
   <link rel="apple-touch-icon" href="/static/apple-touch-icon.png">
   <title>RestOS — {{ _("Подтверждение email") }}</title>
   <link rel="stylesheet" href="/static/fonts/fonts.css">
-  <link rel="stylesheet" href="/static/css/main.css?v=14">
+  <link rel="stylesheet" href="/static/css/main.css?v=15">
 </head>
 <body class="auth-body">
   <div class="auth-container">
@@ -18,9 +18,9 @@
         <span class="logo-serif">Rest</span><span class="logo-mono">OS</span>
       </div>
       {% if ok %}
-        <p class="auth-subtitle" style="color:#4ade80">{{ _("Email подтверждён") }}</p>
+        <p class="auth-subtitle" style="color:var(--ok)">{{ _("Email подтверждён") }}</p>
       {% else %}
-        <p class="auth-subtitle" style="color:#f87171">{{ _("Ссылка недействительна или устарела") }}</p>
+        <p class="auth-subtitle" style="color:var(--bad)">{{ _("Ссылка недействительна или устарела") }}</p>
       {% endif %}
       <a href="/dashboard" class="btn-primary btn-full" style="display:block; text-align:center; text-decoration:none; margin-top:1rem">{{ _("В панель управления") }}</a>
     </div>

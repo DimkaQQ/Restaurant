@@ -9,7 +9,7 @@
   <meta name="theme-color" content="#0D0D0D">
   <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
   <link rel="apple-touch-icon" href="/static/apple-touch-icon.png">
-  <link rel="stylesheet" href="/static/css/main.css?v=14">
+  <link rel="stylesheet" href="/static/css/main.css?v=15">
   <script src="/static/js/notify.js?v=3"></script>
   <style>
     * { box-sizing: border-box; }
@@ -24,7 +24,7 @@
     .w-label { font-size:.78rem; color:var(--muted); margin:.25rem 0 .5rem; text-transform:uppercase; letter-spacing:.04em; }
     .w-tables { display:grid; grid-template-columns:repeat(auto-fill, minmax(72px,1fr)); gap:.5rem; }
     .w-table { padding:.9rem .25rem; text-align:center; border-radius:10px; border:1px solid var(--border); background:var(--card); color:var(--white); font-size:1.05rem; font-weight:600; cursor:pointer; }
-    .w-table.occupied { border-color:rgba(248,113,113,.5); color:#f87171; }
+    .w-table.occupied { border-color:color-mix(in srgb, var(--bad) 50%, transparent); color:var(--bad); }
     .w-table.selected { background:var(--gold); color:var(--on-accent); border-color:var(--gold); }
     .w-search { width:100%; background:var(--card); border:1px solid var(--border); color:var(--white); padding:.7rem .9rem; border-radius:10px; font-size:1rem; margin-bottom:.6rem; }
     .w-cats { display:flex; gap:.4rem; overflow-x:auto; padding-bottom:.4rem; margin-bottom:.5rem; scrollbar-width:none; }
@@ -51,8 +51,8 @@
     .w-badge.st-new { color:#60a5fa; border-color:rgba(96,165,250,.4); }
     .w-badge.st-confirmed { color:#a78bfa; border-color:rgba(167,139,250,.4); }
     .w-badge.st-preparing { color:#fb923c; border-color:rgba(251,146,60,.4); }
-    .w-badge.st-ready { color:#4ade80; border-color:rgba(74,222,128,.4); }
-    .w-badge.unpaid { color:#fbbf24; border-color:rgba(251,191,36,.4); }
+    .w-badge.st-ready { color:var(--ok); border-color:color-mix(in srgb, var(--ok) 40%, transparent); }
+    .w-badge.unpaid { color:var(--warn); border-color:color-mix(in srgb, var(--warn) 40%, transparent); }
     .w-order-items { color:var(--muted); font-size:.85rem; line-height:1.5; margin-bottom:.6rem; }
     .w-order-actions { display:flex; gap:.5rem; flex-wrap:wrap; }
     .w-btn { padding:.6rem .9rem; min-height:44px; border-radius:10px; border:1px solid var(--border); background:none; color:var(--white); font-size:.88rem; cursor:pointer; }

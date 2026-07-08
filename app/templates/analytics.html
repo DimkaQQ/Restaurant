@@ -135,7 +135,7 @@
         <td>{% if f.cost is not none %}{{ "{:,.0f}".format(f.cost) }} ₸{% else %}<span class="muted">{{ _("нет техкарты") }}</span>{% endif %}</td>
         <td>
           {% if f.margin_pct is not none %}
-          <span style="font-weight:600; color:{% if f.margin_pct >= 60 %}var(--success){% elif f.margin_pct >= 30 %}#fbbf24{% else %}#f87171{% endif %}">{{ f.margin_pct }}%</span>
+          <span style="font-weight:600; color:{% if f.margin_pct >= 60 %}var(--success){% elif f.margin_pct >= 30 %}var(--warn){% else %}var(--bad){% endif %}">{{ f.margin_pct }}%</span>
           {% else %}<span class="muted">—</span>{% endif %}
         </td>
       </tr>
