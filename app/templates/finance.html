@@ -9,7 +9,7 @@
 .fin-controls { display:flex; gap:.75rem; flex-wrap:wrap; align-items:center; }
 .period-tabs { display:flex; background:var(--card); border:1px solid var(--border); border-radius:8px; overflow:hidden; }
 .period-tab { padding:.4rem .9rem; font-size:.8rem; cursor:pointer; border:none; background:none; color:var(--muted); transition:all .15s; }
-.period-tab.active { background:var(--gold); color:#000; font-weight:600; }
+.period-tab.active { background:var(--gold); color:var(--on-accent); font-weight:600; }
 .fin-kpis { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-bottom:1.5rem; }
 @media(max-width:800px){ .fin-kpis{grid-template-columns:repeat(2,1fr);} }
 .fin-kpi { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:1.25rem 1.5rem; }
@@ -23,11 +23,11 @@
 .fin-card h2 { font-size:.9rem; font-weight:600; margin-bottom:1rem; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; }
 .category-bar { display:flex; align-items:center; gap:.75rem; margin-bottom:.6rem; }
 .category-bar-label { font-size:.8rem; width:120px; flex-shrink:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.category-bar-track { flex:1; background:rgba(255,255,255,.07); border-radius:4px; height:8px; overflow:hidden; }
+.category-bar-track { flex:1; background:var(--hover); border-radius:4px; height:8px; overflow:hidden; }
 .category-bar-fill { height:100%; background:var(--gold); border-radius:4px; }
 .category-bar-amount { font-size:.8rem; color:var(--muted); width:80px; text-align:right; flex-shrink:0; }
 .expense-list { max-height:400px; overflow-y:auto; }
-.expense-row { display:flex; align-items:center; justify-content:space-between; padding:.5rem 0; border-bottom:1px solid rgba(255,255,255,.04); }
+.expense-row { display:flex; align-items:center; justify-content:space-between; padding:.5rem 0; border-bottom:1px solid var(--hover); }
 .expense-row:last-child { border-bottom:none; }
 .expense-info { flex:1; }
 .expense-desc { font-size:.85rem; font-weight:500; }
@@ -146,7 +146,7 @@
           </thead>
           <tbody>
             {% for s in cash_shifts %}
-            <tr style="border-top:1px solid rgba(255,255,255,.05)">
+            <tr style="border-top:1px solid var(--hover)">
               <td style="padding:.45rem .5rem">{{ s.opened_at.strftime('%d.%m %H:%M') }}<br><span style="color:var(--muted);font-size:.72rem">{{ s.opened_by }}</span></td>
               <td style="padding:.45rem .5rem">{% if s.closed_at %}{{ s.closed_at.strftime('%d.%m %H:%M') }}{% else %}<span style="color:var(--success)">{{ _("открыта") }}</span>{% endif %}</td>
               <td style="text-align:right;padding:.45rem .5rem">{{ "{:,.0f}".format(s.cash_sales) if s.cash_sales is not none else '—' }}</td>

@@ -7,7 +7,7 @@
   .onb-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.1rem; gap: 1rem; flex-wrap: wrap; }
   .onb-title { font-size: 1.05rem; font-weight: 600; }
   .onb-progress-text { font-size: 0.8rem; color: var(--muted); }
-  .onb-bar { height: 6px; background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden; margin-bottom: 1.25rem; }
+  .onb-bar { height: 6px; background: var(--hover); border-radius: 4px; overflow: hidden; margin-bottom: 1.25rem; }
   .onb-bar-fill { height: 100%; background: var(--gold); border-radius: 4px; transition: width .3s; }
   .onb-steps { display: flex; flex-direction: column; gap: 0.5rem; }
   .onb-step {
@@ -16,7 +16,7 @@
     background: rgba(255,255,255,0.02); border: 1px solid transparent;
     transition: background .15s, border-color .15s;
   }
-  .onb-step:hover { background: rgba(200,168,75,0.08); border-color: var(--border); }
+  .onb-step:hover { background: color-mix(in srgb, var(--gold) 8%, transparent); border-color: var(--border); }
   .onb-step.done { opacity: 0.55; }
   .onb-step.done:hover { background: rgba(255,255,255,0.02); border-color: transparent; }
   .onb-check {

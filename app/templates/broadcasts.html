@@ -16,7 +16,7 @@
 .bc-form-group textarea { width:100%; background:var(--black); border:1px solid var(--border); color:var(--white); padding:.6rem .75rem; border-radius:6px; font-size:.875rem; resize:vertical; min-height:110px; box-sizing:border-box; font-family:inherit; }
 .bc-form-group textarea:focus { outline:none; border-color:var(--gold); }
 .bc-form-group select { width:100%; background:var(--black); border:1px solid var(--border); color:var(--white); padding:.5rem .75rem; border-radius:6px; font-size:.875rem; box-sizing:border-box; }
-.bc-preview { background:rgba(200,168,75,.06); border:1px solid rgba(200,168,75,.2); border-radius:8px; padding:.75rem 1rem; font-size:.85rem; color:var(--muted); margin-top:.75rem; min-height:48px; white-space:pre-wrap; word-break:break-word; }
+.bc-preview { background:color-mix(in srgb, var(--gold) 6%, transparent); border:1px solid color-mix(in srgb, var(--gold) 20%, transparent); border-radius:8px; padding:.75rem 1rem; font-size:.85rem; color:var(--muted); margin-top:.75rem; min-height:48px; white-space:pre-wrap; word-break:break-word; }
 .bc-counter { font-size:.75rem; color:var(--muted); text-align:right; margin-top:.25rem; }
 
 .bc-list-card { background:var(--card); border:1px solid var(--border); border-radius:12px; overflow:hidden; }
@@ -29,8 +29,8 @@
 .bc-item-meta { font-size:.75rem; color:var(--muted); display:flex; gap:.75rem; flex-wrap:wrap; }
 .bc-badge { display:inline-block; padding:.15rem .5rem; border-radius:20px; font-size:.72rem; font-weight:600; }
 .bc-badge.sent { background:rgba(75,200,122,.12); color:var(--success); border:1px solid rgba(75,200,122,.25); }
-.bc-badge.pending { background:rgba(200,168,75,.12); color:var(--gold); border:1px solid rgba(200,168,75,.25); }
-.bc-badge.lang { background:rgba(255,255,255,.06); color:var(--muted); border:1px solid var(--border); }
+.bc-badge.pending { background:color-mix(in srgb, var(--gold) 12%, transparent); color:var(--gold); border:1px solid color-mix(in srgb, var(--gold) 25%, transparent); }
+.bc-badge.lang { background:var(--hover); color:var(--muted); border:1px solid var(--border); }
 .bc-item-del { background:none; border:none; color:var(--muted); cursor:pointer; font-size:.85rem; padding:.2rem; }
 .bc-item-del:hover { color:#ef4444; }
 .bc-stats { display:flex; gap:1rem; margin-bottom:1.5rem; flex-wrap:wrap; }

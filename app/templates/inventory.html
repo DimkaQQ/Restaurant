@@ -14,14 +14,14 @@
 @media(max-width:900px){ .inv-layout{ grid-template-columns:1fr; } }
 .inv-table-wrap { background:var(--card); border:1px solid var(--border); border-radius:10px; overflow-x:auto; }
 .inv-filters { padding:.75rem 1rem; border-bottom:1px solid var(--border); display:flex; gap:.75rem; flex-wrap:wrap; align-items:center; }
-.category-chip { background:rgba(255,255,255,.05); border:1px solid var(--border); border-radius:20px; padding:.2rem .65rem; font-size:.78rem; cursor:pointer; transition:all .15s; }
-.category-chip.active, .category-chip:hover { background:rgba(200,168,75,.15); border-color:var(--gold); color:var(--gold); }
+.category-chip { background:var(--hover); border:1px solid var(--border); border-radius:20px; padding:.2rem .65rem; font-size:.78rem; cursor:pointer; transition:all .15s; }
+.category-chip.active, .category-chip:hover { background:color-mix(in srgb, var(--gold) 15%, transparent); border-color:var(--gold); color:var(--gold); }
 .inv-table { width:100%; border-collapse:collapse; }
 .inv-table th { font-size:.72rem; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); padding:.6rem .7rem; text-align:left; border-bottom:1px solid var(--border); white-space:nowrap; }
-.inv-table td { padding:.65rem .7rem; border-bottom:1px solid rgba(255,255,255,.04); font-size:.875rem; vertical-align:middle; white-space:nowrap; }
+.inv-table td { padding:.65rem .7rem; border-bottom:1px solid var(--hover); font-size:.875rem; vertical-align:middle; white-space:nowrap; }
 .inv-table tr:last-child td { border-bottom:none; }
 .inv-table tr:hover td { background:rgba(255,255,255,.02); }
-.stock-bar-wrap { width:64px; background:rgba(255,255,255,.07); border-radius:4px; height:6px; overflow:hidden; }
+.stock-bar-wrap { width:64px; background:var(--hover); border-radius:4px; height:6px; overflow:hidden; }
 .stock-bar { height:100%; border-radius:4px; transition:width .3s; }
 .stock-ok { background:#22c55e; }
 .stock-warning { background:#f59e0b; }
@@ -355,7 +355,7 @@ async function loadInvoices() {
     if (!res.ok) return;
     const invoices = (await res.json()).invoices.slice(0, 5);
     el.innerHTML = invoices.length ? invoices.map(i => `
-      <div style="display:flex;justify-content:space-between;padding:.35rem 0;border-bottom:1px solid rgba(255,255,255,.05)">
+      <div style="display:flex;justify-content:space-between;padding:.35rem 0;border-bottom:1px solid var(--hover)">
         <span style="color:var(--muted)">${i.invoice_date}${i.supplier ? ' · ' + i.supplier : ''}</span>
         <strong>${i.total.toLocaleString('ru-RU')} ₸</strong>
       </div>`).join('') : '';

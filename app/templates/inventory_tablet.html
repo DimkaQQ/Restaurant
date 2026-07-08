@@ -9,7 +9,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-192.png">
   <link rel="alternate icon" href="/static/favicon.ico">
   <link rel="apple-touch-icon" href="/static/apple-touch-icon.png">
-  <link rel="stylesheet" href="/static/css/main.css?v=13">
+  <link rel="stylesheet" href="/static/css/main.css?v=14">
   <style>
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     body { background:#0A0A0A; font-family:'Inter',sans-serif; margin:0; display:block; }
@@ -28,12 +28,12 @@
       flex-wrap:wrap; align-items:center;
     }
     .tb-search {
-      flex:1; min-width:180px; background:rgba(255,255,255,.05);
+      flex:1; min-width:180px; background:var(--hover);
       border:1px solid #333; color:#fff; padding:.6rem 1rem;
       border-radius:8px; font-size:1rem;
     }
     .tb-search:focus { outline:none; border-color:var(--gold); }
-    .tb-venue { background:rgba(255,255,255,.05); border:1px solid #333; color:#fff;
+    .tb-venue { background:var(--hover); border:1px solid #333; color:#fff;
       padding:.6rem .9rem; border-radius:8px; font-size:.9rem; }
 
     .tb-cat-bar {
@@ -48,7 +48,7 @@
       background:none; cursor:pointer; flex-shrink:0;
       display:inline-flex; align-items:center;
     }
-    .tb-chip.active { background:rgba(200,168,75,.15); border-color:var(--gold); color:var(--gold); }
+    .tb-chip.active { background:color-mix(in srgb, var(--gold) 15%, transparent); border-color:var(--gold); color:var(--gold); }
 
     .tb-grid {
       display:grid;
@@ -74,7 +74,7 @@
     .tb-unit    { font-size:.9rem; color:var(--muted); }
     .tb-min     { font-size:.78rem; color:var(--muted); margin-left:auto; }
 
-    .tb-bar-wrap { background:rgba(255,255,255,.07); border-radius:4px; height:6px; overflow:hidden; }
+    .tb-bar-wrap { background:var(--hover); border-radius:4px; height:6px; overflow:hidden; }
     .tb-bar { height:100%; border-radius:4px; }
     .tb-bar.ok      { background:#22c55e; }
     .tb-bar.warning { background:#f59e0b; }
@@ -105,8 +105,8 @@
     .tb-modal-select { width:100%; background:#0f0f0f; border:1px solid #444; color:#fff;
       padding:.6rem .8rem; border-radius:8px; font-size:.95rem; margin-bottom:1rem; }
     .tb-modal-actions { display:grid; grid-template-columns:1fr 1fr; gap:.75rem; }
-    .tb-modal-confirm { background:var(--gold); color:#000; border:none; border-radius:10px; padding:.85rem; font-size:1rem; font-weight:700; cursor:pointer; }
-    .tb-modal-cancel  { background:rgba(255,255,255,.07); color:var(--muted); border:1px solid #333; border-radius:10px; padding:.85rem; font-size:1rem; cursor:pointer; }
+    .tb-modal-confirm { background:var(--gold); color:var(--on-accent); border:none; border-radius:10px; padding:.85rem; font-size:1rem; font-weight:700; cursor:pointer; }
+    .tb-modal-cancel  { background:var(--hover); color:var(--muted); border:1px solid #333; border-radius:10px; padding:.85rem; font-size:1rem; cursor:pointer; }
     .tb-toast { position:fixed; bottom:1.5rem; left:50%; transform:translateX(-50%); background:#1e1e1e; border:1px solid #444; color:#fff; padding:.65rem 1.25rem; border-radius:10px; font-size:.9rem; z-index:9999; display:none; }
   </style>
 </head>

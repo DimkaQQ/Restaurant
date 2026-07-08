@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% block title %}{{ _("Вид") }} — RestOS{% endblock %}
+
+{% block head %}
+<style>
+.ap-section { max-width: 720px; }
+.ap-label { font-size: .8rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin: 1.5rem 0 .75rem; }
+.ap-themes { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: .75rem; }
+.ap-theme {
+  border: 2px solid var(--border); border-radius: 12px; overflow: hidden;
+  cursor: pointer; background: none; padding: 0; text-align: left;
+}
+.ap-theme.active { border-color: var(--gold); }
+.ap-preview { height: 84px; display: flex; }
+.ap-preview .ap-side { width: 26%; }
+.ap-preview .ap-main { flex: 1; padding: 10px; display: flex; flex-direction: column; gap: 6px; }
+.ap-preview .ap-line { height: 8px; border-radius: 4px; width: 70%; }
+.ap-preview .ap-dot { width: 26px; height: 8px; border-radius: 4px; }
+.ap-theme-name { display: block; padding: .55rem .8rem; font-size: .85rem; color: var(--white); background: var(--card); border-top: 1px solid var(--border); }
+.ap-swatches { display: flex; gap: .6rem; flex-wrap: wrap; align-items: center; }
+.ap-swatch {
+  width: 44px; height: 44px; border-radius: 50%; cursor: pointer;
+  border: 2px solid var(--border); padding: 0;
+}
+.ap-swatch.active { border-color: var(--white); box-shadow: 0 0 0 2px var(--gold); }
+.ap-custom { display: flex; align-items: center; gap: .6rem; }
+.ap-custom input[type=color] { width: 44px; height: 44px; border: none; border-radius: 50%; background: none; cursor: pointer; padding: 0; }
+.ap-hint { color: var(--muted); font-size: .8rem; margin-top: .5rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">{{ _("Настройки") }}</h1>
+</div>
+{% include "partials/settings_tabs.html" %}
+
+<div class="ap-section">
+  <p style="color:var(--muted); font-size:.85rem">{{ _("Оформление сохраняется на этом устройстве: кассовый планшет, кухня и телефон официанта могут выглядеть по-разному.") }}</p>
+
+  <div class="ap-label">{{ _("Тема") }}</div>
+  <div class="ap-themes" id="ap-themes">
+    <button type="button" class="ap-theme" data-theme="dark" onclick="pickTheme('dark')">
+      <span class="ap-preview" style="background:#0D0D0D">
+        <span class="ap-side" style="background:#161410"></span>
+        <span class="ap-main">
+          <span class="ap-line" style="background:#2b2721"></span>
+          <span class="ap-line" style="background:#2b2721; width:45%"></span>
+          <span class="ap-dot" style="background:var(--gold)"></span>
+        </span>
+      </span>
+      <span class="ap-theme-name">{{ _("Тёмная") }}</span>
+    </button>
+    <button type="button" class="ap-theme" data-theme="black" onclick="pickTheme('black')">
+      <span class="ap-preview" style="background:#000">
+        <span class="ap-side" style="background:#0D0C0A"></span>
+        <span class="ap-main">
+          <span class="ap-line" style="background:#1e1c18"></span>
+          <span class="ap-line" style="background:#1e1c18; width:45%"></span>
+          <span class="ap-dot" style="background:var(--gold)"></span>
+        </span>
+      </span>
+      <span class="ap-theme-name">{{ _("Чёрная (AMOLED)") }}</span>
+    </button>
+    <button type="button" class="ap-theme" data-theme="light" onclick="pickTheme('light')">
+      <span class="ap-preview" style="background:#F1EEE8">
+        <span class="ap-side" style="background:#FFFFFF; border-right:1px solid rgba(0,0,0,.08)"></span>
+        <span class="ap-main">
+          <span class="ap-line" style="background:#d9d4cb"></span>
+          <span class="ap-line" style="background:#d9d4cb; width:45%"></span>
+          <span class="ap-dot" style="background:var(--gold)"></span>
+        </span>
+      </span>
+      <span class="ap-theme-name">{{ _("Светлая") }}</span>
+    </button>
+  </div>
+
+  <div class="ap-label">{{ _("Акцентный цвет") }}</div>
+  <div class="ap-swatches" id="ap-swatches">
+    <button type="button" class="ap-swatch" data-accent="" style="background:#C8A84B" title="{{ _('Золото (по умолчанию)') }}" onclick="pickAccent('')"></button>
+    <button type="button" class="ap-swatch" data-accent="#5B8DEF" style="background:#5B8DEF" onclick="pickAccent('#5B8DEF')"></button>
+    <button type="button" class="ap-swatch" data-accent="#34C98E" style="background:#34C98E" onclick="pickAccent('#34C98E')"></button>
+    <button type="button" class="ap-swatch" data-accent="#E07A5F" style="background:#E07A5F" onclick="pickAccent('#E07A5F')"></button>
+    <button type="button" class="ap-swatch" data-accent="#A78BFA" style="background:#A78BFA" onclick="pickAccent('#A78BFA')"></button>
+    <button type="button" class="ap-swatch" data-accent="#E4577B" style="background:#E4577B" onclick="pickAccent('#E4577B')"></button>
+    <label class="ap-custom">
+      <input type="color" id="ap-custom-color" value="#C8A84B" oninput="pickAccent(this.value)">
+      <span style="font-size:.85rem; color:var(--muted)">{{ _("Свой цвет") }}</span>
+    </label>
+  </div>
+  <p class="ap-hint">{{ _("Цвет текста на кнопках подбирается автоматически, чтобы всё оставалось читаемым. Гостевые страницы (QR-меню) остаются в фирменном стиле.") }}</p>
+</div>
+
+<script>
+  function markActive() {
+    const theme = localStorage.getItem('ui_theme') || 'dark';
+    document.querySelectorAll('.ap-theme').forEach(b =>
+      b.classList.toggle('active', b.dataset.theme === theme));
+    const accent = localStorage.getItem('ui_accent') || '';
+    let matched = false;
+    document.querySelectorAll('.ap-swatch').forEach(b => {
+      const on = (b.dataset.accent || '') === accent;
+      b.classList.toggle('active', on);
+      if (on) matched = true;
+    });
+    if (accent) document.getElementById('ap-custom-color').value = accent;
+  }
+
+  function pickTheme(t) {
+    if (t === 'dark') {
+      localStorage.removeItem('ui_theme');
+      document.documentElement.removeAttribute('data-theme');
+    } else {
+      localStorage.setItem('ui_theme', t);
+      document.documentElement.setAttribute('data-theme', t);
+    }
+    markActive();
+  }
+
+  function pickAccent(hex) {
+    if (!hex) {
+      localStorage.removeItem('ui_accent');
+      clearAccent();
+    } else {
+      localStorage.setItem('ui_accent', hex);
+      applyAccent(hex);
+    }
+    markActive();
+  }
+
+  markActive();
+</script>
+{% endblock %}

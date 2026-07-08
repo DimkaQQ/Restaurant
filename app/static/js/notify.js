@@ -1,3 +1,29 @@
+window.applyAccent = function (hex) {
+  var r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
+  var s = document.documentElement.style;
+  s.setProperty('--gold', hex);
+  s.setProperty('--gold-dim', 'rgba(' + r + ',' + g + ',' + b + ',0.15)');
+  // WCAG-ish luminance decides whether black or white text sits on the accent
+  s.setProperty('--on-accent', (0.2126 * r + 0.7152 * g + 0.0722 * b) > 150 ? '#0D0D0D' : '#FFFFFF');
+};
+window.clearAccent = function () {
+  var s = document.documentElement.style;
+  s.removeProperty('--gold'); s.removeProperty('--gold-dim'); s.removeProperty('--on-accent');
+};
+
+/* Theme boot — runs at parse time (script is in <head>) so the page paints
+ * in the right theme with no flash. Preferences are per device:
+ * localStorage.ui_theme  = dark | black | light   (dark = the :root default)
+ * localStorage.ui_accent = #rrggbb                (overrides --gold) */
+(function () {
+  try {
+    var t = localStorage.getItem('ui_theme');
+    if (t === 'black' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    var a = localStorage.getItem('ui_accent');
+    if (a && /^#[0-9a-fA-F]{6}$/.test(a)) window.applyAccent(a);
+  } catch (e) {}
+})();
+
 /* Shared toast + confirm dialog — replaces raw browser alert()/confirm()
  * popups app-wide with something that matches the rest of the UI instead
  * of looking like a 2005-era JS error. Self-contained (injects its own

@@ -9,8 +9,8 @@
   <meta name="theme-color" content="#0D0D0D">
   <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
   <link rel="apple-touch-icon" href="/static/apple-touch-icon.png">
-  <link rel="stylesheet" href="/static/css/main.css?v=13">
-  <script src="/static/js/notify.js?v=2"></script>
+  <link rel="stylesheet" href="/static/css/main.css?v=14">
+  <script src="/static/js/notify.js?v=3"></script>
   <style>
     * { box-sizing: border-box; }
     body { background:var(--black); display:block; font-family:'Inter',sans-serif; padding-bottom:76px; }
@@ -25,7 +25,7 @@
     .w-tables { display:grid; grid-template-columns:repeat(auto-fill, minmax(72px,1fr)); gap:.5rem; }
     .w-table { padding:.9rem .25rem; text-align:center; border-radius:10px; border:1px solid var(--border); background:var(--card); color:var(--white); font-size:1.05rem; font-weight:600; cursor:pointer; }
     .w-table.occupied { border-color:rgba(248,113,113,.5); color:#f87171; }
-    .w-table.selected { background:var(--gold); color:#000; border-color:var(--gold); }
+    .w-table.selected { background:var(--gold); color:var(--on-accent); border-color:var(--gold); }
     .w-search { width:100%; background:var(--card); border:1px solid var(--border); color:var(--white); padding:.7rem .9rem; border-radius:10px; font-size:1rem; margin-bottom:.6rem; }
     .w-cats { display:flex; gap:.4rem; overflow-x:auto; padding-bottom:.4rem; margin-bottom:.5rem; scrollbar-width:none; }
     .w-cats::-webkit-scrollbar { display:none; }
@@ -37,13 +37,13 @@
     .w-item-add { width:42px; height:42px; border-radius:10px; border:1px solid var(--gold); background:none; color:var(--gold); font-size:1.4rem; line-height:1; cursor:pointer; flex-shrink:0; }
     .w-item-qty { display:flex; align-items:center; gap:.5rem; }
     .w-item-qty button { width:38px; height:38px; border-radius:10px; border:1px solid var(--border); background:none; color:var(--white); font-size:1.2rem; cursor:pointer; }
-    .w-cart-bar { position:fixed; left:0; right:0; bottom:0; padding:.7rem 1rem calc(.7rem + env(safe-area-inset-bottom)); background:var(--gold); color:#000; display:none; align-items:center; justify-content:space-between; font-weight:700; font-size:1rem; cursor:pointer; z-index:60; }
+    .w-cart-bar { position:fixed; left:0; right:0; bottom:0; padding:.7rem 1rem calc(.7rem + env(safe-area-inset-bottom)); background:var(--gold); color:var(--on-accent); display:none; align-items:center; justify-content:space-between; font-weight:700; font-size:1rem; cursor:pointer; z-index:60; }
     .w-cart-bar.visible { display:flex; }
     .w-sheet { position:fixed; left:0; right:0; bottom:0; background:var(--card); border-top:1px solid var(--border); border-radius:16px 16px 0 0; padding:1rem 1rem calc(1rem + env(safe-area-inset-bottom)); transform:translateY(105%); transition:transform .2s; z-index:70; max-height:85vh; overflow-y:auto; }
     .w-sheet.visible { transform:none; }
     .w-overlay { position:fixed; inset:0; background:rgba(0,0,0,.6); display:none; z-index:65; }
     .w-overlay.visible { display:block; }
-    .w-cart-line { display:flex; align-items:center; gap:.6rem; padding:.5rem 0; border-bottom:1px solid rgba(255,255,255,.05); font-size:.92rem; }
+    .w-cart-line { display:flex; align-items:center; gap:.6rem; padding:.5rem 0; border-bottom:1px solid var(--hover); font-size:.92rem; }
     .w-order { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:.9rem; margin-bottom:.75rem; }
     .w-order-head { display:flex; align-items:center; gap:.5rem; margin-bottom:.4rem; flex-wrap:wrap; }
     .w-order-table { font-weight:700; font-size:1.05rem; }
@@ -56,10 +56,10 @@
     .w-order-items { color:var(--muted); font-size:.85rem; line-height:1.5; margin-bottom:.6rem; }
     .w-order-actions { display:flex; gap:.5rem; flex-wrap:wrap; }
     .w-btn { padding:.6rem .9rem; min-height:44px; border-radius:10px; border:1px solid var(--border); background:none; color:var(--white); font-size:.88rem; cursor:pointer; }
-    .w-btn.primary { background:var(--gold); border-color:var(--gold); color:#000; font-weight:600; }
+    .w-btn.primary { background:var(--gold); border-color:var(--gold); color:var(--on-accent); font-weight:600; }
     .big-btn { width:100%; padding:1rem; border-radius:12px; font-size:1.05rem; font-weight:700; }
     .opt-chip { padding:.55rem .9rem; border-radius:10px; border:1px solid var(--border); background:none; color:var(--white); font-size:.9rem; cursor:pointer; }
-    .opt-chip.active { border-color:var(--gold); color:var(--gold); background:rgba(200,168,75,.12); }
+    .opt-chip.active { border-color:var(--gold); color:var(--gold); background:color-mix(in srgb, var(--gold) 12%, transparent); }
     .empty { color:var(--muted); text-align:center; padding:2rem 1rem; font-size:.9rem; }
   </style>
 </head>

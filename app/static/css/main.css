@@ -1,14 +1,37 @@
 :root {
-  --black: #0D0D0D;
-  --card: #161410;
-  --white: #F7F5F0;
-  --gold: #C8A84B;
-  --gold-dim: rgba(200, 168, 75, 0.15);
+  --black: #0D0D0D;        /* page background */
+  --card: #161410;         /* panel background */
+  --card-2: #1a1714;       /* nested cards (orders) */
+  --white: #F7F5F0;        /* main text */
+  --gold: #C8A84B;         /* accent — overridable from the appearance settings */
+  --gold-dim: color-mix(in srgb, var(--gold) 15%, transparent);
+  --on-accent: #0D0D0D;    /* text sitting ON the accent color */
   --muted: #8A857E;
   --border: rgba(255, 255, 255, 0.09);
+  --hover: rgba(255, 255, 255, 0.06);
   --danger: #C84B4B;
   --success: #4BC87A;
   --sidebar-w: 220px;
+}
+
+/* ── Themes ──
+   The palette above IS the dark theme; the blocks below only override
+   tokens. data-theme is stamped on <html> before first paint (notify.js)
+   from localStorage('ui_theme'), so there is no flash. */
+html[data-theme="black"] {
+  --black: #000000;
+  --card: #0D0C0A;
+  --card-2: #111009;
+  --border: rgba(255, 255, 255, 0.12);
+}
+html[data-theme="light"] {
+  --black: #F1EEE8;
+  --card: #FFFFFF;
+  --card-2: #FAF8F4;
+  --white: #221E18;
+  --muted: #716B61;
+  --border: rgba(0, 0, 0, 0.13);
+  --hover: rgba(0, 0, 0, 0.05);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -269,7 +292,7 @@ body {
 }
 
 .order-card {
-  background: #1a1714;
+  background: var(--card-2);
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 1rem;
@@ -278,7 +301,7 @@ body {
   gap: 0.6rem;
 }
 
-.order-card.status-new { border-color: rgba(200,168,75,0.4); }
+.order-card.status-new { border-color: color-mix(in srgb, var(--gold) 40%, transparent); }
 .order-card.status-confirmed { border-color: rgba(75,168,200,0.4); }
 .order-card.status-preparing { border-color: rgba(200,100,75,0.4); }
 .order-card.status-ready { border-color: rgba(75,200,122,0.4); }
@@ -301,7 +324,7 @@ body {
 .order-items { display: flex; flex-wrap: wrap; gap: 0.3rem; }
 .order-item {
   font-size: 0.75rem;
-  background: rgba(255,255,255,0.05);
+  background: var(--hover);
   padding: 0.3rem 0.5rem;
   border-radius: 4px;
 }
@@ -331,7 +354,7 @@ body {
   cursor: pointer;
   transition: border-color .15s, background .15s;
 }
-.btn-pay:hover { border-color: var(--gold); background: rgba(200,168,75,0.08); }
+.btn-pay:hover { border-color: var(--gold); background: color-mix(in srgb, var(--gold) 8%, transparent); }
 
 /* ── Order card: one primary action + dropdown menus ──
    The card keeps a single status button and an «Оплатить» / «⋯» pair;
@@ -352,7 +375,7 @@ body {
   padding: 0.6rem 0.7rem; min-height: 40px; font-size: 0.85rem;
   border-radius: 6px; cursor: pointer; text-decoration: none;
 }
-.order-menu button:hover, .order-menu a:hover { background: rgba(255,255,255,0.06); }
+.order-menu button:hover, .order-menu a:hover { background: var(--hover); }
 .order-menu .menu-danger { color: #f87171; }
 .btn-more {
   width: 36px; min-height: 36px; border-radius: 6px;
@@ -361,14 +384,14 @@ body {
 }
 .btn-more:hover { color: var(--white); border-color: var(--gold); }
 .btn-next {
-  background: var(--gold) !important; color: #000 !important;
+  background: var(--gold) !important; color:var(--on-accent) !important;
   border-color: var(--gold) !important; font-weight: 600;
 }
 
 /* ── Buttons ── */
 .btn-primary {
   background: var(--gold);
-  color: #0D0D0D;
+  color: var(--on-accent);
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 8px;
@@ -393,7 +416,7 @@ body {
 
 .btn-status {
   background: var(--gold);
-  color: #0D0D0D;
+  color: var(--on-accent);
   border: none;
   padding: 0.5rem 0.65rem;
   min-height: 36px;
@@ -453,7 +476,7 @@ a.venue-item-link {
   margin: 0 -0.4rem;
   cursor: pointer;
 }
-a.venue-item-link:hover { background: rgba(255,255,255,0.05); }
+a.venue-item-link:hover { background: var(--hover); }
 a.venue-item-link .venue-name { color: var(--white); }
 .venue-name { display: block; font-weight: 500; }
 .venue-addr { font-size: 0.75rem; color: var(--muted); }
@@ -462,7 +485,7 @@ a.venue-item-link .venue-name { color: var(--white); }
 .badge { font-size: 0.75rem; padding: 0.25rem 0.5rem; border-radius: 20px; }
 .badge-active   { background: rgba(75,200,122,0.15); color: #4BC87A; }
 .badge-inactive { background: rgba(200,75,75,0.15); color: var(--danger); }
-.badge-launch   { background: rgba(200,168,75,0.15); color: var(--gold); }
+.badge-launch   { background: color-mix(in srgb, var(--gold) 15%, transparent); color: var(--gold); }
 
 .tg-badge {
   font-size: 0.72rem;
@@ -509,7 +532,7 @@ label { font-size: 0.8rem; color: var(--muted); }
 input[type=text], input[type=email], input[type=password], input[type=number],
 input[type=search], input[type=url], input[type=tel], input[type=date],
 input[type=time], textarea, select {
-  background: rgba(255,255,255,0.04);
+  background: var(--hover);
   border: 1px solid var(--border);
   color: var(--white);
   padding: 0.6rem 2.25rem 0.6rem 0.75rem;
@@ -569,7 +592,7 @@ select option { background: var(--card); }
 
 .data-table td {
   padding: 0.75rem 1rem;
-  border-bottom: 1px solid rgba(200,168,75,0.08);
+  border-bottom: 1px solid color-mix(in srgb, var(--gold) 8%, transparent);
   font-size: 0.875rem;
 }
 
@@ -593,7 +616,7 @@ select option { background: var(--card); }
 .menu-card.unavailable { opacity: 0.55; }
 
 .menu-img { width: 100%; height: 140px; object-fit: cover; }
-.menu-img-placeholder { width: 100%; height: 80px; background: rgba(255,255,255,0.03); }
+.menu-img-placeholder { width: 100%; height: 80px; background: var(--hover); }
 
 .menu-card-body { padding: 0.875rem; display: flex; flex-direction: column; gap: 0.4rem; }
 .menu-card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; }
@@ -695,7 +718,7 @@ select option { background: var(--card); }
 .oss-item {
   flex: 1;
   min-width: 90px;
-  background: rgba(255,255,255,0.03);
+  background: var(--hover);
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 1rem;
@@ -987,7 +1010,7 @@ select option { background: var(--card); }
 }
 .notify-confirm-actions button:hover { opacity: .85; }
 .notify-confirm-cancel { background: none; border: 1px solid var(--border); color: var(--muted); }
-.notify-confirm-ok { background: var(--gold); border: none; color: #000; }
+.notify-confirm-ok { background: var(--gold); border: none; color:var(--on-accent); }
 .notify-confirm-ok.notify-confirm-danger { background: #ef4444; color: #fff; }
 
 @media (max-width: 420px) {

@@ -19,8 +19,8 @@
 .menu-img-placeholder {
   width: 100%;
   aspect-ratio: 16/9;
-  background: rgba(200,168,75,0.08);
-  border: 1px dashed rgba(200,168,75,0.3);
+  background: color-mix(in srgb, var(--gold) 8%, transparent);
+  border: 1px dashed color-mix(in srgb, var(--gold) 30%, transparent);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -32,17 +32,17 @@
 .menu-recipe-btn {
   display: flex; align-items: center; justify-content: center; gap: .4rem;
   width: 100%; margin-top: .6rem; padding: .5rem; min-height: 36px;
-  background: rgba(200,168,75,0.08); border: 1px solid var(--border); border-radius: 8px;
+  background: color-mix(in srgb, var(--gold) 8%, transparent); border: 1px solid var(--border); border-radius: 8px;
   color: var(--muted); font-size: .8rem; cursor: pointer; transition: all .15s;
 }
-.menu-recipe-btn:hover { border-color: var(--gold); color: var(--gold); background: rgba(200,168,75,0.14); }
+.menu-recipe-btn:hover { border-color: var(--gold); color: var(--gold); background: color-mix(in srgb, var(--gold) 14%, transparent); }
 .cat-tabs { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1rem; }
 .cat-tab {
   padding: .45rem .9rem; min-height: 36px; border-radius: 8px;
   border: 1px solid var(--border); background: var(--card); color: var(--muted);
   font-size: .85rem; cursor: pointer; white-space: nowrap;
 }
-.cat-tab.active { background: var(--gold); border-color: var(--gold); color: #000; font-weight: 600; }
+.cat-tab.active { background: var(--gold); border-color: var(--gold); color:var(--on-accent); font-weight: 600; }
 .cat-tab.cat-add { border-style: dashed; }
 .cat-row { display: flex; gap: .5rem; align-items: center; margin-bottom: .5rem; }
 .cat-row input { flex: 1; }

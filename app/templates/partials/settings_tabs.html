@@ -14,6 +14,7 @@
   <a href="/settings/users" class="settings-tab {% if request.url.path == '/settings/users' %}active{% endif %}">{{ _("Пользователи") }}</a>
   <a href="/settings/broadcasts" class="settings-tab {% if request.url.path == '/settings/broadcasts' %}active{% endif %}">{{ _("Рассылки") }}</a>
   <a href="/settings/promos" class="settings-tab {% if request.url.path == '/settings/promos' %}active{% endif %}">{{ _("Промокоды") }}</a>
+  <a href="/settings/appearance" class="settings-tab {% if request.url.path == '/settings/appearance' %}active{% endif %}">{{ _("Вид") }}</a>
   {% if user.role == 'owner' %}
   <a href="/settings/audit" class="settings-tab {% if request.url.path == '/settings/audit' %}active{% endif %}">{{ _("Журнал") }}</a>
   <a href="/settings/api-access" class="settings-tab {% if request.url.path == '/settings/api-access' %}active{% endif %}">API</a>

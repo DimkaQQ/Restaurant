@@ -11,10 +11,10 @@
   <link rel="stylesheet" href="/static/fonts/fonts.css">
   <style>
     :root {
-      --gold: #C8A84B;
+      --gold: var(--gold);
       --bg: #0A0A0A;
       --card: #111111;
-      --border: rgba(255,255,255,0.08);
+      --border: var(--hover);
       --white: #F5F5F0;
       --muted: rgba(255,255,255,0.45);
       --success: #4BC87A;
@@ -38,7 +38,7 @@
       font-size: .78rem; padding: .25rem .5rem; border-radius: 6px; text-decoration: none;
       color: var(--muted); border: 1px solid var(--border);
     }
-    .lang-switch a.active { color: #000; background: var(--gold); border-color: var(--gold); font-weight: 600; }
+    .lang-switch a.active { color:var(--on-accent); background: var(--gold); border-color: var(--gold); font-weight: 600; }
 
     .cats {
       display: flex; gap: 0.5rem; overflow-x: auto;
@@ -54,7 +54,7 @@
       color: var(--muted); font-size: 0.82rem; cursor: pointer;
       transition: all 0.15s; display: inline-flex; align-items: center;
     }
-    .cat-btn.active { background: var(--gold); border-color: var(--gold); color: #000; font-weight: 600; }
+    .cat-btn.active { background: var(--gold); border-color: var(--gold); color:var(--on-accent); font-weight: 600; }
 
     .menu-section { display: none; }
     .menu-section.visible { display: block; }
@@ -72,7 +72,7 @@
       cursor: pointer;
       transition: background 0.1s;
     }
-    .item-card:active { background: rgba(255,255,255,0.04); }
+    .item-card:active { background: var(--hover); }
     .item-img {
       width: 72px; height: 72px; object-fit: cover; border-radius: 8px;
       flex-shrink: 0; background: #1a1a1a;
@@ -110,7 +110,7 @@
     /* Cart bar */
     .cart-bar {
       position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
-      background: var(--gold); color: #000;
+      background: var(--gold); color:var(--on-accent);
       padding: 0.875rem 1.25rem;
       display: flex; align-items: center; justify-content: space-between;
       cursor: pointer;
@@ -159,7 +159,7 @@
     .form-group { margin-bottom: 0.875rem; }
     .form-group label { display: block; font-size: 0.78rem; color: var(--muted); margin-bottom: 0.3rem; }
     .form-group input, .form-group textarea {
-      width: 100%; background: rgba(255,255,255,0.05);
+      width: 100%; background: var(--hover);
       border: 1px solid var(--border); border-radius: 8px;
       color: var(--white); padding: 0.6rem 0.75rem;
       font-size: 0.9rem; font-family: inherit;
@@ -169,7 +169,7 @@
 
     .btn-primary {
       width: 100%; padding: 0.875rem;
-      background: var(--gold); color: #000;
+      background: var(--gold); color:var(--on-accent);
       border: none; border-radius: 10px;
       font-size: 1rem; font-weight: 700;
       cursor: pointer;
@@ -199,7 +199,7 @@
       border: 1px solid var(--border); background: none; color: var(--white);
       font-size: .85rem; cursor: pointer;
     }
-    .opt-chip.active { background: rgba(200,168,75,.18); border-color: var(--gold); color: var(--gold); font-weight: 600; }
+    .opt-chip.active { background: color-mix(in srgb, var(--gold) 18%, transparent); border-color: var(--gold); color: var(--gold); font-weight: 600; }
 
     /* Order done screen */
     .order-done {
@@ -335,7 +335,7 @@
 <div class="order-done" id="orderDone">
   <div class="order-done-icon">✅</div>
   <div class="order-done-id" id="orderDoneId">{{ t.order_number }}XXXXXXXX</div>
-  <div id="liveStatus" style="margin:1rem auto; padding:.6rem 1.4rem; border-radius:20px; font-weight:600; font-size:1rem; background:rgba(200,168,75,.12); color:var(--gold); display:inline-block"></div>
+  <div id="liveStatus" style="margin:1rem auto; padding:.6rem 1.4rem; border-radius:20px; font-weight:600; font-size:1rem; background:color-mix(in srgb, var(--gold) 12%, transparent); color:var(--gold); display:inline-block"></div>
   <div class="order-done-text">
     {{ t.order_accepted }}<br><br>
     <span id="orderDonePoints" style="color:var(--gold)"></span>
@@ -675,7 +675,7 @@ function startStatusPolling(orderId) {
     } catch (e) { /* offline — keep last state */ }
   }
   el.textContent = labels.new;
-  el.style.background = 'rgba(200,168,75,.12)';
+  el.style.background = 'color-mix(in srgb, var(--gold) 12%, transparent)';
   el.style.color = 'var(--gold)';
   if (_statusTimer) clearInterval(_statusTimer);
   _statusTimer = setInterval(poll, 5000);

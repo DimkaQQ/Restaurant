@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-07 11:41+0000\n"
+"POT-Creation-Date: 2026-07-08 06:21+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -247,6 +247,9 @@ msgstr "Active venues"
 msgid "Активных заказов нет"
 msgstr "No active orders"
 
+msgid "Акцентный цвет"
+msgstr "Accent color"
+
 msgid "Анализируем…"
 msgstr "Analyzing…"
 
@@ -331,6 +334,9 @@ msgstr "Webhooks"
 
 msgid "Вернуть назад"
 msgstr "Move back"
+
+msgid "Вид"
+msgstr "Appearance"
 
 msgid "Визиты"
 msgstr "Visits"
@@ -737,6 +743,9 @@ msgstr "Sign up"
 
 msgid "Значение"
 msgstr "Value"
+
+msgid "Золото (по умолчанию)"
+msgstr "Gold (default)"
 
 msgid "Или номер стола вручную"
 msgstr "Or type a table number"
@@ -1358,6 +1367,13 @@ msgstr "Place your first order in POS"
 msgid "Оформить"
 msgstr "Subscribe"
 
+msgid ""
+"Оформление сохраняется на этом устройстве: кассовый планшет, кухня и "
+"телефон официанта могут выглядеть по-разному."
+msgstr ""
+"Appearance is saved per device: the register tablet, kitchen screen and "
+"waiter phone can each look different."
+
 msgid "Оценка"
 msgstr "Rating"
 
@@ -1804,8 +1820,14 @@ msgstr "Sat"
 msgid "Сбросить"
 msgstr "Reset"
 
+msgid "Светлая"
+msgstr "Light"
+
 msgid "Свободен"
 msgstr "Free"
+
+msgid "Свой цвет"
+msgstr "Custom color"
 
 #, python-brace-format
 msgid "Связь восстановлена: отправлено заказов — {n}"
@@ -2094,6 +2116,9 @@ msgstr "Current plan"
 msgid "Телефон"
 msgstr "Phone"
 
+msgid "Тема"
+msgstr "Theme"
+
 msgid "Техкарта"
 msgstr "Recipe"
 
@@ -2113,6 +2138,9 @@ msgstr "Type"
 
 msgid "Токен:"
 msgstr "Token:"
+
+msgid "Тёмная"
+msgstr "Dark"
 
 msgid "У вас пока нет заведений."
 msgstr "You don't have any venues yet."
@@ -2213,6 +2241,13 @@ msgstr "Fiscalizing…"
 msgid "Фискальный чек №"
 msgstr "Fiscal receipt No."
 
+msgid ""
+"Цвет текста на кнопках подбирается автоматически, чтобы всё оставалось "
+"читаемым. Гостевые страницы (QR-меню) остаются в фирменном стиле."
+msgstr ""
+"Button text color is chosen automatically so everything stays readable. "
+"Guest pages (QR menu) keep the brand style."
+
 msgid "Цена"
 msgstr "Price"
 
@@ -2247,6 +2282,9 @@ msgid "Что-то пошло не так на нашей стороне. Мы �
 msgstr ""
 "Something went wrong on our end. We already know about it and are looking"
 " into it."
+
+msgid "Чёрная (AMOLED)"
+msgstr "Black (AMOLED)"
 
 msgid ""
 "Экран для кухни на любом планшете — очередь заказов по колонкам, таймеры "

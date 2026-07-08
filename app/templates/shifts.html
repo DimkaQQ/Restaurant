@@ -10,7 +10,7 @@
 .week-nav button { background:var(--card); border:1px solid var(--border); color:var(--white); padding:.5rem .75rem; min-height:36px; border-radius:6px; cursor:pointer; font-size:.85rem; }
 .week-nav button:hover { border-color:var(--gold); }
 .week-nav span { font-size:.875rem; font-weight:500; min-width:130px; text-align:center; }
-.today-badge { background:rgba(200,168,75,.15); border:1px solid rgba(200,168,75,.3); color:var(--gold); border-radius:8px; padding:.4rem 1rem; font-size:.85rem; }
+.today-badge { background:color-mix(in srgb, var(--gold) 15%, transparent); border:1px solid color-mix(in srgb, var(--gold) 30%, transparent); color:var(--gold); border-radius:8px; padding:.4rem 1rem; font-size:.85rem; }
 .week-grid { display:grid; grid-template-columns:repeat(7,minmax(155px,1fr)); gap:.75rem; min-width:1085px; }
 .day-col { background:var(--card); border:1px solid var(--border); border-radius:10px; min-height:180px; position:relative; }
 .day-col.today { border-color:var(--gold); }
@@ -21,13 +21,13 @@
 .day-add { background:none; border:none; color:var(--muted); cursor:pointer; font-size:1rem; line-height:1; padding:.5rem; min-height:36px; min-width:36px; display:flex; align-items:center; justify-content:center; }
 .day-add:hover { color:var(--gold); }
 .day-body { padding:.5rem; }
-.shift-chip { background:rgba(255,255,255,.04); border:1px solid var(--border); border-radius:6px; padding:.4rem .6rem; margin-bottom:.35rem; display:flex; align-items:center; gap:.4rem; cursor:pointer; transition:all .15s; }
+.shift-chip { background:var(--hover); border:1px solid var(--border); border-radius:6px; padding:.4rem .6rem; margin-bottom:.35rem; display:flex; align-items:center; gap:.4rem; cursor:pointer; transition:all .15s; }
 .shift-chip:hover { border-color:var(--gold); }
 .shift-chip.status-planned { border-left:3px solid #60a5fa; }
 .shift-chip.status-active { border-left:3px solid #4ade80; }
 .shift-chip.status-done { border-left:3px solid var(--muted); opacity:.6; }
 .shift-chip.status-cancelled { border-left:3px solid #ef4444; opacity:.5; text-decoration:line-through; }
-.shift-avatar { width:24px; height:24px; border-radius:50%; background:rgba(200,168,75,.15); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:.6rem; font-weight:700; color:var(--gold); flex-shrink:0; }
+.shift-avatar { width:24px; height:24px; border-radius:50%; background:color-mix(in srgb, var(--gold) 15%, transparent); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:.6rem; font-weight:700; color:var(--gold); flex-shrink:0; }
 .shift-info { flex:1; min-width:0; }
 .shift-name { font-size:.75rem; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .shift-time { font-size:.68rem; color:var(--muted); }
@@ -40,7 +40,7 @@
 .shift-chip { position:relative; }
 .shift-tooltip {
   display:none; position:fixed; z-index:9999;
-  background:#1e1e1e; border:1px solid rgba(200,168,75,.4); border-radius:8px;
+  background:#1e1e1e; border:1px solid color-mix(in srgb, var(--gold) 40%, transparent); border-radius:8px;
   padding:.65rem .9rem; min-width:180px; max-width:240px;
   box-shadow:0 8px 24px rgba(0,0,0,.7); pointer-events:none;
 }

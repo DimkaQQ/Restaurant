@@ -348,6 +348,19 @@ class VenueSettingsPatch(BaseModel):
     fiscal_cashbox_number: str | None = None
 
 
+@router.get("/appearance", response_class=HTMLResponse)
+async def settings_appearance_page(
+    request: Request,
+    current_user: User = Depends(get_current_user_dep),
+):
+    """Theme/accent picker. Preferences live in the device's localStorage —
+    every station styles itself, so no role gate and no DB writes."""
+    return templates.TemplateResponse("settings_appearance.html", {
+        "request": request,
+        "user": current_user,
+    })
+
+
 @router.get("/venues", response_class=HTMLResponse)
 async def settings_venues_page(
     request: Request,
