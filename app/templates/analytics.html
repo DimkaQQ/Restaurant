@@ -175,14 +175,27 @@
 
 <script>
 const LOCALE = {{ ('en-US' if locale == 'en' else 'ru-RU') | tojson }};
-const gold = 'var(--gold)';
-const muted = '#6B6560';
+// Chart.js paints on <canvas> and can't read CSS variables or color-mix() —
+// resolve the theme tokens to concrete colors here so charts render (and
+// follow the active theme) instead of falling back to black.
+const _root = getComputedStyle(document.documentElement);
+const _cssVar = (n, fb) => (_root.getPropertyValue(n).trim() || fb);
+function _rgba(hex, a) {
+  hex = hex.replace('#', '');
+  if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+  const n = parseInt(hex, 16);
+  return `rgba(${(n>>16)&255},${(n>>8)&255},${n&255},${a})`;
+}
+const gold = _cssVar('--gold', '#C8A84B');
+const txtColor = _cssVar('--white', '#F7F5F0');
+const muted = _cssVar('--muted', '#8A857E');
+const gridColor = _rgba(muted, 0.18);
 const chartDefaults = {
-  color: '#F7F5F0',
-  plugins: { legend: { labels: { color: '#F7F5F0', font: { family: 'Inter' } } } },
+  color: txtColor,
+  plugins: { legend: { labels: { color: txtColor, font: { family: 'Inter' } } } },
   scales: {
-    x: { ticks: { color: muted, maxRotation: 45 }, grid: { color: 'color-mix(in srgb, var(--gold) 8%, transparent)' } },
-    y: { ticks: { color: muted, callback: v => v >= 1000000 ? (v/1000000).toFixed(1).replace(/\.0$/,'')+'M' : v >= 1000 ? (v/1000).toFixed(1).replace(/\.0$/,'')+'K' : v }, grid: { color: 'color-mix(in srgb, var(--gold) 8%, transparent)' } },
+    x: { ticks: { color: muted, maxRotation: 45 }, grid: { color: gridColor } },
+    y: { ticks: { color: muted, callback: v => v >= 1000000 ? (v/1000000).toFixed(1).replace(/\.0$/,'')+'M' : v >= 1000 ? (v/1000).toFixed(1).replace(/\.0$/,'')+'K' : v }, grid: { color: gridColor } },
   },
 };
 
@@ -195,7 +208,7 @@ new Chart(document.getElementById('revenue-chart'), {
       label: {{ _("Выручка ₸") | tojson }},
       data: revenueData.map(d => d.revenue),
       borderColor: gold,
-      backgroundColor: 'color-mix(in srgb, var(--gold) 8%, transparent)',
+      backgroundColor: _rgba(gold, 0.12),
       fill: true,
       tension: 0.4,
       pointRadius: 3,
@@ -208,7 +221,7 @@ new Chart(document.getElementById('revenue-chart'), {
 
 {% if venue_revenue | length > 1 %}
 const venueData = {{ venue_revenue | tojson }};
-const palette = ['var(--gold)','#A08030','#78601E','#50400F','#2E2508','#8B9E5C','#5C6E3A','#3A4825'];
+const palette = [gold, '#A08030','#78601E','#50400F','#2E2508','#8B9E5C','#5C6E3A','#3A4825'];
 new Chart(document.getElementById('venues-chart'), {
   type: 'doughnut',
   data: {
@@ -220,7 +233,7 @@ new Chart(document.getElementById('venues-chart'), {
     maintainAspectRatio: false,
     cutout: '60%',
     plugins: {
-      legend: { position: window.innerWidth < 500 ? 'bottom' : 'right', labels: { color: '#F7F5F0', boxWidth: 12, padding: 10, font: { size: 11 } } },
+      legend: { position: window.innerWidth < 500 ? 'bottom' : 'right', labels: { color: txtColor, boxWidth: 12, padding: 10, font: { size: 11 } } },
       tooltip: { callbacks: { label: ctx => ' ' + parseFloat(ctx.raw).toLocaleString(LOCALE) + ' ₸' } }
     }
   },

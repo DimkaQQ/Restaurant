@@ -43,9 +43,12 @@
       font-family: 'Inter', sans-serif; font-size: 14px; padding: .6rem 1.4rem;
       background: #111; color: #fff; border: none; border-radius: 6px; cursor: pointer;
     }
+    /* margin:0 drops the browser's own header/footer (date, URL, page number)
+       so the printout is just the receipt. */
+    @page { margin: 0; }
     @media print {
-      body { background: #fff; padding: 0; }
-      .receipt { width: 100%; padding: 0; }
+      body { background: #fff; padding: 0; display: block; }
+      .receipt { width: 72mm; padding: 3mm 4mm; margin: 0 auto; }
       .no-print { display: none; }
     }
   </style>

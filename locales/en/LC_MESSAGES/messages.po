@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-08 06:31+0000\n"
+"POT-Creation-Date: 2026-07-09 21:09+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -311,6 +311,9 @@ msgstr "Send to kitchen — pay later"
 msgid "Вариант"
 msgstr "Option"
 
+msgid "Введите PIN"
+msgstr "Enter PIN"
+
 msgid "Введите количество"
 msgstr "Enter a quantity"
 
@@ -319,6 +322,9 @@ msgstr "Enter venue name"
 
 msgid "Введите название и цену"
 msgstr "Enter a name and a price"
+
+msgid "Введите свой PIN, чтобы начать смену."
+msgstr "Enter your PIN to start your shift."
 
 msgid "Введите текст выше..."
 msgstr "Type the text above..."
@@ -674,6 +680,9 @@ msgstr "Journal"
 
 msgid "Журнал действий"
 msgstr "Action journal"
+
+msgid "Заблокировать"
+msgstr "Lock"
 
 msgid "Забыли пароль?"
 msgstr "Forgot password?"

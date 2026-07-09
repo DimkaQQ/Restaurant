@@ -231,6 +231,13 @@ function fmtMoney(v) {
   return String(Math.round(v));
 }
 
+// Chart.js can't read CSS vars/color-mix — resolve theme tokens to concrete
+// colors so the chart renders and follows the active theme.
+const _finRoot = getComputedStyle(document.documentElement);
+const _finMuted = (_finRoot.getPropertyValue('--muted').trim() || '#8A857E');
+function _finRgba(hex, a){ hex = hex.replace('#',''); if (hex.length===3) hex = hex.split('').map(c=>c+c).join(''); const n = parseInt(hex,16); return `rgba(${(n>>16)&255},${(n>>8)&255},${n&255},${a})`; }
+const _finGrid = _finRgba(_finMuted, 0.18);
+const _finOk = (_finRoot.getPropertyValue('--ok').trim() || '#4ade80');
 const ctx = document.getElementById('pl-chart').getContext('2d');
 new Chart(ctx, {
   type: 'bar',
@@ -248,7 +255,7 @@ new Chart(ctx, {
       {
         label: T.profit,
         data: chartData.map(d => Math.max(0, d.revenue - d.expenses)),
-        backgroundColor: 'color-mix(in srgb, var(--ok) 45%, transparent)',
+        backgroundColor: _finRgba(_finOk, 0.75),
         stack: 'pl',
         borderRadius: [4, 4, 0, 0],
         order: 1,
@@ -260,7 +267,7 @@ new Chart(ctx, {
     maintainAspectRatio: false,
     interaction: { mode: 'index', intersect: false },
     plugins: {
-      legend: { labels: { color: '#9ca3af', font: { size: 11 } } },
+      legend: { labels: { color: _finMuted, font: { size: 11 } } },
       tooltip: {
         callbacks: {
           label: item => `${item.dataset.label}: ${item.parsed.y.toLocaleString(LOCALE)} ₸`,
@@ -272,8 +279,8 @@ new Chart(ctx, {
       }
     },
     scales: {
-      x: { stacked: true, ticks: { color: '#6b7280' }, grid: { color: 'rgba(255,255,255,0.04)' } },
-      y: { stacked: true, ticks: { color: '#6b7280', callback: v => fmtMoney(v) }, grid: { color: 'rgba(255,255,255,0.04)' } },
+      x: { stacked: true, ticks: { color: _finMuted }, grid: { color: _finGrid } },
+      y: { stacked: true, ticks: { color: _finMuted, callback: v => fmtMoney(v) }, grid: { color: _finGrid } },
     }
   }
 });
