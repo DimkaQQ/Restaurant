@@ -14,6 +14,9 @@
   --ok: #4ade80;           /* status green (free table, shift open, ready) */
   --warn: #fbbf24;         /* status amber (reserved, unpaid) */
   --bad: #f87171;          /* status red (occupied, stop-list, errors) */
+  --info: #60a5fa;         /* status blue (new, planned) */
+  --violet: #a78bfa;       /* status violet (confirmed) */
+  --orange: #fb923c;       /* status orange (preparing) */
   --sidebar-w: 220px;
 }
 
@@ -41,6 +44,9 @@ html[data-theme="light"] {
   --ok: #15803D;
   --warn: #955E0A;
   --bad: #C02626;
+  --info: #1D4ED8;
+  --violet: #6D28D9;
+  --orange: #C2410C;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -321,7 +327,9 @@ body {
 /* Header wraps so badges never poke out of the card; the ⋯ menu is pinned
    to the card's top-right corner, out of the flex flow, so it can't push the
    badges past the edge (padding-right keeps the badges clear of it). */
-.order-header { display: flex; align-items: center; flex-wrap: wrap; gap: 0.4rem; padding-right: 1.75rem; }
+/* padding-right must clear the pinned ⋯ button: card padding 1rem + this
+   ≥ button right offset 0.8rem + 36px width → 2.25rem keeps the time clear */
+.order-header { display: flex; align-items: center; flex-wrap: wrap; gap: 0.4rem; padding-right: 2.25rem; }
 .order-id { font-family: monospace; font-size: 0.8rem; color: var(--muted); }
 .order-status {
   font-size: 0.75rem;
@@ -350,12 +358,6 @@ body {
 .pay-badge { font-size: 0.72rem; padding: 0.2rem 0.5rem; border-radius: 20px; white-space: nowrap; }
 .pay-badge-paid { background: rgba(75,200,122,0.12); color: var(--success); }
 .pay-badge-unpaid { background: color-mix(in srgb, var(--warn) 12%, transparent); color: var(--warn); }
-.order-pay-row {
-  display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;
-  padding: 0.5rem 0.6rem; border-radius: 8px;
-  background: color-mix(in srgb, var(--warn) 6%, transparent); border: 1px dashed color-mix(in srgb, var(--warn) 30%, transparent);
-}
-.order-pay-label { font-size: 0.75rem; color: var(--warn); margin-right: auto; }
 .btn-pay {
   background: transparent;
   color: var(--white);
@@ -440,16 +442,6 @@ body {
   cursor: pointer;
 }
 
-.btn-cancel {
-  background: transparent;
-  color: var(--danger);
-  border: 1px solid rgba(200,75,75,0.3);
-  padding: 0.5rem 0.65rem;
-  min-height: 36px;
-  border-radius: 6px;
-  font-size: 0.75rem;
-  cursor: pointer;
-}
 
 .btn-icon-danger {
   background: none;
@@ -497,7 +489,7 @@ a.venue-item-link .venue-name { color: var(--white); }
 
 /* ── Badges ── */
 .badge { font-size: 0.75rem; padding: 0.25rem 0.5rem; border-radius: 20px; }
-.badge-active   { background: rgba(75,200,122,0.15); color: #4BC87A; }
+.badge-active   { background: color-mix(in srgb, var(--success) 15%, transparent); color: var(--success); }
 .badge-inactive { background: rgba(200,75,75,0.15); color: var(--danger); }
 .badge-launch   { background: color-mix(in srgb, var(--gold) 15%, transparent); color: var(--gold); }
 
@@ -963,7 +955,7 @@ select option { background: var(--card); }
   .category-chip { padding: .35rem .75rem; min-height: 36px; display: inline-flex; align-items: center; }
 
   /* Order action buttons: ensure 36px touch targets */
-  .btn-status, .btn-cancel { padding: 0.5rem 0.75rem; min-height: 36px; }
+  .btn-status { padding: 0.5rem 0.75rem; min-height: 36px; }
 }
 
 @media (max-width: 420px) {

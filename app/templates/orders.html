@@ -69,6 +69,12 @@
   const LOCALE = {{ ('en-US' if locale == 'en' else 'ru-RU') | tojson }};
 
   function reloadOrders() {
+    // Don't re-render while the user is mid-interaction: an innerHTML swap
+    // would close an open «Оплатить»/«⋯» dropdown (or a move/split modal)
+    // right under their finger. The next 8s tick catches up.
+    if (document.querySelector('.order-menu.open')
+        || document.getElementById('move-modal').style.display === 'flex'
+        || document.getElementById('split-modal').style.display === 'flex') return;
     const venueId = document.getElementById('venue-filter').value;
     const url = '/partials/orders' + (venueId ? '?venue_id=' + venueId : '');
     htmx.ajax('GET', url, {target: '#orders-board', swap: 'innerHTML'});

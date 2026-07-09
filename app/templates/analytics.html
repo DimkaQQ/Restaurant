@@ -175,21 +175,13 @@
 
 <script>
 const LOCALE = {{ ('en-US' if locale == 'en' else 'ru-RU') | tojson }};
-// Chart.js paints on <canvas> and can't read CSS variables or color-mix() —
-// resolve the theme tokens to concrete colors here so charts render (and
-// follow the active theme) instead of falling back to black.
-const _root = getComputedStyle(document.documentElement);
-const _cssVar = (n, fb) => (_root.getPropertyValue(n).trim() || fb);
-function _rgba(hex, a) {
-  hex = hex.replace('#', '');
-  if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
-  const n = parseInt(hex, 16);
-  return `rgba(${(n>>16)&255},${(n>>8)&255},${n&255},${a})`;
-}
-const gold = _cssVar('--gold', '#C8A84B');
-const txtColor = _cssVar('--white', '#F7F5F0');
-const muted = _cssVar('--muted', '#8A857E');
-const gridColor = _rgba(muted, 0.18);
+// Theme tokens resolved once via the shared notify.js helper (canvas can't
+// read CSS variables).
+const _ct = chartTheme();
+const gold = _ct.accent;
+const txtColor = _ct.text;
+const muted = _ct.muted;
+const gridColor = _ct.grid;
 const chartDefaults = {
   color: txtColor,
   plugins: { legend: { labels: { color: txtColor, font: { family: 'Inter' } } } },
@@ -208,7 +200,7 @@ new Chart(document.getElementById('revenue-chart'), {
       label: {{ _("Выручка ₸") | tojson }},
       data: revenueData.map(d => d.revenue),
       borderColor: gold,
-      backgroundColor: _rgba(gold, 0.12),
+      backgroundColor: hexToRgba(gold, 0.12),
       fill: true,
       tension: 0.4,
       pointRadius: 3,

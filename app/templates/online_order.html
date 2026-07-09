@@ -10,11 +10,15 @@
   <title>{{ venue.name }} — {{ t.online_menu }}</title>
   <link rel="stylesheet" href="/static/fonts/fonts.css">
   <style>
+    /* Guest page: self-contained tokens (main.css is NOT loaded here) — the
+       QR menu always keeps the brand look regardless of staff themes. */
     :root {
-      --gold: var(--gold);
+      --gold: #C8A84B;
       --bg: #0A0A0A;
       --card: #111111;
-      --border: var(--hover);
+      --border: rgba(255,255,255,0.08);
+      --hover: rgba(255,255,255,0.06);
+      --on-accent: #0D0D0D;
       --white: #F5F5F0;
       --muted: rgba(255,255,255,0.45);
       --success: #4BC87A;

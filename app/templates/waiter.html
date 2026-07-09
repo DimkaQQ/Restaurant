@@ -9,8 +9,8 @@
   <meta name="theme-color" content="#0D0D0D">
   <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
   <link rel="apple-touch-icon" href="/static/apple-touch-icon.png">
-  <link rel="stylesheet" href="/static/css/main.css?v=16">
-  <script src="/static/js/notify.js?v=3"></script>
+  <link rel="stylesheet" href="/static/css/main.css?v=17">
+  <script src="/static/js/notify.js?v=4"></script>
   <style>
     * { box-sizing: border-box; }
     body { background:var(--black); display:block; font-family:'Inter',sans-serif; padding-bottom:76px; }
@@ -48,9 +48,9 @@
     .w-order-head { display:flex; align-items:center; gap:.5rem; margin-bottom:.4rem; flex-wrap:wrap; }
     .w-order-table { font-weight:700; font-size:1.05rem; }
     .w-badge { font-size:.72rem; padding:.15rem .55rem; border-radius:999px; border:1px solid var(--border); color:var(--muted); }
-    .w-badge.st-new { color:#60a5fa; border-color:rgba(96,165,250,.4); }
-    .w-badge.st-confirmed { color:#a78bfa; border-color:rgba(167,139,250,.4); }
-    .w-badge.st-preparing { color:#fb923c; border-color:rgba(251,146,60,.4); }
+    .w-badge.st-new { color:var(--info); border-color:color-mix(in srgb, var(--info) 40%, transparent); }
+    .w-badge.st-confirmed { color:var(--violet); border-color:color-mix(in srgb, var(--violet) 40%, transparent); }
+    .w-badge.st-preparing { color:var(--orange); border-color:color-mix(in srgb, var(--orange) 40%, transparent); }
     .w-badge.st-ready { color:var(--ok); border-color:color-mix(in srgb, var(--ok) 40%, transparent); }
     .w-badge.unpaid { color:var(--warn); border-color:color-mix(in srgb, var(--warn) 40%, transparent); }
     .w-order-items { color:var(--muted); font-size:.85rem; line-height:1.5; margin-bottom:.6rem; }
@@ -61,6 +61,9 @@
     .opt-chip { padding:.55rem .9rem; border-radius:10px; border:1px solid var(--border); background:none; color:var(--white); font-size:.9rem; cursor:pointer; }
     .opt-chip.active { border-color:var(--gold); color:var(--gold); background:color-mix(in srgb, var(--gold) 12%, transparent); }
     .empty { color:var(--muted); text-align:center; padding:2rem 1rem; font-size:.9rem; }
+    /* Gate mode: fully opaque backdrop — the screen behind must not be
+       readable while locked. */
+    #pin-modal.gate .modal-overlay { background: var(--black); opacity: 1; }
   </style>
 </head>
 <body>
@@ -486,11 +489,16 @@ function showTab(name) {
   if (name === 'orders') loadOrders();
 }
 
-init();
-setInterval(loadOrders, 10000);
-
 // Lock the screen behind the PIN pad until a waiter identifies themselves.
-if (!sessionStorage.getItem('waiter_unlocked')) openPinModal(true);
+// While locked, nothing is fetched or rendered — the gate hides an empty
+// screen, not the order list.
+if (!sessionStorage.getItem('waiter_unlocked')) {
+  document.getElementById('pin-modal').classList.add('gate');
+  openPinModal(true);
+} else {
+  init();
+  setInterval(loadOrders, 10000);
+}
 </script>
 </body>
 </html>

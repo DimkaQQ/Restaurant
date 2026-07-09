@@ -4,16 +4,16 @@
  * good screen instead of a browser error page. API calls are never cached
  * here — offline order queueing is handled in the POS page itself. */
 
-const CACHE_VERSION = 'restos-v1';
+const CACHE_VERSION = 'restos-v2';
 const STATIC_CACHE = CACHE_VERSION + '-static';
 const PAGES_CACHE = CACHE_VERSION + '-pages';
 
 const PRECACHE_URLS = [
-  '/static/css/main.css?v=9',
+  '/static/css/main.css?v=17',
   '/static/fonts/fonts.css',
   '/static/vendor/htmx-1.9.12.min.js',
   '/static/vendor/chart-4.4.3.umd.min.js',
-  '/static/js/notify.js',
+  '/static/js/notify.js?v=4',
   '/static/favicon.svg',
   '/static/favicon-192.png',
   '/static/manifest.json',

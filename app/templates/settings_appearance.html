@@ -97,11 +97,8 @@
     document.querySelectorAll('.ap-theme').forEach(b =>
       b.classList.toggle('active', b.dataset.theme === theme));
     const accent = localStorage.getItem('ui_accent') || '';
-    let matched = false;
     document.querySelectorAll('.ap-swatch').forEach(b => {
-      const on = (b.dataset.accent || '') === accent;
-      b.classList.toggle('active', on);
-      if (on) matched = true;
+      b.classList.toggle('active', (b.dataset.accent || '') === accent);
     });
     if (accent) document.getElementById('ap-custom-color').value = accent;
   }

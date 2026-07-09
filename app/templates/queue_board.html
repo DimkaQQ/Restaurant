@@ -7,6 +7,9 @@
   <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
   <title>{{ venue.name }} — Заказы</title>
   <style>
+    /* Guest display: self-contained token (main.css not loaded) — brand gold
+       stays fixed regardless of staff themes. */
+    :root { --gold: #C8A84B; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       background: #0A0A0A; color: #F7F5F0; font-family: 'Inter', sans-serif;

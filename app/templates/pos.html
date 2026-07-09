@@ -1002,6 +1002,7 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
     localStorage.setItem('pos_venue', sel.value);
     loadMenu();
     lockVenueUI();
+    refreshShift(); // the shift widget follows the venue — single change path
   }
   async function unlockVenue() {
     if (!(await notify.confirm(T.switchVenue))) return;
@@ -1017,6 +1018,5 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
   renderQueueBadge();
   flushQueue();
   refreshShift();
-  document.getElementById('venue-select').addEventListener('change', refreshShift);
 </script>
 {% endblock %}

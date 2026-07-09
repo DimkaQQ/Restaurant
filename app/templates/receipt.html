@@ -48,7 +48,9 @@
     @page { margin: 0; }
     @media print {
       body { background: #fff; padding: 0; display: block; }
-      .receipt { width: 72mm; padding: 3mm 4mm; margin: 0 auto; }
+      /* fill the printable width up to a standard 80mm roll's 72mm print
+         area — on 58mm printers it shrinks instead of clipping */
+      .receipt { width: 100%; max-width: 72mm; padding: 3mm 4mm; margin: 0 auto; }
       .no-print { display: none; }
     }
   </style>
