@@ -254,8 +254,24 @@ async def export_csv(
         select(Venue.id, Venue.name).where(Venue.id.in_(filter_ids))
     )).all())
 
+    def _safe(v):
+        """Neutralise CSV formula injection: a cell that Excel/Sheets would
+        read as a formula (starts with = + - @, or a tab/CR) is prefixed with
+        an apostrophe so it's treated as text. Free-text item names and expense
+        descriptions are staff-entered and the file is opened by an accountant."""
+        s = "" if v is None else str(v)
+        if s and s[0] in ("=", "+", "-", "@", "\t", "\r"):
+            return "'" + s
+        return s
+
     buf = io.StringIO()
-    writer = csv.writer(buf, delimiter=";")
+    _raw = csv.writer(buf, delimiter=";")
+
+    class _writer:
+        @staticmethod
+        def writerow(row):
+            _raw.writerow([_safe(c) for c in row])
+    writer = _writer()
 
     if kind == "sales":
         orders = (await db.execute(

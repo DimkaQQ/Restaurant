@@ -541,3 +541,22 @@ async def test_menu_photo_upload_rejects_oversize_and_non_image(client: AsyncCli
                           files={"photo": ("x.png", png, "image/png")})
     assert r.status_code == 200, r.text
     assert r.json()["image_url"].endswith(".png")
+
+
+async def test_csv_export_neutralizes_formula_injection(client: AsyncClient):
+    """A staff-typed item name starting with = must not become a live formula
+    in the accountant's CSV — it's prefixed with an apostrophe."""
+    h, venue_id, _ = await _setup(client)
+    # free-form POS line with a malicious name
+    evil = "=HYPERLINK(\"http://evil\")"
+    r = await client.post("/api/pos/order", headers=h, json={
+        "venue_id": venue_id,
+        "items": [{"name": evil, "price": 100, "quantity": 1}],
+        "payment_method": "cash",
+    })
+    assert r.status_code == 200, r.text
+    csv_resp = await client.get("/finance/export/sales.csv?period=month", headers=h)
+    assert csv_resp.status_code == 200
+    body = csv_resp.text
+    assert "'=HYPERLINK" in body      # neutralised (leading apostrophe)
+    assert ";=HYPERLINK" not in body  # never a bare formula cell
