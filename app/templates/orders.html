@@ -96,7 +96,7 @@
         const tables = await res.json();
         wrap.innerHTML = tables.map(t =>
           `<button type="button" class="btn-secondary" style="font-size:.85rem; padding:.45rem .8rem${t.status === 'occupied' ? ';opacity:.55' : ''}"
-             onclick="confirmMove('${t.id}')">${t.label}</button>`).join('');
+             onclick="confirmMove('${t.id}')">${esc(t.label)}</button>`).join('');
       }
     } catch (e) {}
     document.getElementById('move-modal').style.display = 'flex';

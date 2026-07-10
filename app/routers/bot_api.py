@@ -27,10 +27,12 @@ _BOT_API_SECRET = os.getenv("BOT_API_SECRET", "")
 
 
 async def _require_bot_secret(x_bot_secret: str = Header(default="")) -> None:
-    """Shared-secret guard for all bot-internal endpoints.
-    Set BOT_API_SECRET in .env; if the env var is empty the check is skipped
-    (backwards-compatible for local dev without the variable set)."""
-    if _BOT_API_SECRET and x_bot_secret != _BOT_API_SECRET:
+    """Shared-secret guard for all bot-internal endpoints. Fails CLOSED: with
+    BOT_API_SECRET unset the whole /api/bot surface (guest/order creation,
+    notification queue) would otherwise be open to the internet."""
+    if not _BOT_API_SECRET:
+        raise HTTPException(status_code=503, detail="BOT_API_SECRET не настроен")
+    if x_bot_secret != _BOT_API_SECRET:
         raise HTTPException(status_code=403, detail="Forbidden")
 
 

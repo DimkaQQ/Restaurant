@@ -163,8 +163,8 @@
       {% endif %}
     </div>
     <div class="tb-actions">
-      <button class="tb-btn tb-btn-add" onclick="openModal('{{ item.id }}','{{ item.name }}','restock','{{ item.unit }}')">{{ _("+ Приход") }}</button>
-      <button class="tb-btn tb-btn-sub" onclick="openModal('{{ item.id }}','{{ item.name }}','writeoff','{{ item.unit }}')">{{ _("− Списание") }}</button>
+      <button class="tb-btn tb-btn-add" data-id="{{ item.id }}" data-name="{{ item.name }}" data-unit="{{ item.unit }}" onclick="openModal(this.dataset.id, this.dataset.name, 'restock', this.dataset.unit)">{{ _("+ Приход") }}</button>
+      <button class="tb-btn tb-btn-sub" data-id="{{ item.id }}" data-name="{{ item.name }}" data-unit="{{ item.unit }}" onclick="openModal(this.dataset.id, this.dataset.name, 'writeoff', this.dataset.unit)">{{ _("− Списание") }}</button>
     </div>
   </div>
   {% else %}

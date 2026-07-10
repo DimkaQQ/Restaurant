@@ -127,8 +127,8 @@
           </td>
           <td>
             <div class="qty-controls">
-              <button class="btn-add" onclick="openQtyModal('{{ item.id }}', '{{ item.name }}', 'restock')">{{ _("+ Приход") }}</button>
-              <button class="btn-rem" onclick="openQtyModal('{{ item.id }}', '{{ item.name }}', 'writeoff')">{{ _("− Списать") }}</button>
+              <button class="btn-add" data-id="{{ item.id }}" data-name="{{ item.name }}" onclick="openQtyModal(this.dataset.id, this.dataset.name, 'restock')">{{ _("+ Приход") }}</button>
+              <button class="btn-rem" data-id="{{ item.id }}" data-name="{{ item.name }}" onclick="openQtyModal(this.dataset.id, this.dataset.name, 'writeoff')">{{ _("− Списать") }}</button>
               <button class="btn-icon" onclick="deleteIngredient('{{ item.id }}')">✕</button>
             </div>
           </td>
@@ -371,7 +371,7 @@ function openInvoiceModal() {
     .then(r => r.ok ? r.json() : {suppliers: []})
     .then(d => {
       document.getElementById('supplier-list').innerHTML =
-        d.suppliers.map(s => `<option value="${s.name}">`).join('');
+        d.suppliers.map(s => `<option value="${esc(s.name)}">`).join('');
     }).catch(() => {});
   document.getElementById('invoice-modal').style.display = 'flex';
 }
@@ -383,7 +383,7 @@ function addInvLine() {
   row.style.cssText = 'gap:.4rem;margin-bottom:.4rem;align-items:center';
   row.innerHTML = `
     <select class="il-ing" style="flex:2" onchange="prefillCost(this)">
-      ${INGREDIENTS.map(i => `<option value="${i.id}" data-cost="${i.cost}">${i.name} (${i.unit})</option>`).join('')}
+      ${INGREDIENTS.map(i => `<option value="${i.id}" data-cost="${i.cost}">${esc(i.name)} (${esc(i.unit)})</option>`).join('')}
     </select>
     <input type="number" class="il-qty" step="0.001" min="0.001" placeholder="${T.invQty}" style="flex:1" oninput="recalcInvoice()">
     <input type="number" class="il-cost" step="0.01" min="0" placeholder="₸/ед" style="flex:1" value="${INGREDIENTS[0] ? INGREDIENTS[0].cost : ''}" oninput="recalcInvoice()">
