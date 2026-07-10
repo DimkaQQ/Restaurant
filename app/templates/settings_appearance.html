@@ -91,6 +91,88 @@
   <p class="ap-hint">{{ _("Цвет текста на кнопках подбирается автоматически, чтобы всё оставалось читаемым. Гостевые страницы (QR-меню) остаются в фирменном стиле.") }}</p>
 </div>
 
+{% if user.role == 'owner' and venues %}
+<div class="ap-section" style="margin-top:2.5rem; border-top:1px solid var(--border); padding-top:1.5rem">
+  <h2 style="font-size:1.05rem; font-weight:600; margin-bottom:.4rem">{{ _("По заведениям и экранам") }}</h2>
+  <p style="color:var(--muted); font-size:.85rem">{{ _("Настройка привязывается к заведению и конкретному экрану (касса, кухня, склад) и применяется на любом устройстве, которое его открывает. Перекрывает настройку устройства выше.") }}</p>
+
+  <div style="display:flex; gap:.75rem; flex-wrap:wrap; margin-top:1rem">
+    <select id="va-venue" class="select-input" onchange="loadVenueAppearance()">
+      {% for v in venues %}<option value="{{ v.id }}">{{ v.name }}</option>{% endfor %}
+    </select>
+    <select id="va-surface" class="select-input" onchange="loadVenueAppearance()">
+      <option value="pos">{{ _("Касса") }}</option>
+      <option value="kitchen">{{ _("Кухня") }}</option>
+      <option value="inventory">{{ _("Склад") }}</option>
+      <option value="waiter">{{ _("Официант") }}</option>
+    </select>
+  </div>
+
+  <div class="ap-label">{{ _("Тема") }}</div>
+  <div class="ap-themes" id="va-themes">
+    <button type="button" class="ap-theme" data-vt="device" onclick="setVenueTheme('device')"><span class="ap-preview" style="background:var(--card); align-items:center; justify-content:center"><span style="color:var(--muted); font-size:.8rem">{{ _("Как на устройстве") }}</span></span><span class="ap-theme-name">{{ _("По умолчанию") }}</span></button>
+    <button type="button" class="ap-theme" data-vt="dark" onclick="setVenueTheme('dark')"><span class="ap-preview" style="background:#0D0D0D"><span class="ap-side" style="background:#161410"></span><span class="ap-main"><span class="ap-line" style="background:#2b2721"></span><span class="ap-dot" style="background:var(--gold)"></span></span></span><span class="ap-theme-name">{{ _("Тёмная") }}</span></button>
+    <button type="button" class="ap-theme" data-vt="black" onclick="setVenueTheme('black')"><span class="ap-preview" style="background:#000"><span class="ap-side" style="background:#0D0C0A"></span><span class="ap-main"><span class="ap-line" style="background:#1e1c18"></span><span class="ap-dot" style="background:var(--gold)"></span></span></span><span class="ap-theme-name">{{ _("Чёрная (AMOLED)") }}</span></button>
+    <button type="button" class="ap-theme" data-vt="light" onclick="setVenueTheme('light')"><span class="ap-preview" style="background:#F1EEE8"><span class="ap-side" style="background:#FFF; border-right:1px solid rgba(0,0,0,.08)"></span><span class="ap-main"><span class="ap-line" style="background:#d9d4cb"></span><span class="ap-dot" style="background:var(--gold)"></span></span></span><span class="ap-theme-name">{{ _("Светлая") }}</span></button>
+  </div>
+
+  <div class="ap-label">{{ _("Акцентный цвет") }}</div>
+  <div class="ap-swatches" id="va-swatches">
+    <button type="button" class="ap-swatch" data-va="" style="background:#C8A84B" title="{{ _('Золото (по умолчанию)') }}" onclick="setVenueAccent('')"></button>
+    <button type="button" class="ap-swatch" data-va="#5B8DEF" style="background:#5B8DEF" onclick="setVenueAccent('#5B8DEF')"></button>
+    <button type="button" class="ap-swatch" data-va="#34C98E" style="background:#34C98E" onclick="setVenueAccent('#34C98E')"></button>
+    <button type="button" class="ap-swatch" data-va="#E07A5F" style="background:#E07A5F" onclick="setVenueAccent('#E07A5F')"></button>
+    <button type="button" class="ap-swatch" data-va="#A78BFA" style="background:#A78BFA" onclick="setVenueAccent('#A78BFA')"></button>
+    <button type="button" class="ap-swatch" data-va="#E4577B" style="background:#E4577B" onclick="setVenueAccent('#E4577B')"></button>
+    <label class="ap-custom"><input type="color" id="va-custom" value="#C8A84B" oninput="setVenueAccent(this.value)"><span style="font-size:.85rem; color:var(--muted)">{{ _("Свой цвет") }}</span></label>
+  </div>
+  <p class="ap-hint" id="va-status">{{ _("Изменения сохраняются сразу.") }}</p>
+</div>
+{% endif %}
+
+<script>
+  {% if user.role == 'owner' and venues %}
+  // Per-venue-per-surface config comes from the DB; the picker writes it back
+  // via PATCH. Preloaded here so switching venue/surface is instant.
+  const VA = {{ venues_appearance | tojson if venues_appearance is defined else '{}' }};
+  const T_SAVED = {{ _("Сохранено ✓") | tojson }};
+  const T_SAVEERR = {{ _("Ошибка сохранения") | tojson }};
+  function _vaKey() { return document.getElementById('va-venue').value + '|' + document.getElementById('va-surface').value; }
+  function loadVenueAppearance() {
+    const conf = (VA[_vaKey()]) || {};
+    const theme = conf.theme || 'device';
+    document.querySelectorAll('#va-themes .ap-theme').forEach(b => b.classList.toggle('active', b.dataset.vt === theme));
+    const accent = conf.accent || '';
+    document.querySelectorAll('#va-swatches .ap-swatch').forEach(b => b.classList.toggle('active', (b.dataset.va || '') === accent));
+    if (accent) document.getElementById('va-custom').value = accent;
+  }
+  async function _saveVenue() {
+    const venueId = document.getElementById('va-venue').value;
+    const surface = document.getElementById('va-surface').value;
+    const conf = VA[_vaKey()] || {};
+    const res = await fetch('/settings/api/venues/' + venueId + '/appearance', {
+      method: 'PATCH', credentials: 'include',
+      headers: {'Content-Type':'application/json','Authorization':'Bearer '+(localStorage.getItem('access_token')||'')},
+      body: JSON.stringify({ surface, theme: conf.theme === 'device' ? null : (conf.theme || null), accent: conf.accent || null }),
+    });
+    const st = document.getElementById('va-status');
+    if (res.ok) { st.textContent = T_SAVED; st.style.color = 'var(--ok)'; }
+    else { st.textContent = T_SAVEERR; st.style.color = 'var(--bad)'; }
+  }
+  function setVenueTheme(t) {
+    const conf = VA[_vaKey()] || {}; if (t === 'device') delete conf.theme; else conf.theme = t;
+    if (!conf.theme && !conf.accent) delete VA[_vaKey()]; else VA[_vaKey()] = conf;
+    loadVenueAppearance(); _saveVenue();
+  }
+  function setVenueAccent(hex) {
+    const conf = VA[_vaKey()] || {}; if (!hex) delete conf.accent; else conf.accent = hex;
+    if (!conf.theme && !conf.accent) delete VA[_vaKey()]; else VA[_vaKey()] = conf;
+    loadVenueAppearance(); _saveVenue();
+  }
+  loadVenueAppearance();
+  {% endif %}
+</script>
+
 <script>
   function markActive() {
     const theme = localStorage.getItem('ui_theme') || 'dark';

@@ -408,10 +408,16 @@ async def kitchen_page(
             .order_by(Venue.name)
         )).scalars().all()
         current_venue = next((v for v in venues if v.id == venue_id), None) if venue_id else None
+        # A physical kitchen screen is tied to one venue — apply that venue's
+        # configured kitchen appearance (falls back to the single accessible
+        # venue when the URL didn't pin one).
+        from app.services.appearance import surface_appearance
+        appearance_venue = current_venue or (venues[0] if len(venues) == 1 else None)
         return templates.TemplateResponse("kitchen.html", {
             "request": request,
             "venues": venues,
             "current_venue": current_venue,
+            "appearance": surface_appearance(appearance_venue, "kitchen"),
         })
     except Exception as e:
         logger.error("Kitchen page error: %s", e)

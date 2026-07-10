@@ -1,0 +1,9 @@
+{# Applies a venue surface's theme+accent before first paint. Include in
+   <head> and pass `appearance` (dict from surface_appearance()). No-op when
+   the owner hasn't configured this surface. #}
+{% if appearance %}
+{% if appearance.theme %}<script>document.documentElement.setAttribute('data-theme', {{ appearance.theme | tojson }});</script>{% endif %}
+{% if appearance.accent %}
+<style>:root{ --gold: {{ appearance.accent }}; --gold-dim: color-mix(in srgb, {{ appearance.accent }} 15%, transparent); --on-accent: {{ appearance.on_accent }}; }</style>
+{% endif %}
+{% endif %}

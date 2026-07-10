@@ -125,9 +125,12 @@ async def inventory_tablet(
             .order_by(Ingredient.category, Ingredient.name)
         )).scalars().all()
 
+        from app.services.appearance import surface_appearance
+        current_v = next((v for v in venues if str(v.id) == (str(venue_id) if venue_id else "")), None) or (venues[0] if len(venues) == 1 else None)
         return templates.TemplateResponse("inventory_tablet.html", {
             "request": request,
             "venues": venues,
+            "appearance": surface_appearance(current_v, "inventory"),
             "selected_venue_id": str(venue_id) if venue_id and venue_id in accessible_ids else (str(venues[0].id) if len(venues) == 1 else ""),
             "ingredients": ingredients,
         })

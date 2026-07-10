@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime
-from sqlalchemy import String, Boolean, Text, BigInteger, DateTime, ForeignKey, func
+from sqlalchemy import String, Boolean, Text, BigInteger, DateTime, ForeignKey, func, JSON
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.database import Base
 
@@ -26,6 +26,8 @@ class Venue(Base):
     fiscal_login: Mapped[str | None] = mapped_column(String(255), nullable=True)
     fiscal_password: Mapped[str | None] = mapped_column(String(255), nullable=True)
     fiscal_cashbox_number: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    # Per-surface appearance: {"kitchen": {"theme": "light", "accent": "#5B8DEF"}, "pos": {...}, ...}
+    appearance: Mapped[dict] = mapped_column(JSON, default=dict, server_default="{}")
 
     network: Mapped["Network"] = relationship("Network", back_populates="venues")
     menu_items: Mapped[list["MenuItem"]] = relationship("MenuItem", back_populates="venue")

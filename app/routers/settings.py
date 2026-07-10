@@ -352,13 +352,71 @@ class VenueSettingsPatch(BaseModel):
 async def settings_appearance_page(
     request: Request,
     current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
 ):
-    """Theme/accent picker. Preferences live in the device's localStorage —
-    every station styles itself, so no role gate and no DB writes."""
+    """Theme/accent picker. Two scopes: a per-DEVICE default (localStorage) and,
+    for owners, per-VENUE-per-SURFACE settings stored on the venue so a fixed
+    kitchen/register screen looks the same on any device."""
+    venues = []
+    venues_appearance = {}
+    if current_user.role == "owner":
+        venues = (await db.execute(
+            select(Venue).where(Venue.network_id == current_user.network_id).order_by(Venue.name)
+        )).scalars().all()
+        # {"<venue_id>|<surface>": {"theme": ..., "accent": ...}} for the picker
+        for v in venues:
+            for surface, conf in (v.appearance or {}).items():
+                if isinstance(conf, dict):
+                    venues_appearance[f"{v.id}|{surface}"] = conf
     return templates.TemplateResponse("settings_appearance.html", {
         "request": request,
         "user": current_user,
+        "venues": venues,
+        "venues_appearance": venues_appearance,
     })
+
+
+class VenueAppearancePatch(BaseModel):
+    surface: str
+    theme: str | None = None
+    accent: str | None = None
+
+
+@router.patch("/api/venues/{venue_id}/appearance")
+async def update_venue_appearance(
+    venue_id: uuid.UUID,
+    data: VenueAppearancePatch,
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    """Owner sets one surface's theme/accent for one venue. Empty theme+accent
+    clears that surface (screen falls back to the device default)."""
+    from app.services.appearance import SURFACES, _valid_accent
+    _require_owner(current_user)
+    if data.surface not in SURFACES:
+        raise HTTPException(status_code=400, detail="Неизвестный экран")
+    venue = (await db.execute(
+        select(Venue).where(Venue.id == venue_id, Venue.network_id == current_user.network_id)
+    )).scalar_one_or_none()
+    if not venue:
+        raise HTTPException(status_code=404, detail="Заведение не найдено")
+    appearance = dict(venue.appearance or {})
+    conf = {}
+    if data.theme in ("dark", "black", "light"):
+        conf["theme"] = data.theme
+    accent = _valid_accent(data.accent)
+    if accent:
+        conf["accent"] = accent
+    if conf:
+        appearance[data.surface] = conf
+    else:
+        appearance.pop(data.surface, None)
+    venue.appearance = appearance
+    # JSON column mutation needs an explicit flag for SQLAlchemy to persist it
+    from sqlalchemy.orm.attributes import flag_modified
+    flag_modified(venue, "appearance")
+    await db.commit()
+    return {"ok": True, "appearance": appearance.get(data.surface, {})}
 
 
 @router.get("/venues", response_class=HTMLResponse)

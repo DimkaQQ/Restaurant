@@ -9,7 +9,7 @@ const STATIC_CACHE = CACHE_VERSION + '-static';
 const PAGES_CACHE = CACHE_VERSION + '-pages';
 
 const PRECACHE_URLS = [
-  '/static/css/main.css?v=17',
+  '/static/css/main.css?v=18',
   '/static/fonts/fonts.css',
   '/static/vendor/htmx-1.9.12.min.js',
   '/static/vendor/chart-4.4.3.umd.min.js',

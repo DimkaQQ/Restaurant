@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-09 21:27+0000\n"
+"POT-Creation-Date: 2026-07-10 10:45+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -756,6 +756,9 @@ msgstr "Value"
 msgid "Золото (по умолчанию)"
 msgstr "Gold (default)"
 
+msgid "Изменения сохраняются сразу."
+msgstr "Changes are saved instantly."
+
 msgid "Или номер стола вручную"
 msgstr "Or type a table number"
 
@@ -795,6 +798,9 @@ msgstr "Pay"
 
 msgid "Казахстан"
 msgstr "Kazakhstan"
+
+msgid "Как на устройстве"
+msgstr "Same as device"
 
 msgid "Как начать"
 msgstr "How to start"
@@ -1058,6 +1064,14 @@ msgstr ""
 "These terms govern the use of the RestOS platform (the \"Service\"), "
 "provided for restaurant management: order taking, guest loyalty, "
 "inventory, staff shifts, analytics, and receipt fiscalization."
+
+msgid ""
+"Настройка привязывается к заведению и конкретному экрану (касса, кухня, "
+"склад) и применяется на любом устройстве, которое его открывает. "
+"Перекрывает настройку устройства выше."
+msgstr ""
+"Bound to a venue and a specific screen (register, kitchen, inventory) and"
+" applied on any device that opens it. Overrides the device setting above."
 
 msgid "Настройки"
 msgstr "Settings"
@@ -1524,6 +1538,12 @@ msgstr ""
 
 msgid "По заведениям"
 msgstr "By venue"
+
+msgid "По заведениям и экранам"
+msgstr "By venue and screen"
+
+msgid "По умолчанию"
+msgstr "Default"
 
 msgid "Повреждение"
 msgstr "Damage"
@@ -2037,6 +2057,9 @@ msgstr "No staff members yet."
 
 msgid "Сохранено"
 msgstr "Saved"
+
+msgid "Сохранено ✓"
+msgstr "Saved ✓"
 
 msgid "Сохранить"
 msgstr "Save"
