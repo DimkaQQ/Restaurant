@@ -48,7 +48,7 @@ async def create_venue(
         raise
     except Exception as e:
         logger.error("Create venue error: %s", e)
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail="Ошибка обработки запроса")
 
 
 @router.patch("/{venue_id}", response_model=VenueOut)
@@ -76,4 +76,4 @@ async def update_venue(
         raise
     except Exception as e:
         logger.error("Update venue error: %s", e)
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail="Ошибка обработки запроса")

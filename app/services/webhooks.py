@@ -24,6 +24,8 @@ logger = logging.getLogger(__name__)
 
 EVENTS = ("order.created", "order.paid")
 
+_pending_deliveries: set = set()
+
 
 @retry(
     retry=retry_if_exception_type((httpx.TimeoutException, httpx.ConnectError, httpx.ReadError)),
@@ -67,4 +69,8 @@ async def dispatch_event(db: AsyncSession, network_id: uuid.UUID, event: str, pa
     )).scalars().all()
     for sub in subs:
         if event in [e.strip() for e in (sub.events or "").split(",")]:
-            asyncio.create_task(_deliver(sub.url, sub.secret, event, payload))
+            # asyncio holds tasks only by weak reference — keep a strong one
+            # until done, or a fire-and-forget delivery can be GC'd mid-flight
+            task = asyncio.create_task(_deliver(sub.url, sub.secret, event, payload))
+            _pending_deliveries.add(task)
+            task.add_done_callback(_pending_deliveries.discard)

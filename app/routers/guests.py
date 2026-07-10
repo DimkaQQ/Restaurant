@@ -85,7 +85,7 @@ async def create_or_get_guest(
         return guest
     except Exception as e:
         logger.error("Create guest error: %s", e)
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail="Ошибка обработки запроса")
 
 
 @router.get("/{guest_id}/recommendation")

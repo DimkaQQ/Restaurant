@@ -107,7 +107,7 @@ async def create_item(
         raise
     except Exception as e:
         logger.error("Create menu item error: %s", e)
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail="Ошибка обработки запроса")
 
 
 @router.patch("/{item_id}", response_model=MenuItemOut)
@@ -143,7 +143,7 @@ async def update_item(
         raise
     except Exception as e:
         logger.error("Update menu item error: %s", e)
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail="Ошибка обработки запроса")
 
 
 @router.post("/{venue_id}/category-rename")
@@ -190,7 +190,7 @@ async def delete_item(
         raise
     except Exception as e:
         logger.error("Delete menu item error: %s", e)
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail="Ошибка обработки запроса")
 
 
 @router.get("/{item_id}/recipe", response_model=list[RecipeLineOut])

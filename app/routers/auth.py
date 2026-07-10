@@ -70,7 +70,7 @@ async def register(request: Request, data: NetworkCreate, response: Response, db
         user = await register_network(data.name, data.slug, data.email, data.password, db)
     except Exception as e:
         logger.error("Registration error: %s", e)
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail="Ошибка обработки запроса")
 
     await _send_verification_email(user)
 
