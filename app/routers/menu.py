@@ -343,9 +343,20 @@ async def upload_photo(
         if ext not in ("jpg", "jpeg", "png", "webp"):
             raise HTTPException(status_code=400, detail="Только jpg/png/webp")
 
+        # Bounded read: never pull an unbounded upload into memory (a 2 GB
+        # "photo" would OOM the worker). 5 MB is generous for a menu photo.
+        MAX_PHOTO = 5 * 1024 * 1024
+        content = await photo.read(MAX_PHOTO + 1)
+        if len(content) > MAX_PHOTO:
+            raise HTTPException(status_code=413, detail="Файл слишком большой (макс. 5 МБ)")
+        # Verify the bytes actually are the declared image type (magic number),
+        # so a renamed script/HTML can't be stored as a .png.
+        sigs = (b"\xff\xd8\xff", b"\x89PNG\r\n\x1a\n", b"RIFF")
+        if not any(content.startswith(s) for s in sigs):
+            raise HTTPException(status_code=400, detail="Файл не похож на изображение")
+
         filename = f"{item_id}.{ext}"
         path = os.path.join(UPLOAD_DIR, filename)
-        content = await photo.read()
         await asyncio.to_thread(_write_file, path, content)
 
         item.image_url = f"/static/uploads/menu/{filename}"

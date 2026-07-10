@@ -517,3 +517,27 @@ async def test_venue_appearance_owner_only_and_scoped(client: AsyncClient):
     r = await client.patch(f"/settings/api/venues/{venue_id}/appearance", headers=h2,
                            json={"surface": "pos", "theme": "dark"})
     assert r.status_code == 404
+
+
+async def test_menu_photo_upload_rejects_oversize_and_non_image(client: AsyncClient):
+    """The photo endpoint must bound memory (size cap) and refuse non-images."""
+    h, venue_id, item_id = await _setup(client)
+
+    # 6 MB blob → 413
+    big = b"\xff\xd8\xff" + b"0" * (6 * 1024 * 1024)
+    r = await client.post(f"/api/menu/{item_id}/photo", headers=h,
+                          files={"photo": ("x.jpg", big, "image/jpeg")})
+    assert r.status_code == 413, r.status_code
+
+    # small but not an image (declared .png) → 400
+    r = await client.post(f"/api/menu/{item_id}/photo", headers=h,
+                          files={"photo": ("x.png", b"<html>hi</html>", "image/png")})
+    assert r.status_code == 400, r.status_code
+
+    # a real tiny PNG → 200
+    png = bytes.fromhex("89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c489"
+                        "0000000a49444154789c6360000002000154a24f6f0000000049454e44ae426082")
+    r = await client.post(f"/api/menu/{item_id}/photo", headers=h,
+                          files={"photo": ("x.png", png, "image/png")})
+    assert r.status_code == 200, r.text
+    assert r.json()["image_url"].endswith(".png")
