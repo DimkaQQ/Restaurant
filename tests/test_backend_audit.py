@@ -490,3 +490,30 @@ async def test_category_detach_via_patch_null(client: AsyncClient):
     body = resp.json()
     assert body["category"] is None
     assert body["name"] == "Латте 3"
+
+
+async def test_venue_appearance_owner_only_and_scoped(client: AsyncClient):
+    """Per-venue appearance: owner sets/clears a surface; validation rejects
+    junk; a foreign network's venue is 404."""
+    h, venue_id, _ = await _setup(client)
+
+    # set kitchen → light + blue accent
+    r = await client.patch(f"/settings/api/venues/{venue_id}/appearance", headers=h,
+                           json={"surface": "kitchen", "theme": "light", "accent": "#5B8DEF"})
+    assert r.status_code == 200, r.text
+    assert r.json()["appearance"] == {"theme": "light", "accent": "#5B8DEF"}
+
+    # bad accent is dropped, bad theme ignored; unknown surface rejected
+    r = await client.patch(f"/settings/api/venues/{venue_id}/appearance", headers=h,
+                           json={"surface": "kitchen", "theme": "neon", "accent": "red"})
+    assert r.status_code == 200 and r.json()["appearance"] == {}
+    r = await client.patch(f"/settings/api/venues/{venue_id}/appearance", headers=h,
+                           json={"surface": "hacker", "theme": "dark"})
+    assert r.status_code == 400
+
+    # another network can't touch this venue
+    reg2 = await register_network(client, name="Other")
+    h2 = auth_headers(reg2["token"])
+    r = await client.patch(f"/settings/api/venues/{venue_id}/appearance", headers=h2,
+                           json={"surface": "pos", "theme": "dark"})
+    assert r.status_code == 404

@@ -1,9 +1,14 @@
 {# Applies a venue surface's theme+accent before first paint. Include in
-   <head> and pass `appearance` (dict from surface_appearance()). No-op when
-   the owner hasn't configured this surface. #}
+   <head> AFTER notify.js and pass `appearance` (dict from
+   surface_appearance()). No-op when the owner hasn't configured this surface.
+   The venue setting must win over the device's localStorage theme/accent, so
+   accent is applied as an inline style (highest specificity) via the same
+   applyAccent helper notify.js uses — this runs after notify's boot. #}
 {% if appearance %}
-{% if appearance.theme %}<script>document.documentElement.setAttribute('data-theme', {{ appearance.theme | tojson }});</script>{% endif %}
-{% if appearance.accent %}
-<style>:root{ --gold: {{ appearance.accent }}; --gold-dim: color-mix(in srgb, {{ appearance.accent }} 15%, transparent); --on-accent: {{ appearance.on_accent }}; }</style>
-{% endif %}
+<script>
+  (function () {
+    {% if appearance.theme %}document.documentElement.setAttribute('data-theme', {{ appearance.theme | tojson }});{% endif %}
+    {% if appearance.accent %}if (window.applyAccent) { window.applyAccent({{ appearance.accent | tojson }}); }{% endif %}
+  })();
+</script>
 {% endif %}
