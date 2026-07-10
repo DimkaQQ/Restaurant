@@ -25,6 +25,8 @@ class Settings(BaseSettings):
     STRIPE_PRICE_PRO: str = ""
     STRIPE_PRICE_ENTERPRISE: str = ""
     PUBLIC_URL: str = "http://localhost:8000"
+    # Business-day timezone for reports («сегодня», periods, day charts)
+    LOCAL_TZ: str = "Asia/Almaty"
     PLATFORM_ADMIN_EMAIL: str = ""
     SENTRY_DSN: str = ""
     SMTP_HOST: str = ""

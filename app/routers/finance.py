@@ -47,17 +47,19 @@ async def finance_page(
         filter_ids = [venue_id] if venue_id and venue_id in accessible_ids else accessible_ids
         selected_venue_id = str(venue_id) if venue_id and venue_id in accessible_ids else ""
 
-        # Period boundaries
+        # Period boundaries — in the venue's business-day timezone
+        from app.services.timeutil import day_start_utc, local_today
+        today_local = local_today()
         if period == "week":
-            start_date = now.date() - timedelta(days=7)
+            start_date = today_local - timedelta(days=7)
         elif period == "quarter":
-            start_date = now.date() - timedelta(days=90)
+            start_date = today_local - timedelta(days=90)
         elif period == "year":
-            start_date = now.date().replace(month=1, day=1)
+            start_date = today_local.replace(month=1, day=1)
         else:  # month
-            start_date = now.date().replace(day=1)
+            start_date = today_local.replace(day=1)
 
-        start_dt = datetime.combine(start_date, datetime.min.time()).replace(tzinfo=timezone.utc)
+        start_dt = day_start_utc(start_date)
 
         # Revenue from orders (done)
         revenue = (await db.execute(

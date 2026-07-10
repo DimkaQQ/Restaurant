@@ -42,6 +42,8 @@ async def redeem_points(
     points: int,
     db: AsyncSession,
 ) -> Decimal:
+    if points <= 0:
+        raise ValueError("Число баллов должно быть положительным")
     if guest.total_points < points:
         raise ValueError("Недостаточно баллов")
     discount = Decimal(points * POINTS_REDEEM_RATE)

@@ -10,6 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import load_only
 
 
+from app.config import settings
 from app.database import get_db
 from app.models.guest import Guest
 from app.models.order import Order, OrderItem
@@ -51,7 +52,7 @@ async def analytics_page(
             selected_venue = None
 
         revenue_rows = (await db.execute(
-            select(cast(Order.paid_at, Date).label("day"), func.sum(Order.total_amount).label("revenue"))
+            select(cast(func.timezone(settings.LOCAL_TZ, Order.paid_at), Date).label("day"), func.sum(Order.total_amount).label("revenue"))
             .where(
                 Order.venue_id.in_(venue_ids),
                 Order.payment_status == "paid",
@@ -230,7 +231,7 @@ async def nps_page(
 
         # Trend: reviews per day for last 30 days
         trend_rows = (await db.execute(
-            select(cast(Review.created_at, Date).label("day"), func.count(Review.id).label("cnt"))
+            select(cast(func.timezone(settings.LOCAL_TZ, Review.created_at), Date).label("day"), func.count(Review.id).label("cnt"))
             .join(Venue, Venue.id == Review.venue_id)
             .where(
                 Venue.id.in_(accessible_ids),

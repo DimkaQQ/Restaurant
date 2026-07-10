@@ -474,7 +474,7 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
   // Same item with different options = separate cart lines.
   function _addCartLine(item, optionIds, optionNames) {
     const key = item.id + '|' + optionIds.slice().sort().join(',');
-    if (_cart[key]) _cart[key].qty += 1;
+    if (_cart[key]) _cart[key].qty = Math.min(99, _cart[key].qty + 1);
     else {
       let unitPrice = parseFloat(item.price);
       const allOpts = (item.modifier_groups || []).flatMap(g => g.options);
@@ -552,7 +552,7 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
 
   function changeQty(key, delta) {
     if (!_cart[key]) return;
-    _cart[key].qty += delta;
+    _cart[key].qty = Math.min(99, _cart[key].qty + delta);
     if (_cart[key].qty <= 0) delete _cart[key];
     renderCart();
   }
@@ -717,7 +717,7 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
     const price = parseFloat(document.getElementById('free-price').value);
     if (!name || isNaN(price) || price < 0) { notify.error(T.freeItemRequired); return; }
     const key = 'free|' + name + '|' + price;
-    if (_cart[key]) _cart[key].qty += 1;
+    if (_cart[key]) _cart[key].qty = Math.min(99, _cart[key].qty + 1);
     else _cart[key] = { item: { id: null, name }, qty: 1, optionIds: [], optionNames: [], unitPrice: price, custom: true };
     closeFreeItemModal();
     renderCart();

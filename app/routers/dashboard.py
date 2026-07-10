@@ -48,8 +48,8 @@ async def dashboard(
     db: AsyncSession = Depends(get_db),
 ):
     try:
-        today = datetime.now(timezone.utc).date()
-        today_start = datetime.combine(today, datetime.min.time()).replace(tzinfo=timezone.utc)
+        from app.services.timeutil import day_start_utc
+        today_start = day_start_utc()  # local business day, not UTC
 
         venue_ids = await get_accessible_venue_ids(current_user, db)
         venues_result = await db.execute(select(Venue).where(Venue.id.in_(venue_ids)))
@@ -459,9 +459,8 @@ async def kitchen_history(
     try:
         accessible_ids = await get_accessible_venue_ids(current_user, db)
         filter_ids = [venue_id] if venue_id and venue_id in accessible_ids else accessible_ids
-        today_start = datetime.combine(
-            datetime.now(timezone.utc).date(), datetime.min.time()
-        ).replace(tzinfo=timezone.utc)
+        from app.services.timeutil import day_start_utc
+        today_start = day_start_utc()  # local business day, not UTC
         orders = (await db.execute(
             select(Order)
             .options(selectinload(Order.items), selectinload(Order.venue))

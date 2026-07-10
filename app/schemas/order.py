@@ -8,7 +8,7 @@ class OrderItemCreate(BaseModel):
     # None = free-form line ("Прочее" on the POS): staff types a name and a
     # price for something not in the menu. Only staff endpoints allow it.
     menu_item_id: uuid.UUID | None = None
-    quantity: int = Field(..., ge=1, le=999)  # fat-finger/DoS guard
+    quantity: int = Field(..., ge=1, le=99)  # fat-finger/DoS guard
     comment: str | None = Field(None, max_length=500)
     # Free-form line fields (used only when menu_item_id is None)
     name: str | None = Field(None, max_length=100)

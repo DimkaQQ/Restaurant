@@ -300,7 +300,7 @@ function decItem(id) {
 }
 function addLine(item, optIds, optNames) {
   const key = item.id + '|' + optIds.slice().sort().join(',');
-  if (_cart[key]) _cart[key].qty += 1;
+  if (_cart[key]) _cart[key].qty = Math.min(99, _cart[key].qty + 1);
   else {
     let unit = parseFloat(item.price);
     const all = (item.modifier_groups || []).flatMap(g => g.options);
@@ -388,7 +388,7 @@ function renderCartSheet() {
 }
 function chgLine(k, d) {
   if (!_cart[k]) return;
-  _cart[k].qty += d;
+  _cart[k].qty = Math.min(99, _cart[k].qty + d);
   if (_cart[k].qty <= 0) delete _cart[k];
   renderCartSheet(); renderMenu(); updateCartBar();
   if (!cartCount()) closeSheets();

@@ -412,7 +412,7 @@ function addLine(item, optionIds, optionNames) {
   const key = item.id + '|' + optionIds.slice().sort().join(',');
   const existing = getLine(key);
   if (existing) {
-    existing.qty += 1;
+    existing.qty = Math.min(99, existing.qty + 1);
   } else {
     let unit = item.price;
     const allOpts = (item.modifier_groups || []).flatMap(g => g.options);
@@ -587,7 +587,7 @@ function updateCartUI() {
 
 function addLineSheet(key) {
   const line = getLine(key);
-  if (line) { line.qty += 1; saveCart(); updateCartUI(); }
+  if (line) { line.qty = Math.min(99, line.qty + 1); saveCart(); updateCartUI(); }
 }
 
 function renderCartSheet() { updateCartUI(); }
