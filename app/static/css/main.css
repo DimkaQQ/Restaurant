@@ -971,7 +971,7 @@ select option { background: var(--card); }
 
 /* ── Toast notifications + confirm dialog (app/static/js/notify.js) ── */
 #notify-toast-host {
-  position: fixed; top: 1rem; right: 1rem; z-index: 9999;
+  position: fixed; bottom: 1rem; right: 1rem; z-index: 9999;
   display: flex; flex-direction: column; gap: .6rem;
   max-width: min(360px, calc(100vw - 2rem));
   pointer-events: none;

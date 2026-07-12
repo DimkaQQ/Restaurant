@@ -27,7 +27,7 @@ async def list_guests(
     try:
         stmt = (
             select(Guest)
-            .where(Guest.network_id == current_user.network_id, Guest.phone != WALKIN_MARKER)
+            .where(Guest.network_id == current_user.network_id, Guest.phone.is_distinct_from(WALKIN_MARKER))
             .order_by(Guest.total_visits.desc())
             .limit(limit)
         )

@@ -70,7 +70,7 @@ async def dashboard(
             select(func.count(Guest.id))
             .where(
                 Guest.network_id == current_user.network_id,
-                Guest.phone != WALKIN_MARKER,
+                Guest.phone.is_distinct_from(WALKIN_MARKER),
                 Guest.created_at >= today_start,
             )
         )).scalar() or 0
@@ -298,7 +298,7 @@ async def guests_partial(
     try:
         stmt = (
             select(Guest)
-            .where(Guest.network_id == current_user.network_id, Guest.phone != WALKIN_MARKER)
+            .where(Guest.network_id == current_user.network_id, Guest.phone.is_distinct_from(WALKIN_MARKER))
             .order_by(Guest.total_visits.desc())
             .limit(100)
         )
@@ -497,14 +497,21 @@ async def guests_page(
     try:
         guests = (await db.execute(
             select(Guest)
-            .where(Guest.network_id == current_user.network_id, Guest.phone != WALKIN_MARKER)
+            .where(Guest.network_id == current_user.network_id, Guest.phone.is_distinct_from(WALKIN_MARKER))
             .order_by(Guest.total_visits.desc())
             .limit(100)
         )).scalars().all()
+        # Real total (not just the loaded page of 100) — must match the count
+        # shown on Settings → Broadcasts, which counts the same way.
+        total_guests = (await db.execute(
+            select(func.count(Guest.id))
+            .where(Guest.network_id == current_user.network_id, Guest.phone.is_distinct_from(WALKIN_MARKER))
+        )).scalar() or 0
         return templates.TemplateResponse("guests.html", {
             "request": request,
             "user": current_user,
             "guests": guests,
+            "total_guests": total_guests,
         })
     except Exception as e:
         logger.error("Guests page error: %s", e)

@@ -299,6 +299,7 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
     offlineNoCache: {{ _("Нет связи и нет локальной копии меню. Подключитесь к интернету один раз.") | tojson }},
     optRequired: {{ _("Выберите «{g}»") | tojson }},
     switchVenue: {{ _("Сменить заведение? Текущий чек будет очищен, заказы начнут пробиваться в другое заведение.") | tojson }},
+    needShift: {{ _("Откройте смену, чтобы принимать оплату") | tojson }},
     shiftOpen: {{ _("Смена открыта с") | tojson }},
     shiftNone: {{ _("Смена не открыта") | tojson }},
     shiftOpenBtn: {{ _("Открыть смену") | tojson }},
@@ -650,6 +651,14 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
   }
 
   function openPayModal() {
+    // Can't take payment without an open shift — cash wouldn't land in a
+    // Z-report. Point the cashier at the shift widget instead of failing later.
+    if (!_shift) {
+      notify.error(T.needShift);
+      const w = document.getElementById('shift-widget');
+      if (w) { w.style.outline = '2px solid var(--warn)'; setTimeout(() => w.style.outline = '', 2000); }
+      return;
+    }
     document.getElementById('pay-modal-total').textContent = document.getElementById('cart-total').textContent;
     document.getElementById('pay-methods').style.display = 'flex';
     document.getElementById('cash-panel').style.display = 'none';

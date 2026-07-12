@@ -3,6 +3,8 @@ import logging
 import uuid
 from datetime import datetime, timedelta, timezone
 
+import httpx
+
 from fastapi import APIRouter, Depends, HTTPException, Request, Query
 from fastapi.responses import HTMLResponse
 from sqlalchemy import select, func, cast, Date
@@ -279,7 +281,23 @@ async def ai_insights(
     from app.services.ai_insights import generate_insights
     try:
         text = await generate_insights(db, venue_ids)
+    except httpx.HTTPStatusError as e:
+        # Surface the upstream reason (bad key / model / rate limit) so the
+        # toast can show the actual cause instead of a generic message.
+        body = ""
+        try:
+            body = e.response.json().get("error", {}).get("message", "")
+        except Exception:
+            body = (e.response.text or "")[:200]
+        logger.error("AI insights upstream %s: %s", e.response.status_code, body)
+        raise HTTPException(
+            status_code=502,
+            detail=f"AI-сервис вернул ошибку {e.response.status_code}: {body or 'нет деталей'}",
+        )
+    except httpx.HTTPError as e:
+        logger.error("AI insights network error: %s", e)
+        raise HTTPException(status_code=502, detail=f"Сеть недоступна: {e}")
     except Exception as e:
-        logger.error("AI insights error: %s", e)
-        raise HTTPException(status_code=502, detail="Не удалось получить инсайты, попробуйте позже")
+        logger.error("AI insights error: %s", e, exc_info=True)
+        raise HTTPException(status_code=502, detail=f"Не удалось получить инсайты: {e}")
     return {"text": text}

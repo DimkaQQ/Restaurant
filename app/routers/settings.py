@@ -277,8 +277,13 @@ async def broadcasts_page(
         .order_by(Broadcast.created_at.desc())
     )).scalars().all()
 
+    # Exclude POS walk-in placeholder guests so this matches the Гости page count
+    from app.services.order_service import WALKIN_MARKER
     total_guests = (await db.execute(
-        select(func.count(Guest.id)).where(Guest.network_id == current_user.network_id)
+        select(func.count(Guest.id)).where(
+            Guest.network_id == current_user.network_id,
+            Guest.phone.is_distinct_from(WALKIN_MARKER),
+        )
     )).scalar() or 0
     tg_guests = (await db.execute(
         select(func.count(Guest.id)).where(
