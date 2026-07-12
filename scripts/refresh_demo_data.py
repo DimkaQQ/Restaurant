@@ -26,7 +26,6 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 from sqlalchemy import select, func, text
 
 from app.database import AsyncSessionLocal
-from app.models.order import Order
 from app.models.menu import MenuItem
 from app.models.table import Table
 from app.models.inventory import Ingredient
@@ -63,20 +62,33 @@ async def _column_exists(db, table: str, column: str) -> bool:
 
 
 async def shift_dates(db) -> timedelta | None:
-    """Shift every timestamp so the newest order sits ~now."""
-    newest = (await db.execute(select(func.max(Order.created_at)))).scalar()
+    """Shift every timestamp so the newest data point sits ~now.
+
+    The anchor is the max across *every* column we shift — not just
+    orders.created_at — otherwise later timestamps (an order's updated_at /
+    paid_at, a review or visit made after the last order) would be pushed
+    past "now" into the future and read as negative elapsed time."""
+    newest = None
+    for table, col in _TS_COLUMNS:
+        if col is None or not await _column_exists(db, table, col):
+            continue
+        m = (await db.execute(text(f"SELECT max({col}) FROM {table}"))).scalar()
+        if m is not None and (newest is None or m > newest):
+            newest = m
     if newest is None:
-        print("No orders — nothing to shift.")
+        print("No timestamped rows — nothing to shift.")
         return None
     now = datetime.now(timezone.utc)
-    # land the freshest order a few minutes ago (so it reads as "just now")
+    # land the freshest row a few minutes ago (so it reads as "just now")
     delta = now - newest - timedelta(minutes=5)
     if abs(delta.total_seconds()) < 3600:
-        print(f"Data already fresh (newest order {newest.isoformat()}). Skipping shift.")
+        print(f"Data already fresh (newest row {newest.isoformat()}). Skipping shift.")
         return timedelta(0)
 
-    days = delta.days
     seconds = int(delta.total_seconds())
+    # keep date-only columns aligned with their timestamp siblings: round to
+    # the nearest day instead of truncating, so expense_date matches created_at.
+    days = round(seconds / 86400)
     for table, col in _TS_COLUMNS:
         if col is None or not await _column_exists(db, table, col):
             continue
