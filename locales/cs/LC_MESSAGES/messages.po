@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-24 19:20+0000\n"
+"POT-Creation-Date: 2026-07-24 19:54+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: cs\n"
@@ -20,380 +20,396 @@ msgstr ""
 "Generated-By: Babel 2.18.0\n"
 
 msgid "(скопируйте и передайте сотруднику для ввода /staff)"
-msgstr ""
+msgstr "(zkopírujte a předejte zaměstnanci k zadání /staff)"
 
 msgid "+ Группа (например, «Размер»)"
-msgstr ""
+msgstr "+ Skupina (například „Velikost“)"
 
 msgid "+ Добавить заведение"
-msgstr ""
+msgstr "+ Přidat provozovnu"
 
 msgid "+ Добавить позицию"
-msgstr ""
+msgstr "+ Přidat položku"
 
 msgid "+ Добавить смену"
-msgstr ""
+msgstr "+ Přidat směnu"
 
 msgid "+ Добавить стол"
-msgstr ""
+msgstr "+ Přidat stůl"
 
 msgid "+ Ингредиент"
-msgstr ""
+msgstr "+ Ingredience"
 
 msgid "+ Категория"
-msgstr ""
+msgstr "+ Kategorie"
 
 msgid "+ Новая накладная"
-msgstr ""
+msgstr "+ Nová faktura"
 
 msgid "+ Новый заказ"
-msgstr ""
+msgstr "+ Nová objednávka"
 
 msgid "+ Приход"
-msgstr ""
+msgstr "+ Příjem"
 
 msgid "+ Фото"
-msgstr ""
+msgstr "+ Foto"
 
 msgid "+ вариант"
-msgstr ""
+msgstr "+ varianta"
 
 msgid "+ строка"
-msgstr ""
+msgstr "+ řádek"
 
 msgid "+₸"
-msgstr ""
+msgstr "+₸"
 
 msgid "1 заведение"
-msgstr ""
+msgstr "1 provozovna"
 
 msgid "1. Добавьте секрет в приложение-аутентификатор:"
-msgstr ""
+msgstr "1. Přidejte tajný klíč do autentizační aplikace:"
 
 msgid "1. Какие данные мы собираем"
-msgstr ""
+msgstr "1. Jaká data shromažďujeme"
 
 msgid "1. Регистрация и учётная запись"
-msgstr ""
+msgstr "1. Registrace a účet"
 
 msgid "14 дней бесплатно, без карты. Настройка занимает пару минут."
-msgstr ""
+msgstr "14 dní zdarma, bez karty. Nastavení zabere pár minut."
 
 msgid "14 дней бесплатно, без карты. Начните за 2 минуты."
-msgstr ""
+msgstr "14 dní zdarma, bez karty. Začněte za 2 minuty."
 
 msgid "15 минут, сами"
-msgstr ""
+msgstr "15 minut, sami"
 
 msgid "2. Введите код из приложения для подтверждения:"
-msgstr ""
+msgstr "2. Zadejte kód z aplikace pro potvrzení:"
 
 msgid "2. Для чего используются данные"
-msgstr ""
+msgstr "2. K čemu se data používají"
 
 msgid "2. Пробный период и оплата"
-msgstr ""
+msgstr "2. Zkušební období a platba"
 
 msgid "2FA включена"
-msgstr ""
+msgstr "2FA je zapnuté"
 
 msgid "2FA включена: при входе нужен код из приложения."
-msgstr ""
+msgstr "2FA je zapnuté: při přihlášení je potřeba kód z aplikace."
 
 msgid "2FA отключена"
-msgstr ""
+msgstr "2FA je vypnuté"
 
 msgid "2GIS ссылки и Telegram менеджеров"
-msgstr ""
+msgstr "Odkazy 2GIS a Telegram manažerů"
 
 msgid "3. Данные и фискализация"
-msgstr ""
+msgstr "3. Data a fiskalizace"
 
 msgid "3. Передача третьим лицам"
-msgstr ""
+msgstr "3. Předávání třetím stranám"
 
 msgid "4. Ограничение ответственности"
-msgstr ""
+msgstr "4. Omezení odpovědnosti"
 
 msgid "4. Хранение и удаление"
-msgstr ""
+msgstr "4. Uchovávání a mazání"
 
 msgid "5. Безопасность"
-msgstr ""
+msgstr "5. Bezpečnost"
 
 msgid "5. Прекращение действия"
-msgstr ""
+msgstr "5. Ukončení"
 
 msgid "6. Ваши права"
-msgstr ""
+msgstr "6. Vaše práva"
 
 msgid "6. Изменения условий"
-msgstr ""
+msgstr "6. Změny podmínek"
 
 msgid "7. Контакты"
-msgstr ""
+msgstr "7. Kontakty"
 
 msgid "AI-инсайты"
-msgstr ""
+msgstr "AI-statistiky"
 
 msgid "API-ключ (x-api-key)"
-msgstr ""
+msgstr "API klíč (x-api-key)"
 
 msgid "API-ключи"
-msgstr ""
+msgstr "API klíče"
 
 msgid "CSV для бухгалтерии"
-msgstr ""
+msgstr "CSV pro účetnictví"
 
 msgid "Email и название заведения — аккаунт готов за 2 минуты, карта не нужна."
 msgstr ""
+"E-mail a název provozovny — účet je připraven za 2 minuty, karta není "
+"potřeba."
 
 msgid "Email подтверждён"
-msgstr ""
+msgstr "E-mail potvrzen"
 
 msgid ""
 "P&L, расходы, выручка по заведениям, NPS гостей — вся картина бизнеса в "
 "одном месте."
 msgstr ""
+"P&L, náklady, tržby podle provozoven, NPS hostů — celý obraz podnikání na"
+" jednom místě."
 
 msgid "PIN для смены сотрудника на станции"
-msgstr ""
+msgstr "PIN pro přepnutí zaměstnance na stanici"
 
 msgid "PIN для станции (необязательно, 4–6 цифр)"
-msgstr ""
+msgstr "PIN pro stanici (nepovinné, 4–6 číslic)"
 
 msgid "PIN сотрудника (4–6 цифр). Пусто — удалить PIN."
-msgstr ""
+msgstr "PIN zaměstnance (4–6 číslic). Prázdné — odstranit PIN."
 
 msgid ""
 "RestOS обрабатывает персональные данные владельцев ресторанов, их "
 "сотрудников и гостей (клиентов ресторанов) в объёме, необходимом для "
 "работы Сервиса."
 msgstr ""
+"RestOS zpracovává osobní údaje majitelů restaurací, jejich zaměstnanců a "
+"hostů (zákazníků restaurací) v rozsahu nezbytném pro fungování Služby."
 
 msgid ""
 "RestOS отправит подписанный POST (HMAC-SHA256, заголовок X-RestOS-"
 "Signature) на ваш URL при событиях заказа."
 msgstr ""
+"RestOS odešle podepsaný POST (HMAC-SHA256, hlavička X-RestOS-Signature) "
+"na vaši URL při událostech objednávky."
 
 msgid "RestOS — Восстановление пароля"
-msgstr ""
+msgstr "RestOS — Obnovení hesla"
 
 msgid "RestOS — Вход"
-msgstr ""
+msgstr "RestOS — Přihlášení"
 
 msgid "RestOS — Новый пароль"
-msgstr ""
+msgstr "RestOS — Nové heslo"
 
 msgid "RestOS — Платформа управления рестораном"
-msgstr ""
+msgstr "RestOS — Platforma pro řízení restaurace"
 
 msgid "RestOS — Регистрация"
-msgstr ""
+msgstr "RestOS — Registrace"
 
 msgid ""
 "RestOS — приём заказов, кухонный дисплей, склад, смены персонала, "
 "программа лояльности и фискализация чеков в одной панели. 14 дней "
 "бесплатно."
 msgstr ""
+"RestOS — příjem objednávek, kuchyňský displej, sklad, směny personálu, "
+"věrnostní program a fiskalizace účtenek v jednom panelu. 14 dní zdarma."
 
 msgid "Telegram ID менеджера"
-msgstr ""
+msgstr "Telegram ID manažera"
 
 #, python-brace-format
 msgid "«{n}» снова в продаже"
-msgstr ""
+msgstr "„{n}“ je opět v prodeji"
 
 #, python-brace-format
 msgid "«{n}» убрана из продажи"
-msgstr ""
+msgstr "„{n}“ byla stažena z prodeje"
 
 msgid "Автоматически, в облаке"
-msgstr ""
+msgstr "Automaticky, v cloudu"
 
 msgid "Администратор"
-msgstr ""
+msgstr "Administrátor"
 
 msgid "Адрес"
-msgstr ""
+msgstr "Adresa"
 
 msgid "Активен"
-msgstr ""
+msgstr "Aktivní"
 
 msgid "Активна"
-msgstr ""
+msgstr "Aktivní"
 
 msgid "Активно"
-msgstr ""
+msgstr "Aktivní"
 
 msgid "Активные"
-msgstr ""
+msgstr "Aktivní"
 
 msgid "Активные заказы"
-msgstr ""
+msgstr "Aktivní objednávky"
 
 msgid "Активных заведений"
-msgstr ""
+msgstr "Aktivních provozoven"
 
 msgid "Активных заказов нет"
-msgstr ""
+msgstr "Žádné aktivní objednávky"
 
 msgid "Акцентный цвет"
-msgstr ""
+msgstr "Zvýrazňující barva"
 
 msgid "Анализируем…"
-msgstr ""
+msgstr "Analyzujeme…"
 
 msgid "Аналитика"
-msgstr ""
+msgstr "Analytika"
 
 msgid "Баллы"
-msgstr ""
+msgstr "Body"
 
 msgid "Без карты. Отменить можно в любой момент."
-msgstr ""
+msgstr "Bez karty. Zrušit můžete kdykoli."
 
 msgid "Без программистов и интеграторов"
-msgstr ""
+msgstr "Bez programátorů a integrátorů"
 
 msgid "Без сдачи"
-msgstr ""
+msgstr "Bez vrácení"
 
 msgid "Без скидки"
-msgstr ""
+msgstr "Bez slevy"
 
 msgid "Безлимит заведений"
-msgstr ""
+msgstr "Neomezeně provozoven"
 
 msgid "Безлимит сотрудников"
-msgstr ""
+msgstr "Neomezeně zaměstnanců"
 
 msgid ""
 "Бонусные баллы, история визитов и Telegram-бот для гостей — без сторонних"
 " CRM."
 msgstr ""
+"Bonusové body, historie návštěv a Telegram bot pro hosty — bez externích "
+"CRM."
 
 msgid "Бот отправит сообщение гостям в течение 5 минут"
-msgstr ""
+msgstr "Bot odešle zprávu hostům do 5 minut"
 
 msgid "Бронь"
-msgstr ""
+msgstr "Rezervace"
 
 msgid "Быстрый старт"
-msgstr ""
+msgstr "Rychlý start"
 
 msgid "В заказ"
-msgstr ""
+msgstr "Do objednávky"
 
 msgid "В корзину"
-msgstr ""
+msgstr "Do košíku"
 
 msgid "В очереди офлайн:"
-msgstr ""
+msgstr "Ve frontě offline:"
 
 msgid "В панель управления"
-msgstr ""
+msgstr "Do ovládacího panelu"
 
 msgid "В работу — оплата потом"
-msgstr ""
+msgstr "Do přípravy — platba později"
 
 msgid "Вариант"
-msgstr ""
+msgstr "Varianta"
 
 msgid "Введите PIN"
-msgstr ""
+msgstr "Zadejte PIN"
 
 msgid "Введите количество"
-msgstr ""
+msgstr "Zadejte množství"
 
 msgid "Введите название заведения"
-msgstr ""
+msgstr "Zadejte název provozovny"
 
 msgid "Введите название и цену"
-msgstr ""
+msgstr "Zadejte název a cenu"
 
 msgid "Введите свой PIN, чтобы начать смену."
-msgstr ""
+msgstr "Zadejte svůj PIN pro zahájení směny."
 
 msgid "Введите текст выше..."
-msgstr ""
+msgstr "Zadejte text výše..."
 
 msgid "Введите текст рассылки"
-msgstr ""
+msgstr "Zadejte text rozeslání"
 
 msgid "Введите текст рассылки..."
-msgstr ""
+msgstr "Zadejte text rozeslání..."
 
 msgid "Вебхуки"
-msgstr ""
+msgstr "Webhooky"
 
 msgid "Вернуть назад"
-msgstr ""
+msgstr "Vrátit zpět"
 
 msgid "Вид"
-msgstr ""
+msgstr "Vzhled"
 
 msgid "Визиты"
-msgstr ""
+msgstr "Návštěvy"
 
 msgid "Включить"
-msgstr ""
+msgstr "Zapnout"
 
 msgid "Включить 2FA"
-msgstr ""
+msgstr "Zapnout 2FA"
 
 msgid "Владелец"
-msgstr ""
+msgstr "Majitel"
 
 msgid "Возможности"
-msgstr ""
+msgstr "Funkce"
 
 msgid "Войти"
-msgstr ""
+msgstr "Přihlásit se"
 
 msgid "Восстановление пароля"
-msgstr ""
+msgstr "Obnovení hesla"
 
 msgid "Вс"
-msgstr ""
+msgstr "Ne"
 
 msgid "Все"
-msgstr ""
+msgstr "Vše"
 
 msgid "Все заведения"
-msgstr ""
+msgstr "Všechny provozovny"
 
 msgid "Все заказы →"
-msgstr ""
+msgstr "Všechny objednávky →"
 
 msgid "Все языки"
-msgstr ""
+msgstr "Všechny jazyky"
 
 msgid "Все языки (ru + kz + en)"
-msgstr ""
+msgstr "Všechny jazyky (ru + kz + en)"
 
 msgid "Всего выручки"
-msgstr ""
+msgstr "Celkové tržby"
 
 msgid "Всё, что нужно ресторану"
-msgstr ""
+msgstr "Vše, co restaurace potřebuje"
 
 msgid "Вт"
-msgstr ""
+msgstr "Út"
 
 msgid "Вход"
-msgstr ""
+msgstr "Přihlášení"
 
 msgid ""
 "Вы вправе запросить доступ к своим данным, их исправление или удаление. "
 "Для этого обратитесь через раздел поддержки в личном кабинете."
 msgstr ""
+"Máte právo požádat o přístup ke svým údajům, jejich opravu nebo výmaz. "
+"Kontaktujte nás přes sekci podpory ve vašem účtu."
 
 msgid ""
 "Вы можете отменить подписку в любой момент через раздел «Оплата». Мы "
 "вправе приостановить доступ при нарушении условий использования или "
 "систематической неоплате."
 msgstr ""
+"Předplatné můžete kdykoli zrušit v sekci „Platba“. Máme právo pozastavit "
+"přístup při porušení podmínek používání nebo při opakovaném neplacení."
 
 msgid ""
 "Вы самостоятельно несёте ответственность за корректность данных, вносимых"
@@ -402,124 +418,139 @@ msgid ""
 "(например, Webkassa) выполняются с использованием ваших собственных "
 "учётных данных, полученных непосредственно от этих провайдеров."
 msgstr ""
+"Sami odpovídáte za správnost údajů zadaných do Služby (menu, ceny, "
+"účtenky) a za dodržování daňové a fiskální legislativy vaší jurisdikce. "
+"Integrace s fiskálními poskytovateli (například Webkassa) se provádějí s "
+"použitím vašich vlastních přihlašovacích údajů získaných přímo od těchto "
+"poskytovatelů."
 
 #, python-brace-format
 msgid "Выберите «{g}»"
-msgstr ""
+msgstr "Vyberte „{g}“"
 
 msgid "Выберите заведение"
-msgstr ""
+msgstr "Vyberte provozovnu"
 
 msgid "Выберите или введите новую"
-msgstr ""
+msgstr "Vyberte nebo zadejte novou"
 
 msgid "Выбрать..."
-msgstr ""
+msgstr "Vybrat..."
 
 msgid "Выдан"
-msgstr ""
+msgstr "Vydán"
 
 msgid "Выдано сегодня"
-msgstr ""
+msgstr "Vydáno dnes"
 
 msgid "Выдать"
-msgstr ""
+msgstr "Vydat"
 
 msgid "Выезд специалиста"
-msgstr ""
+msgstr "Výjezd specialisty"
 
 msgid "Выйти"
-msgstr ""
+msgstr "Odhlásit se"
 
 msgid "Выключен"
-msgstr ""
+msgstr "Vypnuto"
 
 msgid "Выключить"
-msgstr ""
+msgstr "Vypnout"
 
 msgid "Выполненных заказов сегодня ещё нет"
-msgstr ""
+msgstr "Dnes zatím žádné dokončené objednávky"
 
 msgid "Выручка"
-msgstr ""
+msgstr "Tržby"
 
 msgid "Выручка vs Расходы (6 мес.)"
-msgstr ""
+msgstr "Tržby vs Náklady (6 měs.)"
 
 msgid "Выручка за 30 дней"
-msgstr ""
+msgstr "Tržby za 30 dní"
 
 msgid "Выручка по дням"
-msgstr ""
+msgstr "Tržby podle dní"
 
 msgid "Выручка по заведениям"
-msgstr ""
+msgstr "Tržby podle provozoven"
 
 msgid "Выручка сегодня"
-msgstr ""
+msgstr "Tržby dnes"
 
 msgid "Выручка ₸"
-msgstr ""
+msgstr "Tržby ₸"
 
 msgid "Генерируем..."
-msgstr ""
+msgstr "Generujeme..."
 
 msgid "Год"
-msgstr ""
+msgstr "Rok"
 
 msgid "Гостей в базе"
-msgstr ""
+msgstr "Hostů v databázi"
 
 msgid ""
 "Гостей пока нет. Они появятся автоматически, когда сделают заказ через "
 "QR-меню или Telegram-бот."
 msgstr ""
+"Zatím žádní hosté. Objeví se automaticky, když si objednají přes QR menu "
+"nebo Telegram bota."
 
 msgid "Гости"
-msgstr ""
+msgstr "Hosté"
 
 msgid "Гость"
-msgstr ""
+msgstr "Host"
 
 msgid "Готовится"
-msgstr ""
+msgstr "Připravuje se"
 
 msgid "Готовить"
-msgstr ""
+msgstr "Připravit"
 
 msgid "Готово"
-msgstr ""
+msgstr "Hotovo"
 
 msgid "Готово!"
-msgstr ""
+msgstr "Hotovo!"
 
 msgid "Готовы попробовать?"
-msgstr ""
+msgstr "Chcete to vyzkoušet?"
 
 msgid ""
 "График смен, роли официант/повар/кассир/менеджер, рейтинг сотрудников по "
 "отзывам гостей."
 msgstr ""
+"Rozvrh směn, role číšník/kuchař/pokladní/manažer, hodnocení zaměstnanců "
+"podle recenzí hostů."
 
 msgid ""
 "Группы вариантов для позиции: размер, молоко, сиропы. Цена меняется на "
 "указанную надбавку."
 msgstr ""
+"Skupiny variant pro položku: velikost, mléko, sirupy. Cena se mění o "
+"zadaný příplatek."
 
 msgid ""
 "Данные гостей: имя, телефон/Telegram ID, история заказов, баллы "
 "лояльности — используются для программы лояльности и уведомлений."
 msgstr ""
+"Data hostů: jméno, telefon/Telegram ID, historie objednávek, věrnostní "
+"body — používají se pro věrnostní program a upozornění."
 
 msgid ""
 "Данные сотрудников: имя, роль, отработанные смены — вносятся владельцем "
 "ресторана."
 msgstr ""
+"Data zaměstnanců: jméno, role, odpracované směny — zadává je majitel "
+"restaurace."
 
 msgid ""
 "Данные учётной записи владельца: имя ресторана, email, хешированный "
 "пароль."
-msgstr ""
+msgstr "Data účtu majitele: název restaurace, e-mail, hašované heslo."
 
 msgid ""
 "Данные хранятся, пока учётная запись активна. Владелец аккаунта может "
@@ -528,33 +559,37 @@ msgid ""
 "налогового и бухгалтерского законодательства о сроках хранения "
 "документов."
 msgstr ""
+"Data se uchovávají, dokud je účet aktivní. Majitel účtu může požádat o "
+"export nebo výmaz dat své sítě restaurací napsáním podpoře — žádost bude "
+"vyřízena v přiměřené lhůtě s ohledem na požadavky daňové a účetní "
+"legislativy o lhůtách uchovávání dokladů."
 
 msgid "Дата"
-msgstr ""
+msgstr "Datum"
 
 msgid "Дашборд"
-msgstr ""
+msgstr "Dashboard"
 
 msgid "Двухфакторная аутентификация (ваш аккаунт)"
-msgstr ""
+msgstr "Dvoufaktorové ověření (váš účet)"
 
 msgid "Действие"
-msgstr ""
+msgstr "Akce"
 
 msgid "Действует до"
-msgstr ""
+msgstr "Platí do"
 
 msgid "Десятки вкладок, нужны тренинги"
-msgstr ""
+msgstr "Desítky záložek, potřeba školení"
 
 msgid "Детали"
-msgstr ""
+msgstr "Podrobnosti"
 
 msgid "Динамика отзывов (30 дней)"
-msgstr ""
+msgstr "Vývoj recenzí (30 dní)"
 
 msgid "Для быстрой смены сотрудника на планшете"
-msgstr ""
+msgstr "Pro rychlé přepnutí zaměstnance na tabletu"
 
 msgid ""
 "Для предоставления функций Сервиса (приём заказов, кухонный дисплей, "
@@ -562,381 +597,399 @@ msgid ""
 "учётных записей и, при наличии согласия, для email-уведомлений (например,"
 " восстановление пароля)."
 msgstr ""
+"Pro poskytování funkcí Služby (příjem objednávek, kuchyňský displej, "
+"věrnost, analytika, fiskalizace účtenek), zajištění bezpečnosti účtů a, "
+"je-li udělen souhlas, pro e-mailová upozornění (například obnovení "
+"hesla)."
 
 msgid "Дни или недели, платный интегратор"
-msgstr ""
+msgstr "Dny nebo týdny, placený integrátor"
 
 msgid "До 3 сотрудников"
-msgstr ""
+msgstr "Až 3 zaměstnanci"
 
 msgid "До 5 заведений"
-msgstr ""
+msgstr "Až 5 provozoven"
 
 msgid "Добавить"
-msgstr ""
+msgstr "Přidat"
 
 msgid "Добавить первое →"
-msgstr ""
+msgstr "Přidat první →"
 
 msgid "Добавить позицию"
-msgstr ""
+msgstr "Přidat položku"
 
 msgid "Добавить пользователя"
-msgstr ""
+msgstr "Přidat uživatele"
 
 msgid "Добавить расход"
-msgstr ""
+msgstr "Přidat náklad"
 
 msgid "Добавить смену"
-msgstr ""
+msgstr "Přidat směnu"
 
 msgid "Добавьте меню и столы"
-msgstr ""
+msgstr "Přidejte menu a stoly"
 
 msgid "Добавьте позиции в меню"
-msgstr ""
+msgstr "Přidejte položky do menu"
 
 msgid "Добавьте позиции меню и техкарты, чтобы видеть маржинальность."
-msgstr ""
+msgstr "Přidejte položky menu a receptury, abyste viděli marži."
 
 msgid "Добавьте столы"
-msgstr ""
+msgstr "Přidejte stoly"
 
 msgid "Добавьте хотя бы одну строку с количеством"
-msgstr ""
+msgstr "Přidejte alespoň jeden řádek s množstvím"
 
 msgid ""
 "Дополнительная защита входа: пароль + код из приложения (Google "
 "Authenticator, 1Password и т.п.)."
 msgstr ""
+"Dodatečná ochrana přihlášení: heslo + kód z aplikace (Google "
+"Authenticator, 1Password apod.)."
 
 msgid ""
 "Доступ к данным для интеграций (только чтение): GET /api/v1/venues, "
 "/api/v1/menu, /api/v1/orders с заголовком X-API-Key."
 msgstr ""
+"Přístup k datům pro integrace (pouze čtení): GET /api/v1/venues, "
+"/api/v1/menu, /api/v1/orders s hlavičkou X-API-Key."
 
 msgid "Доступ ограничен до продления подписки"
-msgstr ""
+msgstr "Přístup je omezen do obnovení předplatného"
 
 msgid "Доступно"
-msgstr ""
+msgstr "Dostupné"
 
 msgid "Ед."
-msgstr ""
+msgstr "Jedn."
 
 msgid "Еда:"
-msgstr ""
+msgstr "Jídlo:"
 
 msgid "Единица"
-msgstr ""
+msgstr "Jednotka"
 
 msgid "Если такой email зарегистрирован, мы отправили ссылку для сброса пароля."
-msgstr ""
+msgstr "Pokud je takový e-mail registrován, poslali jsme odkaz na obnovení hesla."
 
 msgid "Ещё действия"
-msgstr ""
+msgstr "Další akce"
 
 msgid "Журнал"
-msgstr ""
+msgstr "Deník"
 
 msgid "Журнал действий"
-msgstr ""
+msgstr "Deník akcí"
 
 msgid "Заблокировать"
-msgstr ""
+msgstr "Zablokovat"
 
 msgid "Забыли пароль?"
-msgstr ""
+msgstr "Zapomněli jste heslo?"
 
 msgid "Заведение"
-msgstr ""
+msgstr "Provozovna"
 
 msgid "Заведение (необязательно)"
-msgstr ""
+msgstr "Provozovna (nepovinné)"
 
 msgid "Заведения"
-msgstr ""
+msgstr "Provozovny"
 
 msgid "Завершённых заказов"
-msgstr ""
+msgstr "Dokončených objednávek"
 
 msgid "Загрузка заказов..."
-msgstr ""
+msgstr "Načítání objednávek..."
 
 msgid "Загрузка..."
-msgstr ""
+msgstr "Načítání..."
 
 msgid "Загрузка…"
-msgstr ""
+msgstr "Načítání…"
 
 msgid "Задайте новый пароль"
-msgstr ""
+msgstr "Nastavte nové heslo"
 
 msgid "Заказ"
-msgstr ""
+msgstr "Objednávka"
 
 msgid "Заказ оплачен и отправлен на кухню"
-msgstr ""
+msgstr "Objednávka je zaplacena a odeslána do kuchyně"
 
 msgid "Заказ отправлен на кухню"
-msgstr ""
+msgstr "Objednávka odeslána do kuchyně"
 
 msgid "Заказ перенесён"
-msgstr ""
+msgstr "Objednávka přesunuta"
 
 msgid "Заказов сегодня"
-msgstr ""
+msgstr "Objednávek dnes"
 
 msgid "Заказы"
-msgstr ""
+msgstr "Objednávky"
 
 msgid "Заказы, склад, смены"
-msgstr ""
+msgstr "Objednávky, sklad, směny"
 
 msgid "Закрыта"
-msgstr ""
+msgstr "Zavřená"
 
 msgid "Закрыть смену"
-msgstr ""
+msgstr "Zavřít směnu"
 
 msgid "Занят"
-msgstr ""
+msgstr "Obsazený"
 
 msgid "Запуск"
-msgstr ""
+msgstr "Spuštění"
 
 msgid "Запуск за 15 минут"
-msgstr ""
+msgstr "Spuštění za 15 minut"
 
 msgid "Зарегистрируйтесь"
-msgstr ""
+msgstr "Zaregistrujte se"
 
 msgid "Значение"
-msgstr ""
+msgstr "Hodnota"
 
 msgid "Золото (по умолчанию)"
-msgstr ""
+msgstr "Zlatá (výchozí)"
 
 msgid "Изменения сохраняются сразу."
-msgstr ""
+msgstr "Změny se ukládají okamžitě."
 
 msgid "Или номер стола вручную"
-msgstr ""
+msgstr "Nebo číslo stolu ručně"
 
 msgid "Инвентаризация"
-msgstr ""
+msgstr "Inventarizace"
 
 msgid ""
 "Интеграция с Webkassa (Казахстан) — чек пробивается автоматически при "
 "закрытии заказа."
 msgstr ""
+"Integrace s Webkassa (Kazachstán) — účtenka se vystaví automaticky při "
+"uzavření objednávky."
 
 msgid "Интуитивно — бариста разберётся за 10 минут"
-msgstr ""
+msgstr "Intuitivně — barista to zvládne za 10 minut"
 
 msgid "Использован"
-msgstr ""
+msgstr "Použit"
 
 msgid "Использование"
-msgstr ""
+msgstr "Použití"
 
 msgid "Использование на кухне"
-msgstr ""
+msgstr "Použití v kuchyni"
 
 msgid "История рассылок"
-msgstr ""
+msgstr "Historie rozeslání"
 
 msgid "История сегодня"
-msgstr ""
+msgstr "Historie dnes"
 
 msgid "Итого"
-msgstr ""
+msgstr "Celkem"
 
 msgid "К оплате"
-msgstr ""
+msgstr "K úhradě"
 
 msgid "Казахстан"
-msgstr ""
+msgstr "Kazachstán"
 
 msgid "Как на устройстве"
-msgstr ""
+msgstr "Jako na zařízení"
 
 msgid "Как начать"
-msgstr ""
+msgstr "Jak začít"
 
 msgid "Карта"
-msgstr ""
+msgstr "Mapa"
 
 msgid "Картой"
-msgstr ""
+msgstr "Kartou"
 
 msgid "Касса"
-msgstr ""
+msgstr "Pokladna"
 
 msgid "Касса на планшете, кухонный экран, QR-меню для гостей — работает сразу."
 msgstr ""
+"Pokladna na tabletu, kuchyňská obrazovka, QR menu pro hosty — funguje "
+"hned."
 
 msgid "Кассир"
-msgstr ""
+msgstr "Pokladní"
 
 msgid "Кассовые смены (Z-отчёты)"
-msgstr ""
+msgstr "Pokladní směny (Z-výkazy)"
 
 msgid "Категории"
-msgstr ""
+msgstr "Kategorie"
 
 msgid "Категорий пока нет"
-msgstr ""
+msgstr "Zatím žádné kategorie"
 
 msgid "Категория"
-msgstr ""
+msgstr "Kategorie"
 
 msgid ""
 "Категория появится в кассе и QR-меню, как только в ней будет хотя бы одна"
 " позиция."
 msgstr ""
+"Kategorie se zobrazí v pokladně a QR menu, jakmile bude obsahovat alespoň"
+" jednu položku."
 
 msgid "Квартал"
-msgstr ""
+msgstr "Čtvrtletí"
 
 msgid "Классические ERP"
-msgstr ""
+msgstr "Klasické ERP"
 
 msgid ""
 "Классические ресторанные системы создавались для крупных сетей. Маленькой"
 " кофейне они дают сложность, а не контроль."
 msgstr ""
+"Klasické restaurační systémy byly vytvořeny pro velké sítě. Malé kavárně "
+"přinášejí složitost, ne kontrolu."
 
 msgid "Ключ"
-msgstr ""
+msgstr "Klíč"
 
 msgid "Когда"
-msgstr ""
+msgstr "Kdy"
 
 msgid "Код"
-msgstr ""
+msgstr "Kód"
 
 msgid "Код из приложения"
-msgstr ""
+msgstr "Kód z aplikace"
 
 msgid "Код из приложения-аутентификатора"
-msgstr ""
+msgstr "Kód z autentizační aplikace"
 
 msgid "Кол-во"
-msgstr ""
+msgstr "Množ."
 
 msgid "Количество"
-msgstr ""
+msgstr "Množství"
 
 msgid "Количество прихода"
-msgstr ""
+msgstr "Množství příjmu"
 
 msgid "Количество списания"
-msgstr ""
+msgstr "Množství odpisu"
 
 msgid "Комментарий"
-msgstr ""
+msgstr "Komentář"
 
 msgid "Комментарий кухне (необязательно)"
-msgstr ""
+msgstr "Poznámka pro kuchyni (nepovinné)"
 
 msgid "Конец"
-msgstr ""
+msgstr "Konec"
 
 msgid "Конфиденциальность"
-msgstr ""
+msgstr "Soukromí"
 
 msgid "Корзина пуста"
-msgstr ""
+msgstr "Košík je prázdný"
 
 msgid "Критично"
-msgstr ""
+msgstr "Kriticky"
 
 msgid "Крупно"
-msgstr ""
+msgstr "Velké"
 
 msgid "Крупные кнопки для планшета"
-msgstr ""
+msgstr "Velká tlačítka pro tablet"
 
 msgid "Кто"
-msgstr ""
+msgstr "Kdo"
 
 msgid "Кто удалил, отменил или дал скидку — последние 200 записей"
-msgstr ""
+msgstr "Kdo smazal, zrušil nebo poskytl slevu — posledních 200 záznamů"
 
 msgid "Кухня"
-msgstr ""
+msgstr "Kuchyně"
 
 msgid "Кухня (только экран кухни)"
-msgstr ""
+msgstr "Kuchyně (pouze kuchyňská obrazovka)"
 
 msgid "Кухонный дисплей (KDS)"
-msgstr ""
+msgstr "Kuchyňský displej (KDS)"
 
 msgid "Лимит использований"
-msgstr ""
+msgstr "Limit použití"
 
 msgid "Лицензии + модули + внедрение"
-msgstr ""
+msgstr "Licence + moduly + zavedení"
 
 msgid "Логин кассы"
-msgstr ""
+msgstr "Přihlášení pokladny"
 
 msgid "Любой планшет, iPad или смартфон"
-msgstr ""
+msgstr "Jakýkoli tablet, iPad nebo smartphone"
 
 msgid "Мало"
-msgstr ""
+msgstr "Málo"
 
 msgid "Маржа"
-msgstr ""
+msgstr "Marže"
 
 msgid "Менеджер"
-msgstr ""
+msgstr "Manažer"
 
 msgid "Меню"
-msgstr ""
+msgstr "Menu"
 
 msgid "Меню пусто"
-msgstr ""
+msgstr "Menu je prázdné"
 
 msgid "Меню-инжиниринг: себестоимость и маржа"
-msgstr ""
+msgstr "Menu engineering: náklady a marže"
 
 msgid "Мест"
-msgstr ""
+msgstr "Míst"
 
 msgid "Месяц"
-msgstr ""
+msgstr "Měsíc"
 
 msgid "Мин. остаток"
-msgstr ""
+msgstr "Min. zásoba"
 
 msgid "Моб. платёж"
-msgstr ""
+msgstr "Mob. platba"
 
 msgid "Модификаторы"
-msgstr ""
+msgstr "Modifikátory"
 
 msgid "Модификаторы:"
-msgstr ""
+msgstr "Modifikátory:"
 
 msgid "Мои"
-msgstr ""
+msgstr "Moje"
 
 msgid "Мои столы"
-msgstr ""
+msgstr "Moje stoly"
 
 msgid "Мой ресторан"
-msgstr ""
+msgstr "Moje restaurace"
 
 msgid "Мультисеть"
-msgstr ""
+msgstr "Multisíť"
 
 msgid ""
 "Мы можем обновлять эти условия. Существенные изменения будут доведены до "
 "вашего сведения по email или через интерфейс Сервиса."
 msgstr ""
+"Tyto podmínky můžeme aktualizovat. O podstatných změnách vás budeme "
+"informovat e-mailem nebo přes rozhraní Služby."
 
 msgid ""
 "Мы передаём данные третьим лицам только в объёме, необходимом для работы "
@@ -945,62 +998,69 @@ msgid ""
 "учётных данных, и провайдеру email-рассылок. Мы не продаём персональные "
 "данные третьим лицам."
 msgstr ""
+"Data předáváme třetím stranám pouze v rozsahu nezbytném pro fungování "
+"Služby: platebnímu procesoru (Stripe), fiskálním poskytovatelům, které "
+"jste si zvolili (například Webkassa) — s použitím vašich vlastních "
+"přihlašovacích údajů, a poskytovateli e-mailových rozeslání. Osobní údaje"
+" třetím stranám neprodáváme."
 
 msgid "Мясо"
-msgstr ""
+msgstr "Maso"
 
 msgid "Мясо говядина"
-msgstr ""
+msgstr "Maso hovězí"
 
 msgid ""
 "Нажмите кнопку — AI проанализирует продажи, меню и склад за 28 дней и "
 "даст конкретные рекомендации."
 msgstr ""
+"Stiskněte tlačítko — AI analyzuje prodeje, menu a sklad za 28 dní a "
+"poskytne konkrétní doporučení."
 
 msgid "Назад"
-msgstr ""
+msgstr "Zpět"
 
 msgid "Назад ко входу"
-msgstr ""
+msgstr "Zpět na přihlášení"
 
 msgid "Название"
-msgstr ""
+msgstr "Název"
 
 msgid "Название (например, «BI-отчёты»)"
-msgstr ""
+msgstr "Název (například „BI-výkazy“)"
 
 msgid "Название группы"
-msgstr ""
+msgstr "Název skupiny"
 
 msgid "Название категории"
-msgstr ""
+msgstr "Název kategorie"
 
 msgid "Название сети / ресторана"
-msgstr ""
+msgstr "Název sítě / restaurace"
 
 msgid "Наименование"
-msgstr ""
+msgstr "Název"
 
 msgid "Накладные (приход)"
-msgstr ""
+msgstr "Faktury (příjem)"
 
 msgid "Наличные"
-msgstr ""
+msgstr "Hotovost"
 
 msgid "Наличные в кассе на начало (₸)"
-msgstr ""
+msgstr "Hotovost v pokladně na začátku (₸)"
 
 msgid "Написать в поддержку"
-msgstr ""
+msgstr "Napsat podpoře"
 
 msgid "Например, 5"
-msgstr ""
+msgstr "Například 5"
 
 msgid "Например, Кофейня на Абая"
-msgstr ""
+msgstr "Například Kavárna na Abaji"
 
 msgid "Например: пакет, доставка"
-msgstr ""
+msgstr "Například: taška, doručení"
 
 msgid ""
 "Настоящие условия регулируют использование платформы RestOS (далее — "
@@ -1008,133 +1068,143 @@ msgid ""
 "лояльность гостей, склад, смены персонала, аналитика и фискализация "
 "чеков."
 msgstr ""
+"Tyto podmínky upravují používání platformy RestOS (dále jen „Služba“), "
+"poskytované pro řízení restaurací: příjem objednávek, věrnost hostů, "
+"sklad, směny personálu, analytika a fiskalizace účtenek."
 
 msgid ""
 "Настройка привязывается к заведению и конкретному экрану (касса, кухня, "
 "склад) и применяется на любом устройстве, которое его открывает. "
 "Перекрывает настройку устройства выше."
 msgstr ""
+"Nastavení je vázáno na provozovnu a konkrétní obrazovku (pokladna, "
+"kuchyně, sklad) a použije se na každém zařízení, které ji otevře. "
+"Přepisuje nastavení zařízení výše."
 
 msgid "Настройки"
-msgstr ""
+msgstr "Nastavení"
 
 msgid "Настройки заведений"
-msgstr ""
+msgstr "Nastavení provozoven"
 
 msgid "Начало"
-msgstr ""
+msgstr "Začátek"
 
 msgid "Начать бесплатно"
-msgstr ""
+msgstr "Začít zdarma"
 
 msgid "Не оплачен"
-msgstr ""
+msgstr "Nezaplaceno"
 
 msgid "Не подключено"
-msgstr ""
+msgstr "Nepřipojeno"
 
 msgid "Не удалось сменить язык"
-msgstr ""
+msgstr "Jazyk se nepodařilo změnit"
 
 msgid ""
 "Не удалось списать оплату с карты. Обновите способ оплаты — доступ "
 "сохранится, Stripe повторит списание автоматически."
 msgstr ""
+"Platbu z karty se nepodařilo strhnout. Aktualizujte způsob platby — "
+"přístup zůstane zachován, Stripe strhnutí zopakuje automaticky."
 
 msgid "Неверный PIN"
-msgstr ""
+msgstr "Nesprávný PIN"
 
 msgid "Негативные отзывы"
-msgstr ""
+msgstr "Negativní recenze"
 
 msgid "Негативных отзывов пока нет"
-msgstr ""
+msgstr "Zatím žádné negativní recenze"
 
 msgid "Неделя"
-msgstr ""
+msgstr "Týden"
 
 msgid "Недостача"
-msgstr ""
+msgstr "Manko"
 
 msgid "Некоторые позиции больше недоступны и не были добавлены"
-msgstr ""
+msgstr "Některé položky již nejsou dostupné a nebyly přidány"
 
 msgid "Необязательно"
-msgstr ""
+msgstr "Nepovinné"
 
 msgid "Нет"
-msgstr ""
+msgstr "Ne"
 
 msgid "Нет аккаунта?"
-msgstr ""
+msgstr "Nemáte účet?"
 
 msgid "Нет активных заказов"
-msgstr ""
+msgstr "Žádné aktivní objednávky"
 
 msgid "Нет данных"
-msgstr ""
+msgstr "Žádná data"
 
 msgid "Нет заказов в работе"
-msgstr ""
+msgstr "Žádné objednávky v přípravě"
 
 msgid "Нет новых заказов"
-msgstr ""
+msgstr "Žádné nové objednávky"
 
 msgid "Нет отзывов"
-msgstr ""
+msgstr "Žádné recenze"
 
 msgid "Нет позиций на складе"
-msgstr ""
+msgstr "Žádné položky na skladě"
 
 msgid "Нет расходов"
-msgstr ""
+msgstr "Žádné náklady"
 
 msgid "Нет расходов за период"
-msgstr ""
+msgstr "Žádné náklady za období"
 
 msgid "Нет связи и нет локальной копии меню. Подключитесь к интернету один раз."
-msgstr ""
+msgstr "Žádné spojení a žádná lokální kopie menu. Připojte se jednou k internetu."
 
 msgid "Нет связи — заказ сохранён и отправится автоматически"
-msgstr ""
+msgstr "Žádné spojení — objednávka je uložena a odešle se automaticky"
 
 msgid ""
 "Нет связи — экран показывает последние полученные заказы. Обновится "
 "автоматически."
 msgstr ""
+"Žádné spojení — obrazovka zobrazuje poslední přijaté objednávky. Obnoví "
+"se automaticky."
 
 msgid "Низкий остаток"
-msgstr ""
+msgstr "Nízká zásoba"
 
 msgid "Ничего не найдено"
-msgstr ""
+msgstr "Nic nenalezeno"
 
 msgid "Новая категория"
-msgstr ""
+msgstr "Nová kategorie"
 
 msgid "Новая накладная"
-msgstr ""
+msgstr "Nová faktura"
 
 msgid "Новая позиция"
-msgstr ""
+msgstr "Nová položka"
 
 msgid "Новая рассылка"
-msgstr ""
+msgstr "Nové rozeslání"
 
 msgid "Новые"
-msgstr ""
+msgstr "Nové"
 
 msgid "Новый"
-msgstr ""
+msgstr "Nový"
 
 msgid "Новый заказ"
-msgstr ""
+msgstr "Nová objednávka"
 
 msgid "Новый пароль"
-msgstr ""
+msgstr "Nové heslo"
 
 msgid "Новый чек"
-msgstr ""
+msgstr "Nová účtenka"
 
 msgid ""
 "Новым аккаунтам предоставляется бесплатный пробный период 14 дней. По "
@@ -1142,585 +1212,612 @@ msgid ""
 "требуется активная оплаченная подписка. Оплата обрабатывается через "
 "Stripe; RestOS не хранит данные вашей карты."
 msgstr ""
+"Novým účtům se poskytuje bezplatné zkušební období 14 dní. Po jeho "
+"uplynutí je pro další používání Služby potřeba aktivní placené "
+"předplatné. Platbu zpracovává Stripe; RestOS neuchovává údaje vaší karty."
 
 msgid "Новых"
-msgstr ""
+msgstr "Nových"
 
 msgid "Новых гостей сегодня"
-msgstr ""
+msgstr "Nových hostů dnes"
 
 msgid "Номер кассы (CashboxUniqueNumber)"
-msgstr ""
+msgstr "Číslo pokladny (CashboxUniqueNumber)"
 
 msgid "Номер накладной"
-msgstr ""
+msgstr "Číslo faktury"
 
 msgid "Номер стола"
-msgstr ""
+msgstr "Číslo stolu"
 
 msgid "Нормально"
-msgstr ""
+msgstr "Normálně"
 
 msgid "Нужно улучшить"
-msgstr ""
+msgstr "Je třeba zlepšit"
 
 msgid "Обзор"
-msgstr ""
+msgstr "Přehled"
 
 msgid "Обновить страницу"
-msgstr ""
+msgstr "Obnovit stránku"
 
 msgid "Обновления"
-msgstr ""
+msgstr "Aktualizace"
 
 msgid "Обновлено:"
-msgstr ""
+msgstr "Aktualizováno:"
 
 msgid "Оборудование"
-msgstr ""
+msgstr "Vybavení"
 
 msgid "Обучение персонала"
-msgstr ""
+msgstr "Školení personálu"
 
 msgid "Общий NPS"
-msgstr ""
+msgstr "Celkové NPS"
 
 msgid "Ожидает"
-msgstr ""
+msgstr "Čeká"
 
 msgid "Ожидается в кассе"
-msgstr ""
+msgstr "Očekává se v pokladně"
 
 msgid "Ожидалось"
-msgstr ""
+msgstr "Očekávalo se"
 
 msgid "Онлайн"
-msgstr ""
+msgstr "Online"
 
 msgid ""
 "Онлайн-оплата пока не подключена — свяжитесь с поддержкой для активации "
 "тарифа."
 msgstr ""
+"Online platba zatím není připojena — kontaktujte podporu pro aktivaci "
+"tarifu."
 
 msgid "Операция"
-msgstr ""
+msgstr "Operace"
 
 msgid "Описание"
-msgstr ""
+msgstr "Popis"
 
 msgid "Описание (необязательно)"
-msgstr ""
+msgstr "Popis (nepovinné)"
 
 msgid "Оплата"
-msgstr ""
+msgstr "Platba"
 
 msgid "Оплата аренды за июнь"
-msgstr ""
+msgstr "Platba nájmu za červen"
 
 msgid "Оплата не прошла"
-msgstr ""
+msgstr "Platba neproběhla"
 
 msgid "Оплатить"
-msgstr ""
+msgstr "Zaplatit"
 
 msgid "Оплачен"
-msgstr ""
+msgstr "Zaplaceno"
 
 msgid "Оплаченных заказов"
-msgstr ""
+msgstr "Zaplacených objednávek"
 
 msgid "Оставьте пустым — отправим приглашение на email"
-msgstr ""
+msgstr "Nechte prázdné — pošleme pozvánku na e-mail"
 
 msgid "Осталось дней пробного периода:"
-msgstr ""
+msgstr "Zbývá dní zkušebního období:"
 
 msgid "Остаток"
-msgstr ""
+msgstr "Zůstatek"
 
 msgid "От $30/мес, всё включено"
-msgstr ""
+msgstr "Od $30/měs, vše v ceně"
 
 msgid "Отзывов"
-msgstr ""
+msgstr "Recenzí"
 
 msgid "Отзывов за месяц"
-msgstr ""
+msgstr "Recenzí za měsíc"
 
 msgid "Отзывов пока нет"
-msgstr ""
+msgstr "Zatím žádné recenze"
 
 msgid "Отзывы"
-msgstr ""
+msgstr "Recenze"
 
 msgid "Отключить 2FA"
-msgstr ""
+msgstr "Vypnout 2FA"
 
 msgid "Откройте смену, чтобы принимать оплату"
-msgstr ""
+msgstr "Otevřete směnu, abyste mohli přijímat platby"
 
 msgid "Открыта"
-msgstr ""
+msgstr "Otevřená"
 
 msgid "Открыть смену"
-msgstr ""
+msgstr "Otevřít směnu"
 
 msgid "Отлично"
-msgstr ""
+msgstr "Výborně"
 
 msgid "Отмена"
-msgstr ""
+msgstr "Zrušení"
 
 msgid "Отменил заказ"
-msgstr ""
+msgstr "Zrušil objednávku"
 
 msgid "Отменить заказ"
-msgstr ""
+msgstr "Zrušit objednávku"
 
 msgid "Отменить заказ?"
-msgstr ""
+msgstr "Zrušit objednávku?"
 
 msgid "Отменён"
-msgstr ""
+msgstr "Zrušeno"
 
 msgid ""
 "Отметьте позиции, которые уйдут в отдельный чек — его можно оплатить "
 "отдельно."
 msgstr ""
+"Označte položky, které půjdou na samostatnou účtenku — lze zaplatit "
+"zvlášť."
 
 msgid "Отозвать ключ?"
-msgstr ""
+msgstr "Zrušit klíč?"
 
 msgid "Отправить на кухню"
-msgstr ""
+msgstr "Odeslat do kuchyně"
 
 msgid "Отправить письмо повторно"
-msgstr ""
+msgstr "Odeslat e-mail znovu"
 
 msgid "Отправить ссылку для сброса"
-msgstr ""
+msgstr "Odeslat odkaz na obnovení"
 
 msgid "Отправлена"
-msgstr ""
+msgstr "Odeslána"
 
 msgid "Отправлено ✓"
-msgstr ""
+msgstr "Odesláno ✓"
 
 msgid "Отправляем…"
-msgstr ""
+msgstr "Odesíláme…"
 
 msgid "Официант"
-msgstr ""
+msgstr "Číšník"
 
 msgid "Официант (только приём заказов)"
-msgstr ""
+msgstr "Číšník (pouze příjem objednávek)"
 
 msgid ""
 "Официант, кухня и касса видят заказ в реальном времени. Столы, статусы, "
 "комментарии к позициям."
 msgstr ""
+"Číšník, kuchyně a pokladna vidí objednávku v reálném čase. Stoly, stavy, "
+"poznámky k položkám."
 
 msgid "Офлайн-режим: меню из локальной копии"
-msgstr ""
+msgstr "Offline režim: menu z lokální kopie"
 
 msgid "Оформите первый заказ в кассе"
-msgstr ""
+msgstr "Vytvořte první objednávku v pokladně"
 
 msgid "Оформить"
-msgstr ""
+msgstr "Objednat"
 
 msgid ""
 "Оформление сохраняется на этом устройстве: кассовый планшет, кухня и "
 "телефон официанта могут выглядеть по-разному."
 msgstr ""
+"Vzhled se ukládá na tomto zařízení: pokladní tablet, kuchyně a telefon "
+"číšníka mohou vypadat různě."
 
 msgid "Оценка"
-msgstr ""
+msgstr "Hodnocení"
 
 msgid "Ошибка"
-msgstr ""
+msgstr "Chyba"
 
 msgid "Ошибка входа"
-msgstr ""
+msgstr "Chyba přihlášení"
 
 msgid "Ошибка генерации токена"
-msgstr ""
+msgstr "Chyba generování tokenu"
 
 msgid "Ошибка добавления позиции"
-msgstr ""
+msgstr "Chyba při přidávání položky"
 
 msgid "Ошибка добавления стола"
-msgstr ""
+msgstr "Chyba při přidávání stolu"
 
 msgid "Ошибка загрузки"
-msgstr ""
+msgstr "Chyba načítání"
 
 msgid "Ошибка загрузки фото"
-msgstr ""
+msgstr "Chyba načítání fotky"
 
 msgid "Ошибка обновления статуса"
-msgstr ""
+msgstr "Chyba při aktualizaci stavu"
 
 msgid "Ошибка отмены"
-msgstr ""
+msgstr "Chyba při rušení"
 
 msgid "Ошибка отправки. Попробуйте позже."
-msgstr ""
+msgstr "Chyba odesílání. Zkuste to později."
 
 msgid "Ошибка оформления заказа"
-msgstr ""
+msgstr "Chyba při vytváření objednávky"
 
 msgid "Ошибка регистрации"
-msgstr ""
+msgstr "Chyba registrace"
 
 msgid "Ошибка смены"
-msgstr ""
+msgstr "Chyba směny"
 
 msgid "Ошибка соединения"
-msgstr ""
+msgstr "Chyba spojení"
 
 msgid "Ошибка создания пользователя"
-msgstr ""
+msgstr "Chyba při vytváření uživatele"
 
 msgid "Ошибка сохранения"
-msgstr ""
+msgstr "Chyba při ukládání"
 
 msgid "Ошибка сохранения модификаторов"
-msgstr ""
+msgstr "Chyba při ukládání modifikátorů"
 
 msgid "Ошибка сохранения техкарты"
-msgstr ""
+msgstr "Chyba při ukládání receptury"
 
 msgid "Ошибка удаления"
-msgstr ""
+msgstr "Chyba při mazání"
 
 msgid "Ошибка удаления стола"
-msgstr ""
+msgstr "Chyba při mazání stolu"
 
 msgid "Ошибка фискализации"
-msgstr ""
+msgstr "Chyba fiskalizace"
 
 msgid "Ошибка, попробуйте позже"
-msgstr ""
+msgstr "Chyba, zkuste to později"
 
 msgid ""
 "Панель сама подскажет шаги. Позиции меню, столы, сотрудники — всё за 10 "
 "минут."
 msgstr ""
+"Panel vám sám poradí kroky. Položky menu, stoly, zaměstnanci — vše za 10 "
+"minut."
 
 msgid "Панель управления сетью ресторанов"
-msgstr ""
+msgstr "Panel pro řízení sítě restaurací"
 
 msgid ""
 "Пароли хранятся в виде необратимых хешей (bcrypt). Соединение с Сервисом "
 "защищено HTTPS. Доступ к данным одной сети ресторанов технически "
 "изолирован от данных других сетей."
 msgstr ""
+"Hesla se uchovávají jako nevratné haše (bcrypt). Spojení se Službou je "
+"chráněno HTTPS. Přístup k datům jedné sítě restaurací je technicky "
+"izolován od dat jiných sítí."
 
 msgid "Пароль"
-msgstr ""
+msgstr "Heslo"
 
 msgid "Пароль (необязательно)"
-msgstr ""
+msgstr "Heslo (nepovinné)"
 
 msgid "Пароль кассы"
-msgstr ""
+msgstr "Heslo pokladny"
 
 msgid ""
 "Переименование меняет категорию у всех позиций. «Убрать» оставляет "
 "позиции без категории, ничего не удаляя."
 msgstr ""
+"Přejmenování změní kategorii u všech položek. „Odebrat“ ponechá položky "
+"bez kategorie, nic nesmaže."
 
 msgid "Перенести"
-msgstr ""
+msgstr "Přesunout"
 
 msgid "Перенести на другой стол"
-msgstr ""
+msgstr "Přesunout na jiný stůl"
 
 msgid "Персонал"
-msgstr ""
+msgstr "Personál"
 
 msgid "Печать"
-msgstr ""
+msgstr "Tisk"
 
 msgid "Печать талона"
-msgstr ""
+msgstr "Tisk lístku"
 
 msgid "Печать чека"
-msgstr ""
+msgstr "Tisk účtenky"
 
 msgid ""
 "Платёжные данные обрабатываются напрямую Stripe; RestOS не хранит номера "
 "карт."
-msgstr ""
+msgstr "Platební údaje zpracovává přímo Stripe; RestOS neuchovává čísla karet."
 
 msgid "Пн"
-msgstr ""
+msgstr "Po"
 
 msgid ""
 "По вопросам, связанным с условиями использования, пишите на адрес, "
 "указанный в вашем аккаунте платформы, или через раздел поддержки."
 msgstr ""
+"V otázkách souvisejících s podmínkami používání pište na adresu uvedenou "
+"ve vašem účtu platformy nebo přes sekci podpory."
 
 msgid "По заведениям"
-msgstr ""
+msgstr "Podle provozoven"
 
 msgid "По заведениям и экранам"
-msgstr ""
+msgstr "Podle provozoven a obrazovek"
 
 msgid "По умолчанию"
-msgstr ""
+msgstr "Výchozí"
 
 msgid "Повреждение"
-msgstr ""
+msgstr "Poškození"
 
 msgid "Повторить последний заказ"
-msgstr ""
+msgstr "Zopakovat poslední objednávku"
 
 msgid "Подключены в Telegram"
-msgstr ""
+msgstr "Připojeni přes Telegram"
 
 msgid "Подписка"
-msgstr ""
+msgstr "Předplatné"
 
 msgid "Подписка не найдена. Свяжитесь с поддержкой."
-msgstr ""
+msgstr "Předplatné nenalezeno. Kontaktujte podporu."
 
 msgid "Подтвердите email"
-msgstr ""
+msgstr "Potvrďte e-mail"
 
 msgid "Подтвердить"
-msgstr ""
+msgstr "Potvrdit"
 
 msgid "Подтверждение email"
-msgstr ""
+msgstr "Potvrzení e-mailu"
 
 msgid "Подтверждено"
-msgstr ""
+msgstr "Potvrzeno"
 
 msgid "Подтверждён"
-msgstr ""
+msgstr "Potvrzen"
 
 msgid "Подытог"
-msgstr ""
+msgstr "Mezisoučet"
 
 msgid "Позиций на складе"
-msgstr ""
+msgstr "Položek na skladě"
 
 msgid "Позиция"
-msgstr ""
+msgstr "Položka"
 
 msgid "Позиция в стоп-листе"
-msgstr ""
+msgstr "Položka na stop-listu"
 
 msgid "Поиск по имени или телефону..."
-msgstr ""
+msgstr "Hledat podle jména nebo telefonu..."
 
 msgid "Поиск по меню…"
-msgstr ""
+msgstr "Hledat v menu…"
 
 msgid "Поиск по названию..."
-msgstr ""
+msgstr "Hledat podle názvu..."
 
 msgid ""
 "Пока пусто. Здесь появятся удаления, отмены заказов, скидки и изменения "
 "пользователей."
 msgstr ""
+"Zatím prázdné. Zde se objeví mazání, rušení objednávek, slevy a změny "
+"uživatelů."
 
 msgid "Политика конфиденциальности"
-msgstr ""
+msgstr "Zásady ochrany osobních údajů"
 
 msgid "Политика конфиденциальности — RestOS"
-msgstr ""
+msgstr "Zásady ochrany osobních údajů — RestOS"
 
 msgid "Политика конфиденциальности →"
-msgstr ""
+msgstr "Zásady ochrany osobních údajů →"
 
 msgid "Полный вид →"
-msgstr ""
+msgstr "Úplné zobrazení →"
 
 msgid "Получено меньше суммы заказа"
-msgstr ""
+msgstr "Přijato méně než částka objednávky"
 
 msgid "Получено от гостя (₸)"
-msgstr ""
+msgstr "Přijato od hosta (₸)"
 
 msgid "Получить рекомендации"
-msgstr ""
+msgstr "Získat doporučení"
 
 msgid "Пользователей нет"
-msgstr ""
+msgstr "Žádní uživatelé"
 
 msgid "Пользователи"
-msgstr ""
+msgstr "Uživatelé"
 
 msgid "Попробовать 14 дней бесплатно"
-msgstr ""
+msgstr "Vyzkoušet 14 dní zdarma"
 
 msgid "Популярные позиции"
-msgstr ""
+msgstr "Populární položky"
 
 msgid "Порча"
-msgstr ""
+msgstr "Znehodnocení"
 
 msgid "Порча / просрочка"
-msgstr ""
+msgstr "Znehodnocení / expirace"
 
 msgid "Последнее использование"
-msgstr ""
+msgstr "Poslední použití"
 
 msgid "Последние 30 дней"
-msgstr ""
+msgstr "Posledních 30 dní"
 
 msgid "Последние расходы"
-msgstr ""
+msgstr "Poslední náklady"
 
 msgid "Посмотреть цены"
-msgstr ""
+msgstr "Zobrazit ceny"
 
 msgid "Поставщик"
-msgstr ""
+msgstr "Dodavatel"
 
 msgid "Почему не тяжёлая ERP?"
-msgstr ""
+msgstr "Proč ne těžké ERP?"
 
 msgid "Предпросмотр"
-msgstr ""
+msgstr "Náhled"
 
 msgid "Прибыль"
-msgstr ""
+msgstr "Zisk"
 
 msgid "Привязать Telegram (для официантов)"
-msgstr ""
+msgstr "Propojit Telegram (pro číšníky)"
 
 msgid "Пригласите сотрудника"
-msgstr ""
+msgstr "Pozvěte zaměstnance"
 
 msgid "Применил скидку"
-msgstr ""
+msgstr "Uplatnil slevu"
 
 msgid "Примечание"
-msgstr ""
+msgstr "Poznámka"
 
 msgid "Принимайте заказы"
-msgstr ""
+msgstr "Přijímejte objednávky"
 
 msgid "Принять"
-msgstr ""
+msgstr "Přijmout"
 
 msgid "Принять наличные"
-msgstr ""
+msgstr "Přijmout hotovost"
 
 msgid "Приоритетная поддержка"
-msgstr ""
+msgstr "Prioritní podpora"
 
 msgid "Приостановлена"
-msgstr ""
+msgstr "Pozastavená"
 
 msgid "Приход от поставщика: остатки увеличиваются, цена ингредиента обновляется."
-msgstr ""
+msgstr "Příjem od dodavatele: zásoby se zvyšují, cena ingredience se aktualizuje."
 
 msgid "Приход:"
-msgstr ""
+msgstr "Příjem:"
 
 msgid "Причина"
-msgstr ""
+msgstr "Důvod"
 
 msgid "Приём заказов и касса"
-msgstr ""
+msgstr "Příjem objednávek a pokladna"
 
 msgid ""
 "Приём заказов, кухонный дисплей, склад с автосписанием по техкартам, "
 "смены персонала, программа лояльности гостей и фискализация чеков — без "
 "Excel и десятка разных приложений."
 msgstr ""
+"Příjem objednávek, kuchyňský displej, sklad s automatickým odpisem podle "
+"receptur, směny personálu, věrnostní program hostů a fiskalizace účtenek "
+"— bez Excelu a desítky různých aplikací."
 
 msgid "Пробный период"
-msgstr ""
+msgstr "Zkušební období"
 
 msgid "Пробный период закончился"
-msgstr ""
+msgstr "Zkušební období skončilo"
 
 msgid "Провайдер"
-msgstr ""
+msgstr "Poskytovatel"
 
 msgid "Провести накладную"
-msgstr ""
+msgstr "Zaúčtovat fakturu"
 
 msgid "Программа лояльности"
-msgstr ""
+msgstr "Věrnostní program"
 
 msgid "Продажи CSV"
-msgstr ""
+msgstr "Prodeje CSV"
 
 msgid "Продажи картой"
-msgstr ""
+msgstr "Prodeje kartou"
 
 msgid "Продажи наличными"
-msgstr ""
+msgstr "Prodeje v hotovosti"
 
 msgid "Продление:"
-msgstr ""
+msgstr "Obnovení:"
 
 msgid "Продолжить выбор"
-msgstr ""
+msgstr "Pokračovat ve výběru"
 
 msgid "Прозрачные цены"
-msgstr ""
+msgstr "Transparentní ceny"
 
 msgid "Произвольная позиция"
-msgstr ""
+msgstr "Vlastní položka"
 
 msgid "Промокодов пока нет. Создайте первый — гости смогут вводить его в QR-меню."
 msgstr ""
+"Zatím žádné promokódy. Vytvořte první — hosté ho budou moci zadávat v QR "
+"menu."
 
 msgid "Промокоды"
-msgstr ""
+msgstr "Promokódy"
 
 msgid "Процент"
-msgstr ""
+msgstr "Procento"
 
 msgid "Прочее"
-msgstr ""
+msgstr "Ostatní"
 
 msgid "Пт"
-msgstr ""
+msgstr "Pá"
 
 msgid "Пусто"
-msgstr ""
+msgstr "Prázdné"
 
 msgid "Работает на любом планшете"
-msgstr ""
+msgstr "Funguje na jakémkoli tabletu"
 
 msgid "Работают в QR-меню для гостей"
-msgstr ""
+msgstr "Fungují v QR menu pro hosty"
 
 msgid "Разделить"
-msgstr ""
+msgstr "Rozdělit"
 
 msgid "Разделить чек"
-msgstr ""
+msgstr "Rozdělit účet"
 
 msgid "Рассылки"
-msgstr ""
+msgstr "Rozeslání"
 
 msgid "Рассылок отправлено"
-msgstr ""
+msgstr "Odesláno rozeslání"
 
 msgid "Рассылок пока не было"
-msgstr ""
+msgstr "Zatím žádná rozeslání"
 
 msgid "Расходы"
-msgstr ""
+msgstr "Náklady"
 
 msgid "Расходы CSV"
-msgstr ""
+msgstr "Náklady CSV"
 
 msgid "Расходы по категориям"
-msgstr ""
+msgstr "Náklady podle kategorií"
 
 msgid "Расхождение"
-msgstr ""
+msgstr "Rozdíl"
 
 msgid ""
 "Регистрируясь, вы подтверждаете, что представляете юридическое лицо или "
@@ -1728,75 +1825,81 @@ msgid ""
 "питания. Вы несёте ответственность за сохранность учётных данных и "
 "действия под вашей учётной записью."
 msgstr ""
+"Registrací potvrzujete, že zastupujete právnickou osobu nebo živnostníka "
+"oprávněného uzavírat smlouvy o poskytování stravovacích služeb. "
+"Odpovídáte za ochranu přihlašovacích údajů a za činnosti provedené pod "
+"vaším účtem."
 
 msgid "Редактировать"
-msgstr ""
+msgstr "Upravit"
 
 msgid "Редактировать позицию"
-msgstr ""
+msgstr "Upravit položku"
 
 msgid "Режим планшета"
-msgstr ""
+msgstr "Režim tabletu"
 
 msgid "Режим планшета ↗︎"
-msgstr ""
+msgstr "Režim tabletu ↗︎"
 
 msgid ""
 "Режим стоп-листа: нажмите на позицию, чтобы убрать её из продажи или "
 "вернуть."
 msgstr ""
+"Režim stop-listu: klikněte na položku, abyste ji stáhli z prodeje nebo "
+"vrátili."
 
 msgid "Роль"
-msgstr ""
+msgstr "Role"
 
 msgid "Русский"
-msgstr ""
+msgstr "Ruština"
 
 msgid "С нами с"
-msgstr ""
+msgstr "S námi od"
 
 msgid "Самые лояльные гости"
-msgstr ""
+msgstr "Nejvěrnější hosté"
 
 msgid "Сб"
-msgstr ""
+msgstr "So"
 
 msgid "Сбросить"
-msgstr ""
+msgstr "Obnovit"
 
 msgid "Светлая"
-msgstr ""
+msgstr "Světlá"
 
 msgid "Свободен"
-msgstr ""
+msgstr "Volný"
 
 msgid "Свой цвет"
-msgstr ""
+msgstr "Vlastní barva"
 
 #, python-brace-format
 msgid "Связь восстановлена: отправлено заказов — {n}"
-msgstr ""
+msgstr "Spojení obnoveno: odesláno objednávek — {n}"
 
 msgid "Сгенерировать ссылку"
-msgstr ""
+msgstr "Vygenerovat odkaz"
 
 msgid "Сдача"
-msgstr ""
+msgstr "Vrácení"
 
 msgid "Себестоимость"
-msgstr ""
+msgstr "Náklady na výrobu"
 
 msgid "Себестоимость считается по техкартам и ценам ингредиентов"
-msgstr ""
+msgstr "Náklady se počítají podle receptur a cen ingrediencí"
 
 msgid "Сегодня"
-msgstr ""
+msgstr "Dnes"
 
 msgid "Сегодня работают:"
-msgstr ""
+msgstr "Dnes pracují:"
 
 msgid "Секрет для проверки подписи:"
-msgstr ""
+msgstr "Tajný klíč pro ověření podpisu:"
 
 msgid ""
 "Сервис предоставляется «как есть». RestOS не несёт ответственности за "
@@ -1804,581 +1907,603 @@ msgid ""
 "результате использования или невозможности использования Сервиса, в "
 "пределах, допустимых применимым законодательством."
 msgstr ""
+"Služba se poskytuje „tak, jak je“. RestOS neodpovídá za nepřímé škody, "
+"ušlý zisk nebo ztrátu dat vzniklé v důsledku používání nebo nemožnosti "
+"používání Služby, v rozsahu přípustném platnými právními předpisy."
 
 msgid "Сервис:"
-msgstr ""
+msgstr "Služba:"
 
 msgid "Скачать все данные сети в формате JSON"
-msgstr ""
+msgstr "Stáhnout všechna data sítě ve formátu JSON"
 
 msgid "Скидка"
-msgstr ""
+msgstr "Sleva"
 
 msgid "Скидка %"
-msgstr ""
+msgstr "Sleva %"
 
 msgid "Скидка ₸"
-msgstr ""
+msgstr "Sleva ₸"
 
 msgid "Склад"
-msgstr ""
+msgstr "Sklad"
 
 msgid "Склад и техкарты"
-msgstr ""
+msgstr "Sklad a receptury"
 
 msgid ""
 "Сколько ингредиента списывается со склада при продаже 1 шт. этой позиции."
 " При завершении заказа склад списывается автоматически."
 msgstr ""
+"Kolik ingredience se odepíše ze skladu při prodeji 1 ks této položky. Po "
+"dokončení objednávky se sklad odepíše automaticky."
 
 msgid "Скопировано!"
-msgstr ""
+msgstr "Zkopírováno!"
 
 msgid "Скопировать"
-msgstr ""
+msgstr "Kopírovat"
 
 msgid "Скопируйте ключ сейчас — он показывается только один раз:"
-msgstr ""
+msgstr "Zkopírujte klíč nyní — zobrazí se pouze jednou:"
 
 msgid "Скрыто"
-msgstr ""
+msgstr "Skryté"
 
 msgid "Скрыть или показать меню"
-msgstr ""
+msgstr "Skrýt nebo zobrazit menu"
 
 msgid "Смена не открыта"
-msgstr ""
+msgstr "Směna není otevřená"
 
 msgid "Смена открыта"
-msgstr ""
+msgstr "Směna je otevřená"
 
 msgid "Смена открыта с"
-msgstr ""
+msgstr "Směna otevřená od"
 
 msgid "Смена сотрудника"
-msgstr ""
+msgstr "Přepnutí zaměstnance"
 
 msgid "Смена сотрудника по PIN"
-msgstr ""
+msgstr "Přepnutí zaměstnance přes PIN"
 
 msgid "Сменить заведение"
-msgstr ""
+msgstr "Změnit provozovnu"
 
 msgid ""
 "Сменить заведение? Текущий чек будет очищен, заказы начнут пробиваться в "
 "другое заведение."
 msgstr ""
+"Změnit provozovnu? Aktuální účet se vymaže, objednávky se začnou účtovat "
+"do jiné provozovny."
 
 msgid "Смены"
-msgstr ""
+msgstr "Směny"
 
 msgid "Смены и персонал"
-msgstr ""
+msgstr "Směny a personál"
 
 msgid ""
 "Смены открываются на экране кассы. Открытие и закрытие с пересчётом "
 "наличных — главный контроль кассовой дисциплины."
 msgstr ""
+"Směny se otevírají na obrazovce pokladny. Otevření a zavření s přepočtem "
+"hotovosti — hlavní kontrola pokladní disciplíny."
 
 msgid "Сначала выберите заведение"
-msgstr ""
+msgstr "Nejprve vyberte provozovnu"
 
 msgid "Сначала выберите заведение (не «Все заведения»)"
-msgstr ""
+msgstr "Nejprve vyberte provozovnu (ne „Všechny provozovny“)"
 
 msgid "Сначала выберите стол"
-msgstr ""
+msgstr "Nejprve vyberte stůl"
 
 msgid "Сначала добавьте заведение"
-msgstr ""
+msgstr "Nejprve přidejte provozovnu"
 
 msgid "Сначала добавьте ингредиенты"
-msgstr ""
+msgstr "Nejprve přidejte ingredience"
 
 msgid "Сначала добавьте ингредиенты на складе"
-msgstr ""
+msgstr "Nejprve přidejte ingredience na sklad"
 
 msgid "События"
-msgstr ""
+msgstr "Události"
 
 msgid "Согласен с"
-msgstr ""
+msgstr "Souhlasím s"
 
 msgid "Создайте заведение"
-msgstr ""
+msgstr "Vytvořte provozovnu"
 
 msgid "Создал API-ключ"
-msgstr ""
+msgstr "Vytvořil API klíč"
 
 msgid "Создал пользователя"
-msgstr ""
+msgstr "Vytvořil uživatele"
 
 msgid "Создал промокод"
-msgstr ""
+msgstr "Vytvořil promokód"
 
 msgid "Создан"
-msgstr ""
+msgstr "Vytvořen"
 
 msgid "Создать"
-msgstr ""
+msgstr "Vytvořit"
 
 msgid "Создать аккаунт"
-msgstr ""
+msgstr "Vytvořit účet"
 
 msgid "Создать аккаунты и ссылки для привязки →"
-msgstr ""
+msgstr "Vytvořit účty a odkazy pro propojení →"
 
 msgid "Создать заведение"
-msgstr ""
+msgstr "Vytvořit provozovnu"
 
 msgid "Создать ключ"
-msgstr ""
+msgstr "Vytvořit klíč"
 
 msgid "Создать рассылку →"
-msgstr ""
+msgstr "Vytvořit rozeslání →"
 
 msgid "Создаётся..."
-msgstr ""
+msgstr "Vytváří se..."
 
 msgid "Сотрудник"
-msgstr ""
+msgstr "Zaměstnanec"
 
 msgid ""
 "Сотрудник может принимать заказы прямо из Telegram-бота. Сгенерируйте "
 "ссылку и передайте её сотруднику — он перейдёт по ней и его аккаунт "
 "привяжется автоматически."
 msgstr ""
+"Zaměstnanec může přijímat objednávky přímo z Telegram bota. Vygenerujte "
+"odkaz a předejte ho zaměstnanci — po jeho otevření se jeho účet "
+"automaticky propojí."
 
 msgid "Сотрудники"
-msgstr ""
+msgstr "Zaměstnanci"
 
 msgid "Сотрудники появляются здесь после привязки Telegram-аккаунта."
-msgstr ""
+msgstr "Zaměstnanci se zde zobrazí po propojení Telegram účtu."
 
 msgid "Сотрудников пока нет."
-msgstr ""
+msgstr "Zatím žádní zaměstnanci."
 
 msgid "Сохранено"
-msgstr ""
+msgstr "Uloženo"
 
 msgid "Сохранено ✓"
-msgstr ""
+msgstr "Uloženo ✓"
 
 msgid "Сохранить"
-msgstr ""
+msgstr "Uložit"
 
 msgid "Сохранить пароль"
-msgstr ""
+msgstr "Uložit heslo"
 
 msgid "Сохранить фискализацию"
-msgstr ""
+msgstr "Uložit fiskalizaci"
 
 msgid "Спасибо, ждём вас снова!"
-msgstr ""
+msgstr "Děkujeme, těšíme se na vás znovu!"
 
 msgid "Специальные Windows-терминалы"
-msgstr ""
+msgstr "Speciální Windows terminály"
 
 msgid ""
 "Списание ингредиентов автоматически при закрытии заказа по рецептуре "
 "блюда — остатки всегда актуальны."
 msgstr ""
+"Automatický odpis ingrediencí při uzavření objednávky podle receptury "
+"pokrmu — zásoby jsou vždy aktuální."
 
 msgid "Списание:"
-msgstr ""
+msgstr "Odpis:"
 
 msgid "Ср"
-msgstr ""
+msgstr "St"
 
 msgid "Средний чек"
-msgstr ""
+msgstr "Průměrný účet"
 
 msgid "Средняя оценка"
-msgstr ""
+msgstr "Průměrné hodnocení"
 
 msgid "Ссылка 2GIS"
-msgstr ""
+msgstr "Odkaz 2GIS"
 
 msgid "Ссылка для входа (действует 1 раз):"
-msgstr ""
+msgstr "Odkaz pro přihlášení (platí 1×):"
 
 msgid "Ссылка недействительна или устарела"
-msgstr ""
+msgstr "Odkaz je neplatný nebo vypršel"
 
 msgid "Станции"
-msgstr ""
+msgstr "Stanice"
 
 msgid "Статус"
-msgstr ""
+msgstr "Stav"
 
 msgid "Стоимость запасов"
-msgstr ""
+msgstr "Hodnota zásob"
 
 msgid "Стол"
-msgstr ""
+msgstr "Stůl"
 
 msgid "Стол / номер заказа"
-msgstr ""
+msgstr "Stůl / číslo objednávky"
 
 msgid "Столов пока нет"
-msgstr ""
+msgstr "Zatím žádné stoly"
 
 msgid "Столы"
-msgstr ""
+msgstr "Stoly"
 
 msgid "Стоп"
-msgstr ""
+msgstr "Stop"
 
 msgid "Стоп-лист"
-msgstr ""
+msgstr "Stop-list"
 
 msgid "Страница не найдена"
-msgstr ""
+msgstr "Stránka nenalezena"
 
 msgid "Сумма (₸)"
-msgstr ""
+msgstr "Částka (₸)"
 
 msgid "ТОО Продукты"
-msgstr ""
+msgstr "s.r.o. Potraviny"
 
 msgid "Табло очереди ↗︎"
-msgstr ""
+msgstr "Tabule fronty ↗︎"
 
 msgid "Такой страницы не существует или она была перемещена."
-msgstr ""
+msgstr "Taková stránka neexistuje nebo byla přesunuta."
 
 msgid "Талон"
-msgstr ""
+msgstr "Lístek"
 
 msgid "Текст сообщения"
-msgstr ""
+msgstr "Text zprávy"
 
 msgid "Текущий тариф"
-msgstr ""
+msgstr "Aktuální tarif"
 
 msgid "Телефон"
-msgstr ""
+msgstr "Telefon"
 
 msgid "Тема"
-msgstr ""
+msgstr "Téma"
 
 msgid "Техкарта"
-msgstr ""
+msgstr "Receptura"
 
 msgid "Техкарта:"
-msgstr ""
+msgstr "Receptura:"
 
 msgid ""
 "Технические данные: IP-адрес, тип браузера — для безопасности и "
 "предотвращения злоупотреблений (например, ограничение частоты запросов "
 "при входе)."
 msgstr ""
+"Technická data: IP adresa, typ prohlížeče — pro bezpečnost a prevenci "
+"zneužití (například omezení frekvence požadavků při přihlášení)."
 
 msgid "Тип"
-msgstr ""
+msgstr "Typ"
 
 msgid "Токен:"
-msgstr ""
+msgstr "Token:"
 
 msgid "Тёмная"
-msgstr ""
+msgstr "Tmavá"
 
 msgid "У вас пока нет заведений."
-msgstr ""
+msgstr "Zatím nemáte žádné provozovny."
 
 msgid ""
 "У вас пока нет ни одного заведения. Добавьте первое — это займёт меньше "
 "минуты."
 msgstr ""
+"Zatím nemáte žádnou provozovnu. Přidejte první — zabere to méně než "
+"minutu."
 
 msgid "Убрать"
-msgstr ""
+msgstr "Odebrat"
 
 msgid "Удалил ингредиент"
-msgstr ""
+msgstr "Smazal ingredienci"
 
 msgid "Удалил позицию меню"
-msgstr ""
+msgstr "Smazal položku menu"
 
 msgid "Удалил пользователя"
-msgstr ""
+msgstr "Smazal uživatele"
 
 msgid "Удалить"
-msgstr ""
+msgstr "Smazat"
 
 msgid "Удалить вебхук?"
-msgstr ""
+msgstr "Smazat webhook?"
 
 msgid "Удалить позицию?"
-msgstr ""
+msgstr "Smazat položku?"
 
 msgid "Удалить пользователя?"
-msgstr ""
+msgstr "Smazat uživatele?"
 
 msgid "Удалить промокод?"
-msgstr ""
+msgstr "Smazat promokód?"
 
 msgid "Удалить рассылку?"
-msgstr ""
+msgstr "Smazat rozeslání?"
 
 msgid "Удалить расход?"
-msgstr ""
+msgstr "Smazat náklad?"
 
 msgid "Удалить смену?"
-msgstr ""
+msgstr "Smazat směnu?"
 
 msgid "Удалить стол?"
-msgstr ""
+msgstr "Smazat stůl?"
 
 msgid "Уже есть аккаунт?"
-msgstr ""
+msgstr "Už máte účet?"
 
 msgid "Улица, дом"
-msgstr ""
+msgstr "Ulice, číslo"
 
 msgid ""
 "Управляйте несколькими заведениями из одного аккаунта с отдельными "
 "данными по каждому."
-msgstr ""
+msgstr "Spravujte více provozoven z jednoho účtu s oddělenými daty pro každou."
 
 msgid "Управляйте рестораном"
-msgstr ""
+msgstr "Řiďte restauraci"
 
 msgid "Управлять оплатой"
-msgstr ""
+msgstr "Spravovat platbu"
 
 msgid "Условия использования"
-msgstr ""
+msgstr "Podmínky používání"
 
 msgid "Условия использования — RestOS"
-msgstr ""
+msgstr "Podmínky používání — RestOS"
 
 msgid "Факт"
-msgstr ""
+msgstr "Skutečnost"
 
 msgid "Фактические наличные в кассе (₸)"
-msgstr ""
+msgstr "Skutečná hotovost v pokladně (₸)"
 
 msgid "Финансы"
-msgstr ""
+msgstr "Finance"
 
 msgid "Финансы P&L, аналитика"
-msgstr ""
+msgstr "Finance P&L, analytika"
 
 msgid "Финансы и аналитика"
-msgstr ""
+msgstr "Finance a analytika"
 
 msgid "Фискализация (ОФД)"
-msgstr ""
+msgstr "Fiskalizace (OFD)"
 
 msgid "Фискализация чеков"
-msgstr ""
+msgstr "Fiskalizace účtenek"
 
 msgid "Фискализация…"
-msgstr ""
+msgstr "Fiskalizace…"
 
 msgid "Фискальный чек №"
-msgstr ""
+msgstr "Fiskální účtenka č."
 
 msgid ""
 "Цвет текста на кнопках подбирается автоматически, чтобы всё оставалось "
 "читаемым. Гостевые страницы (QR-меню) остаются в фирменном стиле."
 msgstr ""
+"Barva textu na tlačítkách se vybírá automaticky, aby vše zůstalo čitelné."
+" Stránky pro hosty (QR menu) zůstávají ve firemním stylu."
 
 msgid "Цена"
-msgstr ""
+msgstr "Cena"
 
 msgid "Цена (₸)"
-msgstr ""
+msgstr "Cena (₸)"
 
 msgid "Цена за ед. (₸)"
-msgstr ""
+msgstr "Cena za jedn. (₸)"
 
 msgid "Цена/ед."
-msgstr ""
+msgstr "Cena/jedn."
 
 msgid "Цены"
-msgstr ""
+msgstr "Ceny"
 
 msgid "Чек"
-msgstr ""
+msgstr "Účtenka"
 
 msgid "Чек пробит"
-msgstr ""
+msgstr "Účtenka vystavena"
 
 msgid "Чек разделён"
-msgstr ""
+msgstr "Účet rozdělen"
 
 msgid "Чт"
-msgstr ""
+msgstr "Čt"
 
 msgid "Что-то пошло не так"
-msgstr ""
+msgstr "Něco se pokazilo"
 
 msgid "Что-то пошло не так на нашей стороне. Мы уже знаем об этом и разбираемся."
-msgstr ""
+msgstr "Něco se pokazilo na naší straně. Už o tom víme a řešíme to."
 
 msgid "Чёрная (AMOLED)"
-msgstr ""
+msgstr "Černá (AMOLED)"
 
 msgid ""
 "Экран для кухни на любом планшете — очередь заказов по колонкам, таймеры "
 "готовки, без бумажных чеков."
 msgstr ""
+"Obrazovka pro kuchyni na jakémkoli tabletu — fronta objednávek ve "
+"sloupcích, časovače přípravy, bez papírových účtenek."
 
 msgid "Экран кухни ↗︎"
-msgstr ""
+msgstr "Obrazovka kuchyně ↗︎"
 
 msgid "Экран официанта ↗︎"
-msgstr ""
+msgstr "Obrazovka číšníka ↗︎"
 
 msgid "Экспорт данных"
-msgstr ""
+msgstr "Export dat"
 
 msgid "Язык интерфейса"
-msgstr ""
+msgstr "Jazyk rozhraní"
 
 msgid "Язык получателей"
-msgstr ""
+msgstr "Jazyk příjemců"
 
 msgid "Язык привязан к вашему аккаунту и меняется только здесь."
-msgstr ""
+msgstr "Jazyk je vázán na váš účet a mění se pouze zde."
 
 msgid "без лимита"
-msgstr ""
+msgstr "bez limitu"
 
 msgid "без стола"
-msgstr ""
+msgstr "bez stolu"
 
 msgid "в базе"
-msgstr ""
+msgstr "v databázi"
 
 msgid "всего"
-msgstr ""
+msgstr "celkem"
 
 msgid "г"
-msgstr ""
+msgstr "g"
 
 msgid "и"
-msgstr ""
+msgstr "a"
 
 msgid "и интеграции"
-msgstr ""
+msgstr "a integrace"
 
 msgid "из кабинета Webkassa"
-msgstr ""
+msgstr "z účtu Webkassa"
 
 msgid "из одной панели"
-msgstr ""
+msgstr "z jednoho panelu"
 
 msgid "кг"
-msgstr ""
+msgstr "kg"
 
 msgid "л"
-msgstr ""
+msgstr "l"
 
 msgid "логин"
-msgstr ""
+msgstr "přihlášení"
 
 msgid "мес"
-msgstr ""
+msgstr "měs"
 
 msgid "мест"
-msgstr ""
+msgstr "míst"
 
 msgid "мин"
-msgstr ""
+msgstr "min"
 
 msgid "мин на кухне"
-msgstr ""
+msgstr "min v kuchyni"
 
 msgid "мин:"
-msgstr ""
+msgstr "min:"
 
 msgid "мл"
-msgstr ""
+msgstr "ml"
 
 msgid "млн"
-msgstr ""
+msgstr "mil"
 
 msgid "можно несколько"
-msgstr ""
+msgstr "možno více"
 
 msgid "не оплачен"
-msgstr ""
+msgstr "nezaplaceno"
 
 msgid "необязательно"
-msgstr ""
+msgstr "nepovinné"
 
 msgid "нет техкарты"
-msgstr ""
+msgstr "bez receptury"
 
 msgid "обязательный выбор"
-msgstr ""
+msgstr "povinný výběr"
 
 msgid "отзывов"
-msgstr ""
+msgstr "recenzí"
 
 msgid "открыта"
-msgstr ""
+msgstr "otevřená"
 
 msgid "пароль"
-msgstr ""
+msgstr "heslo"
 
 msgid "подключено"
-msgstr ""
+msgstr "připojeno"
 
 msgid "поз."
-msgstr ""
+msgstr "pol."
 
 msgid "позиций:"
-msgstr ""
+msgstr "položek:"
 
 msgid "пока пусто"
-msgstr ""
+msgstr "zatím prázdné"
 
 msgid "политикой конфиденциальности"
-msgstr ""
+msgstr "zásadami ochrany osobních údajů"
 
 msgid "получ."
-msgstr ""
+msgstr "přij."
 
 msgid "своя цена"
-msgstr ""
+msgstr "vlastní cena"
 
 msgid "ссылка"
-msgstr ""
+msgstr "odkaz"
 
 msgid "уникальный номер ККМ"
-msgstr ""
+msgstr "jedinečné číslo pokladny"
 
 msgid "условиями использования"
-msgstr ""
+msgstr "podmínkami používání"
 
 msgid "ч."
-msgstr ""
+msgstr "hod."
 
 msgid "чтобы обезопасить аккаунт."
-msgstr ""
+msgstr "pro zabezpečení účtu."
 
 msgid "шагов выполнено"
-msgstr ""
+msgstr "kroků hotovo"
 
 msgid "шт"
-msgstr ""
+msgstr "ks"
 
 msgid "← Условия использования"
-msgstr ""
+msgstr "← Podmínky používání"
 
 msgid "− Списание"
-msgstr ""
+msgstr "− Odpis"
 
 msgid "− Списать"
-msgstr ""
+msgstr "− Odepsat"
 
 msgid "✓ Приход записан"
-msgstr ""
+msgstr "✓ Příjem zaznamenán"
 
 msgid "✓ Списание записано"
-msgstr ""
+msgstr "✓ Odpis zaznamenán"
 
