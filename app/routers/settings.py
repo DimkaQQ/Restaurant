@@ -3,7 +3,7 @@ import logging
 import uuid
 
 from fastapi import APIRouter, Depends, HTTPException, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 from pydantic import BaseModel
 from sqlalchemy import select, func
 from sqlalchemy.exc import IntegrityError
@@ -373,12 +373,37 @@ async def settings_appearance_page(
             for surface, conf in (v.appearance or {}).items():
                 if isinstance(conf, dict):
                     venues_appearance[f"{v.id}|{surface}"] = conf
+    from app.i18n import LOCALE_NAMES
     return templates.TemplateResponse("settings_appearance.html", {
         "request": request,
         "user": current_user,
         "venues": venues,
         "venues_appearance": venues_appearance,
+        "locale_names": LOCALE_NAMES,
+        "current_language": current_user.language or "ru",
     })
+
+
+class LanguagePatch(BaseModel):
+    language: str
+
+
+@router.patch("/api/language")
+async def update_language(
+    data: LanguagePatch,
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    """Persist the acting user's UI language (the only place it can be changed)
+    and mirror it into the `lang` cookie so get_locale() picks it up at once."""
+    from app.i18n import SUPPORTED_LOCALES
+    if data.language not in SUPPORTED_LOCALES:
+        raise HTTPException(status_code=400, detail="Unsupported language")
+    current_user.language = data.language
+    await db.commit()
+    resp = JSONResponse({"ok": True, "language": data.language})
+    resp.set_cookie("lang", data.language, max_age=60 * 60 * 24 * 365, samesite="lax")
+    return resp
 
 
 class VenueAppearancePatch(BaseModel):

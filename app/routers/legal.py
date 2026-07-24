@@ -3,7 +3,7 @@ from datetime import date
 from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse
 
-from app.i18n import get_translator
+from app.i18n import get_translator, SUPPORTED_LOCALES
 from app.templates_env import templates
 
 router = APIRouter(prefix="/legal", tags=["legal"])
@@ -16,7 +16,7 @@ def _response(request: Request, template: str):
     response = templates.TemplateResponse(
         template, {"request": request, "updated": _UPDATED, "_": gettext_fn, "locale": locale}
     )
-    if request.query_params.get("lang") in ("ru", "en"):
+    if request.query_params.get("lang") in SUPPORTED_LOCALES:
         response.set_cookie("lang", request.query_params["lang"], max_age=60 * 60 * 24 * 365)
     return response
 

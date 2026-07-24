@@ -10,7 +10,7 @@ from sqlalchemy import select
 
 from app.config import settings
 from app.database import get_db
-from app.i18n import get_translator
+from app.i18n import get_translator, SUPPORTED_LOCALES
 from app.models.user import User
 from app.routers.deps import get_current_user_dep
 from app.schemas.auth import NetworkCreate, LoginRequest, TokenResponse, PasswordResetRequest, PasswordResetConfirm
@@ -48,7 +48,7 @@ def _i18n_response(request: Request, template: str, extra: dict | None = None):
     if extra:
         context.update(extra)
     response = templates.TemplateResponse(template, context)
-    if request.query_params.get("lang") in ("ru", "en"):
+    if request.query_params.get("lang") in SUPPORTED_LOCALES:
         response.set_cookie("lang", request.query_params["lang"], max_age=60 * 60 * 24 * 365)
     return response
 
@@ -180,6 +180,10 @@ async def login(request: Request, data: LoginRequest, response: Response, db: As
         secure=_COOKIE_SECURE,
         max_age=60 * settings.ACCESS_TOKEN_EXPIRE_MINUTES,
     )
+    # Carry the user's saved UI language across devices: mirror it into the
+    # `lang` cookie that get_locale() reads (not httponly — the client shows it).
+    if (user.language or "ru") in SUPPORTED_LOCALES:
+        response.set_cookie("lang", user.language or "ru", max_age=60 * 60 * 24 * 365, samesite="lax")
     return TokenResponse(access_token=access_token)
 
 

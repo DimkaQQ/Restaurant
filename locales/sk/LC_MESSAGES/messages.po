@@ -1,4 +1,4 @@
-# English translations for PROJECT.
+# Slovak translations for PROJECT.
 # Copyright (C) 2026 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
@@ -11,404 +11,389 @@ msgstr ""
 "POT-Creation-Date: 2026-07-24 19:20+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language: en\n"
-"Language-Team: en <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: sk\n"
+"Language-Team: sk <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=((n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
 msgid "(скопируйте и передайте сотруднику для ввода /staff)"
-msgstr "(copy and give it to the staff member to enter with /staff)"
+msgstr ""
 
 msgid "+ Группа (например, «Размер»)"
-msgstr "+ Group (e.g. \"Size\")"
+msgstr ""
 
 msgid "+ Добавить заведение"
-msgstr "+ Add venue"
+msgstr ""
 
 msgid "+ Добавить позицию"
-msgstr "+ Add item"
+msgstr ""
 
 msgid "+ Добавить смену"
-msgstr "+ Add shift"
+msgstr ""
 
 msgid "+ Добавить стол"
-msgstr "+ Add table"
+msgstr ""
 
 msgid "+ Ингредиент"
-msgstr "+ Ingredient"
+msgstr ""
 
 msgid "+ Категория"
-msgstr "+ Category"
+msgstr ""
 
 msgid "+ Новая накладная"
-msgstr "+ New invoice"
+msgstr ""
 
 msgid "+ Новый заказ"
-msgstr "+ New order"
+msgstr ""
 
 msgid "+ Приход"
-msgstr "+ Restock"
+msgstr ""
 
 msgid "+ Фото"
-msgstr "+ Photo"
+msgstr ""
 
 msgid "+ вариант"
-msgstr "+ option"
+msgstr ""
 
 msgid "+ строка"
-msgstr "+ line"
+msgstr ""
 
 msgid "+₸"
-msgstr "+₸"
+msgstr ""
 
 msgid "1 заведение"
-msgstr "1 venue"
+msgstr ""
 
 msgid "1. Добавьте секрет в приложение-аутентификатор:"
-msgstr "1. Add the secret to your authenticator app:"
+msgstr ""
 
 msgid "1. Какие данные мы собираем"
-msgstr "1. What data we collect"
+msgstr ""
 
 msgid "1. Регистрация и учётная запись"
-msgstr "1. Registration and account"
+msgstr ""
 
 msgid "14 дней бесплатно, без карты. Настройка занимает пару минут."
-msgstr "14 days free, no card required. Setup takes a couple of minutes."
+msgstr ""
 
 msgid "14 дней бесплатно, без карты. Начните за 2 минуты."
-msgstr "14 days free, no card required. Get started in 2 minutes."
+msgstr ""
 
 msgid "15 минут, сами"
-msgstr "15 minutes, on your own"
+msgstr ""
 
 msgid "2. Введите код из приложения для подтверждения:"
-msgstr "2. Enter the code from the app to confirm:"
+msgstr ""
 
 msgid "2. Для чего используются данные"
-msgstr "2. What the data is used for"
+msgstr ""
 
 msgid "2. Пробный период и оплата"
-msgstr "2. Trial period and billing"
+msgstr ""
 
 msgid "2FA включена"
-msgstr "2FA enabled"
+msgstr ""
 
 msgid "2FA включена: при входе нужен код из приложения."
-msgstr "2FA is on: signing in requires a code from your app."
+msgstr ""
 
 msgid "2FA отключена"
-msgstr "2FA disabled"
+msgstr ""
 
 msgid "2GIS ссылки и Telegram менеджеров"
-msgstr "2GIS links and manager Telegram IDs"
+msgstr ""
 
 msgid "3. Данные и фискализация"
-msgstr "3. Data and fiscalization"
+msgstr ""
 
 msgid "3. Передача третьим лицам"
-msgstr "3. Sharing with third parties"
+msgstr ""
 
 msgid "4. Ограничение ответственности"
-msgstr "4. Limitation of liability"
+msgstr ""
 
 msgid "4. Хранение и удаление"
-msgstr "4. Storage and deletion"
+msgstr ""
 
 msgid "5. Безопасность"
-msgstr "5. Security"
+msgstr ""
 
 msgid "5. Прекращение действия"
-msgstr "5. Termination"
+msgstr ""
 
 msgid "6. Ваши права"
-msgstr "6. Your rights"
+msgstr ""
 
 msgid "6. Изменения условий"
-msgstr "6. Changes to these terms"
+msgstr ""
 
 msgid "7. Контакты"
-msgstr "7. Contact"
+msgstr ""
 
 msgid "AI-инсайты"
-msgstr "AI insights"
+msgstr ""
 
 msgid "API-ключ (x-api-key)"
-msgstr "API key (x-api-key)"
+msgstr ""
 
 msgid "API-ключи"
-msgstr "API keys"
+msgstr ""
 
 msgid "CSV для бухгалтерии"
-msgstr "CSV for accounting"
+msgstr ""
 
 msgid "Email и название заведения — аккаунт готов за 2 минуты, карта не нужна."
-msgstr "Email and venue name — your account is ready in 2 minutes, no card needed."
+msgstr ""
 
 msgid "Email подтверждён"
-msgstr "Email verified"
+msgstr ""
 
 msgid ""
 "P&L, расходы, выручка по заведениям, NPS гостей — вся картина бизнеса в "
 "одном месте."
 msgstr ""
-"P&L, expenses, revenue by venue, guest NPS — the full business picture in"
-" one place."
 
 msgid "PIN для смены сотрудника на станции"
-msgstr "PIN for switching the operator at a station"
+msgstr ""
 
 msgid "PIN для станции (необязательно, 4–6 цифр)"
-msgstr "Station PIN (optional, 4–6 digits)"
+msgstr ""
 
 msgid "PIN сотрудника (4–6 цифр). Пусто — удалить PIN."
-msgstr "Employee PIN (4–6 digits). Empty — remove the PIN."
+msgstr ""
 
 msgid ""
 "RestOS обрабатывает персональные данные владельцев ресторанов, их "
 "сотрудников и гостей (клиентов ресторанов) в объёме, необходимом для "
 "работы Сервиса."
 msgstr ""
-"RestOS processes personal data of restaurant owners, their staff, and "
-"guests (restaurant customers) to the extent necessary to operate the "
-"Service."
 
 msgid ""
 "RestOS отправит подписанный POST (HMAC-SHA256, заголовок X-RestOS-"
 "Signature) на ваш URL при событиях заказа."
 msgstr ""
-"RestOS will send a signed POST (HMAC-SHA256, X-RestOS-Signature header) "
-"to your URL on order events."
 
 msgid "RestOS — Восстановление пароля"
-msgstr "RestOS — Password recovery"
+msgstr ""
 
 msgid "RestOS — Вход"
-msgstr "RestOS — Sign in"
+msgstr ""
 
 msgid "RestOS — Новый пароль"
-msgstr "RestOS — New password"
+msgstr ""
 
 msgid "RestOS — Платформа управления рестораном"
-msgstr "RestOS — Restaurant management platform"
+msgstr ""
 
 msgid "RestOS — Регистрация"
-msgstr "RestOS — Sign up"
+msgstr ""
 
 msgid ""
 "RestOS — приём заказов, кухонный дисплей, склад, смены персонала, "
 "программа лояльности и фискализация чеков в одной панели. 14 дней "
 "бесплатно."
 msgstr ""
-"RestOS — order taking, kitchen display, inventory, staff shifts, loyalty "
-"program, and receipt fiscalization in one dashboard. 14 days free."
 
 msgid "Telegram ID менеджера"
-msgstr "Manager Telegram ID"
+msgstr ""
 
 #, python-brace-format
 msgid "«{n}» снова в продаже"
-msgstr "\"{n}\" is back on sale"
+msgstr ""
 
 #, python-brace-format
 msgid "«{n}» убрана из продажи"
-msgstr "\"{n}\" removed from sale"
+msgstr ""
 
 msgid "Автоматически, в облаке"
-msgstr "Automatic, in the cloud"
+msgstr ""
 
 msgid "Администратор"
-msgstr "Administrator"
+msgstr ""
 
 msgid "Адрес"
-msgstr "Address"
+msgstr ""
 
 msgid "Активен"
-msgstr "Active"
+msgstr ""
 
 msgid "Активна"
-msgstr "Active"
+msgstr ""
 
 msgid "Активно"
-msgstr "Active"
+msgstr ""
 
 msgid "Активные"
-msgstr "Active"
+msgstr ""
 
 msgid "Активные заказы"
-msgstr "Active orders"
+msgstr ""
 
 msgid "Активных заведений"
-msgstr "Active venues"
+msgstr ""
 
 msgid "Активных заказов нет"
-msgstr "No active orders"
+msgstr ""
 
 msgid "Акцентный цвет"
-msgstr "Accent color"
+msgstr ""
 
 msgid "Анализируем…"
-msgstr "Analyzing…"
+msgstr ""
 
 msgid "Аналитика"
-msgstr "Analytics"
+msgstr ""
 
 msgid "Баллы"
-msgstr "Points"
+msgstr ""
 
 msgid "Без карты. Отменить можно в любой момент."
-msgstr "No card required. Cancel anytime."
+msgstr ""
 
 msgid "Без программистов и интеграторов"
-msgstr "No engineers or integrators"
+msgstr ""
 
 msgid "Без сдачи"
-msgstr "Exact amount"
+msgstr ""
 
 msgid "Без скидки"
-msgstr "No discount"
+msgstr ""
 
 msgid "Безлимит заведений"
-msgstr "Unlimited venues"
+msgstr ""
 
 msgid "Безлимит сотрудников"
-msgstr "Unlimited staff"
+msgstr ""
 
 msgid ""
 "Бонусные баллы, история визитов и Telegram-бот для гостей — без сторонних"
 " CRM."
 msgstr ""
-"Bonus points, visit history, and a Telegram bot for guests — no third-"
-"party CRM needed."
 
 msgid "Бот отправит сообщение гостям в течение 5 минут"
-msgstr "The bot will send the message to guests within 5 minutes"
+msgstr ""
 
 msgid "Бронь"
-msgstr "Reserved"
+msgstr ""
 
 msgid "Быстрый старт"
-msgstr "Quick start"
+msgstr ""
 
 msgid "В заказ"
-msgstr "Add"
+msgstr ""
 
 msgid "В корзину"
-msgstr "Add to cart"
+msgstr ""
 
 msgid "В очереди офлайн:"
-msgstr "Queued offline:"
+msgstr ""
 
 msgid "В панель управления"
-msgstr "Go to dashboard"
+msgstr ""
 
 msgid "В работу — оплата потом"
-msgstr "Send to kitchen — pay later"
+msgstr ""
 
 msgid "Вариант"
-msgstr "Option"
+msgstr ""
 
 msgid "Введите PIN"
-msgstr "Enter PIN"
+msgstr ""
 
 msgid "Введите количество"
-msgstr "Enter a quantity"
+msgstr ""
 
 msgid "Введите название заведения"
-msgstr "Enter venue name"
+msgstr ""
 
 msgid "Введите название и цену"
-msgstr "Enter a name and a price"
+msgstr ""
 
 msgid "Введите свой PIN, чтобы начать смену."
-msgstr "Enter your PIN to start your shift."
+msgstr ""
 
 msgid "Введите текст выше..."
-msgstr "Type the text above..."
+msgstr ""
 
 msgid "Введите текст рассылки"
-msgstr "Enter the broadcast text"
+msgstr ""
 
 msgid "Введите текст рассылки..."
-msgstr "Enter the broadcast text..."
+msgstr ""
 
 msgid "Вебхуки"
-msgstr "Webhooks"
+msgstr ""
 
 msgid "Вернуть назад"
-msgstr "Move back"
+msgstr ""
 
 msgid "Вид"
-msgstr "Appearance"
+msgstr ""
 
 msgid "Визиты"
-msgstr "Visits"
+msgstr ""
 
 msgid "Включить"
-msgstr "Enable"
+msgstr ""
 
 msgid "Включить 2FA"
-msgstr "Enable 2FA"
+msgstr ""
 
 msgid "Владелец"
-msgstr "Owner"
+msgstr ""
 
 msgid "Возможности"
-msgstr "Features"
+msgstr ""
 
 msgid "Войти"
-msgstr "Sign in"
+msgstr ""
 
 msgid "Восстановление пароля"
-msgstr "Password recovery"
+msgstr ""
 
 msgid "Вс"
-msgstr "Sun"
+msgstr ""
 
 msgid "Все"
-msgstr "All"
+msgstr ""
 
 msgid "Все заведения"
-msgstr "All venues"
+msgstr ""
 
 msgid "Все заказы →"
-msgstr "All orders →"
+msgstr ""
 
 msgid "Все языки"
-msgstr "All languages"
+msgstr ""
 
 msgid "Все языки (ru + kz + en)"
-msgstr "All languages (ru + kz + en)"
+msgstr ""
 
 msgid "Всего выручки"
-msgstr "Total revenue"
+msgstr ""
 
 msgid "Всё, что нужно ресторану"
-msgstr "Everything a restaurant needs"
+msgstr ""
 
 msgid "Вт"
-msgstr "Tue"
+msgstr ""
 
 msgid "Вход"
-msgstr "Sign in"
+msgstr ""
 
 msgid ""
 "Вы вправе запросить доступ к своим данным, их исправление или удаление. "
 "Для этого обратитесь через раздел поддержки в личном кабинете."
 msgstr ""
-"You may request access to, correction of, or deletion of your data. "
-"Contact us via the support section in your account."
 
 msgid ""
 "Вы можете отменить подписку в любой момент через раздел «Оплата». Мы "
 "вправе приостановить доступ при нарушении условий использования или "
 "систематической неоплате."
 msgstr ""
-"You may cancel your subscription anytime via the \"Billing\" section. We "
-"may suspend access for violating these terms or for repeated non-payment."
 
 msgid ""
 "Вы самостоятельно несёте ответственность за корректность данных, вносимых"
@@ -417,137 +402,124 @@ msgid ""
 "(например, Webkassa) выполняются с использованием ваших собственных "
 "учётных данных, полученных непосредственно от этих провайдеров."
 msgstr ""
-"You are solely responsible for the accuracy of data entered into the "
-"Service (menu, prices, receipts) and for complying with the tax and "
-"fiscal laws of your jurisdiction. Integrations with fiscal providers "
-"(e.g. Webkassa) use your own credentials obtained directly from those "
-"providers."
 
 #, python-brace-format
 msgid "Выберите «{g}»"
-msgstr "Choose \"{g}\""
+msgstr ""
 
 msgid "Выберите заведение"
-msgstr "Select a venue"
+msgstr ""
 
 msgid "Выберите или введите новую"
-msgstr "Pick one or type a new one"
+msgstr ""
 
 msgid "Выбрать..."
-msgstr "Choose..."
+msgstr ""
 
 msgid "Выдан"
-msgstr "Served"
+msgstr ""
 
 msgid "Выдано сегодня"
-msgstr "Served today"
+msgstr ""
 
 msgid "Выдать"
-msgstr "Serve"
+msgstr ""
 
 msgid "Выезд специалиста"
-msgstr "On-site technician visit"
+msgstr ""
 
 msgid "Выйти"
-msgstr "Log out"
+msgstr ""
 
 msgid "Выключен"
-msgstr "Disabled"
+msgstr ""
 
 msgid "Выключить"
-msgstr "Disable"
+msgstr ""
 
 msgid "Выполненных заказов сегодня ещё нет"
-msgstr "No completed orders yet today"
+msgstr ""
 
 msgid "Выручка"
-msgstr "Revenue"
+msgstr ""
 
 msgid "Выручка vs Расходы (6 мес.)"
-msgstr "Revenue vs Expenses (6 mo.)"
+msgstr ""
 
 msgid "Выручка за 30 дней"
-msgstr "Revenue (30 days)"
+msgstr ""
 
 msgid "Выручка по дням"
-msgstr "Revenue by day"
+msgstr ""
 
 msgid "Выручка по заведениям"
-msgstr "Revenue by venue"
+msgstr ""
 
 msgid "Выручка сегодня"
-msgstr "Today's revenue"
+msgstr ""
 
 msgid "Выручка ₸"
-msgstr "Revenue ₸"
+msgstr ""
 
 msgid "Генерируем..."
-msgstr "Generating..."
+msgstr ""
 
 msgid "Год"
-msgstr "Year"
+msgstr ""
 
 msgid "Гостей в базе"
-msgstr "Guests in database"
+msgstr ""
 
 msgid ""
 "Гостей пока нет. Они появятся автоматически, когда сделают заказ через "
 "QR-меню или Telegram-бот."
 msgstr ""
-"No guests yet. They will appear automatically once they order via the QR "
-"menu or the Telegram bot."
 
 msgid "Гости"
-msgstr "Guests"
+msgstr ""
 
 msgid "Гость"
-msgstr "Guest"
+msgstr ""
 
 msgid "Готовится"
-msgstr "Preparing"
+msgstr ""
 
 msgid "Готовить"
-msgstr "Start cooking"
+msgstr ""
 
 msgid "Готово"
-msgstr "Ready"
+msgstr ""
 
 msgid "Готово!"
-msgstr "Ready!"
+msgstr ""
 
 msgid "Готовы попробовать?"
-msgstr "Ready to try it?"
+msgstr ""
 
 msgid ""
 "График смен, роли официант/повар/кассир/менеджер, рейтинг сотрудников по "
 "отзывам гостей."
 msgstr ""
-"Shift schedules, waiter/cook/cashier/manager roles, staff ratings from "
-"guest reviews."
 
 msgid ""
 "Группы вариантов для позиции: размер, молоко, сиропы. Цена меняется на "
 "указанную надбавку."
 msgstr ""
-"Option groups for this item: size, milk, syrups. The price changes by the"
-" given surcharge."
 
 msgid ""
 "Данные гостей: имя, телефон/Telegram ID, история заказов, баллы "
 "лояльности — используются для программы лояльности и уведомлений."
 msgstr ""
-"Guest data: name, phone/Telegram ID, order history, loyalty points — used"
-" for the loyalty program and notifications."
 
 msgid ""
 "Данные сотрудников: имя, роль, отработанные смены — вносятся владельцем "
 "ресторана."
-msgstr "Staff data: name, role, worked shifts — entered by the restaurant owner."
+msgstr ""
 
 msgid ""
 "Данные учётной записи владельца: имя ресторана, email, хешированный "
 "пароль."
-msgstr "Owner account data: restaurant name, email, hashed password."
+msgstr ""
 
 msgid ""
 "Данные хранятся, пока учётная запись активна. Владелец аккаунта может "
@@ -556,37 +528,33 @@ msgid ""
 "налогового и бухгалтерского законодательства о сроках хранения "
 "документов."
 msgstr ""
-"Data is retained while the account is active. The account owner may "
-"request export or deletion of their restaurant network's data by "
-"contacting support — the request will be handled within a reasonable "
-"time, subject to tax and accounting record-retention requirements."
 
 msgid "Дата"
-msgstr "Date"
+msgstr ""
 
 msgid "Дашборд"
-msgstr "Dashboard"
+msgstr ""
 
 msgid "Двухфакторная аутентификация (ваш аккаунт)"
-msgstr "Two-factor authentication (your account)"
+msgstr ""
 
 msgid "Действие"
-msgstr "Action"
+msgstr ""
 
 msgid "Действует до"
-msgstr "Valid until"
+msgstr ""
 
 msgid "Десятки вкладок, нужны тренинги"
-msgstr "Dozens of tabs, training required"
+msgstr ""
 
 msgid "Детали"
-msgstr "Details"
+msgstr ""
 
 msgid "Динамика отзывов (30 дней)"
-msgstr "Review trend (30 days)"
+msgstr ""
 
 msgid "Для быстрой смены сотрудника на планшете"
-msgstr "For quick operator switching on the tablet"
+msgstr ""
 
 msgid ""
 "Для предоставления функций Сервиса (приём заказов, кухонный дисплей, "
@@ -594,396 +562,381 @@ msgid ""
 "учётных записей и, при наличии согласия, для email-уведомлений (например,"
 " восстановление пароля)."
 msgstr ""
-"To provide the Service's features (order taking, kitchen display, "
-"loyalty, analytics, receipt fiscalization), to secure accounts, and, "
-"where consented, for email notifications (e.g. password recovery)."
 
 msgid "Дни или недели, платный интегратор"
-msgstr "Days or weeks, paid integrator"
+msgstr ""
 
 msgid "До 3 сотрудников"
-msgstr "Up to 3 staff members"
+msgstr ""
 
 msgid "До 5 заведений"
-msgstr "Up to 5 venues"
+msgstr ""
 
 msgid "Добавить"
-msgstr "Add"
+msgstr ""
 
 msgid "Добавить первое →"
-msgstr "Add your first one →"
+msgstr ""
 
 msgid "Добавить позицию"
-msgstr "Add item"
+msgstr ""
 
 msgid "Добавить пользователя"
-msgstr "Add user"
+msgstr ""
 
 msgid "Добавить расход"
-msgstr "Add expense"
+msgstr ""
 
 msgid "Добавить смену"
-msgstr "Add shift"
+msgstr ""
 
 msgid "Добавьте меню и столы"
-msgstr "Add your menu and tables"
+msgstr ""
 
 msgid "Добавьте позиции в меню"
-msgstr "Add menu items"
+msgstr ""
 
 msgid "Добавьте позиции меню и техкарты, чтобы видеть маржинальность."
-msgstr "Add menu items and recipes to see margins."
+msgstr ""
 
 msgid "Добавьте столы"
-msgstr "Add tables"
+msgstr ""
 
 msgid "Добавьте хотя бы одну строку с количеством"
-msgstr "Add at least one line with a quantity"
+msgstr ""
 
 msgid ""
 "Дополнительная защита входа: пароль + код из приложения (Google "
 "Authenticator, 1Password и т.п.)."
 msgstr ""
-"Extra sign-in protection: password + a code from an app (Google "
-"Authenticator, 1Password, etc.)."
 
 msgid ""
 "Доступ к данным для интеграций (только чтение): GET /api/v1/venues, "
 "/api/v1/menu, /api/v1/orders с заголовком X-API-Key."
 msgstr ""
-"Read-only data access for integrations: GET /api/v1/venues, /api/v1/menu,"
-" /api/v1/orders with the X-API-Key header."
 
 msgid "Доступ ограничен до продления подписки"
-msgstr "Access is limited until the subscription is renewed"
+msgstr ""
 
 msgid "Доступно"
-msgstr "Available"
+msgstr ""
 
 msgid "Ед."
-msgstr "Unit"
+msgstr ""
 
 msgid "Еда:"
-msgstr "Food:"
+msgstr ""
 
 msgid "Единица"
-msgstr "Unit"
+msgstr ""
 
 msgid "Если такой email зарегистрирован, мы отправили ссылку для сброса пароля."
-msgstr "If that email is registered, we sent a password reset link."
+msgstr ""
 
 msgid "Ещё действия"
-msgstr "More actions"
+msgstr ""
 
 msgid "Журнал"
-msgstr "Journal"
+msgstr ""
 
 msgid "Журнал действий"
-msgstr "Action journal"
+msgstr ""
 
 msgid "Заблокировать"
-msgstr "Lock"
+msgstr ""
 
 msgid "Забыли пароль?"
-msgstr "Forgot password?"
+msgstr ""
 
 msgid "Заведение"
-msgstr "Venue"
+msgstr ""
 
 msgid "Заведение (необязательно)"
-msgstr "Venue (optional)"
+msgstr ""
 
 msgid "Заведения"
-msgstr "Venues"
+msgstr ""
 
 msgid "Завершённых заказов"
-msgstr "Completed orders"
+msgstr ""
 
 msgid "Загрузка заказов..."
-msgstr "Loading orders..."
+msgstr ""
 
 msgid "Загрузка..."
-msgstr "Loading..."
+msgstr ""
 
 msgid "Загрузка…"
-msgstr "Loading…"
+msgstr ""
 
 msgid "Задайте новый пароль"
-msgstr "Set a new password"
+msgstr ""
 
 msgid "Заказ"
-msgstr "Order"
+msgstr ""
 
 msgid "Заказ оплачен и отправлен на кухню"
-msgstr "Order paid and sent to the kitchen"
+msgstr ""
 
 msgid "Заказ отправлен на кухню"
-msgstr "Order sent to the kitchen"
+msgstr ""
 
 msgid "Заказ перенесён"
-msgstr "Order moved"
+msgstr ""
 
 msgid "Заказов сегодня"
-msgstr "Orders today"
+msgstr ""
 
 msgid "Заказы"
-msgstr "Orders"
+msgstr ""
 
 msgid "Заказы, склад, смены"
-msgstr "Orders, inventory, shifts"
+msgstr ""
 
 msgid "Закрыта"
-msgstr "Closed"
+msgstr ""
 
 msgid "Закрыть смену"
-msgstr "Close shift"
+msgstr ""
 
 msgid "Занят"
-msgstr "Occupied"
+msgstr ""
 
 msgid "Запуск"
-msgstr "Launching"
+msgstr ""
 
 msgid "Запуск за 15 минут"
-msgstr "Launch in 15 minutes"
+msgstr ""
 
 msgid "Зарегистрируйтесь"
-msgstr "Sign up"
+msgstr ""
 
 msgid "Значение"
-msgstr "Value"
+msgstr ""
 
 msgid "Золото (по умолчанию)"
-msgstr "Gold (default)"
+msgstr ""
 
 msgid "Изменения сохраняются сразу."
-msgstr "Changes are saved instantly."
+msgstr ""
 
 msgid "Или номер стола вручную"
-msgstr "Or type a table number"
+msgstr ""
 
 msgid "Инвентаризация"
-msgstr "Inventory count"
+msgstr ""
 
 msgid ""
 "Интеграция с Webkassa (Казахстан) — чек пробивается автоматически при "
 "закрытии заказа."
 msgstr ""
-"Integration with Webkassa (Kazakhstan) — the receipt is fiscalized "
-"automatically when an order closes."
 
 msgid "Интуитивно — бариста разберётся за 10 минут"
-msgstr "Intuitive — a barista learns it in 10 minutes"
+msgstr ""
 
 msgid "Использован"
-msgstr "Used"
+msgstr ""
 
 msgid "Использование"
-msgstr "Usage"
+msgstr ""
 
 msgid "Использование на кухне"
-msgstr "Kitchen usage"
+msgstr ""
 
 msgid "История рассылок"
-msgstr "Broadcast history"
+msgstr ""
 
 msgid "История сегодня"
-msgstr "Today's history"
+msgstr ""
 
 msgid "Итого"
-msgstr "Total"
+msgstr ""
 
 msgid "К оплате"
-msgstr "Pay"
+msgstr ""
 
 msgid "Казахстан"
-msgstr "Kazakhstan"
+msgstr ""
 
 msgid "Как на устройстве"
-msgstr "Same as device"
+msgstr ""
 
 msgid "Как начать"
-msgstr "How to start"
+msgstr ""
 
 msgid "Карта"
-msgstr "Card"
+msgstr ""
 
 msgid "Картой"
-msgstr "Card"
+msgstr ""
 
 msgid "Касса"
-msgstr "Register"
+msgstr ""
 
 msgid "Касса на планшете, кухонный экран, QR-меню для гостей — работает сразу."
-msgstr "POS on a tablet, kitchen display, QR menu for guests — it just works."
+msgstr ""
 
 msgid "Кассир"
-msgstr "Cashier"
+msgstr ""
 
 msgid "Кассовые смены (Z-отчёты)"
-msgstr "Cash shifts (Z-reports)"
+msgstr ""
 
 msgid "Категории"
-msgstr "Categories"
+msgstr ""
 
 msgid "Категорий пока нет"
-msgstr "No categories yet"
+msgstr ""
 
 msgid "Категория"
-msgstr "Category"
+msgstr ""
 
 msgid ""
 "Категория появится в кассе и QR-меню, как только в ней будет хотя бы одна"
 " позиция."
 msgstr ""
-"The category will appear in the POS and QR menu as soon as it has at "
-"least one item."
 
 msgid "Квартал"
-msgstr "Quarter"
+msgstr ""
 
 msgid "Классические ERP"
-msgstr "Legacy ERPs"
+msgstr ""
 
 msgid ""
 "Классические ресторанные системы создавались для крупных сетей. Маленькой"
 " кофейне они дают сложность, а не контроль."
 msgstr ""
-"Legacy restaurant systems were built for big chains. For a small coffee "
-"shop they add complexity, not control."
 
 msgid "Ключ"
-msgstr "Key"
+msgstr ""
 
 msgid "Когда"
-msgstr "When"
+msgstr ""
 
 msgid "Код"
-msgstr "Code"
+msgstr ""
 
 msgid "Код из приложения"
-msgstr "Code from the app"
+msgstr ""
 
 msgid "Код из приложения-аутентификатора"
-msgstr "Code from your authenticator app"
+msgstr ""
 
 msgid "Кол-во"
-msgstr "Qty"
+msgstr ""
 
 msgid "Количество"
-msgstr "Quantity"
+msgstr ""
 
 msgid "Количество прихода"
-msgstr "Restock quantity"
+msgstr ""
 
 msgid "Количество списания"
-msgstr "Write-off quantity"
+msgstr ""
 
 msgid "Комментарий"
-msgstr "Comment"
+msgstr ""
 
 msgid "Комментарий кухне (необязательно)"
-msgstr "Note for the kitchen (optional)"
+msgstr ""
 
 msgid "Конец"
-msgstr "End"
+msgstr ""
 
 msgid "Конфиденциальность"
-msgstr "Privacy"
+msgstr ""
 
 msgid "Корзина пуста"
-msgstr "Cart is empty"
+msgstr ""
 
 msgid "Критично"
-msgstr "Critical"
+msgstr ""
 
 msgid "Крупно"
-msgstr "Large"
+msgstr ""
 
 msgid "Крупные кнопки для планшета"
-msgstr "Large buttons for tablets"
+msgstr ""
 
 msgid "Кто"
-msgstr "Who"
+msgstr ""
 
 msgid "Кто удалил, отменил или дал скидку — последние 200 записей"
-msgstr "Who deleted, cancelled, or gave a discount — last 200 records"
+msgstr ""
 
 msgid "Кухня"
-msgstr "Kitchen"
+msgstr ""
 
 msgid "Кухня (только экран кухни)"
-msgstr "Kitchen (kitchen screen only)"
+msgstr ""
 
 msgid "Кухонный дисплей (KDS)"
-msgstr "Kitchen display (KDS)"
+msgstr ""
 
 msgid "Лимит использований"
-msgstr "Usage limit"
+msgstr ""
 
 msgid "Лицензии + модули + внедрение"
-msgstr "Licenses + modules + implementation"
+msgstr ""
 
 msgid "Логин кассы"
-msgstr "Kassa login"
+msgstr ""
 
 msgid "Любой планшет, iPad или смартфон"
-msgstr "Any tablet, iPad, or smartphone"
+msgstr ""
 
 msgid "Мало"
-msgstr "Low"
+msgstr ""
 
 msgid "Маржа"
-msgstr "Margin"
+msgstr ""
 
 msgid "Менеджер"
-msgstr "Manager"
+msgstr ""
 
 msgid "Меню"
-msgstr "Menu"
+msgstr ""
 
 msgid "Меню пусто"
-msgstr "Menu is empty"
+msgstr ""
 
 msgid "Меню-инжиниринг: себестоимость и маржа"
-msgstr "Menu engineering: cost and margin"
+msgstr ""
 
 msgid "Мест"
-msgstr "Seats"
+msgstr ""
 
 msgid "Месяц"
-msgstr "Month"
+msgstr ""
 
 msgid "Мин. остаток"
-msgstr "Min stock"
+msgstr ""
 
 msgid "Моб. платёж"
-msgstr "Mobile payment"
+msgstr ""
 
 msgid "Модификаторы"
-msgstr "Modifiers"
+msgstr ""
 
 msgid "Модификаторы:"
-msgstr "Modifiers:"
+msgstr ""
 
 msgid "Мои"
-msgstr "Mine"
+msgstr ""
 
 msgid "Мои столы"
-msgstr "My tables"
+msgstr ""
 
 msgid "Мой ресторан"
-msgstr "My Restaurant"
+msgstr ""
 
 msgid "Мультисеть"
-msgstr "Multi-location"
+msgstr ""
 
 msgid ""
 "Мы можем обновлять эти условия. Существенные изменения будут доведены до "
 "вашего сведения по email или через интерфейс Сервиса."
 msgstr ""
-"We may update these terms. Material changes will be communicated to you "
-"by email or through the Service interface."
 
 msgid ""
 "Мы передаём данные третьим лицам только в объёме, необходимом для работы "
@@ -992,68 +945,62 @@ msgid ""
 "учётных данных, и провайдеру email-рассылок. Мы не продаём персональные "
 "данные третьим лицам."
 msgstr ""
-"We share data with third parties only as needed to operate the Service: "
-"the payment processor (Stripe), the fiscal provider you chose (e.g. "
-"Webkassa) using your own credentials, and our email delivery provider. We"
-" do not sell personal data to third parties."
 
 msgid "Мясо"
-msgstr "Meat"
+msgstr ""
 
 msgid "Мясо говядина"
-msgstr "Beef"
+msgstr ""
 
 msgid ""
 "Нажмите кнопку — AI проанализирует продажи, меню и склад за 28 дней и "
 "даст конкретные рекомендации."
 msgstr ""
-"Press the button — AI will analyze 28 days of sales, menu, and stock and "
-"give concrete recommendations."
 
 msgid "Назад"
-msgstr "Back"
+msgstr ""
 
 msgid "Назад ко входу"
-msgstr "Back to sign in"
+msgstr ""
 
 msgid "Название"
-msgstr "Name"
+msgstr ""
 
 msgid "Название (например, «BI-отчёты»)"
-msgstr "Name (e.g. \"BI reports\")"
+msgstr ""
 
 msgid "Название группы"
-msgstr "Group name"
+msgstr ""
 
 msgid "Название категории"
-msgstr "Category name"
+msgstr ""
 
 msgid "Название сети / ресторана"
-msgstr "Restaurant / network name"
+msgstr ""
 
 msgid "Наименование"
-msgstr "Name"
+msgstr ""
 
 msgid "Накладные (приход)"
-msgstr "Invoices (goods receipt)"
+msgstr ""
 
 msgid "Наличные"
-msgstr "Cash"
+msgstr ""
 
 msgid "Наличные в кассе на начало (₸)"
-msgstr "Opening cash in drawer (₸)"
+msgstr ""
 
 msgid "Написать в поддержку"
-msgstr "Contact support"
+msgstr ""
 
 msgid "Например, 5"
-msgstr "e.g. 5"
+msgstr ""
 
 msgid "Например, Кофейня на Абая"
-msgstr "e.g. Coffee shop on Abay St."
+msgstr ""
 
 msgid "Например: пакет, доставка"
-msgstr "E.g.: bag, delivery"
+msgstr ""
 
 msgid ""
 "Настоящие условия регулируют использование платформы RestOS (далее — "
@@ -1061,142 +1008,133 @@ msgid ""
 "лояльность гостей, склад, смены персонала, аналитика и фискализация "
 "чеков."
 msgstr ""
-"These terms govern the use of the RestOS platform (the \"Service\"), "
-"provided for restaurant management: order taking, guest loyalty, "
-"inventory, staff shifts, analytics, and receipt fiscalization."
 
 msgid ""
 "Настройка привязывается к заведению и конкретному экрану (касса, кухня, "
 "склад) и применяется на любом устройстве, которое его открывает. "
 "Перекрывает настройку устройства выше."
 msgstr ""
-"Bound to a venue and a specific screen (register, kitchen, inventory) and"
-" applied on any device that opens it. Overrides the device setting above."
 
 msgid "Настройки"
-msgstr "Settings"
+msgstr ""
 
 msgid "Настройки заведений"
-msgstr "Venue settings"
+msgstr ""
 
 msgid "Начало"
-msgstr "Start"
+msgstr ""
 
 msgid "Начать бесплатно"
-msgstr "Start free"
+msgstr ""
 
 msgid "Не оплачен"
-msgstr "Unpaid"
+msgstr ""
 
 msgid "Не подключено"
-msgstr "Not connected"
+msgstr ""
 
 msgid "Не удалось сменить язык"
-msgstr "Could not change the language"
+msgstr ""
 
 msgid ""
 "Не удалось списать оплату с карты. Обновите способ оплаты — доступ "
 "сохранится, Stripe повторит списание автоматически."
 msgstr ""
-"The card charge failed. Update your payment method — access stays on, "
-"Stripe will retry automatically."
 
 msgid "Неверный PIN"
-msgstr "Wrong PIN"
+msgstr ""
 
 msgid "Негативные отзывы"
-msgstr "Negative reviews"
+msgstr ""
 
 msgid "Негативных отзывов пока нет"
-msgstr "No negative reviews yet"
+msgstr ""
 
 msgid "Неделя"
-msgstr "Week"
+msgstr ""
 
 msgid "Недостача"
-msgstr "Shortage"
+msgstr ""
 
 msgid "Некоторые позиции больше недоступны и не были добавлены"
-msgstr "Some items are no longer available and were skipped"
+msgstr ""
 
 msgid "Необязательно"
-msgstr "Optional"
+msgstr ""
 
 msgid "Нет"
-msgstr "None"
+msgstr ""
 
 msgid "Нет аккаунта?"
-msgstr "Don't have an account?"
+msgstr ""
 
 msgid "Нет активных заказов"
-msgstr "No active orders"
+msgstr ""
 
 msgid "Нет данных"
-msgstr "No data"
+msgstr ""
 
 msgid "Нет заказов в работе"
-msgstr "No orders in progress"
+msgstr ""
 
 msgid "Нет новых заказов"
-msgstr "No new orders"
+msgstr ""
 
 msgid "Нет отзывов"
-msgstr "No reviews"
+msgstr ""
 
 msgid "Нет позиций на складе"
-msgstr "No items in stock"
+msgstr ""
 
 msgid "Нет расходов"
-msgstr "No expenses"
+msgstr ""
 
 msgid "Нет расходов за период"
-msgstr "No expenses for this period"
+msgstr ""
 
 msgid "Нет связи и нет локальной копии меню. Подключитесь к интернету один раз."
-msgstr "No connection and no local copy of the menu. Connect to the internet once."
+msgstr ""
 
 msgid "Нет связи — заказ сохранён и отправится автоматически"
-msgstr "No connection — the order is saved and will be sent automatically"
+msgstr ""
 
 msgid ""
 "Нет связи — экран показывает последние полученные заказы. Обновится "
 "автоматически."
 msgstr ""
-"No connection — showing the last received orders. Will refresh "
-"automatically."
 
 msgid "Низкий остаток"
-msgstr "Low stock"
+msgstr ""
 
 msgid "Ничего не найдено"
-msgstr "Nothing found"
+msgstr ""
 
 msgid "Новая категория"
-msgstr "New category"
+msgstr ""
 
 msgid "Новая накладная"
-msgstr "New invoice"
+msgstr ""
 
 msgid "Новая позиция"
-msgstr "New item"
+msgstr ""
 
 msgid "Новая рассылка"
-msgstr "New broadcast"
+msgstr ""
 
 msgid "Новые"
-msgstr "New"
+msgstr ""
 
 msgid "Новый"
-msgstr "New"
+msgstr ""
 
 msgid "Новый заказ"
-msgstr "New order"
+msgstr ""
 
 msgid "Новый пароль"
-msgstr "New password"
+msgstr ""
 
 msgid "Новый чек"
-msgstr "New check"
+msgstr ""
 
 msgid ""
 "Новым аккаунтам предоставляется бесплатный пробный период 14 дней. По "
@@ -1204,610 +1142,585 @@ msgid ""
 "требуется активная оплаченная подписка. Оплата обрабатывается через "
 "Stripe; RestOS не хранит данные вашей карты."
 msgstr ""
-"New accounts get a free 14-day trial. After the trial, continued use of "
-"the Service requires an active paid subscription. Payments are processed "
-"via Stripe; RestOS does not store your card details."
 
 msgid "Новых"
-msgstr "New"
+msgstr ""
 
 msgid "Новых гостей сегодня"
-msgstr "New guests today"
+msgstr ""
 
 msgid "Номер кассы (CashboxUniqueNumber)"
-msgstr "Kassa number (CashboxUniqueNumber)"
+msgstr ""
 
 msgid "Номер накладной"
-msgstr "Invoice number"
+msgstr ""
 
 msgid "Номер стола"
-msgstr "Table number"
+msgstr ""
 
 msgid "Нормально"
-msgstr "OK"
+msgstr ""
 
 msgid "Нужно улучшить"
-msgstr "Needs improvement"
+msgstr ""
 
 msgid "Обзор"
-msgstr "Overview"
+msgstr ""
 
 msgid "Обновить страницу"
-msgstr "Reload page"
+msgstr ""
 
 msgid "Обновления"
-msgstr "Updates"
+msgstr ""
 
 msgid "Обновлено:"
-msgstr "Last updated:"
+msgstr ""
 
 msgid "Оборудование"
-msgstr "Hardware"
+msgstr ""
 
 msgid "Обучение персонала"
-msgstr "Staff training"
+msgstr ""
 
 msgid "Общий NPS"
-msgstr "Overall NPS"
+msgstr ""
 
 msgid "Ожидает"
-msgstr "Pending"
+msgstr ""
 
 msgid "Ожидается в кассе"
-msgstr "Expected in drawer"
+msgstr ""
 
 msgid "Ожидалось"
-msgstr "Expected"
+msgstr ""
 
 msgid "Онлайн"
-msgstr "Online"
+msgstr ""
 
 msgid ""
 "Онлайн-оплата пока не подключена — свяжитесь с поддержкой для активации "
 "тарифа."
-msgstr "Online payment is not connected yet — contact support to activate a plan."
+msgstr ""
 
 msgid "Операция"
-msgstr "Operation"
+msgstr ""
 
 msgid "Описание"
-msgstr "Description"
+msgstr ""
 
 msgid "Описание (необязательно)"
-msgstr "Description (optional)"
+msgstr ""
 
 msgid "Оплата"
-msgstr "Payment"
+msgstr ""
 
 msgid "Оплата аренды за июнь"
-msgstr "June rent payment"
+msgstr ""
 
 msgid "Оплата не прошла"
-msgstr "Payment failed"
+msgstr ""
 
 msgid "Оплатить"
-msgstr "Pay"
+msgstr ""
 
 msgid "Оплачен"
-msgstr "Paid"
+msgstr ""
 
 msgid "Оплаченных заказов"
-msgstr "Paid orders"
+msgstr ""
 
 msgid "Оставьте пустым — отправим приглашение на email"
-msgstr "Leave blank — we'll send an email invite"
+msgstr ""
 
 msgid "Осталось дней пробного периода:"
-msgstr "Trial days left:"
+msgstr ""
 
 msgid "Остаток"
-msgstr "In stock"
+msgstr ""
 
 msgid "От $30/мес, всё включено"
-msgstr "From $30/mo, all inclusive"
+msgstr ""
 
 msgid "Отзывов"
-msgstr "Reviews"
+msgstr ""
 
 msgid "Отзывов за месяц"
-msgstr "Reviews this month"
+msgstr ""
 
 msgid "Отзывов пока нет"
-msgstr "No reviews yet"
+msgstr ""
 
 msgid "Отзывы"
-msgstr "Reviews"
+msgstr ""
 
 msgid "Отключить 2FA"
-msgstr "Disable 2FA"
+msgstr ""
 
 msgid "Откройте смену, чтобы принимать оплату"
-msgstr "Open a shift to accept payments"
+msgstr ""
 
 msgid "Открыта"
-msgstr "Opened"
+msgstr ""
 
 msgid "Открыть смену"
-msgstr "Open shift"
+msgstr ""
 
 msgid "Отлично"
-msgstr "Excellent"
+msgstr ""
 
 msgid "Отмена"
-msgstr "Cancel"
+msgstr ""
 
 msgid "Отменил заказ"
-msgstr "Cancelled an order"
+msgstr ""
 
 msgid "Отменить заказ"
-msgstr "Cancel order"
+msgstr ""
 
 msgid "Отменить заказ?"
-msgstr "Cancel this order?"
+msgstr ""
 
 msgid "Отменён"
-msgstr "Cancelled"
+msgstr ""
 
 msgid ""
 "Отметьте позиции, которые уйдут в отдельный чек — его можно оплатить "
 "отдельно."
-msgstr "Tick the lines that go to a separate check — it can be paid on its own."
+msgstr ""
 
 msgid "Отозвать ключ?"
-msgstr "Revoke this key?"
+msgstr ""
 
 msgid "Отправить на кухню"
-msgstr "Send to kitchen"
+msgstr ""
 
 msgid "Отправить письмо повторно"
-msgstr "Resend email"
+msgstr ""
 
 msgid "Отправить ссылку для сброса"
-msgstr "Send reset link"
+msgstr ""
 
 msgid "Отправлена"
-msgstr "Sent"
+msgstr ""
 
 msgid "Отправлено ✓"
-msgstr "Sent ✓"
+msgstr ""
 
 msgid "Отправляем…"
-msgstr "Sending…"
+msgstr ""
 
 msgid "Официант"
-msgstr "Waiter"
+msgstr ""
 
 msgid "Официант (только приём заказов)"
-msgstr "Waiter (order taking only)"
+msgstr ""
 
 msgid ""
 "Официант, кухня и касса видят заказ в реальном времени. Столы, статусы, "
 "комментарии к позициям."
 msgstr ""
-"Waiter, kitchen, and register see the order in real time. Tables, "
-"statuses, item comments."
 
 msgid "Офлайн-режим: меню из локальной копии"
-msgstr "Offline mode: menu from local copy"
+msgstr ""
 
 msgid "Оформите первый заказ в кассе"
-msgstr "Place your first order in POS"
+msgstr ""
 
 msgid "Оформить"
-msgstr "Subscribe"
+msgstr ""
 
 msgid ""
 "Оформление сохраняется на этом устройстве: кассовый планшет, кухня и "
 "телефон официанта могут выглядеть по-разному."
 msgstr ""
-"Appearance is saved per device: the register tablet, kitchen screen and "
-"waiter phone can each look different."
 
 msgid "Оценка"
-msgstr "Rating"
+msgstr ""
 
 msgid "Ошибка"
-msgstr "Error"
+msgstr ""
 
 msgid "Ошибка входа"
-msgstr "Sign-in error"
+msgstr ""
 
 msgid "Ошибка генерации токена"
-msgstr "Failed to generate token"
+msgstr ""
 
 msgid "Ошибка добавления позиции"
-msgstr "Failed to add item"
+msgstr ""
 
 msgid "Ошибка добавления стола"
-msgstr "Failed to add table"
+msgstr ""
 
 msgid "Ошибка загрузки"
-msgstr "Failed to load"
+msgstr ""
 
 msgid "Ошибка загрузки фото"
-msgstr "Failed to upload photo"
+msgstr ""
 
 msgid "Ошибка обновления статуса"
-msgstr "Failed to update status"
+msgstr ""
 
 msgid "Ошибка отмены"
-msgstr "Failed to cancel"
+msgstr ""
 
 msgid "Ошибка отправки. Попробуйте позже."
-msgstr "Failed to send. Please try again later."
+msgstr ""
 
 msgid "Ошибка оформления заказа"
-msgstr "Failed to place order"
+msgstr ""
 
 msgid "Ошибка регистрации"
-msgstr "Registration error"
+msgstr ""
 
 msgid "Ошибка смены"
-msgstr "Shift error"
+msgstr ""
 
 msgid "Ошибка соединения"
-msgstr "Connection error"
+msgstr ""
 
 msgid "Ошибка создания пользователя"
-msgstr "Failed to create user"
+msgstr ""
 
 msgid "Ошибка сохранения"
-msgstr "Save error"
+msgstr ""
 
 msgid "Ошибка сохранения модификаторов"
-msgstr "Failed to save modifiers"
+msgstr ""
 
 msgid "Ошибка сохранения техкарты"
-msgstr "Failed to save the recipe"
+msgstr ""
 
 msgid "Ошибка удаления"
-msgstr "Failed to delete"
+msgstr ""
 
 msgid "Ошибка удаления стола"
-msgstr "Failed to delete table"
+msgstr ""
 
 msgid "Ошибка фискализации"
-msgstr "Fiscalization error"
+msgstr ""
 
 msgid "Ошибка, попробуйте позже"
-msgstr "Error, please try again later"
+msgstr ""
 
 msgid ""
 "Панель сама подскажет шаги. Позиции меню, столы, сотрудники — всё за 10 "
 "минут."
 msgstr ""
-"The dashboard guides you through the steps. Menu items, tables, staff — "
-"all in 10 minutes."
 
 msgid "Панель управления сетью ресторанов"
-msgstr "Restaurant network management dashboard"
+msgstr ""
 
 msgid ""
 "Пароли хранятся в виде необратимых хешей (bcrypt). Соединение с Сервисом "
 "защищено HTTPS. Доступ к данным одной сети ресторанов технически "
 "изолирован от данных других сетей."
 msgstr ""
-"Passwords are stored as irreversible hashes (bcrypt). The connection to "
-"the Service is protected by HTTPS. Access to one restaurant network's "
-"data is technically isolated from other networks' data."
 
 msgid "Пароль"
-msgstr "Password"
+msgstr ""
 
 msgid "Пароль (необязательно)"
-msgstr "Password (optional)"
+msgstr ""
 
 msgid "Пароль кассы"
-msgstr "Kassa password"
+msgstr ""
 
 msgid ""
 "Переименование меняет категорию у всех позиций. «Убрать» оставляет "
 "позиции без категории, ничего не удаляя."
 msgstr ""
-"Renaming changes the category on all its items. \"Remove\" leaves items "
-"uncategorized without deleting anything."
 
 msgid "Перенести"
-msgstr "Move"
+msgstr ""
 
 msgid "Перенести на другой стол"
-msgstr "Move to another table"
+msgstr ""
 
 msgid "Персонал"
-msgstr "Staff"
+msgstr ""
 
 msgid "Печать"
-msgstr "Print"
+msgstr ""
 
 msgid "Печать талона"
-msgstr "Print ticket"
+msgstr ""
 
 msgid "Печать чека"
-msgstr "Print receipt"
+msgstr ""
 
 msgid ""
 "Платёжные данные обрабатываются напрямую Stripe; RestOS не хранит номера "
 "карт."
 msgstr ""
-"Payment data is processed directly by Stripe; RestOS does not store card "
-"numbers."
 
 msgid "Пн"
-msgstr "Mon"
+msgstr ""
 
 msgid ""
 "По вопросам, связанным с условиями использования, пишите на адрес, "
 "указанный в вашем аккаунте платформы, или через раздел поддержки."
 msgstr ""
-"For questions about these terms, contact the address listed in your "
-"platform account, or via the support section."
 
 msgid "По заведениям"
-msgstr "By venue"
+msgstr ""
 
 msgid "По заведениям и экранам"
-msgstr "By venue and screen"
+msgstr ""
 
 msgid "По умолчанию"
-msgstr "Default"
+msgstr ""
 
 msgid "Повреждение"
-msgstr "Damage"
+msgstr ""
 
 msgid "Повторить последний заказ"
-msgstr "Repeat last order"
+msgstr ""
 
 msgid "Подключены в Telegram"
-msgstr "Connected via Telegram"
+msgstr ""
 
 msgid "Подписка"
-msgstr "Subscription"
+msgstr ""
 
 msgid "Подписка не найдена. Свяжитесь с поддержкой."
-msgstr "Subscription not found. Contact support."
+msgstr ""
 
 msgid "Подтвердите email"
-msgstr "Verify your email"
+msgstr ""
 
 msgid "Подтвердить"
-msgstr "Confirm"
+msgstr ""
 
 msgid "Подтверждение email"
-msgstr "Email verification"
+msgstr ""
 
 msgid "Подтверждено"
-msgstr "Confirmed"
+msgstr ""
 
 msgid "Подтверждён"
-msgstr "Confirmed"
+msgstr ""
 
 msgid "Подытог"
-msgstr "Subtotal"
+msgstr ""
 
 msgid "Позиций на складе"
-msgstr "Items in stock"
+msgstr ""
 
 msgid "Позиция"
-msgstr "Item"
+msgstr ""
 
 msgid "Позиция в стоп-листе"
-msgstr "Item is stop-listed"
+msgstr ""
 
 msgid "Поиск по имени или телефону..."
-msgstr "Search by name or phone..."
+msgstr ""
 
 msgid "Поиск по меню…"
-msgstr "Search the menu…"
+msgstr ""
 
 msgid "Поиск по названию..."
-msgstr "Search by name..."
+msgstr ""
 
 msgid ""
 "Пока пусто. Здесь появятся удаления, отмены заказов, скидки и изменения "
 "пользователей."
 msgstr ""
-"Empty for now. Deletions, order cancellations, discounts, and user "
-"changes will appear here."
 
 msgid "Политика конфиденциальности"
-msgstr "Privacy Policy"
+msgstr ""
 
 msgid "Политика конфиденциальности — RestOS"
-msgstr "Privacy Policy — RestOS"
+msgstr ""
 
 msgid "Политика конфиденциальности →"
-msgstr "Privacy Policy →"
+msgstr ""
 
 msgid "Полный вид →"
-msgstr "Full view →"
+msgstr ""
 
 msgid "Получено меньше суммы заказа"
-msgstr "Received less than the total"
+msgstr ""
 
 msgid "Получено от гостя (₸)"
-msgstr "Received from guest (₸)"
+msgstr ""
 
 msgid "Получить рекомендации"
-msgstr "Get recommendations"
+msgstr ""
 
 msgid "Пользователей нет"
-msgstr "No users"
+msgstr ""
 
 msgid "Пользователи"
-msgstr "Users"
+msgstr ""
 
 msgid "Попробовать 14 дней бесплатно"
-msgstr "Try 14 days free"
+msgstr ""
 
 msgid "Популярные позиции"
-msgstr "Popular items"
+msgstr ""
 
 msgid "Порча"
-msgstr "Spoilage"
+msgstr ""
 
 msgid "Порча / просрочка"
-msgstr "Spoilage / expired"
+msgstr ""
 
 msgid "Последнее использование"
-msgstr "Last used"
+msgstr ""
 
 msgid "Последние 30 дней"
-msgstr "Last 30 days"
+msgstr ""
 
 msgid "Последние расходы"
-msgstr "Recent expenses"
+msgstr ""
 
 msgid "Посмотреть цены"
-msgstr "See pricing"
+msgstr ""
 
 msgid "Поставщик"
-msgstr "Supplier"
+msgstr ""
 
 msgid "Почему не тяжёлая ERP?"
-msgstr "Why not a heavyweight ERP?"
+msgstr ""
 
 msgid "Предпросмотр"
-msgstr "Preview"
+msgstr ""
 
 msgid "Прибыль"
-msgstr "Profit"
+msgstr ""
 
 msgid "Привязать Telegram (для официантов)"
-msgstr "Link Telegram (for waitstaff)"
+msgstr ""
 
 msgid "Пригласите сотрудника"
-msgstr "Invite a staff member"
+msgstr ""
 
 msgid "Применил скидку"
-msgstr "Applied a discount"
+msgstr ""
 
 msgid "Примечание"
-msgstr "Note"
+msgstr ""
 
 msgid "Принимайте заказы"
-msgstr "Take orders"
+msgstr ""
 
 msgid "Принять"
-msgstr "Accept"
+msgstr ""
 
 msgid "Принять наличные"
-msgstr "Accept cash"
+msgstr ""
 
 msgid "Приоритетная поддержка"
-msgstr "Priority support"
+msgstr ""
 
 msgid "Приостановлена"
-msgstr "Suspended"
+msgstr ""
 
 msgid "Приход от поставщика: остатки увеличиваются, цена ингредиента обновляется."
-msgstr "Goods receipt from a supplier: stock goes up, ingredient price is updated."
+msgstr ""
 
 msgid "Приход:"
-msgstr "Restock:"
+msgstr ""
 
 msgid "Причина"
-msgstr "Reason"
+msgstr ""
 
 msgid "Приём заказов и касса"
-msgstr "Order taking and register"
+msgstr ""
 
 msgid ""
 "Приём заказов, кухонный дисплей, склад с автосписанием по техкартам, "
 "смены персонала, программа лояльности гостей и фискализация чеков — без "
 "Excel и десятка разных приложений."
 msgstr ""
-"Order taking, kitchen display, inventory with automatic deduction by "
-"recipe, staff shifts, guest loyalty program, and receipt fiscalization — "
-"no Excel, no dozen different apps."
 
 msgid "Пробный период"
-msgstr "Trial"
+msgstr ""
 
 msgid "Пробный период закончился"
-msgstr "Trial period has ended"
+msgstr ""
 
 msgid "Провайдер"
-msgstr "Provider"
+msgstr ""
 
 msgid "Провести накладную"
-msgstr "Post invoice"
+msgstr ""
 
 msgid "Программа лояльности"
-msgstr "Loyalty program"
+msgstr ""
 
 msgid "Продажи CSV"
-msgstr "Sales CSV"
+msgstr ""
 
 msgid "Продажи картой"
-msgstr "Card sales"
+msgstr ""
 
 msgid "Продажи наличными"
-msgstr "Cash sales"
+msgstr ""
 
 msgid "Продление:"
-msgstr "Renews:"
+msgstr ""
 
 msgid "Продолжить выбор"
-msgstr "Keep browsing"
+msgstr ""
 
 msgid "Прозрачные цены"
-msgstr "Transparent pricing"
+msgstr ""
 
 msgid "Произвольная позиция"
-msgstr "Custom item"
+msgstr ""
 
 msgid "Промокодов пока нет. Создайте первый — гости смогут вводить его в QR-меню."
 msgstr ""
-"No promo codes yet. Create the first one — guests can enter it in the QR "
-"menu."
 
 msgid "Промокоды"
-msgstr "Promo codes"
+msgstr ""
 
 msgid "Процент"
-msgstr "Percent"
+msgstr ""
 
 msgid "Прочее"
-msgstr "Other"
+msgstr ""
 
 msgid "Пт"
-msgstr "Fri"
+msgstr ""
 
 msgid "Пусто"
-msgstr "Empty"
+msgstr ""
 
 msgid "Работает на любом планшете"
-msgstr "Runs on any tablet"
+msgstr ""
 
 msgid "Работают в QR-меню для гостей"
-msgstr "Work in the guest QR menu"
+msgstr ""
 
 msgid "Разделить"
-msgstr "Split"
+msgstr ""
 
 msgid "Разделить чек"
-msgstr "Split the check"
+msgstr ""
 
 msgid "Рассылки"
-msgstr "Broadcasts"
+msgstr ""
 
 msgid "Рассылок отправлено"
-msgstr "Broadcasts sent"
+msgstr ""
 
 msgid "Рассылок пока не было"
-msgstr "No broadcasts yet"
+msgstr ""
 
 msgid "Расходы"
-msgstr "Expenses"
+msgstr ""
 
 msgid "Расходы CSV"
-msgstr "Expenses CSV"
+msgstr ""
 
 msgid "Расходы по категориям"
-msgstr "Expenses by category"
+msgstr ""
 
 msgid "Расхождение"
-msgstr "Difference"
+msgstr ""
 
 msgid ""
 "Регистрируясь, вы подтверждаете, что представляете юридическое лицо или "
@@ -1815,79 +1728,75 @@ msgid ""
 "питания. Вы несёте ответственность за сохранность учётных данных и "
 "действия под вашей учётной записью."
 msgstr ""
-"By registering, you confirm that you represent a legal entity or sole "
-"proprietor entitled to enter into contracts for food service. You are "
-"responsible for safeguarding your credentials and for actions taken under"
-" your account."
 
 msgid "Редактировать"
-msgstr "Edit"
+msgstr ""
 
 msgid "Редактировать позицию"
-msgstr "Edit item"
+msgstr ""
 
 msgid "Режим планшета"
-msgstr "Tablet mode"
+msgstr ""
 
 msgid "Режим планшета ↗︎"
-msgstr "Tablet mode ↗︎"
+msgstr ""
 
 msgid ""
 "Режим стоп-листа: нажмите на позицию, чтобы убрать её из продажи или "
 "вернуть."
-msgstr "Stop-list mode: tap an item to pull it from sale or bring it back."
+msgstr ""
 
 msgid "Роль"
-msgstr "Role"
+msgstr ""
 
 msgid "Русский"
-msgstr "Russian"
+msgstr ""
 
 msgid "С нами с"
-msgstr "Customer since"
+msgstr ""
 
 msgid "Самые лояльные гости"
-msgstr "Most loyal guests"
+msgstr ""
 
 msgid "Сб"
-msgstr "Sat"
+msgstr ""
 
 msgid "Сбросить"
-msgstr "Reset"
+msgstr ""
 
 msgid "Светлая"
-msgstr "Light"
+msgstr ""
 
 msgid "Свободен"
-msgstr "Free"
+msgstr ""
 
 msgid "Свой цвет"
-msgstr "Custom color"
+msgstr ""
 
 #, python-brace-format
 msgid "Связь восстановлена: отправлено заказов — {n}"
-msgstr "Back online: orders sent — {n}"
+msgstr ""
 
 msgid "Сгенерировать ссылку"
-msgstr "Generate link"
+msgstr ""
 
 msgid "Сдача"
-msgstr "Change"
+msgstr ""
 
 msgid "Себестоимость"
-msgstr "Cost"
+msgstr ""
 
 msgid "Себестоимость считается по техкартам и ценам ингредиентов"
-msgstr "Cost is computed from recipes and ingredient prices"
+msgstr ""
 
 msgid "Сегодня"
-msgstr "Today"
+msgstr ""
 
 msgid "Сегодня работают:"
-msgstr "Working today:"
+msgstr ""
 
 msgid "Секрет для проверки подписи:"
-msgstr "Secret for signature verification:"
+msgstr ""
 
 msgid ""
 "Сервис предоставляется «как есть». RestOS не несёт ответственности за "
@@ -1895,605 +1804,581 @@ msgid ""
 "результате использования или невозможности использования Сервиса, в "
 "пределах, допустимых применимым законодательством."
 msgstr ""
-"The Service is provided \"as is\". RestOS is not liable for indirect "
-"losses, lost profits, or data loss arising from the use or inability to "
-"use the Service, to the extent permitted by applicable law."
 
 msgid "Сервис:"
-msgstr "Service:"
+msgstr ""
 
 msgid "Скачать все данные сети в формате JSON"
-msgstr "Download all network data as JSON"
+msgstr ""
 
 msgid "Скидка"
-msgstr "Discount"
+msgstr ""
 
 msgid "Скидка %"
-msgstr "Discount %"
+msgstr ""
 
 msgid "Скидка ₸"
-msgstr "Discount ₸"
+msgstr ""
 
 msgid "Склад"
-msgstr "Inventory"
+msgstr ""
 
 msgid "Склад и техкарты"
-msgstr "Inventory and recipes"
+msgstr ""
 
 msgid ""
 "Сколько ингредиента списывается со склада при продаже 1 шт. этой позиции."
 " При завершении заказа склад списывается автоматически."
 msgstr ""
-"How much of the ingredient is deducted from stock when selling 1 unit of "
-"this item. Stock is deducted automatically when an order is completed."
 
 msgid "Скопировано!"
-msgstr "Copied!"
+msgstr ""
 
 msgid "Скопировать"
-msgstr "Copy"
+msgstr ""
 
 msgid "Скопируйте ключ сейчас — он показывается только один раз:"
-msgstr "Copy the key now — it is shown only once:"
+msgstr ""
 
 msgid "Скрыто"
-msgstr "Hidden"
+msgstr ""
 
 msgid "Скрыть или показать меню"
-msgstr "Hide or show the sidebar"
+msgstr ""
 
 msgid "Смена не открыта"
-msgstr "Shift not open"
+msgstr ""
 
 msgid "Смена открыта"
-msgstr "Shift opened"
+msgstr ""
 
 msgid "Смена открыта с"
-msgstr "Shift open since"
+msgstr ""
 
 msgid "Смена сотрудника"
-msgstr "Switch operator"
+msgstr ""
 
 msgid "Смена сотрудника по PIN"
-msgstr "Switch operator by PIN"
+msgstr ""
 
 msgid "Сменить заведение"
-msgstr "Switch venue"
+msgstr ""
 
 msgid ""
 "Сменить заведение? Текущий чек будет очищен, заказы начнут пробиваться в "
 "другое заведение."
 msgstr ""
-"Switch venue? The current check will be cleared and orders will start "
-"going to the other venue."
 
 msgid "Смены"
-msgstr "Shifts"
+msgstr ""
 
 msgid "Смены и персонал"
-msgstr "Shifts and staff"
+msgstr ""
 
 msgid ""
 "Смены открываются на экране кассы. Открытие и закрытие с пересчётом "
 "наличных — главный контроль кассовой дисциплины."
 msgstr ""
-"Shifts are opened on the POS screen. Opening and closing with a cash "
-"recount is the primary cash-discipline control."
 
 msgid "Сначала выберите заведение"
-msgstr "Select a venue first"
+msgstr ""
 
 msgid "Сначала выберите заведение (не «Все заведения»)"
-msgstr "First pick a venue (not \"All venues\")"
+msgstr ""
 
 msgid "Сначала выберите стол"
-msgstr "Pick a table first"
+msgstr ""
 
 msgid "Сначала добавьте заведение"
-msgstr "Add a venue first"
+msgstr ""
 
 msgid "Сначала добавьте ингредиенты"
-msgstr "Add ingredients first"
+msgstr ""
 
 msgid "Сначала добавьте ингредиенты на складе"
-msgstr "Add ingredients to inventory first"
+msgstr ""
 
 msgid "События"
-msgstr "Events"
+msgstr ""
 
 msgid "Согласен с"
-msgstr "I agree to the"
+msgstr ""
 
 msgid "Создайте заведение"
-msgstr "Create a venue"
+msgstr ""
 
 msgid "Создал API-ключ"
-msgstr "Created API key"
+msgstr ""
 
 msgid "Создал пользователя"
-msgstr "Created a user"
+msgstr ""
 
 msgid "Создал промокод"
-msgstr "Created a promo code"
+msgstr ""
 
 msgid "Создан"
-msgstr "Created"
+msgstr ""
 
 msgid "Создать"
-msgstr "Sign up"
+msgstr ""
 
 msgid "Создать аккаунт"
-msgstr "Create account"
+msgstr ""
 
 msgid "Создать аккаунты и ссылки для привязки →"
-msgstr "Create accounts and linking links →"
+msgstr ""
 
 msgid "Создать заведение"
-msgstr "Create venue"
+msgstr ""
 
 msgid "Создать ключ"
-msgstr "Create key"
+msgstr ""
 
 msgid "Создать рассылку →"
-msgstr "Create broadcast →"
+msgstr ""
 
 msgid "Создаётся..."
-msgstr "Creating..."
+msgstr ""
 
 msgid "Сотрудник"
-msgstr "Staff member"
+msgstr ""
 
 msgid ""
 "Сотрудник может принимать заказы прямо из Telegram-бота. Сгенерируйте "
 "ссылку и передайте её сотруднику — он перейдёт по ней и его аккаунт "
 "привяжется автоматически."
 msgstr ""
-"Staff can take orders directly from the Telegram bot. Generate a link and"
-" give it to the staff member — opening it links their account "
-"automatically."
 
 msgid "Сотрудники"
-msgstr "Staff"
+msgstr ""
 
 msgid "Сотрудники появляются здесь после привязки Telegram-аккаунта."
-msgstr "Staff members appear here once they link their Telegram account."
+msgstr ""
 
 msgid "Сотрудников пока нет."
-msgstr "No staff members yet."
+msgstr ""
 
 msgid "Сохранено"
-msgstr "Saved"
+msgstr ""
 
 msgid "Сохранено ✓"
-msgstr "Saved ✓"
+msgstr ""
 
 msgid "Сохранить"
-msgstr "Save"
+msgstr ""
 
 msgid "Сохранить пароль"
-msgstr "Save password"
+msgstr ""
 
 msgid "Сохранить фискализацию"
-msgstr "Save fiscalization settings"
+msgstr ""
 
 msgid "Спасибо, ждём вас снова!"
-msgstr "Thank you, see you again!"
+msgstr ""
 
 msgid "Специальные Windows-терминалы"
-msgstr "Dedicated Windows terminals"
+msgstr ""
 
 msgid ""
 "Списание ингредиентов автоматически при закрытии заказа по рецептуре "
 "блюда — остатки всегда актуальны."
 msgstr ""
-"Ingredients are deducted automatically when an order closes, based on the"
-" dish recipe — stock levels stay accurate."
 
 msgid "Списание:"
-msgstr "Write-off:"
+msgstr ""
 
 msgid "Ср"
-msgstr "Wed"
+msgstr ""
 
 msgid "Средний чек"
-msgstr "Average check"
+msgstr ""
 
 msgid "Средняя оценка"
-msgstr "Average rating"
+msgstr ""
 
 msgid "Ссылка 2GIS"
-msgstr "2GIS link"
+msgstr ""
 
 msgid "Ссылка для входа (действует 1 раз):"
-msgstr "Sign-in link (one-time use):"
+msgstr ""
 
 msgid "Ссылка недействительна или устарела"
-msgstr "The link is invalid or has expired"
+msgstr ""
 
 msgid "Станции"
-msgstr "Stations"
+msgstr ""
 
 msgid "Статус"
-msgstr "Status"
+msgstr ""
 
 msgid "Стоимость запасов"
-msgstr "Inventory value"
+msgstr ""
 
 msgid "Стол"
-msgstr "Table"
+msgstr ""
 
 msgid "Стол / номер заказа"
-msgstr "Table / order number"
+msgstr ""
 
 msgid "Столов пока нет"
-msgstr "No tables yet"
+msgstr ""
 
 msgid "Столы"
-msgstr "Tables"
+msgstr ""
 
 msgid "Стоп"
-msgstr "Stopped"
+msgstr ""
 
 msgid "Стоп-лист"
-msgstr "Stop-list"
+msgstr ""
 
 msgid "Страница не найдена"
-msgstr "Page not found"
+msgstr ""
 
 msgid "Сумма (₸)"
-msgstr "Amount (₸)"
+msgstr ""
 
 msgid "ТОО Продукты"
-msgstr "Foods LLC"
+msgstr ""
 
 msgid "Табло очереди ↗︎"
-msgstr "Queue board ↗︎"
+msgstr ""
 
 msgid "Такой страницы не существует или она была перемещена."
-msgstr "This page doesn't exist or has been moved."
+msgstr ""
 
 msgid "Талон"
-msgstr "Ticket"
+msgstr ""
 
 msgid "Текст сообщения"
-msgstr "Message text"
+msgstr ""
 
 msgid "Текущий тариф"
-msgstr "Current plan"
+msgstr ""
 
 msgid "Телефон"
-msgstr "Phone"
+msgstr ""
 
 msgid "Тема"
-msgstr "Theme"
+msgstr ""
 
 msgid "Техкарта"
-msgstr "Recipe"
+msgstr ""
 
 msgid "Техкарта:"
-msgstr "Recipe:"
+msgstr ""
 
 msgid ""
 "Технические данные: IP-адрес, тип браузера — для безопасности и "
 "предотвращения злоупотреблений (например, ограничение частоты запросов "
 "при входе)."
 msgstr ""
-"Technical data: IP address, browser type — for security and abuse "
-"prevention (e.g. rate limiting on sign-in)."
 
 msgid "Тип"
-msgstr "Type"
+msgstr ""
 
 msgid "Токен:"
-msgstr "Token:"
+msgstr ""
 
 msgid "Тёмная"
-msgstr "Dark"
+msgstr ""
 
 msgid "У вас пока нет заведений."
-msgstr "You don't have any venues yet."
+msgstr ""
 
 msgid ""
 "У вас пока нет ни одного заведения. Добавьте первое — это займёт меньше "
 "минуты."
 msgstr ""
-"You don't have any venues yet. Add your first one — it takes less than a "
-"minute."
 
 msgid "Убрать"
-msgstr "Remove"
+msgstr ""
 
 msgid "Удалил ингредиент"
-msgstr "Deleted an ingredient"
+msgstr ""
 
 msgid "Удалил позицию меню"
-msgstr "Deleted a menu item"
+msgstr ""
 
 msgid "Удалил пользователя"
-msgstr "Deleted a user"
+msgstr ""
 
 msgid "Удалить"
-msgstr "Delete"
+msgstr ""
 
 msgid "Удалить вебхук?"
-msgstr "Delete this webhook?"
+msgstr ""
 
 msgid "Удалить позицию?"
-msgstr "Delete this item?"
+msgstr ""
 
 msgid "Удалить пользователя?"
-msgstr "Delete this user?"
+msgstr ""
 
 msgid "Удалить промокод?"
-msgstr "Delete this promo code?"
+msgstr ""
 
 msgid "Удалить рассылку?"
-msgstr "Delete this broadcast?"
+msgstr ""
 
 msgid "Удалить расход?"
-msgstr "Delete this expense?"
+msgstr ""
 
 msgid "Удалить смену?"
-msgstr "Delete this shift?"
+msgstr ""
 
 msgid "Удалить стол?"
-msgstr "Delete this table?"
+msgstr ""
 
 msgid "Уже есть аккаунт?"
-msgstr "Already have an account?"
+msgstr ""
 
 msgid "Улица, дом"
-msgstr "Street, building"
+msgstr ""
 
 msgid ""
 "Управляйте несколькими заведениями из одного аккаунта с отдельными "
 "данными по каждому."
-msgstr "Manage multiple venues from one account, each with its own separate data."
+msgstr ""
 
 msgid "Управляйте рестораном"
-msgstr "Run your restaurant"
+msgstr ""
 
 msgid "Управлять оплатой"
-msgstr "Manage billing"
+msgstr ""
 
 msgid "Условия использования"
-msgstr "Terms of Service"
+msgstr ""
 
 msgid "Условия использования — RestOS"
-msgstr "Terms of Service — RestOS"
+msgstr ""
 
 msgid "Факт"
-msgstr "Actual"
+msgstr ""
 
 msgid "Фактические наличные в кассе (₸)"
-msgstr "Actual cash in drawer (₸)"
+msgstr ""
 
 msgid "Финансы"
-msgstr "Finance"
+msgstr ""
 
 msgid "Финансы P&L, аналитика"
-msgstr "P&L finance, analytics"
+msgstr ""
 
 msgid "Финансы и аналитика"
-msgstr "Finance and analytics"
+msgstr ""
 
 msgid "Фискализация (ОФД)"
-msgstr "Fiscalization (tax authority)"
+msgstr ""
 
 msgid "Фискализация чеков"
-msgstr "Receipt fiscalization"
+msgstr ""
 
 msgid "Фискализация…"
-msgstr "Fiscalizing…"
+msgstr ""
 
 msgid "Фискальный чек №"
-msgstr "Fiscal receipt No."
+msgstr ""
 
 msgid ""
 "Цвет текста на кнопках подбирается автоматически, чтобы всё оставалось "
 "читаемым. Гостевые страницы (QR-меню) остаются в фирменном стиле."
 msgstr ""
-"Button text color is chosen automatically so everything stays readable. "
-"Guest pages (QR menu) keep the brand style."
 
 msgid "Цена"
-msgstr "Price"
+msgstr ""
 
 msgid "Цена (₸)"
-msgstr "Price (₸)"
+msgstr ""
 
 msgid "Цена за ед. (₸)"
-msgstr "Price per unit (₸)"
+msgstr ""
 
 msgid "Цена/ед."
-msgstr "Price/unit"
+msgstr ""
 
 msgid "Цены"
-msgstr "Pricing"
+msgstr ""
 
 msgid "Чек"
-msgstr "Receipt"
+msgstr ""
 
 msgid "Чек пробит"
-msgstr "Receipt issued"
+msgstr ""
 
 msgid "Чек разделён"
-msgstr "Check split"
+msgstr ""
 
 msgid "Чт"
-msgstr "Thu"
+msgstr ""
 
 msgid "Что-то пошло не так"
-msgstr "Something went wrong"
+msgstr ""
 
 msgid "Что-то пошло не так на нашей стороне. Мы уже знаем об этом и разбираемся."
 msgstr ""
-"Something went wrong on our end. We already know about it and are looking"
-" into it."
 
 msgid "Чёрная (AMOLED)"
-msgstr "Black (AMOLED)"
+msgstr ""
 
 msgid ""
 "Экран для кухни на любом планшете — очередь заказов по колонкам, таймеры "
 "готовки, без бумажных чеков."
 msgstr ""
-"A kitchen screen on any tablet — orders queued by column, cook timers, no"
-" paper tickets."
 
 msgid "Экран кухни ↗︎"
-msgstr "Kitchen screen ↗︎"
+msgstr ""
 
 msgid "Экран официанта ↗︎"
-msgstr "Waiter screen ↗︎"
+msgstr ""
 
 msgid "Экспорт данных"
-msgstr "Export data"
+msgstr ""
 
 msgid "Язык интерфейса"
-msgstr "Interface language"
+msgstr ""
 
 msgid "Язык получателей"
-msgstr "Recipient language"
+msgstr ""
 
 msgid "Язык привязан к вашему аккаунту и меняется только здесь."
-msgstr "The language is tied to your account and can only be changed here."
+msgstr ""
 
 msgid "без лимита"
-msgstr "no limit"
+msgstr ""
 
 msgid "без стола"
-msgstr "no table"
+msgstr ""
 
 msgid "в базе"
-msgstr "in the database"
+msgstr ""
 
 msgid "всего"
-msgstr "total"
+msgstr ""
 
 msgid "г"
-msgstr "g"
+msgstr ""
 
 msgid "и"
-msgstr "and"
+msgstr ""
 
 msgid "и интеграции"
-msgstr "and integrations"
+msgstr ""
 
 msgid "из кабинета Webkassa"
-msgstr "from your Webkassa dashboard"
+msgstr ""
 
 msgid "из одной панели"
-msgstr "from one dashboard"
+msgstr ""
 
 msgid "кг"
-msgstr "kg"
+msgstr ""
 
 msgid "л"
-msgstr "l"
+msgstr ""
 
 msgid "логин"
-msgstr "login"
+msgstr ""
 
 msgid "мес"
-msgstr "mo"
+msgstr ""
 
 msgid "мест"
-msgstr "seats"
+msgstr ""
 
 msgid "мин"
-msgstr "min"
+msgstr ""
 
 msgid "мин на кухне"
-msgstr "min in the kitchen"
+msgstr ""
 
 msgid "мин:"
-msgstr "min:"
+msgstr ""
 
 msgid "мл"
-msgstr "ml"
+msgstr ""
 
 msgid "млн"
-msgstr "M"
+msgstr ""
 
 msgid "можно несколько"
-msgstr "multiple allowed"
+msgstr ""
 
 msgid "не оплачен"
-msgstr "unpaid"
+msgstr ""
 
 msgid "необязательно"
-msgstr "optional"
+msgstr ""
 
 msgid "нет техкарты"
-msgstr "no recipe"
+msgstr ""
 
 msgid "обязательный выбор"
-msgstr "required choice"
+msgstr ""
 
 msgid "отзывов"
-msgstr "reviews"
+msgstr ""
 
 msgid "открыта"
-msgstr "open"
+msgstr ""
 
 msgid "пароль"
-msgstr "password"
+msgstr ""
 
 msgid "подключено"
-msgstr "connected"
+msgstr ""
 
 msgid "поз."
-msgstr "items"
+msgstr ""
 
 msgid "позиций:"
-msgstr "items:"
+msgstr ""
 
 msgid "пока пусто"
-msgstr "empty"
+msgstr ""
 
 msgid "политикой конфиденциальности"
-msgstr "Privacy Policy"
+msgstr ""
 
 msgid "получ."
-msgstr "recip."
+msgstr ""
 
 msgid "своя цена"
-msgstr "custom price"
+msgstr ""
 
 msgid "ссылка"
-msgstr "link"
+msgstr ""
 
 msgid "уникальный номер ККМ"
-msgstr "unique kassa number"
+msgstr ""
 
 msgid "условиями использования"
-msgstr "Terms of Service"
+msgstr ""
 
 msgid "ч."
-msgstr "h"
+msgstr ""
 
 msgid "чтобы обезопасить аккаунт."
-msgstr "to secure your account."
+msgstr ""
 
 msgid "шагов выполнено"
-msgstr "steps done"
+msgstr ""
 
 msgid "шт"
-msgstr "pcs"
+msgstr ""
 
 msgid "← Условия использования"
-msgstr "← Terms of Service"
+msgstr ""
 
 msgid "− Списание"
-msgstr "− Write off"
+msgstr ""
 
 msgid "− Списать"
-msgstr "− Write off"
+msgstr ""
 
 msgid "✓ Приход записан"
-msgstr "✓ Restock recorded"
+msgstr ""
 
 msgid "✓ Списание записано"
-msgstr "✓ Write-off recorded"
+msgstr ""
 

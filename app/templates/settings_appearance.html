@@ -36,7 +36,15 @@
 {% include "partials/settings_tabs.html" %}
 
 <div class="ap-section">
-  <p style="color:var(--muted); font-size:.85rem">{{ _("Оформление сохраняется на этом устройстве: кассовый планшет, кухня и телефон официанта могут выглядеть по-разному.") }}</p>
+  <div class="ap-label" style="margin-top:0">{{ _("Язык интерфейса") }}</div>
+  <select id="ap-language" class="search-input" style="max-width:280px" onchange="pickLanguage(this.value)">
+    {% for code, name in locale_names.items() %}
+    <option value="{{ code }}" {% if code == current_language %}selected{% endif %}>{{ name }}</option>
+    {% endfor %}
+  </select>
+  <p class="ap-hint">{{ _("Язык привязан к вашему аккаунту и меняется только здесь.") }}</p>
+
+  <p style="color:var(--muted); font-size:.85rem; margin-top:2rem">{{ _("Оформление сохраняется на этом устройстве: кассовый планшет, кухня и телефон официанта могут выглядеть по-разному.") }}</p>
 
   <div class="ap-label">{{ _("Тема") }}</div>
   <div class="ap-themes" id="ap-themes">
@@ -208,5 +216,25 @@
   }
 
   markActive();
+
+  const T_LANGERR = {{ _("Не удалось сменить язык") | tojson }};
+  async function pickLanguage(code) {
+    const sel = document.getElementById('ap-language');
+    const prev = sel.dataset.current || code;
+    try {
+      const res = await fetch('/settings/api/language', {
+        method: 'PATCH', credentials: 'include',
+        headers: {'Content-Type':'application/json','Authorization':'Bearer '+(localStorage.getItem('access_token')||'')},
+        body: JSON.stringify({ language: code }),
+      });
+      if (!res.ok) throw new Error('bad status');
+      // Cookie is set server-side; reload so every string re-renders in the new language.
+      location.reload();
+    } catch (e) {
+      if (window.notify) notify.error(T_LANGERR);
+      sel.value = prev;  // revert the dropdown on failure
+    }
+  }
+  (function(){ const s = document.getElementById('ap-language'); if (s) s.dataset.current = s.value; })();
 </script>
 {% endblock %}

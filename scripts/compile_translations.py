@@ -1,17 +1,20 @@
-"""Extract {{ _("...") }} message ids from every template and compile
-locales/en/LC_MESSAGES/messages.mo, reusing existing translations from
-messages.po. Run from the repo root after adding or editing a translatable
-string:
+"""Extract {{ _("...") }} message ids from every template and compile a
+gettext catalog (.po + .mo) for every supported locale, reusing whatever
+translations already exist in each locale's messages.po. Run from the repo
+root after adding or editing a translatable string:
 
     python scripts/compile_translations.py
 
-New strings with no translation yet are left untranslated in the .po (and
-print as MISSING below) — gettext falls back to the Russian source text for
-those at runtime, so nothing breaks; just fill them in and re-run.
+Message ids are the Russian source text, so the base locale ("ru") needs no
+catalog — gettext falls back to the id. For every other locale, a new string
+with no translation yet is left blank in that locale's .po (and printed as
+MISSING below); gettext falls back to the Russian source at runtime, so
+nothing breaks — just fill it in and re-run.
 
 Requires `pip install babel` (dev-only dependency, see requirements-dev.txt).
 """
 import glob
+import os
 import re
 
 from babel.messages.catalog import Catalog
@@ -22,8 +25,9 @@ PATTERN = re.compile(
     r'_\(\s*"((?:[^"\\]|\\.)*)"\s*(?:\|\s*tojson\s*)?\)'
     r'|_\(\s*\'((?:[^\'\\]|\\.)*)\'\s*(?:\|\s*tojson\s*)?\)'
 )
-PO_PATH = "locales/en/LC_MESSAGES/messages.po"
-MO_PATH = "locales/en/LC_MESSAGES/messages.mo"
+
+# "ru" is the source language (msgid == translation) so it needs no catalog.
+TARGET_LOCALES = ("en", "uk", "sk", "hu", "cs")
 
 
 def extract_msgids() -> list[str]:
@@ -35,34 +39,41 @@ def extract_msgids() -> list[str]:
     return sorted(set(strings))
 
 
-def main() -> None:
-    msgids = extract_msgids()
+def compile_locale(locale: str, msgids: list[str]) -> int:
+    po_path = f"locales/{locale}/LC_MESSAGES/messages.po"
+    mo_path = f"locales/{locale}/LC_MESSAGES/messages.mo"
+    os.makedirs(os.path.dirname(po_path), exist_ok=True)
 
     try:
-        with open(PO_PATH, "rb") as f:
+        with open(po_path, "rb") as f:
             existing = read_po(f)
     except FileNotFoundError:
-        existing = Catalog(locale="en")
+        existing = Catalog(locale=locale)
 
-    catalog = Catalog(locale="en")
-    missing = []
+    catalog = Catalog(locale=locale)
+    missing = 0
     for msgid in msgids:
         existing_msg = existing.get(msgid)
         translation = existing_msg.string if existing_msg and existing_msg.string else ""
         if not translation:
-            missing.append(msgid)
+            missing += 1
         catalog.add(msgid, translation)
 
-    with open(PO_PATH, "wb") as f:
+    with open(po_path, "wb") as f:
         write_po(f, catalog)
-    with open(MO_PATH, "wb") as f:
+    with open(mo_path, "wb") as f:
         write_mo(f, catalog)
+    return missing
 
-    print(f"Compiled {len(msgids)} strings ({len(missing)} untranslated).")
-    if missing:
-        print("\nMISSING TRANSLATIONS (fall back to Russian until filled in):")
-        for m in missing:
-            print(f"  {m!r}")
+
+def main() -> None:
+    msgids = extract_msgids()
+    print(f"Extracted {len(msgids)} translatable strings from templates.\n")
+    for locale in TARGET_LOCALES:
+        missing = compile_locale(locale, msgids)
+        done = len(msgids) - missing
+        flag = "" if not missing else f"  ⚠ {missing} untranslated (fall back to Russian)"
+        print(f"  {locale}: {done}/{len(msgids)} translated{flag}")
 
 
 if __name__ == "__main__":

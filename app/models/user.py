@@ -27,6 +27,8 @@ class User(Base):
     # TOTP 2FA: secret is provisional until the first code is confirmed
     totp_secret: Mapped[str | None] = mapped_column(String(64), nullable=True)
     totp_enabled: Mapped[bool] = mapped_column(Boolean, default=False)
+    # UI language — changed only from Settings, mirrored into the `lang` cookie
+    language: Mapped[str] = mapped_column(String(5), default="ru", server_default="ru")
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     network: Mapped["Network"] = relationship("Network", back_populates="users")
