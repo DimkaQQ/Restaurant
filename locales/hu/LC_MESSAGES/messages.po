@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-24 19:20+0000\n"
+"POT-Creation-Date: 2026-07-24 20:01+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: hu\n"
@@ -20,380 +20,399 @@ msgstr ""
 "Generated-By: Babel 2.18.0\n"
 
 msgid "(скопируйте и передайте сотруднику для ввода /staff)"
-msgstr ""
+msgstr "(másolja ki és adja át a munkatársnak a /staff beírásához)"
 
 msgid "+ Группа (например, «Размер»)"
-msgstr ""
+msgstr "+ Csoport (például „Méret”)"
 
 msgid "+ Добавить заведение"
-msgstr ""
+msgstr "+ Hely hozzáadása"
 
 msgid "+ Добавить позицию"
-msgstr ""
+msgstr "+ Tétel hozzáadása"
 
 msgid "+ Добавить смену"
-msgstr ""
+msgstr "+ Műszak hozzáadása"
 
 msgid "+ Добавить стол"
-msgstr ""
+msgstr "+ Asztal hozzáadása"
 
 msgid "+ Ингредиент"
-msgstr ""
+msgstr "+ Hozzávaló"
 
 msgid "+ Категория"
-msgstr ""
+msgstr "+ Kategória"
 
 msgid "+ Новая накладная"
-msgstr ""
+msgstr "+ Új számla"
 
 msgid "+ Новый заказ"
-msgstr ""
+msgstr "+ Új rendelés"
 
 msgid "+ Приход"
-msgstr ""
+msgstr "+ Bevételezés"
 
 msgid "+ Фото"
-msgstr ""
+msgstr "+ Fotó"
 
 msgid "+ вариант"
-msgstr ""
+msgstr "+ változat"
 
 msgid "+ строка"
-msgstr ""
+msgstr "+ sor"
 
 msgid "+₸"
-msgstr ""
+msgstr "+₸"
 
 msgid "1 заведение"
-msgstr ""
+msgstr "1 hely"
 
 msgid "1. Добавьте секрет в приложение-аутентификатор:"
-msgstr ""
+msgstr "1. Adja hozzá a titkos kulcsot a hitelesítő alkalmazáshoz:"
 
 msgid "1. Какие данные мы собираем"
-msgstr ""
+msgstr "1. Milyen adatokat gyűjtünk"
 
 msgid "1. Регистрация и учётная запись"
-msgstr ""
+msgstr "1. Regisztráció és fiók"
 
 msgid "14 дней бесплатно, без карты. Настройка занимает пару минут."
-msgstr ""
+msgstr "14 nap ingyen, kártya nélkül. A beállítás pár percet vesz igénybe."
 
 msgid "14 дней бесплатно, без карты. Начните за 2 минуты."
-msgstr ""
+msgstr "14 nap ingyen, kártya nélkül. Kezdje el 2 perc alatt."
 
 msgid "15 минут, сами"
-msgstr ""
+msgstr "15 perc, egyedül"
 
 msgid "2. Введите код из приложения для подтверждения:"
-msgstr ""
+msgstr "2. Írja be az alkalmazásból származó kódot a megerősítéshez:"
 
 msgid "2. Для чего используются данные"
-msgstr ""
+msgstr "2. Mire használjuk az adatokat"
 
 msgid "2. Пробный период и оплата"
-msgstr ""
+msgstr "2. Próbaidőszak és fizetés"
 
 msgid "2FA включена"
-msgstr ""
+msgstr "2FA bekapcsolva"
 
 msgid "2FA включена: при входе нужен код из приложения."
 msgstr ""
+"2FA bekapcsolva: a bejelentkezéshez az alkalmazásból származó kód "
+"szükséges."
 
 msgid "2FA отключена"
-msgstr ""
+msgstr "2FA kikapcsolva"
 
 msgid "2GIS ссылки и Telegram менеджеров"
-msgstr ""
+msgstr "2GIS-linkek és a menedzserek Telegram-azonosítói"
 
 msgid "3. Данные и фискализация"
-msgstr ""
+msgstr "3. Adatok és fiskalizáció"
 
 msgid "3. Передача третьим лицам"
-msgstr ""
+msgstr "3. Átadás harmadik feleknek"
 
 msgid "4. Ограничение ответственности"
-msgstr ""
+msgstr "4. Felelősség korlátozása"
 
 msgid "4. Хранение и удаление"
-msgstr ""
+msgstr "4. Tárolás és törlés"
 
 msgid "5. Безопасность"
-msgstr ""
+msgstr "5. Biztonság"
 
 msgid "5. Прекращение действия"
-msgstr ""
+msgstr "5. Megszűnés"
 
 msgid "6. Ваши права"
-msgstr ""
+msgstr "6. Az Ön jogai"
 
 msgid "6. Изменения условий"
-msgstr ""
+msgstr "6. A feltételek módosítása"
 
 msgid "7. Контакты"
-msgstr ""
+msgstr "7. Kapcsolat"
 
 msgid "AI-инсайты"
-msgstr ""
+msgstr "AI-elemzések"
 
 msgid "API-ключ (x-api-key)"
-msgstr ""
+msgstr "API-kulcs (x-api-key)"
 
 msgid "API-ключи"
-msgstr ""
+msgstr "API-kulcsok"
 
 msgid "CSV для бухгалтерии"
-msgstr ""
+msgstr "CSV a könyveléshez"
 
 msgid "Email и название заведения — аккаунт готов за 2 минуты, карта не нужна."
-msgstr ""
+msgstr "E-mail és a hely neve — a fiók 2 perc alatt elkészül, kártya nem kell."
 
 msgid "Email подтверждён"
-msgstr ""
+msgstr "E-mail megerősítve"
 
 msgid ""
 "P&L, расходы, выручка по заведениям, NPS гостей — вся картина бизнеса в "
 "одном месте."
 msgstr ""
+"P&L, költségek, bevétel helyenként, vendég-NPS — a vállalkozás teljes "
+"képe egy helyen."
 
 msgid "PIN для смены сотрудника на станции"
-msgstr ""
+msgstr "PIN a munkatárs váltásához a munkaállomáson"
 
 msgid "PIN для станции (необязательно, 4–6 цифр)"
-msgstr ""
+msgstr "PIN a munkaállomáshoz (nem kötelező, 4–6 számjegy)"
 
 msgid "PIN сотрудника (4–6 цифр). Пусто — удалить PIN."
-msgstr ""
+msgstr "Munkatárs PIN-kódja (4–6 számjegy). Üres — PIN törlése."
 
 msgid ""
 "RestOS обрабатывает персональные данные владельцев ресторанов, их "
 "сотрудников и гостей (клиентов ресторанов) в объёме, необходимом для "
 "работы Сервиса."
 msgstr ""
+"A RestOS az éttermek tulajdonosainak, munkatársaiknak és vendégeiknek (az"
+" éttermek ügyfeleinek) személyes adatait a Szolgáltatás működéséhez "
+"szükséges mértékben kezeli."
 
 msgid ""
 "RestOS отправит подписанный POST (HMAC-SHA256, заголовок X-RestOS-"
 "Signature) на ваш URL при событиях заказа."
 msgstr ""
+"A RestOS aláírt POST-ot küld (HMAC-SHA256, X-RestOS-Signature fejléc) az "
+"Ön URL-jére a rendelés eseményeinél."
 
 msgid "RestOS — Восстановление пароля"
-msgstr ""
+msgstr "RestOS — Jelszó-helyreállítás"
 
 msgid "RestOS — Вход"
-msgstr ""
+msgstr "RestOS — Bejelentkezés"
 
 msgid "RestOS — Новый пароль"
-msgstr ""
+msgstr "RestOS — Új jelszó"
 
 msgid "RestOS — Платформа управления рестораном"
-msgstr ""
+msgstr "RestOS — Éttermkezelő platform"
 
 msgid "RestOS — Регистрация"
-msgstr ""
+msgstr "RestOS — Regisztráció"
 
 msgid ""
 "RestOS — приём заказов, кухонный дисплей, склад, смены персонала, "
 "программа лояльности и фискализация чеков в одной панели. 14 дней "
 "бесплатно."
 msgstr ""
+"RestOS — rendelésfelvétel, konyhai kijelző, raktár, személyzeti műszakok,"
+" hűségprogram és nyugták fiskalizációja egy felületen. 14 nap ingyen."
 
 msgid "Telegram ID менеджера"
-msgstr ""
+msgstr "Menedzser Telegram-azonosítója"
 
 #, python-brace-format
 msgid "«{n}» снова в продаже"
-msgstr ""
+msgstr "„{n}” ismét kapható"
 
 #, python-brace-format
 msgid "«{n}» убрана из продажи"
-msgstr ""
+msgstr "„{n}” kivéve az eladásból"
 
 msgid "Автоматически, в облаке"
-msgstr ""
+msgstr "Automatikusan, a felhőben"
 
 msgid "Администратор"
-msgstr ""
+msgstr "Adminisztrátor"
 
 msgid "Адрес"
-msgstr ""
+msgstr "Cím"
 
 msgid "Активен"
-msgstr ""
+msgstr "Aktív"
 
 msgid "Активна"
-msgstr ""
+msgstr "Aktív"
 
 msgid "Активно"
-msgstr ""
+msgstr "Aktív"
 
 msgid "Активные"
-msgstr ""
+msgstr "Aktív"
 
 msgid "Активные заказы"
-msgstr ""
+msgstr "Aktív rendelések"
 
 msgid "Активных заведений"
-msgstr ""
+msgstr "Aktív helyek"
 
 msgid "Активных заказов нет"
-msgstr ""
+msgstr "Nincs aktív rendelés"
 
 msgid "Акцентный цвет"
-msgstr ""
+msgstr "Kiemelőszín"
 
 msgid "Анализируем…"
-msgstr ""
+msgstr "Elemzés…"
 
 msgid "Аналитика"
-msgstr ""
+msgstr "Analitika"
 
 msgid "Баллы"
-msgstr ""
+msgstr "Pontok"
 
 msgid "Без карты. Отменить можно в любой момент."
-msgstr ""
+msgstr "Kártya nélkül. Bármikor lemondható."
 
 msgid "Без программистов и интеграторов"
-msgstr ""
+msgstr "Programozók és integrátorok nélkül"
 
 msgid "Без сдачи"
-msgstr ""
+msgstr "Pontos összeg"
 
 msgid "Без скидки"
-msgstr ""
+msgstr "Kedvezmény nélkül"
 
 msgid "Безлимит заведений"
-msgstr ""
+msgstr "Korlátlan hely"
 
 msgid "Безлимит сотрудников"
-msgstr ""
+msgstr "Korlátlan munkatárs"
 
 msgid ""
 "Бонусные баллы, история визитов и Telegram-бот для гостей — без сторонних"
 " CRM."
 msgstr ""
+"Bónuszpontok, látogatási előzmények és Telegram-bot a vendégeknek — külső"
+" CRM nélkül."
 
 msgid "Бот отправит сообщение гостям в течение 5 минут"
-msgstr ""
+msgstr "A bot 5 percen belül elküldi az üzenetet a vendégeknek"
 
 msgid "Бронь"
-msgstr ""
+msgstr "Foglalás"
 
 msgid "Быстрый старт"
-msgstr ""
+msgstr "Gyors kezdés"
 
 msgid "В заказ"
-msgstr ""
+msgstr "Rendeléshez"
 
 msgid "В корзину"
-msgstr ""
+msgstr "Kosárba"
 
 msgid "В очереди офлайн:"
-msgstr ""
+msgstr "Offline sorban:"
 
 msgid "В панель управления"
-msgstr ""
+msgstr "Vezérlőpultra"
 
 msgid "В работу — оплата потом"
-msgstr ""
+msgstr "Előkészítésbe — fizetés később"
 
 msgid "Вариант"
-msgstr ""
+msgstr "Változat"
 
 msgid "Введите PIN"
-msgstr ""
+msgstr "Adja meg a PIN-kódot"
 
 msgid "Введите количество"
-msgstr ""
+msgstr "Adja meg a mennyiséget"
 
 msgid "Введите название заведения"
-msgstr ""
+msgstr "Adja meg a hely nevét"
 
 msgid "Введите название и цену"
-msgstr ""
+msgstr "Adja meg a nevet és az árat"
 
 msgid "Введите свой PIN, чтобы начать смену."
-msgstr ""
+msgstr "Adja meg a PIN-kódját a műszak megkezdéséhez."
 
 msgid "Введите текст выше..."
-msgstr ""
+msgstr "Írja be a szöveget fent..."
 
 msgid "Введите текст рассылки"
-msgstr ""
+msgstr "Írja be a körüzenet szövegét"
 
 msgid "Введите текст рассылки..."
-msgstr ""
+msgstr "Írja be a körüzenet szövegét..."
 
 msgid "Вебхуки"
-msgstr ""
+msgstr "Webhookok"
 
 msgid "Вернуть назад"
-msgstr ""
+msgstr "Visszaállítás"
 
 msgid "Вид"
-msgstr ""
+msgstr "Megjelenés"
 
 msgid "Визиты"
-msgstr ""
+msgstr "Látogatások"
 
 msgid "Включить"
-msgstr ""
+msgstr "Bekapcsolás"
 
 msgid "Включить 2FA"
-msgstr ""
+msgstr "2FA bekapcsolása"
 
 msgid "Владелец"
-msgstr ""
+msgstr "Tulajdonos"
 
 msgid "Возможности"
-msgstr ""
+msgstr "Funkciók"
 
 msgid "Войти"
-msgstr ""
+msgstr "Bejelentkezés"
 
 msgid "Восстановление пароля"
-msgstr ""
+msgstr "Jelszó-helyreállítás"
 
 msgid "Вс"
-msgstr ""
+msgstr "V"
 
 msgid "Все"
-msgstr ""
+msgstr "Mind"
 
 msgid "Все заведения"
-msgstr ""
+msgstr "Minden hely"
 
 msgid "Все заказы →"
-msgstr ""
+msgstr "Minden rendelés →"
 
 msgid "Все языки"
-msgstr ""
+msgstr "Minden nyelv"
 
 msgid "Все языки (ru + kz + en)"
-msgstr ""
+msgstr "Minden nyelv (ru + kz + en)"
 
 msgid "Всего выручки"
-msgstr ""
+msgstr "Összes bevétel"
 
 msgid "Всё, что нужно ресторану"
-msgstr ""
+msgstr "Minden, amire egy étteremnek szüksége van"
 
 msgid "Вт"
-msgstr ""
+msgstr "K"
 
 msgid "Вход"
-msgstr ""
+msgstr "Bejelentkezés"
 
 msgid ""
 "Вы вправе запросить доступ к своим данным, их исправление или удаление. "
 "Для этого обратитесь через раздел поддержки в личном кабинете."
 msgstr ""
+"Jogában áll hozzáférést kérni adataihoz, azok helyesbítését vagy "
+"törlését. Ehhez forduljon a fiókjában található támogatási részlegen "
+"keresztül."
 
 msgid ""
 "Вы можете отменить подписку в любой момент через раздел «Оплата». Мы "
 "вправе приостановить доступ при нарушении условий использования или "
 "систематической неоплате."
 msgstr ""
+"Előfizetését bármikor lemondhatja a „Fizetés” részben. Jogunkban áll "
+"felfüggeszteni a hozzáférést a felhasználási feltételek megsértése vagy "
+"rendszeres fizetéselmaradás esetén."
 
 msgid ""
 "Вы самостоятельно несёте ответственность за корректность данных, вносимых"
@@ -402,124 +421,139 @@ msgid ""
 "(например, Webkassa) выполняются с использованием ваших собственных "
 "учётных данных, полученных непосредственно от этих провайдеров."
 msgstr ""
+"Ön kizárólagosan felel a Szolgáltatásba bevitt adatok (menü, árak, "
+"nyugták) helyességéért, valamint a joghatósága szerinti adó- és fiskális "
+"jogszabályok betartásáért. A fiskális szolgáltatókkal (például Webkassa) "
+"való integrációk az Ön saját, közvetlenül ezektől a szolgáltatóktól "
+"kapott hitelesítő adataival működnek."
 
 #, python-brace-format
 msgid "Выберите «{g}»"
-msgstr ""
+msgstr "Válassza a(z) „{g}” lehetőséget"
 
 msgid "Выберите заведение"
-msgstr ""
+msgstr "Válasszon helyet"
 
 msgid "Выберите или введите новую"
-msgstr ""
+msgstr "Válasszon vagy adjon meg újat"
 
 msgid "Выбрать..."
-msgstr ""
+msgstr "Kiválasztás..."
 
 msgid "Выдан"
-msgstr ""
+msgstr "Kiadva"
 
 msgid "Выдано сегодня"
-msgstr ""
+msgstr "Ma kiadva"
 
 msgid "Выдать"
-msgstr ""
+msgstr "Kiadás"
 
 msgid "Выезд специалиста"
-msgstr ""
+msgstr "Szakember kiszállása"
 
 msgid "Выйти"
-msgstr ""
+msgstr "Kijelentkezés"
 
 msgid "Выключен"
-msgstr ""
+msgstr "Kikapcsolva"
 
 msgid "Выключить"
-msgstr ""
+msgstr "Kikapcsolás"
 
 msgid "Выполненных заказов сегодня ещё нет"
-msgstr ""
+msgstr "Ma még nincs teljesített rendelés"
 
 msgid "Выручка"
-msgstr ""
+msgstr "Bevétel"
 
 msgid "Выручка vs Расходы (6 мес.)"
-msgstr ""
+msgstr "Bevétel vs Költségek (6 hó)"
 
 msgid "Выручка за 30 дней"
-msgstr ""
+msgstr "Bevétel 30 nap alatt"
 
 msgid "Выручка по дням"
-msgstr ""
+msgstr "Bevétel naponta"
 
 msgid "Выручка по заведениям"
-msgstr ""
+msgstr "Bevétel helyenként"
 
 msgid "Выручка сегодня"
-msgstr ""
+msgstr "Mai bevétel"
 
 msgid "Выручка ₸"
-msgstr ""
+msgstr "Bevétel ₸"
 
 msgid "Генерируем..."
-msgstr ""
+msgstr "Generálás..."
 
 msgid "Год"
-msgstr ""
+msgstr "Év"
 
 msgid "Гостей в базе"
-msgstr ""
+msgstr "Vendégek az adatbázisban"
 
 msgid ""
 "Гостей пока нет. Они появятся автоматически, когда сделают заказ через "
 "QR-меню или Telegram-бот."
 msgstr ""
+"Még nincsenek vendégek. Automatikusan megjelennek, amikor rendelnek a QR-"
+"menün vagy a Telegram-boton keresztül."
 
 msgid "Гости"
-msgstr ""
+msgstr "Vendégek"
 
 msgid "Гость"
-msgstr ""
+msgstr "Vendég"
 
 msgid "Готовится"
-msgstr ""
+msgstr "Készül"
 
 msgid "Готовить"
-msgstr ""
+msgstr "Elkészítés"
 
 msgid "Готово"
-msgstr ""
+msgstr "Kész"
 
 msgid "Готово!"
-msgstr ""
+msgstr "Kész!"
 
 msgid "Готовы попробовать?"
-msgstr ""
+msgstr "Kipróbálná?"
 
 msgid ""
 "График смен, роли официант/повар/кассир/менеджер, рейтинг сотрудников по "
 "отзывам гостей."
 msgstr ""
+"Műszakbeosztás, pincér/szakács/pénztáros/menedzser szerepkörök, "
+"munkatársak értékelése a vendégek visszajelzései alapján."
 
 msgid ""
 "Группы вариантов для позиции: размер, молоко, сиропы. Цена меняется на "
 "указанную надбавку."
 msgstr ""
+"Változatcsoportok a tételhez: méret, tej, szirupok. Az ár a megadott "
+"felárral változik."
 
 msgid ""
 "Данные гостей: имя, телефон/Telegram ID, история заказов, баллы "
 "лояльности — используются для программы лояльности и уведомлений."
 msgstr ""
+"Vendégadatok: név, telefon/Telegram-azonosító, rendelési előzmények, "
+"hűségpontok — a hűségprogramhoz és értesítésekhez használjuk."
 
 msgid ""
 "Данные сотрудников: имя, роль, отработанные смены — вносятся владельцем "
 "ресторана."
 msgstr ""
+"Munkatársak adatai: név, szerepkör, ledolgozott műszakok — az étterem "
+"tulajdonosa viszi be."
 
 msgid ""
 "Данные учётной записи владельца: имя ресторана, email, хешированный "
 "пароль."
-msgstr ""
+msgstr "A tulajdonos fiókadatai: az étterem neve, e-mail, kivonatolt jelszó."
 
 msgid ""
 "Данные хранятся, пока учётная запись активна. Владелец аккаунта может "
@@ -528,33 +562,38 @@ msgid ""
 "налогового и бухгалтерского законодательства о сроках хранения "
 "документов."
 msgstr ""
+"Az adatokat addig tároljuk, amíg a fiók aktív. A fiók tulajdonosa kérheti"
+" étteremhálózata adatainak exportját vagy törlését a támogatásnak írva — "
+"a kérést ésszerű határidőn belül feldolgozzuk, figyelembe véve az adó- és"
+" számviteli jogszabályoknak a dokumentumok megőrzési idejére vonatkozó "
+"követelményeit."
 
 msgid "Дата"
-msgstr ""
+msgstr "Dátum"
 
 msgid "Дашборд"
-msgstr ""
+msgstr "Irányítópult"
 
 msgid "Двухфакторная аутентификация (ваш аккаунт)"
-msgstr ""
+msgstr "Kétfaktoros hitelesítés (az Ön fiókja)"
 
 msgid "Действие"
-msgstr ""
+msgstr "Művelet"
 
 msgid "Действует до"
-msgstr ""
+msgstr "Érvényes eddig"
 
 msgid "Десятки вкладок, нужны тренинги"
-msgstr ""
+msgstr "Tucatnyi fül, képzés szükséges"
 
 msgid "Детали"
-msgstr ""
+msgstr "Részletek"
 
 msgid "Динамика отзывов (30 дней)"
-msgstr ""
+msgstr "Visszajelzések alakulása (30 nap)"
 
 msgid "Для быстрой смены сотрудника на планшете"
-msgstr ""
+msgstr "A munkatárs gyors váltásához a táblagépen"
 
 msgid ""
 "Для предоставления функций Сервиса (приём заказов, кухонный дисплей, "
@@ -562,381 +601,399 @@ msgid ""
 "учётных записей и, при наличии согласия, для email-уведомлений (например,"
 " восстановление пароля)."
 msgstr ""
+"A Szolgáltatás funkcióinak biztosításához (rendelésfelvétel, konyhai "
+"kijelző, hűség, analitika, nyugták fiskalizációja), a fiókok "
+"biztonságához, és hozzájárulás esetén e-mail-értesítésekhez (például "
+"jelszó-helyreállítás)."
 
 msgid "Дни или недели, платный интегратор"
-msgstr ""
+msgstr "Napok vagy hetek, fizetett integrátor"
 
 msgid "До 3 сотрудников"
-msgstr ""
+msgstr "Legfeljebb 3 munkatárs"
 
 msgid "До 5 заведений"
-msgstr ""
+msgstr "Legfeljebb 5 hely"
 
 msgid "Добавить"
-msgstr ""
+msgstr "Hozzáadás"
 
 msgid "Добавить первое →"
-msgstr ""
+msgstr "Első hozzáadása →"
 
 msgid "Добавить позицию"
-msgstr ""
+msgstr "Tétel hozzáadása"
 
 msgid "Добавить пользователя"
-msgstr ""
+msgstr "Felhasználó hozzáadása"
 
 msgid "Добавить расход"
-msgstr ""
+msgstr "Költség hozzáadása"
 
 msgid "Добавить смену"
-msgstr ""
+msgstr "Műszak hozzáadása"
 
 msgid "Добавьте меню и столы"
-msgstr ""
+msgstr "Adjon hozzá menüt és asztalokat"
 
 msgid "Добавьте позиции в меню"
-msgstr ""
+msgstr "Adjon hozzá tételeket a menühöz"
 
 msgid "Добавьте позиции меню и техкарты, чтобы видеть маржинальность."
-msgstr ""
+msgstr "Adjon hozzá menütételeket és recepteket, hogy lássa az árrést."
 
 msgid "Добавьте столы"
-msgstr ""
+msgstr "Adjon hozzá asztalokat"
 
 msgid "Добавьте хотя бы одну строку с количеством"
-msgstr ""
+msgstr "Adjon hozzá legalább egy sort mennyiséggel"
 
 msgid ""
 "Дополнительная защита входа: пароль + код из приложения (Google "
 "Authenticator, 1Password и т.п.)."
 msgstr ""
+"A bejelentkezés további védelme: jelszó + az alkalmazásból származó kód "
+"(Google Authenticator, 1Password stb.)."
 
 msgid ""
 "Доступ к данным для интеграций (только чтение): GET /api/v1/venues, "
 "/api/v1/menu, /api/v1/orders с заголовком X-API-Key."
 msgstr ""
+"Adathozzáférés integrációkhoz (csak olvasás): GET /api/v1/venues, "
+"/api/v1/menu, /api/v1/orders az X-API-Key fejléccel."
 
 msgid "Доступ ограничен до продления подписки"
-msgstr ""
+msgstr "A hozzáférés korlátozva az előfizetés megújításáig"
 
 msgid "Доступно"
-msgstr ""
+msgstr "Elérhető"
 
 msgid "Ед."
-msgstr ""
+msgstr "Egys."
 
 msgid "Еда:"
-msgstr ""
+msgstr "Étel:"
 
 msgid "Единица"
-msgstr ""
+msgstr "Egység"
 
 msgid "Если такой email зарегистрирован, мы отправили ссылку для сброса пароля."
-msgstr ""
+msgstr "Ha ez az e-mail regisztrálva van, elküldtük a jelszó-visszaállító linket."
 
 msgid "Ещё действия"
-msgstr ""
+msgstr "További műveletek"
 
 msgid "Журнал"
-msgstr ""
+msgstr "Napló"
 
 msgid "Журнал действий"
-msgstr ""
+msgstr "Műveletnapló"
 
 msgid "Заблокировать"
-msgstr ""
+msgstr "Zárolás"
 
 msgid "Забыли пароль?"
-msgstr ""
+msgstr "Elfelejtette a jelszavát?"
 
 msgid "Заведение"
-msgstr ""
+msgstr "Hely"
 
 msgid "Заведение (необязательно)"
-msgstr ""
+msgstr "Hely (nem kötelező)"
 
 msgid "Заведения"
-msgstr ""
+msgstr "Helyek"
 
 msgid "Завершённых заказов"
-msgstr ""
+msgstr "Befejezett rendelések"
 
 msgid "Загрузка заказов..."
-msgstr ""
+msgstr "Rendelések betöltése..."
 
 msgid "Загрузка..."
-msgstr ""
+msgstr "Betöltés..."
 
 msgid "Загрузка…"
-msgstr ""
+msgstr "Betöltés…"
 
 msgid "Задайте новый пароль"
-msgstr ""
+msgstr "Állítson be új jelszót"
 
 msgid "Заказ"
-msgstr ""
+msgstr "Rendelés"
 
 msgid "Заказ оплачен и отправлен на кухню"
-msgstr ""
+msgstr "A rendelés kifizetve és elküldve a konyhára"
 
 msgid "Заказ отправлен на кухню"
-msgstr ""
+msgstr "A rendelés elküldve a konyhára"
 
 msgid "Заказ перенесён"
-msgstr ""
+msgstr "A rendelés áthelyezve"
 
 msgid "Заказов сегодня"
-msgstr ""
+msgstr "Mai rendelések"
 
 msgid "Заказы"
-msgstr ""
+msgstr "Rendelések"
 
 msgid "Заказы, склад, смены"
-msgstr ""
+msgstr "Rendelések, raktár, műszakok"
 
 msgid "Закрыта"
-msgstr ""
+msgstr "Lezárva"
 
 msgid "Закрыть смену"
-msgstr ""
+msgstr "Műszak lezárása"
 
 msgid "Занят"
-msgstr ""
+msgstr "Foglalt"
 
 msgid "Запуск"
-msgstr ""
+msgstr "Indítás"
 
 msgid "Запуск за 15 минут"
-msgstr ""
+msgstr "Indítás 15 perc alatt"
 
 msgid "Зарегистрируйтесь"
-msgstr ""
+msgstr "Regisztráljon"
 
 msgid "Значение"
-msgstr ""
+msgstr "Érték"
 
 msgid "Золото (по умолчанию)"
-msgstr ""
+msgstr "Arany (alapértelmezett)"
 
 msgid "Изменения сохраняются сразу."
-msgstr ""
+msgstr "A módosítások azonnal mentődnek."
 
 msgid "Или номер стола вручную"
-msgstr ""
+msgstr "Vagy az asztal száma kézzel"
 
 msgid "Инвентаризация"
-msgstr ""
+msgstr "Leltár"
 
 msgid ""
 "Интеграция с Webkassa (Казахстан) — чек пробивается автоматически при "
 "закрытии заказа."
 msgstr ""
+"Webkassa integráció (Kazahsztán) — a nyugta automatikusan kiadódik a "
+"rendelés lezárásakor."
 
 msgid "Интуитивно — бариста разберётся за 10 минут"
-msgstr ""
+msgstr "Intuitív — a barista 10 perc alatt kiismeri"
 
 msgid "Использован"
-msgstr ""
+msgstr "Felhasználva"
 
 msgid "Использование"
-msgstr ""
+msgstr "Használat"
 
 msgid "Использование на кухне"
-msgstr ""
+msgstr "Használat a konyhán"
 
 msgid "История рассылок"
-msgstr ""
+msgstr "Körüzenetek előzményei"
 
 msgid "История сегодня"
-msgstr ""
+msgstr "Mai előzmények"
 
 msgid "Итого"
-msgstr ""
+msgstr "Összesen"
 
 msgid "К оплате"
-msgstr ""
+msgstr "Fizetendő"
 
 msgid "Казахстан"
-msgstr ""
+msgstr "Kazahsztán"
 
 msgid "Как на устройстве"
-msgstr ""
+msgstr "Mint az eszközön"
 
 msgid "Как начать"
-msgstr ""
+msgstr "Hogyan kezdje"
 
 msgid "Карта"
-msgstr ""
+msgstr "Térkép"
 
 msgid "Картой"
-msgstr ""
+msgstr "Kártyával"
 
 msgid "Касса"
-msgstr ""
+msgstr "Pénztár"
 
 msgid "Касса на планшете, кухонный экран, QR-меню для гостей — работает сразу."
 msgstr ""
+"Pénztár a táblagépen, konyhai képernyő, QR-menü a vendégeknek — azonnal "
+"működik."
 
 msgid "Кассир"
-msgstr ""
+msgstr "Pénztáros"
 
 msgid "Кассовые смены (Z-отчёты)"
-msgstr ""
+msgstr "Pénztári műszakok (Z-jelentések)"
 
 msgid "Категории"
-msgstr ""
+msgstr "Kategóriák"
 
 msgid "Категорий пока нет"
-msgstr ""
+msgstr "Még nincsenek kategóriák"
 
 msgid "Категория"
-msgstr ""
+msgstr "Kategória"
 
 msgid ""
 "Категория появится в кассе и QR-меню, как только в ней будет хотя бы одна"
 " позиция."
 msgstr ""
+"A kategória megjelenik a pénztárban és a QR-menüben, amint legalább egy "
+"tétel lesz benne."
 
 msgid "Квартал"
-msgstr ""
+msgstr "Negyedév"
 
 msgid "Классические ERP"
-msgstr ""
+msgstr "Klasszikus ERP"
 
 msgid ""
 "Классические ресторанные системы создавались для крупных сетей. Маленькой"
 " кофейне они дают сложность, а не контроль."
 msgstr ""
+"A klasszikus éttermi rendszereket nagy láncoknak tervezték. Egy kis "
+"kávézónak bonyolultságot adnak, nem irányítást."
 
 msgid "Ключ"
-msgstr ""
+msgstr "Kulcs"
 
 msgid "Когда"
-msgstr ""
+msgstr "Mikor"
 
 msgid "Код"
-msgstr ""
+msgstr "Kód"
 
 msgid "Код из приложения"
-msgstr ""
+msgstr "Kód az alkalmazásból"
 
 msgid "Код из приложения-аутентификатора"
-msgstr ""
+msgstr "Kód a hitelesítő alkalmazásból"
 
 msgid "Кол-во"
-msgstr ""
+msgstr "Menny."
 
 msgid "Количество"
-msgstr ""
+msgstr "Mennyiség"
 
 msgid "Количество прихода"
-msgstr ""
+msgstr "Bevételezett mennyiség"
 
 msgid "Количество списания"
-msgstr ""
+msgstr "Leírt mennyiség"
 
 msgid "Комментарий"
-msgstr ""
+msgstr "Megjegyzés"
 
 msgid "Комментарий кухне (необязательно)"
-msgstr ""
+msgstr "Megjegyzés a konyhának (nem kötelező)"
 
 msgid "Конец"
-msgstr ""
+msgstr "Vége"
 
 msgid "Конфиденциальность"
-msgstr ""
+msgstr "Adatvédelem"
 
 msgid "Корзина пуста"
-msgstr ""
+msgstr "A kosár üres"
 
 msgid "Критично"
-msgstr ""
+msgstr "Kritikus"
 
 msgid "Крупно"
-msgstr ""
+msgstr "Nagy"
 
 msgid "Крупные кнопки для планшета"
-msgstr ""
+msgstr "Nagy gombok a táblagéphez"
 
 msgid "Кто"
-msgstr ""
+msgstr "Ki"
 
 msgid "Кто удалил, отменил или дал скидку — последние 200 записей"
-msgstr ""
+msgstr "Ki törölt, mondott le vagy adott kedvezményt — az utolsó 200 bejegyzés"
 
 msgid "Кухня"
-msgstr ""
+msgstr "Konyha"
 
 msgid "Кухня (только экран кухни)"
-msgstr ""
+msgstr "Konyha (csak a konyhai képernyő)"
 
 msgid "Кухонный дисплей (KDS)"
-msgstr ""
+msgstr "Konyhai kijelző (KDS)"
 
 msgid "Лимит использований"
-msgstr ""
+msgstr "Felhasználási korlát"
 
 msgid "Лицензии + модули + внедрение"
-msgstr ""
+msgstr "Licencek + modulok + bevezetés"
 
 msgid "Логин кассы"
-msgstr ""
+msgstr "Pénztár bejelentkezés"
 
 msgid "Любой планшет, iPad или смартфон"
-msgstr ""
+msgstr "Bármilyen táblagép, iPad vagy okostelefon"
 
 msgid "Мало"
-msgstr ""
+msgstr "Kevés"
 
 msgid "Маржа"
-msgstr ""
+msgstr "Árrés"
 
 msgid "Менеджер"
-msgstr ""
+msgstr "Menedzser"
 
 msgid "Меню"
-msgstr ""
+msgstr "Menü"
 
 msgid "Меню пусто"
-msgstr ""
+msgstr "A menü üres"
 
 msgid "Меню-инжиниринг: себестоимость и маржа"
-msgstr ""
+msgstr "Menümérnökség: önköltség és árrés"
 
 msgid "Мест"
-msgstr ""
+msgstr "Hely"
 
 msgid "Месяц"
-msgstr ""
+msgstr "Hónap"
 
 msgid "Мин. остаток"
-msgstr ""
+msgstr "Min. készlet"
 
 msgid "Моб. платёж"
-msgstr ""
+msgstr "Mobil fizetés"
 
 msgid "Модификаторы"
-msgstr ""
+msgstr "Módosítók"
 
 msgid "Модификаторы:"
-msgstr ""
+msgstr "Módosítók:"
 
 msgid "Мои"
-msgstr ""
+msgstr "Enyéim"
 
 msgid "Мои столы"
-msgstr ""
+msgstr "Asztalaim"
 
 msgid "Мой ресторан"
-msgstr ""
+msgstr "Az éttermem"
 
 msgid "Мультисеть"
-msgstr ""
+msgstr "Multihálózat"
 
 msgid ""
 "Мы можем обновлять эти условия. Существенные изменения будут доведены до "
 "вашего сведения по email или через интерфейс Сервиса."
 msgstr ""
+"Ezeket a feltételeket frissíthetjük. A lényeges változásokról e-mailben "
+"vagy a Szolgáltatás felületén értesítjük."
 
 msgid ""
 "Мы передаём данные третьим лицам только в объёме, необходимом для работы "
@@ -945,62 +1002,69 @@ msgid ""
 "учётных данных, и провайдеру email-рассылок. Мы не продаём персональные "
 "данные третьим лицам."
 msgstr ""
+"Az adatokat harmadik feleknek csak a Szolgáltatás működéséhez szükséges "
+"mértékben adjuk át: a fizetési feldolgozónak (Stripe), az Ön által "
+"választott fiskális szolgáltatóknak (például Webkassa) — az Ön saját "
+"hitelesítő adataival, és az e-mail-küldő szolgáltatónak. Személyes "
+"adatokat harmadik feleknek nem adunk el."
 
 msgid "Мясо"
-msgstr ""
+msgstr "Hús"
 
 msgid "Мясо говядина"
-msgstr ""
+msgstr "Hús marha"
 
 msgid ""
 "Нажмите кнопку — AI проанализирует продажи, меню и склад за 28 дней и "
 "даст конкретные рекомендации."
 msgstr ""
+"Nyomja meg a gombot — az AI elemzi az eladásokat, a menüt és a raktárt 28"
+" napra, és konkrét ajánlásokat ad."
 
 msgid "Назад"
-msgstr ""
+msgstr "Vissza"
 
 msgid "Назад ко входу"
-msgstr ""
+msgstr "Vissza a bejelentkezéshez"
 
 msgid "Название"
-msgstr ""
+msgstr "Név"
 
 msgid "Название (например, «BI-отчёты»)"
-msgstr ""
+msgstr "Név (például „BI-jelentések”)"
 
 msgid "Название группы"
-msgstr ""
+msgstr "Csoport neve"
 
 msgid "Название категории"
-msgstr ""
+msgstr "Kategória neve"
 
 msgid "Название сети / ресторана"
-msgstr ""
+msgstr "Hálózat / étterem neve"
 
 msgid "Наименование"
-msgstr ""
+msgstr "Megnevezés"
 
 msgid "Накладные (приход)"
-msgstr ""
+msgstr "Számlák (bevételezés)"
 
 msgid "Наличные"
-msgstr ""
+msgstr "Készpénz"
 
 msgid "Наличные в кассе на начало (₸)"
-msgstr ""
+msgstr "Készpénz a pénztárban induláskor (₸)"
 
 msgid "Написать в поддержку"
-msgstr ""
+msgstr "Írjon a támogatásnak"
 
 msgid "Например, 5"
-msgstr ""
+msgstr "Például 5"
 
 msgid "Например, Кофейня на Абая"
-msgstr ""
+msgstr "Például Kávézó az Abaj utcában"
 
 msgid "Например: пакет, доставка"
-msgstr ""
+msgstr "Például: zacskó, kiszállítás"
 
 msgid ""
 "Настоящие условия регулируют использование платформы RestOS (далее — "
@@ -1008,133 +1072,146 @@ msgid ""
 "лояльность гостей, склад, смены персонала, аналитика и фискализация "
 "чеков."
 msgstr ""
+"Ezek a feltételek szabályozzák a RestOS platform (a továbbiakban: "
+"„Szolgáltatás”) használatát, amelyet éttermek kezelésére nyújtunk: "
+"rendelésfelvétel, vendéghűség, raktár, személyzeti műszakok, analitika és"
+" nyugták fiskalizációja."
 
 msgid ""
 "Настройка привязывается к заведению и конкретному экрану (касса, кухня, "
 "склад) и применяется на любом устройстве, которое его открывает. "
 "Перекрывает настройку устройства выше."
 msgstr ""
+"A beállítás a helyhez és egy adott képernyőhöz (pénztár, konyha, raktár) "
+"kötődik, és minden eszközön érvényesül, amely megnyitja. Felülírja a "
+"fenti eszközbeállítást."
 
 msgid "Настройки"
-msgstr ""
+msgstr "Beállítások"
 
 msgid "Настройки заведений"
-msgstr ""
+msgstr "Helyek beállításai"
 
 msgid "Начало"
-msgstr ""
+msgstr "Kezdés"
 
 msgid "Начать бесплатно"
-msgstr ""
+msgstr "Kezdés ingyen"
 
 msgid "Не оплачен"
-msgstr ""
+msgstr "Nincs kifizetve"
 
 msgid "Не подключено"
-msgstr ""
+msgstr "Nincs csatlakoztatva"
 
 msgid "Не удалось сменить язык"
-msgstr ""
+msgstr "A nyelvet nem sikerült módosítani"
 
 msgid ""
 "Не удалось списать оплату с карты. Обновите способ оплаты — доступ "
 "сохранится, Stripe повторит списание автоматически."
 msgstr ""
+"A kártyáról nem sikerült levonni a fizetést. Frissítse a fizetési módot —"
+" a hozzáférés megmarad, a Stripe automatikusan újrapróbálja a levonást."
 
 msgid "Неверный PIN"
-msgstr ""
+msgstr "Helytelen PIN"
 
 msgid "Негативные отзывы"
-msgstr ""
+msgstr "Negatív visszajelzések"
 
 msgid "Негативных отзывов пока нет"
-msgstr ""
+msgstr "Még nincsenek negatív visszajelzések"
 
 msgid "Неделя"
-msgstr ""
+msgstr "Hét"
 
 msgid "Недостача"
-msgstr ""
+msgstr "Hiány"
 
 msgid "Некоторые позиции больше недоступны и не были добавлены"
-msgstr ""
+msgstr "Néhány tétel már nem elérhető, és nem lett hozzáadva"
 
 msgid "Необязательно"
-msgstr ""
+msgstr "Nem kötelező"
 
 msgid "Нет"
-msgstr ""
+msgstr "Nem"
 
 msgid "Нет аккаунта?"
-msgstr ""
+msgstr "Nincs fiókja?"
 
 msgid "Нет активных заказов"
-msgstr ""
+msgstr "Nincs aktív rendelés"
 
 msgid "Нет данных"
-msgstr ""
+msgstr "Nincs adat"
 
 msgid "Нет заказов в работе"
-msgstr ""
+msgstr "Nincs folyamatban lévő rendelés"
 
 msgid "Нет новых заказов"
-msgstr ""
+msgstr "Nincs új rendelés"
 
 msgid "Нет отзывов"
-msgstr ""
+msgstr "Nincsenek visszajelzések"
 
 msgid "Нет позиций на складе"
-msgstr ""
+msgstr "Nincsenek tételek a raktárban"
 
 msgid "Нет расходов"
-msgstr ""
+msgstr "Nincsenek költségek"
 
 msgid "Нет расходов за период"
-msgstr ""
+msgstr "Nincsenek költségek az időszakban"
 
 msgid "Нет связи и нет локальной копии меню. Подключитесь к интернету один раз."
 msgstr ""
+"Nincs kapcsolat és nincs helyi menümásolat. Csatlakozzon egyszer az "
+"internethez."
 
 msgid "Нет связи — заказ сохранён и отправится автоматически"
-msgstr ""
+msgstr "Nincs kapcsolat — a rendelés mentve, és automatikusan elküldődik"
 
 msgid ""
 "Нет связи — экран показывает последние полученные заказы. Обновится "
 "автоматически."
 msgstr ""
+"Nincs kapcsolat — a képernyő az utolsó beérkezett rendeléseket mutatja. "
+"Automatikusan frissül."
 
 msgid "Низкий остаток"
-msgstr ""
+msgstr "Alacsony készlet"
 
 msgid "Ничего не найдено"
-msgstr ""
+msgstr "Nincs találat"
 
 msgid "Новая категория"
-msgstr ""
+msgstr "Új kategória"
 
 msgid "Новая накладная"
-msgstr ""
+msgstr "Új számla"
 
 msgid "Новая позиция"
-msgstr ""
+msgstr "Új tétel"
 
 msgid "Новая рассылка"
-msgstr ""
+msgstr "Új körüzenet"
 
 msgid "Новые"
-msgstr ""
+msgstr "Újak"
 
 msgid "Новый"
-msgstr ""
+msgstr "Új"
 
 msgid "Новый заказ"
-msgstr ""
+msgstr "Új rendelés"
 
 msgid "Новый пароль"
-msgstr ""
+msgstr "Új jelszó"
 
 msgid "Новый чек"
-msgstr ""
+msgstr "Új nyugta"
 
 msgid ""
 "Новым аккаунтам предоставляется бесплатный пробный период 14 дней. По "
@@ -1142,585 +1219,615 @@ msgid ""
 "требуется активная оплаченная подписка. Оплата обрабатывается через "
 "Stripe; RestOS не хранит данные вашей карты."
 msgstr ""
+"Az új fiókok 14 napos ingyenes próbaidőszakot kapnak. A próbaidőszak "
+"lejárta után a Szolgáltatás további használatához aktív, fizetett "
+"előfizetés szükséges. A fizetést a Stripe dolgozza fel; a RestOS nem "
+"tárolja a kártyaadatait."
 
 msgid "Новых"
-msgstr ""
+msgstr "Új"
 
 msgid "Новых гостей сегодня"
-msgstr ""
+msgstr "Új vendégek ma"
 
 msgid "Номер кассы (CashboxUniqueNumber)"
-msgstr ""
+msgstr "Pénztár száma (CashboxUniqueNumber)"
 
 msgid "Номер накладной"
-msgstr ""
+msgstr "Számla száma"
 
 msgid "Номер стола"
-msgstr ""
+msgstr "Asztal száma"
 
 msgid "Нормально"
-msgstr ""
+msgstr "Rendben"
 
 msgid "Нужно улучшить"
-msgstr ""
+msgstr "Javítani kell"
 
 msgid "Обзор"
-msgstr ""
+msgstr "Áttekintés"
 
 msgid "Обновить страницу"
-msgstr ""
+msgstr "Oldal frissítése"
 
 msgid "Обновления"
-msgstr ""
+msgstr "Frissítések"
 
 msgid "Обновлено:"
-msgstr ""
+msgstr "Frissítve:"
 
 msgid "Оборудование"
-msgstr ""
+msgstr "Berendezés"
 
 msgid "Обучение персонала"
-msgstr ""
+msgstr "Személyzet betanítása"
 
 msgid "Общий NPS"
-msgstr ""
+msgstr "Teljes NPS"
 
 msgid "Ожидает"
-msgstr ""
+msgstr "Várakozik"
 
 msgid "Ожидается в кассе"
-msgstr ""
+msgstr "Várható a pénztárban"
 
 msgid "Ожидалось"
-msgstr ""
+msgstr "Várható volt"
 
 msgid "Онлайн"
-msgstr ""
+msgstr "Online"
 
 msgid ""
 "Онлайн-оплата пока не подключена — свяжитесь с поддержкой для активации "
 "тарифа."
 msgstr ""
+"Az online fizetés még nincs csatlakoztatva — vegye fel a kapcsolatot a "
+"támogatással a tarifa aktiválásához."
 
 msgid "Операция"
-msgstr ""
+msgstr "Művelet"
 
 msgid "Описание"
-msgstr ""
+msgstr "Leírás"
 
 msgid "Описание (необязательно)"
-msgstr ""
+msgstr "Leírás (nem kötelező)"
 
 msgid "Оплата"
-msgstr ""
+msgstr "Fizetés"
 
 msgid "Оплата аренды за июнь"
-msgstr ""
+msgstr "Júniusi bérleti díj kifizetése"
 
 msgid "Оплата не прошла"
-msgstr ""
+msgstr "A fizetés nem sikerült"
 
 msgid "Оплатить"
-msgstr ""
+msgstr "Fizetés"
 
 msgid "Оплачен"
-msgstr ""
+msgstr "Kifizetve"
 
 msgid "Оплаченных заказов"
-msgstr ""
+msgstr "Kifizetett rendelések"
 
 msgid "Оставьте пустым — отправим приглашение на email"
-msgstr ""
+msgstr "Hagyja üresen — meghívót küldünk e-mailben"
 
 msgid "Осталось дней пробного периода:"
-msgstr ""
+msgstr "Hátralévő próbanapok:"
 
 msgid "Остаток"
-msgstr ""
+msgstr "Készlet"
 
 msgid "От $30/мес, всё включено"
-msgstr ""
+msgstr "$30/hó-tól, minden benne"
 
 msgid "Отзывов"
-msgstr ""
+msgstr "Visszajelzés"
 
 msgid "Отзывов за месяц"
-msgstr ""
+msgstr "Visszajelzés a hónapban"
 
 msgid "Отзывов пока нет"
-msgstr ""
+msgstr "Még nincsenek visszajelzések"
 
 msgid "Отзывы"
-msgstr ""
+msgstr "Visszajelzések"
 
 msgid "Отключить 2FA"
-msgstr ""
+msgstr "2FA kikapcsolása"
 
 msgid "Откройте смену, чтобы принимать оплату"
-msgstr ""
+msgstr "Nyisson műszakot a fizetések elfogadásához"
 
 msgid "Открыта"
-msgstr ""
+msgstr "Nyitva"
 
 msgid "Открыть смену"
-msgstr ""
+msgstr "Műszak nyitása"
 
 msgid "Отлично"
-msgstr ""
+msgstr "Kitűnő"
 
 msgid "Отмена"
-msgstr ""
+msgstr "Mégse"
 
 msgid "Отменил заказ"
-msgstr ""
+msgstr "Lemondta a rendelést"
 
 msgid "Отменить заказ"
-msgstr ""
+msgstr "Rendelés lemondása"
 
 msgid "Отменить заказ?"
-msgstr ""
+msgstr "Lemondja a rendelést?"
 
 msgid "Отменён"
-msgstr ""
+msgstr "Lemondva"
 
 msgid ""
 "Отметьте позиции, которые уйдут в отдельный чек — его можно оплатить "
 "отдельно."
 msgstr ""
+"Jelölje meg a tételeket, amelyek külön nyugtára kerülnek — külön "
+"fizethető."
 
 msgid "Отозвать ключ?"
-msgstr ""
+msgstr "Visszavonja a kulcsot?"
 
 msgid "Отправить на кухню"
-msgstr ""
+msgstr "Küldés a konyhára"
 
 msgid "Отправить письмо повторно"
-msgstr ""
+msgstr "E-mail újraküldése"
 
 msgid "Отправить ссылку для сброса"
-msgstr ""
+msgstr "Visszaállító link küldése"
 
 msgid "Отправлена"
-msgstr ""
+msgstr "Elküldve"
 
 msgid "Отправлено ✓"
-msgstr ""
+msgstr "Elküldve ✓"
 
 msgid "Отправляем…"
-msgstr ""
+msgstr "Küldés…"
 
 msgid "Официант"
-msgstr ""
+msgstr "Pincér"
 
 msgid "Официант (только приём заказов)"
-msgstr ""
+msgstr "Pincér (csak rendelésfelvétel)"
 
 msgid ""
 "Официант, кухня и касса видят заказ в реальном времени. Столы, статусы, "
 "комментарии к позициям."
 msgstr ""
+"A pincér, a konyha és a pénztár valós időben látja a rendelést. Asztalok,"
+" státuszok, megjegyzések a tételekhez."
 
 msgid "Офлайн-режим: меню из локальной копии"
-msgstr ""
+msgstr "Offline mód: menü a helyi másolatból"
 
 msgid "Оформите первый заказ в кассе"
-msgstr ""
+msgstr "Vegye fel az első rendelést a pénztárban"
 
 msgid "Оформить"
-msgstr ""
+msgstr "Megrendelés"
 
 msgid ""
 "Оформление сохраняется на этом устройстве: кассовый планшет, кухня и "
 "телефон официанта могут выглядеть по-разному."
 msgstr ""
+"A megjelenés ezen az eszközön mentődik: a pénztári táblagép, a konyha és "
+"a pincér telefonja eltérően nézhet ki."
 
 msgid "Оценка"
-msgstr ""
+msgstr "Értékelés"
 
 msgid "Ошибка"
-msgstr ""
+msgstr "Hiba"
 
 msgid "Ошибка входа"
-msgstr ""
+msgstr "Bejelentkezési hiba"
 
 msgid "Ошибка генерации токена"
-msgstr ""
+msgstr "Token-generálási hiba"
 
 msgid "Ошибка добавления позиции"
-msgstr ""
+msgstr "Hiba a tétel hozzáadásakor"
 
 msgid "Ошибка добавления стола"
-msgstr ""
+msgstr "Hiba az asztal hozzáadásakor"
 
 msgid "Ошибка загрузки"
-msgstr ""
+msgstr "Betöltési hiba"
 
 msgid "Ошибка загрузки фото"
-msgstr ""
+msgstr "Hiba a fotó betöltésekor"
 
 msgid "Ошибка обновления статуса"
-msgstr ""
+msgstr "Hiba a státusz frissítésekor"
 
 msgid "Ошибка отмены"
-msgstr ""
+msgstr "Hiba a lemondáskor"
 
 msgid "Ошибка отправки. Попробуйте позже."
-msgstr ""
+msgstr "Küldési hiba. Próbálja később."
 
 msgid "Ошибка оформления заказа"
-msgstr ""
+msgstr "Hiba a rendelés leadásakor"
 
 msgid "Ошибка регистрации"
-msgstr ""
+msgstr "Regisztrációs hiba"
 
 msgid "Ошибка смены"
-msgstr ""
+msgstr "Műszakhiba"
 
 msgid "Ошибка соединения"
-msgstr ""
+msgstr "Kapcsolati hiba"
 
 msgid "Ошибка создания пользователя"
-msgstr ""
+msgstr "Hiba a felhasználó létrehozásakor"
 
 msgid "Ошибка сохранения"
-msgstr ""
+msgstr "Mentési hiba"
 
 msgid "Ошибка сохранения модификаторов"
-msgstr ""
+msgstr "Hiba a módosítók mentésekor"
 
 msgid "Ошибка сохранения техкарты"
-msgstr ""
+msgstr "Hiba a recept mentésekor"
 
 msgid "Ошибка удаления"
-msgstr ""
+msgstr "Törlési hiba"
 
 msgid "Ошибка удаления стола"
-msgstr ""
+msgstr "Hiba az asztal törlésekor"
 
 msgid "Ошибка фискализации"
-msgstr ""
+msgstr "Fiskalizációs hiba"
 
 msgid "Ошибка, попробуйте позже"
-msgstr ""
+msgstr "Hiba, próbálja később"
 
 msgid ""
 "Панель сама подскажет шаги. Позиции меню, столы, сотрудники — всё за 10 "
 "минут."
 msgstr ""
+"A panel maga súgja a lépéseket. Menütételek, asztalok, munkatársak — mind"
+" 10 perc alatt."
 
 msgid "Панель управления сетью ресторанов"
-msgstr ""
+msgstr "Éttermhálózat vezérlőpultja"
 
 msgid ""
 "Пароли хранятся в виде необратимых хешей (bcrypt). Соединение с Сервисом "
 "защищено HTTPS. Доступ к данным одной сети ресторанов технически "
 "изолирован от данных других сетей."
 msgstr ""
+"A jelszavakat visszafordíthatatlan kivonatként (bcrypt) tároljuk. A "
+"Szolgáltatással való kapcsolatot HTTPS védi. Egy étteremhálózat adataihoz"
+" való hozzáférés technikailag el van különítve más hálózatok adataitól."
 
 msgid "Пароль"
-msgstr ""
+msgstr "Jelszó"
 
 msgid "Пароль (необязательно)"
-msgstr ""
+msgstr "Jelszó (nem kötelező)"
 
 msgid "Пароль кассы"
-msgstr ""
+msgstr "Pénztár jelszava"
 
 msgid ""
 "Переименование меняет категорию у всех позиций. «Убрать» оставляет "
 "позиции без категории, ничего не удаляя."
 msgstr ""
+"Az átnevezés minden tétel kategóriáját megváltoztatja. Az „Eltávolítás” "
+"kategória nélkül hagyja a tételeket, semmit sem törölve."
 
 msgid "Перенести"
-msgstr ""
+msgstr "Áthelyezés"
 
 msgid "Перенести на другой стол"
-msgstr ""
+msgstr "Áthelyezés másik asztalra"
 
 msgid "Персонал"
-msgstr ""
+msgstr "Személyzet"
 
 msgid "Печать"
-msgstr ""
+msgstr "Nyomtatás"
 
 msgid "Печать талона"
-msgstr ""
+msgstr "Blokk nyomtatása"
 
 msgid "Печать чека"
-msgstr ""
+msgstr "Nyugta nyomtatása"
 
 msgid ""
 "Платёжные данные обрабатываются напрямую Stripe; RestOS не хранит номера "
 "карт."
 msgstr ""
+"A fizetési adatokat közvetlenül a Stripe dolgozza fel; a RestOS nem "
+"tárolja a kártyaszámokat."
 
 msgid "Пн"
-msgstr ""
+msgstr "H"
 
 msgid ""
 "По вопросам, связанным с условиями использования, пишите на адрес, "
 "указанный в вашем аккаунте платформы, или через раздел поддержки."
 msgstr ""
+"A felhasználási feltételekkel kapcsolatos kérdésekben írjon a platform "
+"fiókjában megadott címre, vagy a támogatási részlegen keresztül."
 
 msgid "По заведениям"
-msgstr ""
+msgstr "Helyenként"
 
 msgid "По заведениям и экранам"
-msgstr ""
+msgstr "Helyenként és képernyőnként"
 
 msgid "По умолчанию"
-msgstr ""
+msgstr "Alapértelmezett"
 
 msgid "Повреждение"
-msgstr ""
+msgstr "Sérülés"
 
 msgid "Повторить последний заказ"
-msgstr ""
+msgstr "Utolsó rendelés megismétlése"
 
 msgid "Подключены в Telegram"
-msgstr ""
+msgstr "Csatlakozva a Telegramon"
 
 msgid "Подписка"
-msgstr ""
+msgstr "Előfizetés"
 
 msgid "Подписка не найдена. Свяжитесь с поддержкой."
-msgstr ""
+msgstr "Az előfizetés nem található. Vegye fel a kapcsolatot a támogatással."
 
 msgid "Подтвердите email"
-msgstr ""
+msgstr "Erősítse meg az e-mailt"
 
 msgid "Подтвердить"
-msgstr ""
+msgstr "Megerősítés"
 
 msgid "Подтверждение email"
-msgstr ""
+msgstr "E-mail megerősítése"
 
 msgid "Подтверждено"
-msgstr ""
+msgstr "Megerősítve"
 
 msgid "Подтверждён"
-msgstr ""
+msgstr "Megerősítve"
 
 msgid "Подытог"
-msgstr ""
+msgstr "Részösszeg"
 
 msgid "Позиций на складе"
-msgstr ""
+msgstr "Tételek a raktárban"
 
 msgid "Позиция"
-msgstr ""
+msgstr "Tétel"
 
 msgid "Позиция в стоп-листе"
-msgstr ""
+msgstr "Tétel a tiltólistán"
 
 msgid "Поиск по имени или телефону..."
-msgstr ""
+msgstr "Keresés név vagy telefon szerint..."
 
 msgid "Поиск по меню…"
-msgstr ""
+msgstr "Keresés a menüben…"
 
 msgid "Поиск по названию..."
-msgstr ""
+msgstr "Keresés név szerint..."
 
 msgid ""
 "Пока пусто. Здесь появятся удаления, отмены заказов, скидки и изменения "
 "пользователей."
 msgstr ""
+"Egyelőre üres. Itt jelennek meg a törlések, rendeléslemondások, "
+"kedvezmények és felhasználói módosítások."
 
 msgid "Политика конфиденциальности"
-msgstr ""
+msgstr "Adatvédelmi szabályzat"
 
 msgid "Политика конфиденциальности — RestOS"
-msgstr ""
+msgstr "Adatvédelmi szabályzat — RestOS"
 
 msgid "Политика конфиденциальности →"
-msgstr ""
+msgstr "Adatvédelmi szabályzat →"
 
 msgid "Полный вид →"
-msgstr ""
+msgstr "Teljes nézet →"
 
 msgid "Получено меньше суммы заказа"
-msgstr ""
+msgstr "A rendelés összegénél kevesebb érkezett"
 
 msgid "Получено от гостя (₸)"
-msgstr ""
+msgstr "Vendégtől kapott (₸)"
 
 msgid "Получить рекомендации"
-msgstr ""
+msgstr "Ajánlások kérése"
 
 msgid "Пользователей нет"
-msgstr ""
+msgstr "Nincsenek felhasználók"
 
 msgid "Пользователи"
-msgstr ""
+msgstr "Felhasználók"
 
 msgid "Попробовать 14 дней бесплатно"
-msgstr ""
+msgstr "14 nap ingyenes kipróbálása"
 
 msgid "Популярные позиции"
-msgstr ""
+msgstr "Népszerű tételek"
 
 msgid "Порча"
-msgstr ""
+msgstr "Romlás"
 
 msgid "Порча / просрочка"
-msgstr ""
+msgstr "Romlás / lejárat"
 
 msgid "Последнее использование"
-msgstr ""
+msgstr "Utolsó használat"
 
 msgid "Последние 30 дней"
-msgstr ""
+msgstr "Utolsó 30 nap"
 
 msgid "Последние расходы"
-msgstr ""
+msgstr "Legutóbbi költségek"
 
 msgid "Посмотреть цены"
-msgstr ""
+msgstr "Árak megtekintése"
 
 msgid "Поставщик"
-msgstr ""
+msgstr "Beszállító"
 
 msgid "Почему не тяжёлая ERP?"
-msgstr ""
+msgstr "Miért nem nehéz ERP?"
 
 msgid "Предпросмотр"
-msgstr ""
+msgstr "Előnézet"
 
 msgid "Прибыль"
-msgstr ""
+msgstr "Nyereség"
 
 msgid "Привязать Telegram (для официантов)"
-msgstr ""
+msgstr "Telegram összekapcsolása (pincéreknek)"
 
 msgid "Пригласите сотрудника"
-msgstr ""
+msgstr "Hívjon meg munkatársat"
 
 msgid "Применил скидку"
-msgstr ""
+msgstr "Kedvezményt alkalmazott"
 
 msgid "Примечание"
-msgstr ""
+msgstr "Megjegyzés"
 
 msgid "Принимайте заказы"
-msgstr ""
+msgstr "Fogadjon rendeléseket"
 
 msgid "Принять"
-msgstr ""
+msgstr "Elfogadás"
 
 msgid "Принять наличные"
-msgstr ""
+msgstr "Készpénz elfogadása"
 
 msgid "Приоритетная поддержка"
-msgstr ""
+msgstr "Kiemelt támogatás"
 
 msgid "Приостановлена"
-msgstr ""
+msgstr "Felfüggesztve"
 
 msgid "Приход от поставщика: остатки увеличиваются, цена ингредиента обновляется."
-msgstr ""
+msgstr "Bevételezés beszállítótól: a készlet nő, a hozzávaló ára frissül."
 
 msgid "Приход:"
-msgstr ""
+msgstr "Bevételezés:"
 
 msgid "Причина"
-msgstr ""
+msgstr "Ok"
 
 msgid "Приём заказов и касса"
-msgstr ""
+msgstr "Rendelésfelvétel és pénztár"
 
 msgid ""
 "Приём заказов, кухонный дисплей, склад с автосписанием по техкартам, "
 "смены персонала, программа лояльности гостей и фискализация чеков — без "
 "Excel и десятка разных приложений."
 msgstr ""
+"Rendelésfelvétel, konyhai kijelző, raktár receptek szerinti automatikus "
+"leírással, személyzeti műszakok, vendéghűségprogram és nyugták "
+"fiskalizációja — Excel és tucatnyi különféle alkalmazás nélkül."
 
 msgid "Пробный период"
-msgstr ""
+msgstr "Próbaidőszak"
 
 msgid "Пробный период закончился"
-msgstr ""
+msgstr "A próbaidőszak lejárt"
 
 msgid "Провайдер"
-msgstr ""
+msgstr "Szolgáltató"
 
 msgid "Провести накладную"
-msgstr ""
+msgstr "Számla könyvelése"
 
 msgid "Программа лояльности"
-msgstr ""
+msgstr "Hűségprogram"
 
 msgid "Продажи CSV"
-msgstr ""
+msgstr "Eladások CSV"
 
 msgid "Продажи картой"
-msgstr ""
+msgstr "Kártyás eladások"
 
 msgid "Продажи наличными"
-msgstr ""
+msgstr "Készpénzes eladások"
 
 msgid "Продление:"
-msgstr ""
+msgstr "Megújítás:"
 
 msgid "Продолжить выбор"
-msgstr ""
+msgstr "Kiválasztás folytatása"
 
 msgid "Прозрачные цены"
-msgstr ""
+msgstr "Átlátható árak"
 
 msgid "Произвольная позиция"
-msgstr ""
+msgstr "Egyéni tétel"
 
 msgid "Промокодов пока нет. Создайте первый — гости смогут вводить его в QR-меню."
 msgstr ""
+"Még nincsenek promóciós kódok. Hozza létre az elsőt — a vendégek "
+"beírhatják a QR-menüben."
 
 msgid "Промокоды"
-msgstr ""
+msgstr "Promóciós kódok"
 
 msgid "Процент"
-msgstr ""
+msgstr "Százalék"
 
 msgid "Прочее"
-msgstr ""
+msgstr "Egyéb"
 
 msgid "Пт"
-msgstr ""
+msgstr "P"
 
 msgid "Пусто"
-msgstr ""
+msgstr "Üres"
 
 msgid "Работает на любом планшете"
-msgstr ""
+msgstr "Bármilyen táblagépen működik"
 
 msgid "Работают в QR-меню для гостей"
-msgstr ""
+msgstr "A vendégek QR-menüjében működnek"
 
 msgid "Разделить"
-msgstr ""
+msgstr "Megosztás"
 
 msgid "Разделить чек"
-msgstr ""
+msgstr "Számla megosztása"
 
 msgid "Рассылки"
-msgstr ""
+msgstr "Körüzenetek"
 
 msgid "Рассылок отправлено"
-msgstr ""
+msgstr "Elküldött körüzenetek"
 
 msgid "Рассылок пока не было"
-msgstr ""
+msgstr "Még nem voltak körüzenetek"
 
 msgid "Расходы"
-msgstr ""
+msgstr "Költségek"
 
 msgid "Расходы CSV"
-msgstr ""
+msgstr "Költségek CSV"
 
 msgid "Расходы по категориям"
-msgstr ""
+msgstr "Költségek kategóriánként"
 
 msgid "Расхождение"
-msgstr ""
+msgstr "Eltérés"
 
 msgid ""
 "Регистрируясь, вы подтверждаете, что представляете юридическое лицо или "
@@ -1728,75 +1835,81 @@ msgid ""
 "питания. Вы несёте ответственность за сохранность учётных данных и "
 "действия под вашей учётной записью."
 msgstr ""
+"A regisztrációval megerősíti, hogy olyan jogi személyt vagy egyéni "
+"vállalkozót képvisel, amely jogosult vendéglátási szolgáltatásokra "
+"szerződést kötni. Ön felel a hitelesítő adatok megőrzéséért és a fiókja "
+"alatt végzett műveletekért."
 
 msgid "Редактировать"
-msgstr ""
+msgstr "Szerkesztés"
 
 msgid "Редактировать позицию"
-msgstr ""
+msgstr "Tétel szerkesztése"
 
 msgid "Режим планшета"
-msgstr ""
+msgstr "Táblagép mód"
 
 msgid "Режим планшета ↗︎"
-msgstr ""
+msgstr "Táblagép mód ↗︎"
 
 msgid ""
 "Режим стоп-листа: нажмите на позицию, чтобы убрать её из продажи или "
 "вернуть."
 msgstr ""
+"Tiltólista mód: kattintson egy tételre, hogy kivegye az eladásból vagy "
+"visszategye."
 
 msgid "Роль"
-msgstr ""
+msgstr "Szerepkör"
 
 msgid "Русский"
-msgstr ""
+msgstr "Orosz"
 
 msgid "С нами с"
-msgstr ""
+msgstr "Velünk ekkortól"
 
 msgid "Самые лояльные гости"
-msgstr ""
+msgstr "A leghűségesebb vendégek"
 
 msgid "Сб"
-msgstr ""
+msgstr "Szo"
 
 msgid "Сбросить"
-msgstr ""
+msgstr "Visszaállítás"
 
 msgid "Светлая"
-msgstr ""
+msgstr "Világos"
 
 msgid "Свободен"
-msgstr ""
+msgstr "Szabad"
 
 msgid "Свой цвет"
-msgstr ""
+msgstr "Saját szín"
 
 #, python-brace-format
 msgid "Связь восстановлена: отправлено заказов — {n}"
-msgstr ""
+msgstr "Kapcsolat helyreállt: elküldött rendelések — {n}"
 
 msgid "Сгенерировать ссылку"
-msgstr ""
+msgstr "Link generálása"
 
 msgid "Сдача"
-msgstr ""
+msgstr "Visszajáró"
 
 msgid "Себестоимость"
-msgstr ""
+msgstr "Önköltség"
 
 msgid "Себестоимость считается по техкартам и ценам ингредиентов"
-msgstr ""
+msgstr "Az önköltséget a receptek és a hozzávalók árai alapján számítjuk"
 
 msgid "Сегодня"
-msgstr ""
+msgstr "Ma"
 
 msgid "Сегодня работают:"
-msgstr ""
+msgstr "Ma dolgoznak:"
 
 msgid "Секрет для проверки подписи:"
-msgstr ""
+msgstr "Titkos kulcs az aláírás ellenőrzéséhez:"
 
 msgid ""
 "Сервис предоставляется «как есть». RestOS не несёт ответственности за "
@@ -1804,581 +1917,605 @@ msgid ""
 "результате использования или невозможности использования Сервиса, в "
 "пределах, допустимых применимым законодательством."
 msgstr ""
+"A Szolgáltatást „ahogy van” alapon nyújtjuk. A RestOS nem felel a "
+"Szolgáltatás használatából vagy használhatatlanságából eredő közvetett "
+"károkért, elmaradt haszonért vagy adatvesztésért, az alkalmazandó "
+"jogszabályok által megengedett mértékben."
 
 msgid "Сервис:"
-msgstr ""
+msgstr "Szolgáltatás:"
 
 msgid "Скачать все данные сети в формате JSON"
-msgstr ""
+msgstr "A hálózat összes adatának letöltése JSON formátumban"
 
 msgid "Скидка"
-msgstr ""
+msgstr "Kedvezmény"
 
 msgid "Скидка %"
-msgstr ""
+msgstr "Kedvezmény %"
 
 msgid "Скидка ₸"
-msgstr ""
+msgstr "Kedvezmény ₸"
 
 msgid "Склад"
-msgstr ""
+msgstr "Raktár"
 
 msgid "Склад и техкарты"
-msgstr ""
+msgstr "Raktár és receptek"
 
 msgid ""
 "Сколько ингредиента списывается со склада при продаже 1 шт. этой позиции."
 " При завершении заказа склад списывается автоматически."
 msgstr ""
+"Mennyi hozzávaló íródik le a raktárból e tétel 1 db-jának eladásakor. A "
+"rendelés befejezésekor a raktár automatikusan leíródik."
 
 msgid "Скопировано!"
-msgstr ""
+msgstr "Másolva!"
 
 msgid "Скопировать"
-msgstr ""
+msgstr "Másolás"
 
 msgid "Скопируйте ключ сейчас — он показывается только один раз:"
-msgstr ""
+msgstr "Másolja ki a kulcsot most — csak egyszer jelenik meg:"
 
 msgid "Скрыто"
-msgstr ""
+msgstr "Rejtve"
 
 msgid "Скрыть или показать меню"
-msgstr ""
+msgstr "Menü elrejtése vagy megjelenítése"
 
 msgid "Смена не открыта"
-msgstr ""
+msgstr "A műszak nincs megnyitva"
 
 msgid "Смена открыта"
-msgstr ""
+msgstr "A műszak nyitva"
 
 msgid "Смена открыта с"
-msgstr ""
+msgstr "Műszak nyitva ekkortól"
 
 msgid "Смена сотрудника"
-msgstr ""
+msgstr "Munkatárs váltása"
 
 msgid "Смена сотрудника по PIN"
-msgstr ""
+msgstr "Munkatárs váltása PIN-nel"
 
 msgid "Сменить заведение"
-msgstr ""
+msgstr "Hely váltása"
 
 msgid ""
 "Сменить заведение? Текущий чек будет очищен, заказы начнут пробиваться в "
 "другое заведение."
 msgstr ""
+"Helyet vált? Az aktuális számla törlődik, a rendelések másik helyre "
+"kerülnek könyvelésre."
 
 msgid "Смены"
-msgstr ""
+msgstr "Műszakok"
 
 msgid "Смены и персонал"
-msgstr ""
+msgstr "Műszakok és személyzet"
 
 msgid ""
 "Смены открываются на экране кассы. Открытие и закрытие с пересчётом "
 "наличных — главный контроль кассовой дисциплины."
 msgstr ""
+"A műszakokat a pénztár képernyőjén nyitják. A nyitás és zárás készpénz-"
+"újraszámolással a pénztári fegyelem fő ellenőrzése."
 
 msgid "Сначала выберите заведение"
-msgstr ""
+msgstr "Először válasszon helyet"
 
 msgid "Сначала выберите заведение (не «Все заведения»)"
-msgstr ""
+msgstr "Először válasszon helyet (ne „Minden hely”)"
 
 msgid "Сначала выберите стол"
-msgstr ""
+msgstr "Először válasszon asztalt"
 
 msgid "Сначала добавьте заведение"
-msgstr ""
+msgstr "Először adjon hozzá helyet"
 
 msgid "Сначала добавьте ингредиенты"
-msgstr ""
+msgstr "Először adjon hozzá hozzávalókat"
 
 msgid "Сначала добавьте ингредиенты на складе"
-msgstr ""
+msgstr "Először adjon hozzá hozzávalókat a raktárban"
 
 msgid "События"
-msgstr ""
+msgstr "Események"
 
 msgid "Согласен с"
-msgstr ""
+msgstr "Elfogadom a következőt:"
 
 msgid "Создайте заведение"
-msgstr ""
+msgstr "Hozzon létre helyet"
 
 msgid "Создал API-ключ"
-msgstr ""
+msgstr "Létrehozott egy API-kulcsot"
 
 msgid "Создал пользователя"
-msgstr ""
+msgstr "Létrehozott egy felhasználót"
 
 msgid "Создал промокод"
-msgstr ""
+msgstr "Létrehozott egy promóciós kódot"
 
 msgid "Создан"
-msgstr ""
+msgstr "Létrehozva"
 
 msgid "Создать"
-msgstr ""
+msgstr "Létrehozás"
 
 msgid "Создать аккаунт"
-msgstr ""
+msgstr "Fiók létrehozása"
 
 msgid "Создать аккаунты и ссылки для привязки →"
-msgstr ""
+msgstr "Fiókok és összekapcsoló linkek létrehozása →"
 
 msgid "Создать заведение"
-msgstr ""
+msgstr "Hely létrehozása"
 
 msgid "Создать ключ"
-msgstr ""
+msgstr "Kulcs létrehozása"
 
 msgid "Создать рассылку →"
-msgstr ""
+msgstr "Körüzenet létrehozása →"
 
 msgid "Создаётся..."
-msgstr ""
+msgstr "Létrehozás..."
 
 msgid "Сотрудник"
-msgstr ""
+msgstr "Munkatárs"
 
 msgid ""
 "Сотрудник может принимать заказы прямо из Telegram-бота. Сгенерируйте "
 "ссылку и передайте её сотруднику — он перейдёт по ней и его аккаунт "
 "привяжется автоматически."
 msgstr ""
+"A munkatárs közvetlenül a Telegram-botból fogadhat rendeléseket. "
+"Generáljon egy linket, és adja át a munkatársnak — miután megnyitja, a "
+"fiókja automatikusan összekapcsolódik."
 
 msgid "Сотрудники"
-msgstr ""
+msgstr "Munkatársak"
 
 msgid "Сотрудники появляются здесь после привязки Telegram-аккаунта."
-msgstr ""
+msgstr "A munkatársak itt jelennek meg a Telegram-fiók összekapcsolása után."
 
 msgid "Сотрудников пока нет."
-msgstr ""
+msgstr "Még nincsenek munkatársak."
 
 msgid "Сохранено"
-msgstr ""
+msgstr "Mentve"
 
 msgid "Сохранено ✓"
-msgstr ""
+msgstr "Mentve ✓"
 
 msgid "Сохранить"
-msgstr ""
+msgstr "Mentés"
 
 msgid "Сохранить пароль"
-msgstr ""
+msgstr "Jelszó mentése"
 
 msgid "Сохранить фискализацию"
-msgstr ""
+msgstr "Fiskalizáció mentése"
 
 msgid "Спасибо, ждём вас снова!"
-msgstr ""
+msgstr "Köszönjük, várjuk vissza!"
 
 msgid "Специальные Windows-терминалы"
-msgstr ""
+msgstr "Speciális Windows-terminálok"
 
 msgid ""
 "Списание ингредиентов автоматически при закрытии заказа по рецептуре "
 "блюда — остатки всегда актуальны."
 msgstr ""
+"A hozzávalók automatikus leírása a rendelés lezárásakor az étel receptje "
+"szerint — a készlet mindig naprakész."
 
 msgid "Списание:"
-msgstr ""
+msgstr "Leírás:"
 
 msgid "Ср"
-msgstr ""
+msgstr "Sze"
 
 msgid "Средний чек"
-msgstr ""
+msgstr "Átlagos számla"
 
 msgid "Средняя оценка"
-msgstr ""
+msgstr "Átlagos értékelés"
 
 msgid "Ссылка 2GIS"
-msgstr ""
+msgstr "2GIS-link"
 
 msgid "Ссылка для входа (действует 1 раз):"
-msgstr ""
+msgstr "Bejelentkezési link (1× érvényes):"
 
 msgid "Ссылка недействительна или устарела"
-msgstr ""
+msgstr "A link érvénytelen vagy lejárt"
 
 msgid "Станции"
-msgstr ""
+msgstr "Munkaállomások"
 
 msgid "Статус"
-msgstr ""
+msgstr "Státusz"
 
 msgid "Стоимость запасов"
-msgstr ""
+msgstr "Készlet értéke"
 
 msgid "Стол"
-msgstr ""
+msgstr "Asztal"
 
 msgid "Стол / номер заказа"
-msgstr ""
+msgstr "Asztal / rendelésszám"
 
 msgid "Столов пока нет"
-msgstr ""
+msgstr "Még nincsenek asztalok"
 
 msgid "Столы"
-msgstr ""
+msgstr "Asztalok"
 
 msgid "Стоп"
-msgstr ""
+msgstr "Stop"
 
 msgid "Стоп-лист"
-msgstr ""
+msgstr "Tiltólista"
 
 msgid "Страница не найдена"
-msgstr ""
+msgstr "Az oldal nem található"
 
 msgid "Сумма (₸)"
-msgstr ""
+msgstr "Összeg (₸)"
 
 msgid "ТОО Продукты"
-msgstr ""
+msgstr "Kft. Élelmiszer"
 
 msgid "Табло очереди ↗︎"
-msgstr ""
+msgstr "Sortábla ↗︎"
 
 msgid "Такой страницы не существует или она была перемещена."
-msgstr ""
+msgstr "Ilyen oldal nem létezik, vagy áthelyezték."
 
 msgid "Талон"
-msgstr ""
+msgstr "Blokk"
 
 msgid "Текст сообщения"
-msgstr ""
+msgstr "Üzenet szövege"
 
 msgid "Текущий тариф"
-msgstr ""
+msgstr "Aktuális tarifa"
 
 msgid "Телефон"
-msgstr ""
+msgstr "Telefon"
 
 msgid "Тема"
-msgstr ""
+msgstr "Téma"
 
 msgid "Техкарта"
-msgstr ""
+msgstr "Recept"
 
 msgid "Техкарта:"
-msgstr ""
+msgstr "Recept:"
 
 msgid ""
 "Технические данные: IP-адрес, тип браузера — для безопасности и "
 "предотвращения злоупотреблений (например, ограничение частоты запросов "
 "при входе)."
 msgstr ""
+"Technikai adatok: IP-cím, böngésző típusa — biztonsági célból és a "
+"visszaélések megelőzésére (például a bejelentkezési kérések "
+"gyakoriságának korlátozása)."
 
 msgid "Тип"
-msgstr ""
+msgstr "Típus"
 
 msgid "Токен:"
-msgstr ""
+msgstr "Token:"
 
 msgid "Тёмная"
-msgstr ""
+msgstr "Sötét"
 
 msgid "У вас пока нет заведений."
-msgstr ""
+msgstr "Még nincsenek helyei."
 
 msgid ""
 "У вас пока нет ни одного заведения. Добавьте первое — это займёт меньше "
 "минуты."
 msgstr ""
+"Még egyetlen helye sincs. Adja hozzá az elsőt — kevesebb mint egy percet "
+"vesz igénybe."
 
 msgid "Убрать"
-msgstr ""
+msgstr "Eltávolítás"
 
 msgid "Удалил ингредиент"
-msgstr ""
+msgstr "Törölt egy hozzávalót"
 
 msgid "Удалил позицию меню"
-msgstr ""
+msgstr "Törölt egy menütételt"
 
 msgid "Удалил пользователя"
-msgstr ""
+msgstr "Törölt egy felhasználót"
 
 msgid "Удалить"
-msgstr ""
+msgstr "Törlés"
 
 msgid "Удалить вебхук?"
-msgstr ""
+msgstr "Törli a webhookot?"
 
 msgid "Удалить позицию?"
-msgstr ""
+msgstr "Törli a tételt?"
 
 msgid "Удалить пользователя?"
-msgstr ""
+msgstr "Törli a felhasználót?"
 
 msgid "Удалить промокод?"
-msgstr ""
+msgstr "Törli a promóciós kódot?"
 
 msgid "Удалить рассылку?"
-msgstr ""
+msgstr "Törli a körüzenetet?"
 
 msgid "Удалить расход?"
-msgstr ""
+msgstr "Törli a költséget?"
 
 msgid "Удалить смену?"
-msgstr ""
+msgstr "Törli a műszakot?"
 
 msgid "Удалить стол?"
-msgstr ""
+msgstr "Törli az asztalt?"
 
 msgid "Уже есть аккаунт?"
-msgstr ""
+msgstr "Már van fiókja?"
 
 msgid "Улица, дом"
-msgstr ""
+msgstr "Utca, házszám"
 
 msgid ""
 "Управляйте несколькими заведениями из одного аккаунта с отдельными "
 "данными по каждому."
-msgstr ""
+msgstr "Kezeljen több helyet egy fiókból, mindegyikhez külön adatokkal."
 
 msgid "Управляйте рестораном"
-msgstr ""
+msgstr "Irányítsa az éttermet"
 
 msgid "Управлять оплатой"
-msgstr ""
+msgstr "Fizetés kezelése"
 
 msgid "Условия использования"
-msgstr ""
+msgstr "Felhasználási feltételek"
 
 msgid "Условия использования — RestOS"
-msgstr ""
+msgstr "Felhasználási feltételek — RestOS"
 
 msgid "Факт"
-msgstr ""
+msgstr "Tényleges"
 
 msgid "Фактические наличные в кассе (₸)"
-msgstr ""
+msgstr "Tényleges készpénz a pénztárban (₸)"
 
 msgid "Финансы"
-msgstr ""
+msgstr "Pénzügyek"
 
 msgid "Финансы P&L, аналитика"
-msgstr ""
+msgstr "Pénzügyek P&L, analitika"
 
 msgid "Финансы и аналитика"
-msgstr ""
+msgstr "Pénzügyek és analitika"
 
 msgid "Фискализация (ОФД)"
-msgstr ""
+msgstr "Fiskalizáció (OFD)"
 
 msgid "Фискализация чеков"
-msgstr ""
+msgstr "Nyugták fiskalizációja"
 
 msgid "Фискализация…"
-msgstr ""
+msgstr "Fiskalizáció…"
 
 msgid "Фискальный чек №"
-msgstr ""
+msgstr "Fiskális nyugta sz."
 
 msgid ""
 "Цвет текста на кнопках подбирается автоматически, чтобы всё оставалось "
 "читаемым. Гостевые страницы (QR-меню) остаются в фирменном стиле."
 msgstr ""
+"A gombokon lévő szöveg színe automatikusan igazodik, hogy minden "
+"olvasható maradjon. A vendégoldalak (QR-menü) megtartják a márkastílust."
 
 msgid "Цена"
-msgstr ""
+msgstr "Ár"
 
 msgid "Цена (₸)"
-msgstr ""
+msgstr "Ár (₸)"
 
 msgid "Цена за ед. (₸)"
-msgstr ""
+msgstr "Egységár (₸)"
 
 msgid "Цена/ед."
-msgstr ""
+msgstr "Ár/egys."
 
 msgid "Цены"
-msgstr ""
+msgstr "Árak"
 
 msgid "Чек"
-msgstr ""
+msgstr "Nyugta"
 
 msgid "Чек пробит"
-msgstr ""
+msgstr "A nyugta kiadva"
 
 msgid "Чек разделён"
-msgstr ""
+msgstr "A számla megosztva"
 
 msgid "Чт"
-msgstr ""
+msgstr "Cs"
 
 msgid "Что-то пошло не так"
-msgstr ""
+msgstr "Valami hiba történt"
 
 msgid "Что-то пошло не так на нашей стороне. Мы уже знаем об этом и разбираемся."
-msgstr ""
+msgstr "Valami hiba történt a mi oldalunkon. Már tudunk róla, és dolgozunk rajta."
 
 msgid "Чёрная (AMOLED)"
-msgstr ""
+msgstr "Fekete (AMOLED)"
 
 msgid ""
 "Экран для кухни на любом планшете — очередь заказов по колонкам, таймеры "
 "готовки, без бумажных чеков."
 msgstr ""
+"Konyhai képernyő bármilyen táblagépen — rendelési sor oszlopokban, "
+"elkészítési időzítők, papírnyugták nélkül."
 
 msgid "Экран кухни ↗︎"
-msgstr ""
+msgstr "Konyhai képernyő ↗︎"
 
 msgid "Экран официанта ↗︎"
-msgstr ""
+msgstr "Pincér képernyő ↗︎"
 
 msgid "Экспорт данных"
-msgstr ""
+msgstr "Adatexport"
 
 msgid "Язык интерфейса"
-msgstr ""
+msgstr "Felület nyelve"
 
 msgid "Язык получателей"
-msgstr ""
+msgstr "Címzettek nyelve"
 
 msgid "Язык привязан к вашему аккаунту и меняется только здесь."
-msgstr ""
+msgstr "A nyelv a fiókjához kötődik, és csak itt módosítható."
 
 msgid "без лимита"
-msgstr ""
+msgstr "korlát nélkül"
 
 msgid "без стола"
-msgstr ""
+msgstr "asztal nélkül"
 
 msgid "в базе"
-msgstr ""
+msgstr "az adatbázisban"
 
 msgid "всего"
-msgstr ""
+msgstr "összesen"
 
 msgid "г"
-msgstr ""
+msgstr "g"
 
 msgid "и"
-msgstr ""
+msgstr "és"
 
 msgid "и интеграции"
-msgstr ""
+msgstr "és integrációk"
 
 msgid "из кабинета Webkassa"
-msgstr ""
+msgstr "a Webkassa fiókból"
 
 msgid "из одной панели"
-msgstr ""
+msgstr "egy felületről"
 
 msgid "кг"
-msgstr ""
+msgstr "kg"
 
 msgid "л"
-msgstr ""
+msgstr "l"
 
 msgid "логин"
-msgstr ""
+msgstr "bejelentkezés"
 
 msgid "мес"
-msgstr ""
+msgstr "hó"
 
 msgid "мест"
-msgstr ""
+msgstr "hely"
 
 msgid "мин"
-msgstr ""
+msgstr "perc"
 
 msgid "мин на кухне"
-msgstr ""
+msgstr "perc a konyhán"
 
 msgid "мин:"
-msgstr ""
+msgstr "perc:"
 
 msgid "мл"
-msgstr ""
+msgstr "ml"
 
 msgid "млн"
-msgstr ""
+msgstr "M"
 
 msgid "можно несколько"
-msgstr ""
+msgstr "több is lehet"
 
 msgid "не оплачен"
-msgstr ""
+msgstr "nincs kifizetve"
 
 msgid "необязательно"
-msgstr ""
+msgstr "nem kötelező"
 
 msgid "нет техкарты"
-msgstr ""
+msgstr "nincs recept"
 
 msgid "обязательный выбор"
-msgstr ""
+msgstr "kötelező választás"
 
 msgid "отзывов"
-msgstr ""
+msgstr "visszajelzés"
 
 msgid "открыта"
-msgstr ""
+msgstr "nyitva"
 
 msgid "пароль"
-msgstr ""
+msgstr "jelszó"
 
 msgid "подключено"
-msgstr ""
+msgstr "csatlakoztatva"
 
 msgid "поз."
-msgstr ""
+msgstr "tétel"
 
 msgid "позиций:"
-msgstr ""
+msgstr "tétel:"
 
 msgid "пока пусто"
-msgstr ""
+msgstr "egyelőre üres"
 
 msgid "политикой конфиденциальности"
-msgstr ""
+msgstr "adatvédelmi szabályzattal"
 
 msgid "получ."
-msgstr ""
+msgstr "kapott"
 
 msgid "своя цена"
-msgstr ""
+msgstr "saját ár"
 
 msgid "ссылка"
-msgstr ""
+msgstr "link"
 
 msgid "уникальный номер ККМ"
-msgstr ""
+msgstr "egyedi pénztárgépszám"
 
 msgid "условиями использования"
-msgstr ""
+msgstr "felhasználási feltételekkel"
 
 msgid "ч."
-msgstr ""
+msgstr "ó."
 
 msgid "чтобы обезопасить аккаунт."
-msgstr ""
+msgstr "a fiók biztonsága érdekében."
 
 msgid "шагов выполнено"
-msgstr ""
+msgstr "lépés kész"
 
 msgid "шт"
-msgstr ""
+msgstr "db"
 
 msgid "← Условия использования"
-msgstr ""
+msgstr "← Felhasználási feltételek"
 
 msgid "− Списание"
-msgstr ""
+msgstr "− Leírás"
 
 msgid "− Списать"
-msgstr ""
+msgstr "− Leírás"
 
 msgid "✓ Приход записан"
-msgstr ""
+msgstr "✓ Bevételezés rögzítve"
 
 msgid "✓ Списание записано"
-msgstr ""
+msgstr "✓ Leírás rögzítve"
 
