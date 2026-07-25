@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-25 06:15+0000\n"
+"POT-Creation-Date: 2026-07-25 06:52+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: uk\n"
@@ -1186,6 +1186,9 @@ msgid "Нет связи и нет локальной копии меню. По�
 msgstr ""
 "Немає зв’язку та немає локальної копії меню. Підключіться до інтернету "
 "один раз."
+
+msgid "Нет связи — заказ не отправлен. Проверьте интернет и повторите."
+msgstr "Немає зв’язку — замовлення не надіслано. Перевірте інтернет і повторіть."
 
 msgid "Нет связи — заказ сохранён и отправится автоматически"
 msgstr "Немає зв’язку — замовлення збережено й відправиться автоматично"

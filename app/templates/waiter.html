@@ -183,11 +183,14 @@ const token = () => localStorage.getItem('access_token');
   function pinClear() { _pin = _pin.slice(0, -1); renderPinDots(); }
   async function pinSubmit() {
     if (_pin.length < 4) return;
-    const res = await fetch('/auth/pin-switch', {
-      method: 'POST', credentials: 'include',
-      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + (localStorage.getItem('access_token') || '')},
-      body: JSON.stringify({pin: _pin}),
-    });
+    let res;
+    try {
+      res = await fetch('/auth/pin-switch', {
+        method: 'POST', credentials: 'include',
+        headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + (localStorage.getItem('access_token') || '')},
+        body: JSON.stringify({pin: _pin}),
+      });
+    } catch (e) { _pin = ''; renderPinDots(); notify.error({{ _("Ошибка соединения") | tojson }}); return; }
     _pin = ''; renderPinDots();
     if (res.ok) {
       const d = await res.json();
@@ -206,6 +209,8 @@ const T = {
   pickTable: {{ _("Сначала выберите стол") | tojson }},
   sent: {{ _("Заказ отправлен на кухню") | tojson }},
   error: {{ _("Ошибка") | tojson }},
+  netError: {{ _("Ошибка соединения") | tojson }},
+  orderNotSent: {{ _("Нет связи — заказ не отправлен. Проверьте интернет и повторите.") | tojson }},
   cartEmpty: {{ _("Корзина пуста") | tojson }},
   items: {{ _("позиций:") | tojson }},
   noTable: {{ _("без стола") | tojson }},
@@ -407,11 +412,19 @@ async function sendOrder() {
     notes: document.getElementById('w-comment').value || null,
     client_order_id: (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(36).slice(2)),
   };
-  const res = await fetch('/api/pos/order', {
-    method: 'POST', credentials: 'include',
-    headers: {'Content-Type':'application/json','Authorization':'Bearer '+token()},
-    body: JSON.stringify(body),
-  });
+  let res;
+  try {
+    res = await fetch('/api/pos/order', {
+      method: 'POST', credentials: 'include',
+      headers: {'Content-Type':'application/json','Authorization':'Bearer '+token()},
+      body: JSON.stringify(body),
+    });
+  } catch (e) {
+    // Network down (waiters roam the floor on flaky Wi-Fi). Keep the cart so
+    // the order isn't lost — tell them to retry when the connection is back.
+    notify.error(T.orderNotSent);
+    return;
+  }
   if (res.status === 401) { location.href = '/auth/login'; return; }
   if (res.ok) {
     _cart = {}; _tableId = null;
@@ -465,19 +478,25 @@ async function loadOrders() {
   } catch (e) {}
 }
 async function setStatus(id, status) {
-  const res = await fetch('/api/orders/' + id + '/status', {
-    method: 'PATCH', credentials: 'include',
-    headers: {'Content-Type':'application/json','Authorization':'Bearer '+token()},
-    body: JSON.stringify({status}),
-  });
+  let res;
+  try {
+    res = await fetch('/api/orders/' + id + '/status', {
+      method: 'PATCH', credentials: 'include',
+      headers: {'Content-Type':'application/json','Authorization':'Bearer '+token()},
+      body: JSON.stringify({status}),
+    });
+  } catch (e) { notify.error(T.netError); return; }
   if (res.ok) loadOrders(); else notify.error(T.error);
 }
 async function payOrder(id, method) {
-  const res = await fetch('/api/orders/' + id + '/pay', {
-    method: 'POST', credentials: 'include',
-    headers: {'Content-Type':'application/x-www-form-urlencoded','Authorization':'Bearer '+token()},
-    body: 'method=' + method,
-  });
+  let res;
+  try {
+    res = await fetch('/api/orders/' + id + '/pay', {
+      method: 'POST', credentials: 'include',
+      headers: {'Content-Type':'application/x-www-form-urlencoded','Authorization':'Bearer '+token()},
+      body: 'method=' + method,
+    });
+  } catch (e) { notify.error(T.netError); return; }
   if (res.ok) loadOrders(); else notify.error(T.error);
 }
 

@@ -214,7 +214,7 @@
           return;
         }
         htmx.trigger(document.getElementById('tab-active-panel'), 'refresh');
-      } catch(e) { console.error('advanceOrder error', e); }
+      } catch(e) { notify.error({{ _("Ошибка соединения") | tojson }}); }
     }
 
     async function cancelOrder(orderId) {
@@ -231,7 +231,7 @@
           return;
         }
         htmx.trigger(document.getElementById('tab-active-panel'), 'refresh');
-      } catch(e) { console.error('cancelOrder error', e); }
+      } catch(e) { notify.error({{ _("Ошибка соединения") | tojson }}); }
     }
 
     document.addEventListener('htmx:responseError', (e) => {

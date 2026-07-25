@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-25 06:15+0000\n"
+"POT-Creation-Date: 2026-07-25 06:52+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -1172,6 +1172,9 @@ msgstr "No expenses for this period"
 
 msgid "Нет связи и нет локальной копии меню. Подключитесь к интернету один раз."
 msgstr "No connection and no local copy of the menu. Connect to the internet once."
+
+msgid "Нет связи — заказ не отправлен. Проверьте интернет и повторите."
+msgstr "No connection — the order was not sent. Check your internet and try again."
 
 msgid "Нет связи — заказ сохранён и отправится автоматически"
 msgstr "No connection — the order is saved and will be sent automatically"

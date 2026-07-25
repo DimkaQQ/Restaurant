@@ -11,7 +11,7 @@
 {% macro order_card(order) %}
 {% set order_ts = order.created_at.timestamp() %}
 {% set now_ts = now.timestamp() %}
-{% set mins = ((now_ts - order_ts) / 60) | int %}
+{% set mins = [((now_ts - order_ts) / 60) | int, 0] | max %}
 <div class="kds-card status-{{ order.status }}">
   <div class="kds-card-top">
     <span class="kds-order-id">#{{ order.id | string | truncate(8, True, '') }}</span>
