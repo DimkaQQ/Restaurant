@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-24 20:01+0000\n"
+"POT-Creation-Date: 2026-07-25 05:38+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: hu\n"
@@ -261,6 +261,9 @@ msgstr "Analitika"
 msgid "Баллы"
 msgstr "Pontok"
 
+msgid "Бар"
+msgstr "Bár"
+
 msgid "Без карты. Отменить можно в любой момент."
 msgstr "Kártya nélkül. Bármikor lemondható."
 
@@ -469,6 +472,9 @@ msgstr "Bevétel"
 
 msgid "Выручка vs Расходы (6 мес.)"
 msgstr "Bevétel vs Költségek (6 hó)"
+
+msgid "Выручка за 14 дней"
+msgstr "Bevétel 14 nap alatt"
 
 msgid "Выручка за 30 дней"
 msgstr "Bevétel 30 nap alatt"

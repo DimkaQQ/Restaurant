@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-24 20:01+0000\n"
+"POT-Creation-Date: 2026-07-25 05:38+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: sk\n"
@@ -259,6 +259,9 @@ msgstr "Analytika"
 msgid "Баллы"
 msgstr "Body"
 
+msgid "Бар"
+msgstr "Bar"
+
 msgid "Без карты. Отменить можно в любой момент."
 msgstr "Bez karty. Zrušiť môžete kedykoľvek."
 
@@ -466,6 +469,9 @@ msgstr "Tržby"
 
 msgid "Выручка vs Расходы (6 мес.)"
 msgstr "Tržby vs Náklady (6 mes.)"
+
+msgid "Выручка за 14 дней"
+msgstr "Tržby za 14 dní"
 
 msgid "Выручка за 30 дней"
 msgstr "Tržby za 30 dní"

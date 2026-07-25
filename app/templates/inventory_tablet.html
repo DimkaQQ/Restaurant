@@ -132,12 +132,13 @@
   </select>
 </div>
 
+{% set CAT_LABELS = {"kitchen": _("Кухня"), "bar": _("Бар")} %}
 {% set categories = ingredients | map(attribute='category') | select | unique | sort | list %}
 {% if categories %}
 <div class="tb-cat-bar" id="cat-bar">
   <button class="tb-chip active" onclick="filterCat('', this)">{{ _("Все") }}</button>
   {% for cat in categories %}
-  <button class="tb-chip" onclick="filterCat('{{ cat }}', this)">{{ cat }}</button>
+  <button class="tb-chip" onclick="filterCat('{{ cat }}', this)">{{ CAT_LABELS.get(cat, cat) }}</button>
   {% endfor %}
 </div>
 {% endif %}
@@ -148,7 +149,7 @@
   <div class="tb-card status-{{ item.stock_status }}" data-name="{{ item.name | lower }}" data-cat="{{ item.category or '' }}" data-min="{{ item.min_quantity|float }}" id="card-{{ item.id }}">
     <div>
       <div class="tb-card-name">{{ item.name }}</div>
-      {% if item.category %}<div class="tb-card-cat">{{ item.category }}</div>{% endif %}
+      {% if item.category %}<div class="tb-card-cat">{{ CAT_LABELS.get(item.category, item.category) }}</div>{% endif %}
     </div>
     <div>
       <div class="tb-qty-row">

@@ -63,7 +63,7 @@
       {% set max_qty = top_items[0].qty if top_items else 1 %}
       {% for item in top_items %}
       <div class="items-bar-row">
-        <span class="items-bar-name">{{ item.name }}</span>
+        <span class="items-bar-name" title="{{ item.name }}">{{ item.name }}</span>
         <div class="items-bar-wrap">
           <div class="items-bar-fill" style="width:{{ (item.qty / max_qty * 100) | int }}%"></div>
         </div>
@@ -182,6 +182,7 @@ const gold = _ct.accent;
 const txtColor = _ct.text;
 const muted = _ct.muted;
 const gridColor = _ct.grid;
+const cardColor = getComputedStyle(document.documentElement).getPropertyValue('--card').trim() || '#161410';
 const chartDefaults = {
   color: txtColor,
   plugins: { legend: { labels: { color: txtColor, font: { family: 'Inter' } } } },
@@ -213,12 +214,16 @@ new Chart(document.getElementById('revenue-chart'), {
 
 {% if venue_revenue | length > 1 %}
 const venueData = {{ venue_revenue | tojson }};
-const palette = [gold, '#A08030','#78601E','#50400F','#2E2508','#8B9E5C','#5C6E3A','#3A4825'];
+// Distinct hues (not the old all-gold ramp, whose slices were indistinguishable),
+// tuned for legibility on the dark theme; brand gold stays first.
+const palette = [gold, '#5AA9E6', '#57C79A', '#E6A65A', '#C77DBB', '#E0715C', '#8FBF5C', '#9B8FD4'];
+const venueTotal = venueData.reduce((s, d) => s + parseFloat(d.revenue), 0);
 new Chart(document.getElementById('venues-chart'), {
   type: 'doughnut',
   data: {
     labels: venueData.map(d => d.name.replace(' — ', '\n')),
-    datasets: [{ data: venueData.map(d => d.revenue), backgroundColor: palette, borderWidth: 0 }],
+    datasets: [{ data: venueData.map(d => d.revenue), backgroundColor: palette,
+                 borderColor: cardColor, borderWidth: 2 }],
   },
   options: {
     responsive: true,
@@ -226,7 +231,14 @@ new Chart(document.getElementById('venues-chart'), {
     cutout: '60%',
     plugins: {
       legend: { position: window.innerWidth < 500 ? 'bottom' : 'right', labels: { color: txtColor, boxWidth: 12, padding: 10, font: { size: 11 } } },
-      tooltip: { callbacks: { label: ctx => ' ' + parseFloat(ctx.raw).toLocaleString(LOCALE) + ' ₸' } }
+      tooltip: { callbacks: {
+        title: ctx => ctx[0].label.replace('\n', ' — '),
+        label: ctx => {
+          const v = parseFloat(ctx.raw);
+          const pct = venueTotal ? Math.round(v / venueTotal * 100) : 0;
+          return ' ' + v.toLocaleString(LOCALE) + ' ₸ (' + pct + '%)';
+        }
+      } }
     }
   },
 });

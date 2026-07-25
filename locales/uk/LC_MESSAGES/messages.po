@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-24 20:01+0000\n"
+"POT-Creation-Date: 2026-07-25 05:38+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: uk\n"
@@ -261,6 +261,9 @@ msgstr "Аналітика"
 msgid "Баллы"
 msgstr "Бали"
 
+msgid "Бар"
+msgstr "Бар"
+
 msgid "Без карты. Отменить можно в любой момент."
 msgstr "Без картки. Скасувати можна будь-якої миті."
 
@@ -469,6 +472,9 @@ msgstr "Виручка"
 
 msgid "Выручка vs Расходы (6 мес.)"
 msgstr "Виручка vs Витрати (6 міс.)"
+
+msgid "Выручка за 14 дней"
+msgstr "Виручка за 14 днів"
 
 msgid "Выручка за 30 дней"
 msgstr "Виручка за 30 днів"

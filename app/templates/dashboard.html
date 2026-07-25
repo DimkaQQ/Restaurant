@@ -94,6 +94,15 @@
   </div>
 </div>
 
+{% if user.role != "cashier" and revenue_sparkline %}
+<div class="panel" style="margin-bottom:1.5rem">
+  <div class="panel-header">
+    <h2 class="panel-title">{{ _("Выручка за 14 дней") }}</h2>
+  </div>
+  <div style="position:relative;height:140px"><canvas id="dash-revenue-chart"></canvas></div>
+</div>
+{% endif %}
+
 <div class="panel" style="margin-bottom:1.5rem">
   <div class="panel-header">
     <h2 class="panel-title">{{ _("Активные заказы") }}</h2>
@@ -156,4 +165,42 @@
 <script>
   document.getElementById('current-date').textContent = new Date().toLocaleDateString({{ ('en-US' if locale == 'en' else 'ru-RU') | tojson }}, {weekday:'long', day:'numeric', month:'long'});
 </script>
+{% endblock %}
+
+{% block scripts %}
+{% if user.role != "cashier" and revenue_sparkline %}
+<script src="/static/vendor/chart-4.4.3.umd.min.js"></script>
+<script>
+(function () {
+  const data = {{ revenue_sparkline | tojson }};
+  const ct = window.chartTheme ? chartTheme() : {accent:'#C8A84B', muted:'#8A857E', grid:'rgba(138,133,126,.18)'};
+  const LOCALE = {{ ('en-US' if locale == 'en' else 'ru-RU') | tojson }};
+  new Chart(document.getElementById('dash-revenue-chart'), {
+    type: 'line',
+    data: {
+      labels: data.map(d => d.day.slice(5)),  // MM-DD
+      datasets: [{
+        data: data.map(d => d.revenue),
+        borderColor: ct.accent,
+        backgroundColor: window.hexToRgba ? hexToRgba(ct.accent, 0.12) : 'rgba(200,168,75,.12)',
+        fill: true, tension: 0.35, borderWidth: 2,
+        pointRadius: 0, pointHoverRadius: 4, pointHoverBackgroundColor: ct.accent,
+      }],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ' ' + parseFloat(ctx.raw).toLocaleString(LOCALE) + ' ₸' } },
+      },
+      scales: {
+        x: { ticks: { color: ct.muted, font: { size: 10 }, maxRotation: 0, autoSkip: true, maxTicksLimit: 7 }, grid: { display: false } },
+        y: { ticks: { color: ct.muted, font: { size: 10 }, maxTicksLimit: 4,
+              callback: v => v >= 1000 ? (v/1000) + 'k' : v }, grid: { color: ct.grid }, beginAtZero: true },
+      },
+    },
+  });
+})();
+</script>
+{% endif %}
 {% endblock %}

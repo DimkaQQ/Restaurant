@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-24 20:01+0000\n"
+"POT-Creation-Date: 2026-07-25 05:38+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -259,6 +259,9 @@ msgstr "Analytics"
 msgid "Баллы"
 msgstr "Points"
 
+msgid "Бар"
+msgstr "Bar"
+
 msgid "Без карты. Отменить можно в любой момент."
 msgstr "No card required. Cancel anytime."
 
@@ -465,6 +468,9 @@ msgstr "Revenue"
 
 msgid "Выручка vs Расходы (6 мес.)"
 msgstr "Revenue vs Expenses (6 mo.)"
+
+msgid "Выручка за 14 дней"
+msgstr "Revenue over 14 days"
 
 msgid "Выручка за 30 дней"
 msgstr "Revenue (30 days)"

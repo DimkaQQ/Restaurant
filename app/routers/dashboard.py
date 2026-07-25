@@ -1,12 +1,12 @@
 from app.templates_env import templates
 import logging
 import uuid
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 from fastapi import APIRouter, Depends, HTTPException, Request, Query
 from fastapi.responses import HTMLResponse, RedirectResponse
 
-from sqlalchemy import select, func
+from sqlalchemy import select, func, cast, Date
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -65,6 +65,22 @@ async def dashboard(
             select(func.sum(Order.total_amount))
             .where(Order.venue_id.in_(venue_ids), Order.payment_status == "paid", Order.paid_at >= today_start)
         )).scalar() or 0
+
+        # 14-day paid-revenue sparkline (local business days, gaps filled with 0).
+        rev_since = today_start - timedelta(days=13)
+        rev_rows = (await db.execute(
+            select(cast(func.timezone(settings.LOCAL_TZ, Order.paid_at), Date).label("day"),
+                   func.sum(Order.total_amount).label("revenue"))
+            .where(Order.venue_id.in_(venue_ids), Order.payment_status == "paid", Order.paid_at >= rev_since)
+            .group_by("day").order_by("day")
+        )).all()
+        rev_by_day = {str(r.day): float(r.revenue or 0) for r in rev_rows}
+        start_day = (today_start - timedelta(days=13)).date()
+        revenue_sparkline = [
+            {"day": str(start_day + timedelta(days=i)),
+             "revenue": rev_by_day.get(str(start_day + timedelta(days=i)), 0.0)}
+            for i in range(14)
+        ]
 
         new_guests = (await db.execute(
             select(func.count(Guest.id))
@@ -155,6 +171,7 @@ async def dashboard(
             },
             "active_orders": orders,
             "top_items": top_items_data,
+            "revenue_sparkline": revenue_sparkline,
             "onboarding": onboarding,
         })
     except Exception as e:
