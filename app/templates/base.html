@@ -121,10 +121,12 @@
       {% endif %}
     </ul>
     <div class="sidebar-footer">
-      <div class="lang-switch" style="font-size:.72rem; margin-bottom:.4rem">
-        <a href="?lang=ru" style="color:{% if locale == 'ru' %}var(--gold){% else %}var(--muted){% endif %}; text-decoration:none; padding:.1rem .2rem">RU</a> /
-        <a href="?lang=en" style="color:{% if locale == 'en' %}var(--gold){% else %}var(--muted){% endif %}; text-decoration:none; padding:.1rem .2rem">EN</a>
-      </div>
+      {% if support_url %}
+      <a href="{{ support_url }}" target="_blank" rel="noopener" class="nav-help-link" style="display:flex; align-items:center; gap:.5rem; font-size:.8rem; color:var(--muted); text-decoration:none; margin-bottom:.5rem; padding:.35rem .2rem">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 015 0c0 1.5-2.5 2-2.5 3.5"/><circle cx="12" cy="17" r=".6" fill="currentColor"/></svg>
+        {{ _("Помощь и поддержка") }}
+      </a>
+      {% endif %}
       <span class="user-email">{{ user.email }}</span>
       <button onclick="logout()" class="btn-logout">{{ _("Выйти") }}</button>
     </div>

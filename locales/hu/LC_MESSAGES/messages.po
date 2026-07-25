@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-25 05:38+0000\n"
+"POT-Creation-Date: 2026-07-25 06:15+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: hu\n"
@@ -168,6 +168,9 @@ msgstr "PIN a munkaállomáshoz (nem kötelező, 4–6 számjegy)"
 
 msgid "PIN сотрудника (4–6 цифр). Пусто — удалить PIN."
 msgstr "Munkatárs PIN-kódja (4–6 számjegy). Üres — PIN törlése."
+
+msgid "QR-меню для гостей"
+msgstr "QR-menü a vendégeknek"
 
 msgid ""
 "RestOS обрабатывает персональные данные владельцев ресторанов, их "
@@ -836,6 +839,15 @@ msgstr ""
 msgid "Кассир"
 msgstr "Pénztáros"
 
+msgid ""
+"Кассир — касса и оплата. Менеджер — заказы, меню, склад, гости, "
+"аналитика. Администратор — то же плюс финансы и P&L. Владелец — полный "
+"доступ и настройки."
+msgstr ""
+"Pénztáros — pénztár és fizetés. Menedzser — rendelések, menü, raktár, "
+"vendégek, analitika. Adminisztrátor — ugyanez plusz pénzügyek és P&L. "
+"Tulajdonos — teljes hozzáférés és beállítások."
+
 msgid "Кассовые смены (Z-отчёты)"
 msgstr "Pénztári műszakok (Z-jelentések)"
 
@@ -1400,6 +1412,9 @@ msgstr "Elküldve ✓"
 msgid "Отправляем…"
 msgstr "Küldés…"
 
+msgid "Отсканируйте, чтобы открыть меню и заказать"
+msgstr "Olvassa be a menü megnyitásához és a rendeléshez"
+
 msgid "Официант"
 msgstr "Pincér"
 
@@ -1662,6 +1677,9 @@ msgstr "Nincsenek felhasználók"
 msgid "Пользователи"
 msgstr "Felhasználók"
 
+msgid "Помощь и поддержка"
+msgstr "Súgó és támogatás"
+
 msgid "Попробовать 14 дней бесплатно"
 msgstr "14 nap ingyenes kipróbálása"
 
@@ -1813,6 +1831,16 @@ msgstr "Megosztás"
 
 msgid "Разделить чек"
 msgstr "Számla megosztása"
+
+msgid "Разрешите всплывающие окна для печати"
+msgstr "Engedélyezze a felugró ablakokat a nyomtatáshoz"
+
+msgid ""
+"Распечатайте этот QR-код и поставьте на столы — гости отсканируют его, "
+"откроют меню и сделают заказ сами."
+msgstr ""
+"Nyomtassa ki ezt a QR-kódot és tegye az asztalokra — a vendégek "
+"beolvassák, megnyitják a menüt és maguk rendelnek."
 
 msgid "Рассылки"
 msgstr "Körüzenetek"

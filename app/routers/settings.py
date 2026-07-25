@@ -531,12 +531,44 @@ async def settings_tables_page(
     tables_by_venue: dict[uuid.UUID, list[Table]] = {}
     for t in tables:
         tables_by_venue.setdefault(t.venue_id, []).append(t)
+    from app.config import settings as app_settings
     return templates.TemplateResponse("settings_tables.html", {
         "request": request,
         "user": current_user,
         "venues": venues,
         "tables_by_venue": tables_by_venue,
+        "public_url": app_settings.PUBLIC_URL.rstrip("/"),
     })
+
+
+@router.get("/venues/{venue_id}/menu-qr.svg")
+async def venue_menu_qr(
+    venue_id: uuid.UUID,
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    """QR code (SVG) pointing at the venue's guest ordering menu, so the owner
+    can print it for tables. Owner-only; scoped to the caller's network."""
+    _require_owner(current_user)
+    venue = (await db.execute(
+        select(Venue).where(Venue.id == venue_id, Venue.network_id == current_user.network_id)
+    )).scalar_one_or_none()
+    if venue is None:
+        raise HTTPException(status_code=404, detail="Заведение не найдено")
+    from app.config import settings as app_settings
+    from fastapi.responses import Response
+    menu_url = f"{app_settings.PUBLIC_URL.rstrip('/')}/order/{venue_id}"
+    try:
+        import io
+        import segno
+        buf = io.BytesIO()
+        segno.make(menu_url, error="m").save(buf, kind="svg", scale=6, border=2,
+                                             dark="#0D0D0D", light="#FFFFFF")
+        return Response(content=buf.getvalue(), media_type="image/svg+xml",
+                        headers={"Cache-Control": "public, max-age=3600"})
+    except ImportError:
+        # QR lib not installed — fail soft; the page still shows the copyable link.
+        raise HTTPException(status_code=501, detail="QR generation unavailable")
 
 
 @router.post("/api/tables")

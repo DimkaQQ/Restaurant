@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-25 05:38+0000\n"
+"POT-Creation-Date: 2026-07-25 06:15+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -166,6 +166,9 @@ msgstr "Station PIN (optional, 4–6 digits)"
 
 msgid "PIN сотрудника (4–6 цифр). Пусто — удалить PIN."
 msgstr "Employee PIN (4–6 digits). Empty — remove the PIN."
+
+msgid "QR-меню для гостей"
+msgstr "QR menu for guests"
 
 msgid ""
 "RestOS обрабатывает персональные данные владельцев ресторанов, их "
@@ -826,6 +829,15 @@ msgstr "POS on a tablet, kitchen display, QR menu for guests — it just works."
 msgid "Кассир"
 msgstr "Cashier"
 
+msgid ""
+"Кассир — касса и оплата. Менеджер — заказы, меню, склад, гости, "
+"аналитика. Администратор — то же плюс финансы и P&L. Владелец — полный "
+"доступ и настройки."
+msgstr ""
+"Cashier — register and payments. Manager — orders, menu, inventory, "
+"guests, analytics. Administrator — the same plus finance and P&L. Owner —"
+" full access and settings."
+
 msgid "Кассовые смены (Z-отчёты)"
 msgstr "Cash shifts (Z-reports)"
 
@@ -1380,6 +1392,9 @@ msgstr "Sent ✓"
 msgid "Отправляем…"
 msgstr "Sending…"
 
+msgid "Отсканируйте, чтобы открыть меню и заказать"
+msgstr "Scan to open the menu and order"
+
 msgid "Официант"
 msgstr "Waiter"
 
@@ -1642,6 +1657,9 @@ msgstr "No users"
 msgid "Пользователи"
 msgstr "Users"
 
+msgid "Помощь и поддержка"
+msgstr "Help & support"
+
 msgid "Попробовать 14 дней бесплатно"
 msgstr "Try 14 days free"
 
@@ -1793,6 +1811,16 @@ msgstr "Split"
 
 msgid "Разделить чек"
 msgstr "Split the check"
+
+msgid "Разрешите всплывающие окна для печати"
+msgstr "Allow pop-ups to print"
+
+msgid ""
+"Распечатайте этот QR-код и поставьте на столы — гости отсканируют его, "
+"откроют меню и сделают заказ сами."
+msgstr ""
+"Print this QR code and place it on the tables — guests scan it, open the "
+"menu, and order themselves."
 
 msgid "Рассылки"
 msgstr "Broadcasts"

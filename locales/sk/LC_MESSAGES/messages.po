@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-25 05:38+0000\n"
+"POT-Creation-Date: 2026-07-25 06:15+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: sk\n"
@@ -166,6 +166,9 @@ msgstr "PIN pre stanicu (nepovinné, 4–6 číslic)"
 
 msgid "PIN сотрудника (4–6 цифр). Пусто — удалить PIN."
 msgstr "PIN zamestnanca (4–6 číslic). Prázdne — odstrániť PIN."
+
+msgid "QR-меню для гостей"
+msgstr "QR menu pre hostí"
 
 msgid ""
 "RestOS обрабатывает персональные данные владельцев ресторанов, их "
@@ -832,6 +835,15 @@ msgstr ""
 msgid "Кассир"
 msgstr "Pokladník"
 
+msgid ""
+"Кассир — касса и оплата. Менеджер — заказы, меню, склад, гости, "
+"аналитика. Администратор — то же плюс финансы и P&L. Владелец — полный "
+"доступ и настройки."
+msgstr ""
+"Pokladník — pokladňa a platby. Manažér — objednávky, menu, sklad, hostia,"
+" analytika. Administrátor — to isté plus financie a P&L. Majiteľ — plný "
+"prístup a nastavenia."
+
 msgid "Кассовые смены (Z-отчёты)"
 msgstr "Pokladničné zmeny (Z-výkazy)"
 
@@ -1392,6 +1404,9 @@ msgstr "Odoslané ✓"
 msgid "Отправляем…"
 msgstr "Odosielame…"
 
+msgid "Отсканируйте, чтобы открыть меню и заказать"
+msgstr "Naskenujte pre otvorenie menu a objednanie"
+
 msgid "Официант"
 msgstr "Čašník"
 
@@ -1652,6 +1667,9 @@ msgstr "Žiadni používatelia"
 msgid "Пользователи"
 msgstr "Používatelia"
 
+msgid "Помощь и поддержка"
+msgstr "Pomoc a podpora"
+
 msgid "Попробовать 14 дней бесплатно"
 msgstr "Vyskúšať 14 dní zadarmo"
 
@@ -1803,6 +1821,16 @@ msgstr "Rozdeliť"
 
 msgid "Разделить чек"
 msgstr "Rozdeliť účet"
+
+msgid "Разрешите всплывающие окна для печати"
+msgstr "Povoľte vyskakovacie okná pre tlač"
+
+msgid ""
+"Распечатайте этот QR-код и поставьте на столы — гости отсканируют его, "
+"откроют меню и сделают заказ сами."
+msgstr ""
+"Vytlačte tento QR kód a umiestnite ho na stoly — hostia ho naskenujú, "
+"otvoria menu a objednajú si sami."
 
 msgid "Рассылки"
 msgstr "Rozosielky"

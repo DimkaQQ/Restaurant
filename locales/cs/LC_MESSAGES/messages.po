@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-25 05:38+0000\n"
+"POT-Creation-Date: 2026-07-25 06:15+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: cs\n"
@@ -168,6 +168,9 @@ msgstr "PIN pro stanici (nepovinné, 4–6 číslic)"
 
 msgid "PIN сотрудника (4–6 цифр). Пусто — удалить PIN."
 msgstr "PIN zaměstnance (4–6 číslic). Prázdné — odstranit PIN."
+
+msgid "QR-меню для гостей"
+msgstr "QR menu pro hosty"
 
 msgid ""
 "RestOS обрабатывает персональные данные владельцев ресторанов, их "
@@ -832,6 +835,15 @@ msgstr ""
 msgid "Кассир"
 msgstr "Pokladní"
 
+msgid ""
+"Кассир — касса и оплата. Менеджер — заказы, меню, склад, гости, "
+"аналитика. Администратор — то же плюс финансы и P&L. Владелец — полный "
+"доступ и настройки."
+msgstr ""
+"Pokladní — pokladna a platby. Manažer — objednávky, menu, sklad, hosté, "
+"analytika. Administrátor — totéž plus finance a P&L. Majitel — plný "
+"přístup a nastavení."
+
 msgid "Кассовые смены (Z-отчёты)"
 msgstr "Pokladní směny (Z-výkazy)"
 
@@ -1392,6 +1404,9 @@ msgstr "Odesláno ✓"
 msgid "Отправляем…"
 msgstr "Odesíláme…"
 
+msgid "Отсканируйте, чтобы открыть меню и заказать"
+msgstr "Naskenujte pro otevření menu a objednání"
+
 msgid "Официант"
 msgstr "Číšník"
 
@@ -1652,6 +1667,9 @@ msgstr "Žádní uživatelé"
 msgid "Пользователи"
 msgstr "Uživatelé"
 
+msgid "Помощь и поддержка"
+msgstr "Nápověda a podpora"
+
 msgid "Попробовать 14 дней бесплатно"
 msgstr "Vyzkoušet 14 dní zdarma"
 
@@ -1803,6 +1821,16 @@ msgstr "Rozdělit"
 
 msgid "Разделить чек"
 msgstr "Rozdělit účet"
+
+msgid "Разрешите всплывающие окна для печати"
+msgstr "Povolte vyskakovací okna pro tisk"
+
+msgid ""
+"Распечатайте этот QR-код и поставьте на столы — гости отсканируют его, "
+"откроют меню и сделают заказ сами."
+msgstr ""
+"Vytiskněte tento QR kód a umístěte ho na stoly — hosté ho naskenují, "
+"otevřou menu a objednají si sami."
 
 msgid "Рассылки"
 msgstr "Rozeslání"

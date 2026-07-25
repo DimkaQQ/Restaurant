@@ -223,14 +223,3 @@ async def unhandled_exception_handler(request: Request, exc: Exception):
     if _wants_html(request):
         return templates.TemplateResponse("error_500.html", {"request": request}, status_code=500)
     return JSONResponse(status_code=500, content={"detail": "Внутренняя ошибка сервера"})
-
-
-@app.get("/health")
-async def health_check():
-    try:
-        async with engine.connect() as conn:
-            await conn.execute(text("SELECT 1"))
-        return {"status": "ok"}
-    except Exception as e:
-        logger.error("Health check failed: %s", e)
-        return JSONResponse(status_code=503, content={"status": "error", "detail": str(e)})

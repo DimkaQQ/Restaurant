@@ -17,6 +17,16 @@
 .table-del:hover { color: #ef4444; }
 .add-table-form { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
 .add-table-form input { width: 100px; }
+.qr-menu-card { display: flex; gap: 1.1rem; align-items: center; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.1rem; margin-bottom: 1rem; flex-wrap: wrap; }
+.qr-menu-img { background: #fff; border-radius: 8px; padding: 6px; line-height: 0; flex-shrink: 0; }
+.qr-menu-img img { display: block; width: 128px; height: 128px; }
+.qr-menu-card.qr-noimg .qr-menu-img { display: none; }
+.qr-menu-body { flex: 1; min-width: 220px; }
+.qr-menu-title { font-weight: 600; margin-bottom: .25rem; }
+.qr-menu-hint { font-size: .8rem; color: var(--muted); line-height: 1.5; margin-bottom: .6rem; }
+.qr-menu-linkrow { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
+.qr-menu-link { flex: 1; min-width: 200px; font-size: .8rem; background: var(--black); border: 1px solid var(--border); color: var(--white); border-radius: 6px; padding: .45rem .6rem; }
+.qr-copy.copied { border-color: var(--ok); color: var(--ok); }
 </style>
 {% endblock %}
 
@@ -30,6 +40,25 @@
 {% for v in venues %}
 <div class="tables-venue-block">
   <div class="tables-venue-name">{{ v.name }}</div>
+
+  <div class="qr-menu-card">
+    <div class="qr-menu-img">
+      <img src="/settings/venues/{{ v.id }}/menu-qr.svg" alt="QR" width="128" height="128"
+           onerror="this.closest('.qr-menu-card').classList.add('qr-noimg')">
+    </div>
+    <div class="qr-menu-body">
+      <div class="qr-menu-title">{{ _("QR-меню для гостей") }}</div>
+      <p class="qr-menu-hint">{{ _("Распечатайте этот QR-код и поставьте на столы — гости отсканируют его, откроют меню и сделают заказ сами.") }}</p>
+      <div class="qr-menu-linkrow">
+        <input type="text" readonly class="qr-menu-link" value="{{ public_url }}/order/{{ v.id }}" onclick="this.select()">
+        <button type="button" class="btn-secondary qr-copy" data-link="{{ public_url }}/order/{{ v.id }}">{{ _("Скопировать") }}</button>
+        <button type="button" class="btn-secondary" onclick="printQr('{{ v.id }}', {{ v.name | tojson }})">{{ _("Печать") }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="tables-venue-block">
+  <div class="tables-venue-name" style="font-size:.9rem;color:var(--muted)">{{ _("Столы") }} — {{ v.name }}</div>
   <div class="tables-grid" id="grid-{{ v.id }}">
     {% for t in tables_by_venue.get(v.id, []) %}
     <div class="table-card {{ t.status }}" id="table-{{ t.id }}">
@@ -101,6 +130,35 @@
     });
     if (res.ok) location.reload();
     else notify.error(T.deleteError);
+  }
+
+  // Copy the guest-menu link
+  document.querySelectorAll('.qr-copy').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const link = btn.dataset.link;
+      try { await navigator.clipboard.writeText(link); }
+      catch (e) { const i = btn.previousElementSibling; if (i) { i.select(); document.execCommand('copy'); } }
+      const orig = btn.textContent;
+      btn.textContent = {{ _("Скопировано!") | tojson }};
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 1500);
+    });
+  });
+
+  // Print a clean QR sheet in a popup (the SVG endpoint is same-origin)
+  function printQr(venueId, name) {
+    const w = window.open('', '_blank', 'width=420,height=560');
+    if (!w) { notify.error({{ _("Разрешите всплывающие окна для печати") | tojson }}); return; }
+    const heading = {{ _("Отсканируйте, чтобы открыть меню и заказать") | tojson }};
+    w.document.write(
+      '<!doctype html><html><head><meta charset="utf-8"><title>QR — ' + name + '</title>' +
+      '<style>body{font-family:system-ui,sans-serif;text-align:center;padding:40px 20px;color:#111}' +
+      'h1{font-size:20px;margin:0 0 4px}p{color:#555;margin:0 0 24px;font-size:14px}' +
+      'img{width:320px;height:320px}</style></head><body>' +
+      '<h1>' + name + '</h1><p>' + heading + '</p>' +
+      '<img src="/settings/venues/' + venueId + '/menu-qr.svg" onload="window.print()">' +
+      '</body></html>');
+    w.document.close();
   }
 </script>
 {% endblock %}
