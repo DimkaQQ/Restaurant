@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-26 18:43+0000\n"
+"POT-Creation-Date: 2026-07-26 19:12+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: sk\n"
@@ -102,9 +102,6 @@ msgstr "2FA je zapnuté: pri prihlásení je potrebný kód z aplikácie."
 
 msgid "2FA отключена"
 msgstr "2FA je vypnuté"
-
-msgid "2GIS ссылки и Telegram менеджеров"
-msgstr "Odkazy 2GIS a Telegram manažérov"
 
 msgid "3. Данные и фискализация"
 msgstr "3. Údaje a fiškalizácia"
@@ -708,6 +705,9 @@ msgstr "Prevádzka (nepovinné)"
 
 msgid "Заведения"
 msgstr "Prevádzky"
+
+msgid "Заведения сети"
+msgstr ""
 
 msgid "Завершённых заказов"
 msgstr "Dokončených objednávok"
@@ -2155,9 +2155,6 @@ msgstr "Priemerný účet"
 
 msgid "Средняя оценка"
 msgstr "Priemerné hodnotenie"
-
-msgid "Ссылка 2GIS"
-msgstr "Odkaz 2GIS"
 
 msgid "Ссылка для входа (действует 1 раз):"
 msgstr "Odkaz na prihlásenie (platí 1×):"

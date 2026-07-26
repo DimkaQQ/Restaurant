@@ -211,6 +211,7 @@ const T = {
   sent: {{ _("Заказ отправлен на кухню") | tojson }},
   error: {{ _("Ошибка") | tojson }},
   netError: {{ _("Ошибка соединения") | tojson }},
+  printReceipt: {{ _("Печать чека") | tojson }},
   orderNotSent: {{ _("Нет связи — заказ не отправлен. Проверьте интернет и повторите.") | tojson }},
   orderQueued: {{ _("Нет связи — заказ сохранён и отправится автоматически") | tojson }},
   queueSynced: {{ _("Связь восстановлена: отправлено заказов — {n}") | tojson }},
@@ -484,6 +485,7 @@ async function loadOrders() {
           ${o.payment_status !== 'paid' ? `
             <button class="w-btn" onclick="payOrder('${o.id}','cash')">${T.cash}</button>
             <button class="w-btn" onclick="payOrder('${o.id}','card')">${T.card}</button>` : ''}
+          <a class="w-btn" href="/orders/${o.id}/receipt" target="_blank" rel="noopener" style="text-decoration:none; display:inline-flex; align-items:center">🧾 ${T.printReceipt}</a>
         </div>
       </div>`).join('');
   } catch (e) {}

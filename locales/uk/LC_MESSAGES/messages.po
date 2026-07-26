@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-26 18:43+0000\n"
+"POT-Creation-Date: 2026-07-26 19:12+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: uk\n"
@@ -103,9 +103,6 @@ msgstr "2FA увімкнена: під час входу потрібен код
 
 msgid "2FA отключена"
 msgstr "2FA вимкнена"
-
-msgid "2GIS ссылки и Telegram менеджеров"
-msgstr "Посилання 2GIS та Telegram менеджерів"
 
 msgid "3. Данные и фискализация"
 msgstr "3. Дані та фіскалізація"
@@ -714,6 +711,9 @@ msgstr "Заклад (необов’язково)"
 
 msgid "Заведения"
 msgstr "Заклади"
+
+msgid "Заведения сети"
+msgstr ""
 
 msgid "Завершённых заказов"
 msgstr "Завершених замовлень"
@@ -2162,9 +2162,6 @@ msgstr "Середній чек"
 
 msgid "Средняя оценка"
 msgstr "Середня оцінка"
-
-msgid "Ссылка 2GIS"
-msgstr "Посилання 2GIS"
 
 msgid "Ссылка для входа (действует 1 раз):"
 msgstr "Посилання для входу (діє 1 раз):"

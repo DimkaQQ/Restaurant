@@ -44,7 +44,7 @@
 <div class="page-header">
   <h1 class="page-title">{{ _("Настройки заведений") }}</h1>
   <div style="display:flex;align-items:center;gap:1rem">
-    <span class="muted">{{ _("2GIS ссылки и Telegram менеджеров") }}</span>
+    <span class="muted">{{ _("Заведения сети") }}</span>
     <a href="/settings/api/export" style="color:var(--muted);font-size:.85rem;text-decoration:none;white-space:nowrap" title="{{ _('Скачать все данные сети в формате JSON') }}">⬇ {{ _("Экспорт данных") }}</a>
   </div>
 </div>
@@ -78,16 +78,6 @@
     <div class="venue-settings-addr">{{ venue.address }}</div>
     {% endif %}
 
-    <div class="form-row">
-      <label>{{ _("Ссылка 2GIS") }}</label>
-      <input
-        type="url"
-        id="gis_{{ venue.id }}"
-        class="input-field"
-        placeholder="https://2gis.kz/..."
-        value="{{ venue.gis_url or '' }}"
-      >
-    </div>
     <div class="form-row">
       <label>{{ _("Telegram ID менеджера") }}</label>
       <input
@@ -180,7 +170,6 @@ async function createVenue() {
 }
 
 async function saveVenue(venueId) {
-  const gisUrl = document.getElementById('gis_' + venueId).value.trim();
   const mgrRaw = document.getElementById('mgr_' + venueId).value.trim();
   const mgrId = mgrRaw ? parseInt(mgrRaw, 10) : null;
   const resEl = document.getElementById('res_' + venueId);
@@ -194,7 +183,7 @@ async function saveVenue(venueId) {
       method: 'PATCH',
       headers,
       credentials: 'include',
-      body: JSON.stringify({ gis_url: gisUrl || null, manager_telegram_id: mgrId }),
+      body: JSON.stringify({ manager_telegram_id: mgrId }),
     });
     if (resp.ok) {
       resEl.textContent = T.saved;

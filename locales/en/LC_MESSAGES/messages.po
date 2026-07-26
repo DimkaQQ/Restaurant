@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-26 18:43+0000\n"
+"POT-Creation-Date: 2026-07-26 19:12+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -102,9 +102,6 @@ msgstr "2FA is on: signing in requires a code from your app."
 
 msgid "2FA отключена"
 msgstr "2FA disabled"
-
-msgid "2GIS ссылки и Telegram менеджеров"
-msgstr "2GIS links and manager Telegram IDs"
 
 msgid "3. Данные и фискализация"
 msgstr "3. Data and fiscalization"
@@ -704,6 +701,9 @@ msgstr "Venue (optional)"
 
 msgid "Заведения"
 msgstr "Venues"
+
+msgid "Заведения сети"
+msgstr ""
 
 msgid "Завершённых заказов"
 msgstr "Completed orders"
@@ -2140,9 +2140,6 @@ msgstr "Average check"
 
 msgid "Средняя оценка"
 msgstr "Average rating"
-
-msgid "Ссылка 2GIS"
-msgstr "2GIS link"
 
 msgid "Ссылка для входа (действует 1 раз):"
 msgstr "Sign-in link (one-time use):"
