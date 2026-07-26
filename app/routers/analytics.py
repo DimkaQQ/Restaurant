@@ -34,6 +34,10 @@ async def analytics_page(
     current_user: User = Depends(require_role("manager")),
     db: AsyncSession = Depends(get_db),
 ):
+    from app.routers.feature_gate import feature_gate
+    gated = await feature_gate(request, "analytics", current_user, db)
+    if gated:
+        return gated
     try:
         now = datetime.now(timezone.utc)
         thirty_days_ago = now - timedelta(days=30)
@@ -152,6 +156,10 @@ async def nps_page(
     current_user: User = Depends(require_role("manager")),
     db: AsyncSession = Depends(get_db),
 ):
+    from app.routers.feature_gate import feature_gate
+    gated = await feature_gate(request, "analytics", current_user, db)
+    if gated:
+        return gated
     try:
         now = datetime.now(timezone.utc)
         thirty_days_ago = now - timedelta(days=30)

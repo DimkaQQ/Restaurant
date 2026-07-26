@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}{{ feature }} — RestOS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">{{ feature }}</h1>
+</div>
+
+<div style="max-width:520px; margin:2rem auto; text-align:center; background:var(--card); border:1px solid var(--gold); border-radius:16px; padding:2.5rem 2rem">
+  <div style="font-size:2.5rem; margin-bottom:.75rem">🔒</div>
+  <h2 style="font-size:1.2rem; margin-bottom:.6rem">{{ _("Доступно на тарифе") }} {{ plan }}</h2>
+  <p style="color:var(--muted); line-height:1.6; margin-bottom:1.5rem">
+    {{ _("«{feature}» входит в тариф {plan} и выше. Оформите его, чтобы включить эту функцию для всей сети.").format(feature=feature, plan=plan) }}
+  </p>
+  <a href="/billing" class="btn-primary" style="text-decoration:none; display:inline-block; padding:.7rem 1.6rem">{{ _("Посмотреть тарифы") }}</a>
+</div>
+{% endblock %}

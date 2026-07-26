@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-26 19:29+0000\n"
+"POT-Creation-Date: 2026-07-26 19:49+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: sk\n"
@@ -211,6 +211,14 @@ msgstr ""
 
 msgid "Telegram ID менеджера"
 msgstr "Telegram ID manažéra"
+
+#, python-brace-format
+msgid ""
+"«{feature}» входит в тариф {plan} и выше. Оформите его, чтобы включить "
+"эту функцию для всей сети."
+msgstr ""
+"„{feature}“ je súčasťou tarifu {plan} a vyššie. Predplaťte si ho, aby ste"
+" túto funkciu zapli pre celú sieť."
 
 #, python-brace-format
 msgid "«{n}» снова в продаже"
@@ -684,6 +692,9 @@ msgstr "Prístup je obmedzený do obnovenia predplatného"
 
 msgid "Доступно"
 msgstr "Dostupné"
+
+msgid "Доступно на тарифе"
+msgstr "Dostupné v tarife"
 
 msgid "Ед."
 msgstr "Jedn."
@@ -1749,6 +1760,9 @@ msgstr "Posledných 30 dní"
 
 msgid "Последние расходы"
 msgstr "Posledné náklady"
+
+msgid "Посмотреть тарифы"
+msgstr "Zobraziť tarify"
 
 msgid "Посмотреть цены"
 msgstr "Zobraziť ceny"

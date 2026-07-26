@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-26 19:29+0000\n"
+"POT-Creation-Date: 2026-07-26 19:49+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -211,6 +211,14 @@ msgstr ""
 
 msgid "Telegram ID менеджера"
 msgstr "Manager Telegram ID"
+
+#, python-brace-format
+msgid ""
+"«{feature}» входит в тариф {plan} и выше. Оформите его, чтобы включить "
+"эту функцию для всей сети."
+msgstr ""
+"“{feature}” is included in the {plan} plan and above. Subscribe to enable"
+" it for your whole network."
 
 #, python-brace-format
 msgid "«{n}» снова в продаже"
@@ -680,6 +688,9 @@ msgstr "Access is limited until the subscription is renewed"
 
 msgid "Доступно"
 msgstr "Available"
+
+msgid "Доступно на тарифе"
+msgstr "Available on the"
 
 msgid "Ед."
 msgstr "Unit"
@@ -1737,6 +1748,9 @@ msgstr "Last 30 days"
 
 msgid "Последние расходы"
 msgstr "Recent expenses"
+
+msgid "Посмотреть тарифы"
+msgstr "View plans"
 
 msgid "Посмотреть цены"
 msgstr "See pricing"

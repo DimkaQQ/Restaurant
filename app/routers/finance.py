@@ -37,6 +37,10 @@ async def finance_page(
     current_user: User = Depends(require_role("administrator")),
     db: AsyncSession = Depends(get_db),
 ):
+    from app.routers.feature_gate import feature_gate
+    gated = await feature_gate(request, "finance", current_user, db)
+    if gated:
+        return gated
     try:
         now = datetime.now(timezone.utc)
         accessible_ids = await get_accessible_venue_ids(current_user, db)

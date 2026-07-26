@@ -21,6 +21,40 @@ PLAN_LIMITS = {
     "enterprise": {"max_venues": None, "max_staff": None},
 }
 
+# Feature entitlements — enforce exactly what the billing page advertises, no
+# invented rules. A feature not listed here is core (every plan has it).
+PLAN_RANK = {"starter": 1, "pro": 2, "enterprise": 3}
+FEATURE_MIN_PLAN = {
+    "analytics": "pro",     # billing: "Финансы P&L, аналитика" is a Pro feature
+    "finance": "pro",
+    "whitelabel": "enterprise",  # billing: "White-label" is an Enterprise feature
+    "api": "enterprise",         # public API / webhooks — chain/integrator tier
+}
+# Human labels for the upsell screen (min plan needed for a feature).
+FEATURE_LABELS = {
+    "analytics": "Аналитика",
+    "finance": "Финансы и P&L",
+    "whitelabel": "White-label оформление",
+    "api": "API и веб-хуки",
+}
+
+
+def plan_allows(plan: str, feature: str) -> bool:
+    """Does this plan include this feature? Unknown/core features → always yes."""
+    need = FEATURE_MIN_PLAN.get(feature)
+    if need is None:
+        return True
+    return PLAN_RANK.get(plan, 1) >= PLAN_RANK[need]
+
+
+async def network_has_feature(network_id: uuid.UUID, feature: str, db: AsyncSession) -> bool:
+    """True if the tenant may use `feature`. Trials and un-billed tenants get
+    everything (evaluation, same policy as the venue/staff limits below)."""
+    sub = await _get_active_subscription(network_id, db)
+    if not sub:
+        return True
+    return plan_allows(sub.plan, feature)
+
 
 async def _get_active_subscription(network_id: uuid.UUID, db: AsyncSession) -> Subscription | None:
     sub = (await db.execute(
