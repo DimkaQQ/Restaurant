@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-26 19:13+0000\n"
+"POT-Creation-Date: 2026-07-26 19:26+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: cs\n"
@@ -132,6 +132,9 @@ msgstr "7. Kontakty"
 
 msgid "AI-инсайты"
 msgstr "AI-statistiky"
+
+msgid "API и веб-хуки"
+msgstr "API a webhooky"
 
 msgid "API-ключ (x-api-key)"
 msgstr "API klíč (x-api-key)"
@@ -315,6 +318,9 @@ msgstr "Do přípravy — platba později"
 msgid "Вариант"
 msgstr "Varianta"
 
+msgid "Ваш тариф, оплата и лимиты сети."
+msgstr "Váš tarif, platba a limity sítě."
+
 msgid "Введите PIN"
 msgstr "Zadejte PIN"
 
@@ -348,6 +354,9 @@ msgstr "Vrátit zpět"
 msgid "Вид"
 msgstr "Vzhled"
 
+msgid "Вид и язык"
+msgstr "Vzhled a jazyk"
+
 msgid "Визиты"
 msgstr "Návštěvy"
 
@@ -359,6 +368,9 @@ msgstr "Zapnout 2FA"
 
 msgid "Владелец"
 msgstr "Majitel"
+
+msgid "Внешний вид"
+msgstr "Vzhled"
 
 msgid "Возможности"
 msgstr "Funkce"
@@ -380,6 +392,9 @@ msgstr "Všechny provozovny"
 
 msgid "Все заказы →"
 msgstr "Všechny objednávky →"
+
+msgid "Все настройки"
+msgstr "Všechna nastavení"
 
 msgid "Все языки"
 msgstr "Všechny jazyky"
@@ -703,6 +718,9 @@ msgstr "Provozovna"
 msgid "Заведение (необязательно)"
 msgstr "Provozovna (nepovinné)"
 
+msgid "Заведение и залы"
+msgstr "Provozovna a sály"
+
 msgid "Заведения"
 msgstr "Provozovny"
 
@@ -879,6 +897,9 @@ msgstr ""
 msgid "Ключ"
 msgstr "Klíč"
 
+msgid "Ключи для интеграций и уведомления о заказах для разработчиков."
+msgstr "Klíče pro integrace a upozornění na objednávky pro vývojáře."
+
 msgid "Когда"
 msgstr "Kdy"
 
@@ -902,6 +923,9 @@ msgstr "Množství příjmu"
 
 msgid "Количество списания"
 msgstr "Množství odpisu"
+
+msgid "Команда"
+msgstr "Tým"
 
 msgid "Комментарий"
 msgstr "Komentář"
@@ -933,6 +957,9 @@ msgstr "Kdo"
 msgid "Кто удалил, отменил или дал скидку — последние 200 записей"
 msgstr "Kdo smazal, zrušil nebo poskytl slevu — posledních 200 záznamů"
 
+msgid "Кто удалил, отменил или дал скидку — последние действия команды."
+msgstr "Kdo smazal, zrušil nebo poskytl slevu — poslední akce týmu."
+
 msgid "Кухня"
 msgstr "Kuchyně"
 
@@ -959,6 +986,9 @@ msgstr "Málo"
 
 msgid "Маржа"
 msgstr "Marže"
+
+msgid "Маркетинг"
+msgstr "Marketing"
 
 msgid "Менеджер"
 msgstr "Manažer"
@@ -1055,6 +1085,9 @@ msgstr "Název kategorie"
 
 msgid "Название сети / ресторана"
 msgstr "Název sítě / restaurace"
+
+msgid "Названия, адреса и фискализация (ОФД) ваших точек."
+msgstr "Názvy, adresy a fiskalizace (OFD) vašich provozoven."
 
 msgid "Наименование"
 msgstr "Název"
@@ -1566,6 +1599,9 @@ msgstr "Tisk lístku"
 msgid "Печать чека"
 msgstr "Tisk účtenky"
 
+msgid "План зала, статусы столов и печать QR-кода меню для гостей."
+msgstr "Plán sálu, stavy stolů a tisk QR kódu menu pro hosty."
+
 msgid ""
 "Платёжные данные обрабатываются напрямую Stripe; RestOS не хранит номера "
 "карт."
@@ -1956,6 +1992,9 @@ msgstr ""
 msgid "Сервис:"
 msgstr "Služba:"
 
+msgid "Система"
+msgstr "Systém"
+
 msgid "Скачать все данные сети в формате JSON"
 msgstr "Stáhnout všechna data sítě ve formátu JSON"
 
@@ -1967,6 +2006,9 @@ msgstr "Sleva %"
 
 msgid "Скидка ₸"
 msgstr "Sleva ₸"
+
+msgid "Скидочные коды, которые гости вводят в QR-меню."
+msgstr "Slevové kódy, které hosté zadávají v QR menu."
 
 msgid "Склад"
 msgstr "Sklad"
@@ -2094,6 +2136,9 @@ msgstr "Vytvořit rozeslání →"
 msgid "Создаётся..."
 msgstr "Vytváří se..."
 
+msgid "Сообщения гостям через Telegram-бота."
+msgstr "Zprávy hostům přes Telegram bota."
+
 msgid "Сотрудник"
 msgstr "Zaměstnanec"
 
@@ -2111,6 +2156,9 @@ msgstr "Zaměstnanci"
 
 msgid "Сотрудники появляются здесь после привязки Telegram-аккаунта."
 msgstr "Zaměstnanci se zde zobrazí po propojení Telegram účtu."
+
+msgid "Сотрудники, их роли и PIN-коды для входа на станциях."
+msgstr "Zaměstnanci, jejich role a PIN kódy pro přihlášení na stanicích."
 
 msgid "Сотрудников пока нет."
 msgstr "Zatím žádní zaměstnanci."
@@ -2182,6 +2230,9 @@ msgstr "Zatím žádné stoly"
 msgid "Столы"
 msgstr "Stoly"
 
+msgid "Столы и QR-меню"
+msgstr "Stoly a QR menu"
+
 msgid "Стоп"
 msgstr "Stop"
 
@@ -2217,6 +2268,9 @@ msgstr "Telefon"
 
 msgid "Тема"
 msgstr "Téma"
+
+msgid "Тема оформления, акцентный цвет и язык интерфейса."
+msgstr "Téma, zvýrazňující barva a jazyk rozhraní."
 
 msgid "Техкарта"
 msgstr "Receptura"

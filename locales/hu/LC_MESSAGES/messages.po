@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-26 19:13+0000\n"
+"POT-Creation-Date: 2026-07-26 19:26+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: hu\n"
@@ -134,6 +134,9 @@ msgstr "7. Kapcsolat"
 
 msgid "AI-инсайты"
 msgstr "AI-elemzések"
+
+msgid "API и веб-хуки"
+msgstr "API és webhookok"
 
 msgid "API-ключ (x-api-key)"
 msgstr "API-kulcs (x-api-key)"
@@ -316,6 +319,9 @@ msgstr "Előkészítésbe — fizetés később"
 msgid "Вариант"
 msgstr "Változat"
 
+msgid "Ваш тариф, оплата и лимиты сети."
+msgstr "Az Ön tarifája, fizetése és a hálózat korlátai."
+
 msgid "Введите PIN"
 msgstr "Adja meg a PIN-kódot"
 
@@ -349,6 +355,9 @@ msgstr "Visszaállítás"
 msgid "Вид"
 msgstr "Megjelenés"
 
+msgid "Вид и язык"
+msgstr "Megjelenés és nyelv"
+
 msgid "Визиты"
 msgstr "Látogatások"
 
@@ -360,6 +369,9 @@ msgstr "2FA bekapcsolása"
 
 msgid "Владелец"
 msgstr "Tulajdonos"
+
+msgid "Внешний вид"
+msgstr "Megjelenés"
 
 msgid "Возможности"
 msgstr "Funkciók"
@@ -381,6 +393,9 @@ msgstr "Minden hely"
 
 msgid "Все заказы →"
 msgstr "Minden rendelés →"
+
+msgid "Все настройки"
+msgstr "Minden beállítás"
 
 msgid "Все языки"
 msgstr "Minden nyelv"
@@ -707,6 +722,9 @@ msgstr "Hely"
 msgid "Заведение (необязательно)"
 msgstr "Hely (nem kötelező)"
 
+msgid "Заведение и залы"
+msgstr "Hely és termek"
+
 msgid "Заведения"
 msgstr "Helyek"
 
@@ -883,6 +901,9 @@ msgstr ""
 msgid "Ключ"
 msgstr "Kulcs"
 
+msgid "Ключи для интеграций и уведомления о заказах для разработчиков."
+msgstr "Integrációs kulcsok és rendelési webhookok fejlesztőknek."
+
 msgid "Когда"
 msgstr "Mikor"
 
@@ -906,6 +927,9 @@ msgstr "Bevételezett mennyiség"
 
 msgid "Количество списания"
 msgstr "Leírt mennyiség"
+
+msgid "Команда"
+msgstr "Csapat"
 
 msgid "Комментарий"
 msgstr "Megjegyzés"
@@ -937,6 +961,11 @@ msgstr "Ki"
 msgid "Кто удалил, отменил или дал скидку — последние 200 записей"
 msgstr "Ki törölt, mondott le vagy adott kedvezményt — az utolsó 200 bejegyzés"
 
+msgid "Кто удалил, отменил или дал скидку — последние действия команды."
+msgstr ""
+"Ki törölt, mondott le vagy adott kedvezményt — a csapat legutóbbi "
+"műveletei."
+
 msgid "Кухня"
 msgstr "Konyha"
 
@@ -963,6 +992,9 @@ msgstr "Kevés"
 
 msgid "Маржа"
 msgstr "Árrés"
+
+msgid "Маркетинг"
+msgstr "Marketing"
 
 msgid "Менеджер"
 msgstr "Menedzser"
@@ -1059,6 +1091,9 @@ msgstr "Kategória neve"
 
 msgid "Название сети / ресторана"
 msgstr "Hálózat / étterem neve"
+
+msgid "Названия, адреса и фискализация (ОФД) ваших точек."
+msgstr "Helyszíneinek nevei, címei és fiskalizációja (OFD)."
 
 msgid "Наименование"
 msgstr "Megnevezés"
@@ -1574,6 +1609,9 @@ msgstr "Blokk nyomtatása"
 msgid "Печать чека"
 msgstr "Nyugta nyomtatása"
 
+msgid "План зала, статусы столов и печать QR-кода меню для гостей."
+msgstr "Alaprajz, asztalstátuszok és a vendég QR-menü kód nyomtatása."
+
 msgid ""
 "Платёжные данные обрабатываются напрямую Stripe; RestOS не хранит номера "
 "карт."
@@ -1967,6 +2005,9 @@ msgstr ""
 msgid "Сервис:"
 msgstr "Szolgáltatás:"
 
+msgid "Система"
+msgstr "Rendszer"
+
 msgid "Скачать все данные сети в формате JSON"
 msgstr "A hálózat összes adatának letöltése JSON formátumban"
 
@@ -1978,6 +2019,9 @@ msgstr "Kedvezmény %"
 
 msgid "Скидка ₸"
 msgstr "Kedvezmény ₸"
+
+msgid "Скидочные коды, которые гости вводят в QR-меню."
+msgstr "Kedvezménykódok, amelyeket a vendégek a QR-menüben adnak meg."
 
 msgid "Склад"
 msgstr "Raktár"
@@ -2105,6 +2149,9 @@ msgstr "Körüzenet létrehozása →"
 msgid "Создаётся..."
 msgstr "Létrehozás..."
 
+msgid "Сообщения гостям через Telegram-бота."
+msgstr "Üzenetek a vendégeknek a Telegram boton keresztül."
+
 msgid "Сотрудник"
 msgstr "Munkatárs"
 
@@ -2122,6 +2169,9 @@ msgstr "Munkatársak"
 
 msgid "Сотрудники появляются здесь после привязки Telegram-аккаунта."
 msgstr "A munkatársak itt jelennek meg a Telegram-fiók összekapcsolása után."
+
+msgid "Сотрудники, их роли и PIN-коды для входа на станциях."
+msgstr "Munkatársak, szerepköreik és a munkaállomás PIN-kódjai."
 
 msgid "Сотрудников пока нет."
 msgstr "Még nincsenek munkatársak."
@@ -2193,6 +2243,9 @@ msgstr "Még nincsenek asztalok"
 msgid "Столы"
 msgstr "Asztalok"
 
+msgid "Столы и QR-меню"
+msgstr "Asztalok és QR-menü"
+
 msgid "Стоп"
 msgstr "Stop"
 
@@ -2228,6 +2281,9 @@ msgstr "Telefon"
 
 msgid "Тема"
 msgstr "Téma"
+
+msgid "Тема оформления, акцентный цвет и язык интерфейса."
+msgstr "Téma, kiemelőszín és a felület nyelve."
 
 msgid "Техкарта"
 msgstr "Recept"

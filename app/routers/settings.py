@@ -54,6 +54,21 @@ def _require_owner(current_user: User) -> None:
         raise HTTPException(status_code=403, detail="Доступ запрещён: только для владельца")
 
 
+@router.get("", response_class=HTMLResponse)
+@router.get("/", response_class=HTMLResponse)
+async def settings_home(
+    request: Request,
+    current_user: User = Depends(get_current_user_dep),
+):
+    """Settings landing page: grouped cards with plain-language descriptions so
+    a non-technical owner immediately understands what each area does."""
+    _require_owner(current_user)
+    return templates.TemplateResponse("settings_home.html", {
+        "request": request,
+        "user": current_user,
+    })
+
+
 @router.get("/api/export")
 async def export_network_data(
     current_user: User = Depends(get_current_user_dep),

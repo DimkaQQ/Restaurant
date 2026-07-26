@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-26 19:13+0000\n"
+"POT-Creation-Date: 2026-07-26 19:26+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -132,6 +132,9 @@ msgstr "7. Contact"
 
 msgid "AI-инсайты"
 msgstr "AI insights"
+
+msgid "API и веб-хуки"
+msgstr "API & webhooks"
 
 msgid "API-ключ (x-api-key)"
 msgstr "API key (x-api-key)"
@@ -314,6 +317,9 @@ msgstr "Send to kitchen — pay later"
 msgid "Вариант"
 msgstr "Option"
 
+msgid "Ваш тариф, оплата и лимиты сети."
+msgstr "Your plan, billing and network limits."
+
 msgid "Введите PIN"
 msgstr "Enter PIN"
 
@@ -347,6 +353,9 @@ msgstr "Move back"
 msgid "Вид"
 msgstr "Appearance"
 
+msgid "Вид и язык"
+msgstr "Look & language"
+
 msgid "Визиты"
 msgstr "Visits"
 
@@ -358,6 +367,9 @@ msgstr "Enable 2FA"
 
 msgid "Владелец"
 msgstr "Owner"
+
+msgid "Внешний вид"
+msgstr "Appearance"
 
 msgid "Возможности"
 msgstr "Features"
@@ -379,6 +391,9 @@ msgstr "All venues"
 
 msgid "Все заказы →"
 msgstr "All orders →"
+
+msgid "Все настройки"
+msgstr "All settings"
 
 msgid "Все языки"
 msgstr "All languages"
@@ -699,6 +714,9 @@ msgstr "Venue"
 msgid "Заведение (необязательно)"
 msgstr "Venue (optional)"
 
+msgid "Заведение и залы"
+msgstr "Venue & floor"
+
 msgid "Заведения"
 msgstr "Venues"
 
@@ -873,6 +891,9 @@ msgstr ""
 msgid "Ключ"
 msgstr "Key"
 
+msgid "Ключи для интеграций и уведомления о заказах для разработчиков."
+msgstr "Integration keys and order webhooks for developers."
+
 msgid "Когда"
 msgstr "When"
 
@@ -896,6 +917,9 @@ msgstr "Restock quantity"
 
 msgid "Количество списания"
 msgstr "Write-off quantity"
+
+msgid "Команда"
+msgstr "Team"
 
 msgid "Комментарий"
 msgstr "Comment"
@@ -927,6 +951,9 @@ msgstr "Who"
 msgid "Кто удалил, отменил или дал скидку — последние 200 записей"
 msgstr "Who deleted, cancelled, or gave a discount — last 200 records"
 
+msgid "Кто удалил, отменил или дал скидку — последние действия команды."
+msgstr "Who deleted, cancelled or gave a discount — recent team actions."
+
 msgid "Кухня"
 msgstr "Kitchen"
 
@@ -953,6 +980,9 @@ msgstr "Low"
 
 msgid "Маржа"
 msgstr "Margin"
+
+msgid "Маркетинг"
+msgstr "Marketing"
 
 msgid "Менеджер"
 msgstr "Manager"
@@ -1048,6 +1078,9 @@ msgstr "Category name"
 
 msgid "Название сети / ресторана"
 msgstr "Restaurant / network name"
+
+msgid "Названия, адреса и фискализация (ОФД) ваших точек."
+msgstr "Names, addresses and fiscalization (OFD) of your locations."
 
 msgid "Наименование"
 msgstr "Name"
@@ -1552,6 +1585,9 @@ msgstr "Print ticket"
 msgid "Печать чека"
 msgstr "Print receipt"
 
+msgid "План зала, статусы столов и печать QR-кода меню для гостей."
+msgstr "Floor plan, table statuses and printing the guest QR-menu code."
+
 msgid ""
 "Платёжные данные обрабатываются напрямую Stripe; RestOS не хранит номера "
 "карт."
@@ -1942,6 +1978,9 @@ msgstr ""
 msgid "Сервис:"
 msgstr "Service:"
 
+msgid "Система"
+msgstr "System"
+
 msgid "Скачать все данные сети в формате JSON"
 msgstr "Download all network data as JSON"
 
@@ -1953,6 +1992,9 @@ msgstr "Discount %"
 
 msgid "Скидка ₸"
 msgstr "Discount ₸"
+
+msgid "Скидочные коды, которые гости вводят в QR-меню."
+msgstr "Discount codes guests enter in the QR menu."
 
 msgid "Склад"
 msgstr "Inventory"
@@ -2080,6 +2122,9 @@ msgstr "Create broadcast →"
 msgid "Создаётся..."
 msgstr "Creating..."
 
+msgid "Сообщения гостям через Telegram-бота."
+msgstr "Messages to guests via the Telegram bot."
+
 msgid "Сотрудник"
 msgstr "Staff member"
 
@@ -2097,6 +2142,9 @@ msgstr "Staff"
 
 msgid "Сотрудники появляются здесь после привязки Telegram-аккаунта."
 msgstr "Staff members appear here once they link their Telegram account."
+
+msgid "Сотрудники, их роли и PIN-коды для входа на станциях."
+msgstr "Staff, their roles and station login PIN codes."
 
 msgid "Сотрудников пока нет."
 msgstr "No staff members yet."
@@ -2168,6 +2216,9 @@ msgstr "No tables yet"
 msgid "Столы"
 msgstr "Tables"
 
+msgid "Столы и QR-меню"
+msgstr "Tables & QR menu"
+
 msgid "Стоп"
 msgstr "Stopped"
 
@@ -2203,6 +2254,9 @@ msgstr "Phone"
 
 msgid "Тема"
 msgstr "Theme"
+
+msgid "Тема оформления, акцентный цвет и язык интерфейса."
+msgstr "Theme, accent color and interface language."
 
 msgid "Техкарта"
 msgstr "Recipe"

@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block title %}{{ _("Настройки") }} — RestOS{% endblock %}
+
+{% block head %}
+<style>
+  .set-group { margin-bottom: 2rem; }
+  .set-group-title { font-size: .78rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 0 0 .75rem; }
+  .set-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: .85rem; }
+  .set-card {
+    display: flex; gap: .85rem; align-items: flex-start;
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 1rem 1.1rem; text-decoration: none; color: var(--white);
+    transition: border-color .15s, transform .15s;
+  }
+  .set-card:hover { border-color: var(--gold); transform: translateY(-1px); }
+  .set-card-ico {
+    width: 38px; height: 38px; border-radius: 9px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: color-mix(in srgb, var(--gold) 12%, transparent); color: var(--gold);
+  }
+  .set-card-ico svg { width: 20px; height: 20px; }
+  .set-card-title { font-weight: 600; font-size: .95rem; margin-bottom: .2rem; }
+  .set-card-desc { font-size: .8rem; color: var(--muted); line-height: 1.45; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">{{ _("Настройки") }}</h1>
+</div>
+
+{% macro card(href, title, desc, icon) %}
+<a href="{{ href }}" class="set-card">
+  <span class="set-card-ico">{{ icon }}</span>
+  <span>
+    <span class="set-card-title">{{ title }}</span>
+    <span class="set-card-desc">{{ desc }}</span>
+  </span>
+</a>
+{% endmacro %}
+
+{% set ico_venue %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-4h6v4"/></svg>{% endset %}
+{% set ico_tables %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="7" height="7" rx="1"/><rect x="14" y="4" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>{% endset %}
+{% set ico_team %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0112 0M16 6a3 3 0 010 6m5 8a5 5 0 00-6-5"/></svg>{% endset %}
+{% set ico_look %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 000 18 3 3 0 000-6 1.5 1.5 0 010-3 3 3 0 000-6z"/></svg>{% endset %}
+{% set ico_bcast %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 10v4h4l6 4V6l-6 4H4zM18 8a5 5 0 010 8"/></svg>{% endset %}
+{% set ico_promo %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 9V6a2 2 0 012-2h12a2 2 0 012 2v3a2 2 0 000 6v3a2 2 0 01-2 2H6a2 2 0 01-2-2v-3a2 2 0 000-6z"/><path d="M12 7v10" stroke-dasharray="2 2"/></svg>{% endset %}
+{% set ico_log %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 5h16M4 12h16M4 19h10"/></svg>{% endset %}
+{% set ico_api %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 9l-4 3 4 3M16 9l4 3-4 3M13 6l-2 12"/></svg>{% endset %}
+{% set ico_bill %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/></svg>{% endset %}
+
+<div class="set-group">
+  <p class="set-group-title">{{ _("Заведение и залы") }}</p>
+  <div class="set-cards">
+    {{ card("/settings/venues", _("Заведения"), _("Названия, адреса и фискализация (ОФД) ваших точек."), ico_venue) }}
+    {{ card("/settings/tables", _("Столы и QR-меню"), _("План зала, статусы столов и печать QR-кода меню для гостей."), ico_tables) }}
+  </div>
+</div>
+
+<div class="set-group">
+  <p class="set-group-title">{{ _("Команда") }}</p>
+  <div class="set-cards">
+    {{ card("/settings/users", _("Пользователи"), _("Сотрудники, их роли и PIN-коды для входа на станциях."), ico_team) }}
+  </div>
+</div>
+
+<div class="set-group">
+  <p class="set-group-title">{{ _("Внешний вид") }}</p>
+  <div class="set-cards">
+    {{ card("/settings/appearance", _("Вид и язык"), _("Тема оформления, акцентный цвет и язык интерфейса."), ico_look) }}
+  </div>
+</div>
+
+<div class="set-group">
+  <p class="set-group-title">{{ _("Маркетинг") }}</p>
+  <div class="set-cards">
+    {{ card("/settings/broadcasts", _("Рассылки"), _("Сообщения гостям через Telegram-бота."), ico_bcast) }}
+    {{ card("/settings/promos", _("Промокоды"), _("Скидочные коды, которые гости вводят в QR-меню."), ico_promo) }}
+  </div>
+</div>
+
+<div class="set-group">
+  <p class="set-group-title">{{ _("Система") }}</p>
+  <div class="set-cards">
+    {{ card("/settings/audit", _("Журнал действий"), _("Кто удалил, отменил или дал скидку — последние действия команды."), ico_log) }}
+    {{ card("/settings/api-access", _("API и веб-хуки"), _("Ключи для интеграций и уведомления о заказах для разработчиков."), ico_api) }}
+  </div>
+</div>
+
+<div class="set-group">
+  <p class="set-group-title">{{ _("Оплата") }}</p>
+  <div class="set-cards">
+    {{ card("/billing", _("Подписка"), _("Ваш тариф, оплата и лимиты сети."), ico_bill) }}
+  </div>
+</div>
+{% endblock %}

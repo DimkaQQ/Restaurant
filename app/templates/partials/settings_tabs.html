@@ -7,8 +7,10 @@
 }
 .settings-tab:hover { color: var(--white); }
 .settings-tab.active { color: var(--gold); border-bottom-color: var(--gold); font-weight: 600; }
+.settings-tab.hub { color: var(--muted); }
 </style>
 <div class="settings-tabs">
+  <a href="/settings" class="settings-tab hub" title="{{ _('Все настройки') }}">← {{ _("Все настройки") }}</a>
   <a href="/settings/venues" class="settings-tab {% if request.url.path == '/settings/venues' %}active{% endif %}">{{ _("Заведения") }}</a>
   <a href="/settings/tables" class="settings-tab {% if request.url.path == '/settings/tables' %}active{% endif %}">{{ _("Столы") }}</a>
   <a href="/settings/users" class="settings-tab {% if request.url.path == '/settings/users' %}active{% endif %}">{{ _("Пользователи") }}</a>
