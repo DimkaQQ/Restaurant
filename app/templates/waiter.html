@@ -67,6 +67,7 @@
   </style>
 </head>
 <body>
+  <div id="w-offline-banner" style="display:none; background:color-mix(in srgb, var(--warn) 15%, transparent); border-bottom:2px solid color-mix(in srgb, var(--warn) 50%, transparent); color:var(--warn); padding:.5rem 1rem; font-size:.82rem; font-weight:600; text-align:center"></div>
   <div class="w-header">
     <span class="w-title">{{ _("Официант") }}</span>
     <div class="w-venue">
@@ -211,6 +212,10 @@ const T = {
   error: {{ _("Ошибка") | tojson }},
   netError: {{ _("Ошибка соединения") | tojson }},
   orderNotSent: {{ _("Нет связи — заказ не отправлен. Проверьте интернет и повторите.") | tojson }},
+  orderQueued: {{ _("Нет связи — заказ сохранён и отправится автоматически") | tojson }},
+  queueSynced: {{ _("Связь восстановлена: отправлено заказов — {n}") | tojson }},
+  queuePending: {{ _("В очереди офлайн:") | tojson }},
+  offline: {{ _("Нет связи") | tojson }},
   cartEmpty: {{ _("Корзина пуста") | tojson }},
   items: {{ _("позиций:") | tojson }},
   noTable: {{ _("без стола") | tojson }},
@@ -420,9 +425,15 @@ async function sendOrder() {
       body: JSON.stringify(body),
     });
   } catch (e) {
-    // Network down (waiters roam the floor on flaky Wi-Fi). Keep the cart so
-    // the order isn't lost — tell them to retry when the connection is back.
-    notify.error(T.orderNotSent);
+    // Network down (waiters roam the floor on flaky Wi-Fi). Queue the order —
+    // it carries a client_order_id, so the server dedupes on retry and it can
+    // never create a duplicate. Clear the cart; it syncs automatically.
+    const q = getWQueue(); q.push(body); setWQueue(q);
+    _cart = {}; _tableId = null;
+    document.getElementById('w-comment').value = '';
+    closeSheets(); renderTables(); renderMenu(); updateCartBar();
+    notify.info(T.orderQueued);
+    showTab('orders');
     return;
   }
   if (res.status === 401) { location.href = '/auth/login'; return; }
@@ -507,6 +518,52 @@ function showTab(name) {
   document.getElementById('pane-orders').style.display = name === 'orders' ? '' : 'none';
   if (name === 'orders') loadOrders();
 }
+
+// ── Offline order queue ──────────────────────────────────────────────
+// Waiters roam the floor on flaky Wi-Fi. Orders placed offline are stored
+// locally with a client_order_id and flushed on reconnect; the server dedupes
+// by that id, so a retry can never create a duplicate.
+const W_QUEUE_KEY = 'waiter_order_queue';
+const getWQueue = () => JSON.parse(localStorage.getItem(W_QUEUE_KEY) || '[]');
+const setWQueue = (q) => { localStorage.setItem(W_QUEUE_KEY, JSON.stringify(q)); renderWaiterBanner(); };
+
+function renderWaiterBanner() {
+  const el = document.getElementById('w-offline-banner');
+  if (!el) return;
+  const n = getWQueue().length;
+  if (n) { el.style.display = 'block'; el.textContent = '📴 ' + T.queuePending + ' ' + n; }
+  else if (!navigator.onLine) { el.style.display = 'block'; el.textContent = '📴 ' + T.offline; }
+  else { el.style.display = 'none'; }
+}
+
+let _wFlushing = false;
+async function flushWQueue() {
+  if (_wFlushing || !getWQueue().length) return;
+  _wFlushing = true;
+  try {
+    const remaining = []; let sent = 0;
+    for (const body of getWQueue()) {
+      try {
+        const res = await fetch('/api/pos/order', {
+          method: 'POST', credentials: 'include',
+          headers: {'Content-Type':'application/json','Authorization':'Bearer '+token()},
+          body: JSON.stringify(body),
+        });
+        if (res.ok) sent++;
+        else if (res.status === 400) {  // permanently rejected — surface, don't retry forever
+          const err = await res.json().catch(() => ({}));
+          notify.error((err.detail || T.error) + ' (#' + (body.client_order_id || '').slice(0, 6) + ')');
+        } else remaining.push(body);   // 401/5xx/etc — keep and retry later
+      } catch (e) { remaining.push(body); }  // still offline
+    }
+    setWQueue(remaining);
+    if (sent) { notify.success(T.queueSynced.replace('{n}', sent)); loadOrders(); }
+  } finally { _wFlushing = false; }
+}
+window.addEventListener('online', () => { renderWaiterBanner(); flushWQueue(); });
+window.addEventListener('offline', renderWaiterBanner);
+setInterval(flushWQueue, 15000);
+renderWaiterBanner();
 
 // Lock the screen behind the PIN pad until a waiter identifies themselves.
 // While locked, nothing is fetched or rendered — the gate hides an empty

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-25 06:52+0000\n"
+"POT-Creation-Date: 2026-07-26 18:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: sk\n"
@@ -1177,6 +1177,9 @@ msgstr "Žiadne náklady"
 
 msgid "Нет расходов за период"
 msgstr "Žiadne náklady za obdobie"
+
+msgid "Нет связи"
+msgstr "Žiadne spojenie"
 
 msgid "Нет связи и нет локальной копии меню. Подключитесь к интернету один раз."
 msgstr "Žiadne spojenie a žiadna lokálna kópia menu. Pripojte sa raz na internet."

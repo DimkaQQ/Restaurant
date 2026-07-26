@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-25 06:52+0000\n"
+"POT-Creation-Date: 2026-07-26 18:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: uk\n"
@@ -1181,6 +1181,9 @@ msgstr "Немає витрат"
 
 msgid "Нет расходов за период"
 msgstr "Немає витрат за період"
+
+msgid "Нет связи"
+msgstr "Немає зв’язку"
 
 msgid "Нет связи и нет локальной копии меню. Подключитесь к интернету один раз."
 msgstr ""

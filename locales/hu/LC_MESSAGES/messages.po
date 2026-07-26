@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-25 06:52+0000\n"
+"POT-Creation-Date: 2026-07-26 18:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: hu\n"
@@ -1182,6 +1182,9 @@ msgstr "Nincsenek költségek"
 
 msgid "Нет расходов за период"
 msgstr "Nincsenek költségek az időszakban"
+
+msgid "Нет связи"
+msgstr "Nincs kapcsolat"
 
 msgid "Нет связи и нет локальной копии меню. Подключитесь к интернету один раз."
 msgstr ""
