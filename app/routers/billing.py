@@ -60,6 +60,93 @@ async def billing_page(request: Request, db: AsyncSession = Depends(get_db)):
     })
 
 
+@router.get("/build", response_class=HTMLResponse)
+async def plan_builder_page(request: Request, db: AsyncSession = Depends(get_db)):
+    """Build-your-own subscription: toggle modules, see the live price."""
+    current_user = await get_user_from_request(request, db)
+    if not current_user:
+        return RedirectResponse(url="/auth/login")
+    if current_user.role != "owner":
+        raise HTTPException(status_code=403, detail="Только для владельца")
+
+    from app.services import plan_builder
+    sub = await _get_subscription(current_user.network_id, db)
+    return templates.TemplateResponse("billing_build.html", {
+        "request": request,
+        "user": current_user,
+        "subscription": sub,
+        "base_price": plan_builder.BASE_PRICE,
+        "extra_venue_price": plan_builder.EXTRA_VENUE_PRICE,
+        "currency": plan_builder.CURRENCY,
+        "modules": plan_builder.MODULES,
+        "module_order": plan_builder.MODULE_ORDER,
+        "selected": (sub.features if sub and sub.plan == "custom" else []) or [],
+        "extra_venues": (sub.extra_venues if sub and sub.plan == "custom" else 0) or 0,
+        "stripe_enabled": bool(settings.STRIPE_SECRET_KEY),
+    })
+
+
+@router.post("/build")
+async def apply_custom_plan(request: Request, db: AsyncSession = Depends(get_db)):
+    """Save the assembled plan. With Stripe on, send the owner to a checkout for
+    the computed monthly price; without it, store the selection and point them
+    at support (same as the fixed tiers)."""
+    current_user = await get_user_from_request(request, db)
+    if not current_user:
+        return RedirectResponse(url="/auth/login")
+    if current_user.role != "owner":
+        raise HTTPException(status_code=403, detail="Только для владельца")
+
+    from app.services import plan_builder
+    body = await request.json()
+    features = plan_builder.sanitize_features(body.get("features"))
+    try:
+        extra_venues = max(0, min(50, int(body.get("extra_venues") or 0)))
+    except (TypeError, ValueError):
+        extra_venues = 0
+    price = plan_builder.compute_price(features, extra_venues)
+
+    sub = await _get_subscription(current_user.network_id, db)
+    if not sub:
+        sub = Subscription(network_id=current_user.network_id, status="trial")
+        db.add(sub)
+    sub.plan = "custom"
+    sub.features = features
+    sub.extra_venues = extra_venues
+    await db.commit()
+
+    if not settings.STRIPE_SECRET_KEY:
+        # No online payment configured — selection is saved; activation is manual.
+        return {"ok": True, "price": price, "checkout_url": None}
+
+    try:
+        session = await asyncio.to_thread(
+            stripe.checkout.Session.create,
+            mode="subscription",
+            payment_method_types=["card"],
+            line_items=[{
+                "price_data": {
+                    "currency": "usd",
+                    "product_data": {"name": "RestOS — свой тариф"},
+                    "unit_amount": price * 100,
+                    "recurring": {"interval": "month"},
+                },
+                "quantity": 1,
+            }],
+            customer=sub.stripe_customer_id if sub.stripe_customer_id else None,
+            customer_email=current_user.email if not sub.stripe_customer_id else None,
+            client_reference_id=str(current_user.network_id),
+            metadata={"network_id": str(current_user.network_id), "plan": "custom",
+                      "features": ",".join(features), "extra_venues": str(extra_venues)},
+            success_url=f"{settings.PUBLIC_URL}/billing?checkout=success",
+            cancel_url=f"{settings.PUBLIC_URL}/billing?checkout=cancelled",
+        )
+    except stripe.error.StripeError as e:
+        logger.error("Stripe custom checkout error: %s", e)
+        raise HTTPException(status_code=502, detail="Ошибка платёжной системы")
+    return {"ok": True, "price": price, "checkout_url": session.url}
+
+
 @router.post("/checkout/{plan}")
 async def create_checkout(plan: str, request: Request, db: AsyncSession = Depends(get_db)):
     if not settings.STRIPE_SECRET_KEY:

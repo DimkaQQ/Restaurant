@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime
-from sqlalchemy import String, DateTime, ForeignKey, func
+from sqlalchemy import String, DateTime, ForeignKey, func, JSON, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.database import Base
 
@@ -10,7 +10,11 @@ class Subscription(Base):
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
     network_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("networks.id"), unique=True)
-    plan: Mapped[str] = mapped_column(String(50), default="starter")  # starter, pro, enterprise
+    plan: Mapped[str] = mapped_column(String(50), default="starter")  # starter, pro, enterprise, custom
+    # Build-your-own plan: the add-on modules the network turned on + extra
+    # venues beyond the first. Only meaningful when plan == "custom".
+    features: Mapped[list] = mapped_column(JSON, default=list, server_default="[]")
+    extra_venues: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
     status: Mapped[str] = mapped_column(String(20), default="trial", index=True)  # trial, active, past_due, suspended, cancelled
     trial_ends_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     current_period_end: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)

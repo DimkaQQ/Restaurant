@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-26 19:58+0000\n"
+"POT-Creation-Date: 2026-07-26 20:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: hu\n"
@@ -81,6 +81,9 @@ msgstr "14 nap ingyen, kártya nélkül. A beállítás pár percet vesz igényb
 
 msgid "14 дней бесплатно, без карты. Начните за 2 минуты."
 msgstr "14 nap ingyen, kártya nélkül. Kezdje el 2 perc alatt."
+
+msgid "14 дней бесплатно. Отменить можно в любой момент."
+msgstr "14 nap ingyen. Bármikor lemondható."
 
 msgid "15 минут, сами"
 msgstr "15 perc, egyedül"
@@ -268,6 +271,9 @@ msgstr "Elemzés…"
 
 msgid "Аналитика"
 msgstr "Analitika"
+
+msgid "Базовый набор"
+msgstr "Alapcsomag"
 
 msgid "Баллы"
 msgstr "Pontok"
@@ -551,6 +557,9 @@ msgstr "Kész!"
 msgid "Готовы попробовать?"
 msgstr "Kipróbálná?"
 
+msgid "Готовые тарифы"
+msgstr "Kész csomagok"
+
 msgid ""
 "График смен, роли официант/повар/кассир/менеджер, рейтинг сотрудников по "
 "отзывам гостей."
@@ -684,6 +693,9 @@ msgstr ""
 "A bejelentkezés további védelme: jelszó + az alkalmazásból származó kód "
 "(Google Authenticator, 1Password stb.)."
 
+msgid "Дополнительные заведения"
+msgstr "További helyek"
+
 msgid ""
 "Доступ к данным для интеграций (только чтение): GET /api/v1/venues, "
 "/api/v1/menu, /api/v1/orders с заголовком X-API-Key."
@@ -738,6 +750,9 @@ msgstr "Hely és termek"
 
 msgid "Заведения"
 msgstr "Helyek"
+
+msgid "Заведения (доп.)"
+msgstr "Helyek (extra)"
 
 msgid "Заведения сети"
 msgstr "A hálózat helyei"
@@ -808,6 +823,9 @@ msgstr "Arany (alapértelmezett)"
 msgid "Изменения сохраняются сразу."
 msgstr "A módosítások azonnal mentődnek."
 
+msgid "Или выберите готовый тариф:"
+msgstr "Vagy válasszon kész csomagot:"
+
 msgid "Или номер стола вручную"
 msgstr "Vagy az asztal száma kézzel"
 
@@ -867,6 +885,13 @@ msgid "Касса на планшете, кухонный экран, QR-мен�
 msgstr ""
 "Pénztár a táblagépen, konyhai képernyő, QR-menü a vendégeknek — azonnal "
 "működik."
+
+msgid ""
+"Касса, кухня (KDS), официант, меню, столы, склад, смены, QR-меню и гости."
+" Включено 1 заведение и до 3 сотрудников."
+msgstr ""
+"Pénztár, konyha (KDS), pincér, menü, asztalok, raktár, műszakok, QR-menü "
+"és vendégek. 1 hely és max. 3 munkatárs included."
 
 msgid "Кассир"
 msgstr "Pénztáros"
@@ -1610,6 +1635,10 @@ msgstr "Jelszó (nem kötelező)"
 msgid "Пароль кассы"
 msgstr "Pénztár jelszava"
 
+#, python-brace-format
+msgid "Первое заведение включено. Каждое следующее — +{c}{p} / мес."
+msgstr "Az első hely benne van. Minden további — +{c}{p} / hó."
+
 msgid ""
 "Переименование меняет категорию у всех позиций. «Убрать» оставляет "
 "позиции без категории, ничего не удаляя."
@@ -1637,6 +1666,16 @@ msgstr "Nyugta nyomtatása"
 
 msgid "План зала, статусы столов и печать QR-кода меню для гостей."
 msgstr "Alaprajz, asztalstátuszok és a vendég QR-menü kód nyomtatása."
+
+msgid "Платите только за нужные модули — цена считается сразу."
+msgstr "Csak a szükséges modulokért fizet — az ár azonnal frissül."
+
+msgid ""
+"Платите только за то, что нужно. Базовый набор уже включён — добавьте "
+"модули, и цена пересчитается сразу."
+msgstr ""
+"Csak azért fizessen, amire szüksége van. Az alapcsomag már benne van — "
+"adjon hozzá modulokat, és az ár azonnal újraszámolódik."
 
 msgid ""
 "Платёжные данные обрабатываются напрямую Stripe; RestOS не хранит номера "
@@ -1992,6 +2031,9 @@ msgstr "Világos"
 msgid "Свободен"
 msgstr "Szabad"
 
+msgid "Свой тариф"
+msgstr "Egyéni csomag"
+
 msgid "Свой цвет"
 msgstr "Saját szín"
 
@@ -2135,6 +2177,12 @@ msgstr "Először adjon hozzá hozzávalókat"
 
 msgid "Сначала добавьте ингредиенты на складе"
 msgstr "Először adjon hozzá hozzávalókat a raktárban"
+
+msgid "Соберите свой тариф"
+msgstr "Állítsa össze saját csomagját"
+
+msgid "Собрать"
+msgstr "Összeállítás"
 
 msgid "События"
 msgstr "Események"
@@ -2298,6 +2346,11 @@ msgstr "Ilyen oldal nem létezik, vagy áthelyezték."
 
 msgid "Талон"
 msgstr "Blokk"
+
+msgid "Тариф сохранён. Свяжитесь с поддержкой для активации онлайн-оплаты."
+msgstr ""
+"Csomag mentve. Vegye fel a kapcsolatot a támogatással az online fizetés "
+"aktiválásához."
 
 msgid "Текст сообщения"
 msgstr "Üzenet szövege"

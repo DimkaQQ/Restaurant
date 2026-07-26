@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-26 19:58+0000\n"
+"POT-Creation-Date: 2026-07-26 20:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: sk\n"
@@ -81,6 +81,9 @@ msgstr "14 dní zadarmo, bez karty. Nastavenie zaberie pár minút."
 
 msgid "14 дней бесплатно, без карты. Начните за 2 минуты."
 msgstr "14 dní zadarmo, bez karty. Začnite za 2 minúty."
+
+msgid "14 дней бесплатно. Отменить можно в любой момент."
+msgstr "14 dní zadarmo. Zrušiť môžete kedykoľvek."
 
 msgid "15 минут, сами"
 msgstr "15 minút, sami"
@@ -266,6 +269,9 @@ msgstr "Analyzujeme…"
 
 msgid "Аналитика"
 msgstr "Analytika"
+
+msgid "Базовый набор"
+msgstr "Základný balík"
 
 msgid "Баллы"
 msgstr "Body"
@@ -548,6 +554,9 @@ msgstr "Hotovo!"
 msgid "Готовы попробовать?"
 msgstr "Chcete to vyskúšať?"
 
+msgid "Готовые тарифы"
+msgstr "Hotové tarify"
+
 msgid ""
 "График смен, роли официант/повар/кассир/менеджер, рейтинг сотрудников по "
 "отзывам гостей."
@@ -680,6 +689,9 @@ msgstr ""
 "Dodatočná ochrana prihlásenia: heslo + kód z aplikácie (Google "
 "Authenticator, 1Password a pod.)."
 
+msgid "Дополнительные заведения"
+msgstr "Ďalšie prevádzky"
+
 msgid ""
 "Доступ к данным для интеграций (только чтение): GET /api/v1/venues, "
 "/api/v1/menu, /api/v1/orders с заголовком X-API-Key."
@@ -734,6 +746,9 @@ msgstr "Prevádzka a sály"
 
 msgid "Заведения"
 msgstr "Prevádzky"
+
+msgid "Заведения (доп.)"
+msgstr "Prevádzky (navyše)"
 
 msgid "Заведения сети"
 msgstr "Prevádzky siete"
@@ -804,6 +819,9 @@ msgstr "Zlatá (predvolené)"
 msgid "Изменения сохраняются сразу."
 msgstr "Zmeny sa ukladajú okamžite."
 
+msgid "Или выберите готовый тариф:"
+msgstr "Alebo si vyberte hotový tarif:"
+
 msgid "Или номер стола вручную"
 msgstr "Alebo číslo stola ručne"
 
@@ -863,6 +881,13 @@ msgid "Касса на планшете, кухонный экран, QR-мен�
 msgstr ""
 "Pokladňa na tablete, kuchynská obrazovka, QR menu pre hostí — funguje "
 "hneď."
+
+msgid ""
+"Касса, кухня (KDS), официант, меню, столы, склад, смены, QR-меню и гости."
+" Включено 1 заведение и до 3 сотрудников."
+msgstr ""
+"Pokladňa, kuchyňa (KDS), čašník, menu, stoly, sklad, zmeny, QR menu a "
+"hostia. Zahrnutá 1 prevádzka a až 3 zamestnanci."
 
 msgid "Кассир"
 msgstr "Pokladník"
@@ -1600,6 +1625,10 @@ msgstr "Heslo (nepovinné)"
 msgid "Пароль кассы"
 msgstr "Heslo pokladne"
 
+#, python-brace-format
+msgid "Первое заведение включено. Каждое следующее — +{c}{p} / мес."
+msgstr "Prvá prevádzka je zahrnutá. Každá ďalšia — +{c}{p} / mes."
+
 msgid ""
 "Переименование меняет категорию у всех позиций. «Убрать» оставляет "
 "позиции без категории, ничего не удаляя."
@@ -1627,6 +1656,16 @@ msgstr "Tlač účtenky"
 
 msgid "План зала, статусы столов и печать QR-кода меню для гостей."
 msgstr "Plán sály, stavy stolov a tlač QR kódu menu pre hostí."
+
+msgid "Платите только за нужные модули — цена считается сразу."
+msgstr "Plaťte len za moduly, ktoré potrebujete — cena sa prepočíta okamžite."
+
+msgid ""
+"Платите только за то, что нужно. Базовый набор уже включён — добавьте "
+"модули, и цена пересчитается сразу."
+msgstr ""
+"Plaťte len za to, čo potrebujete. Základný balík je už zahrnutý — "
+"pridajte moduly a cena sa okamžite prepočíta."
 
 msgid ""
 "Платёжные данные обрабатываются напрямую Stripe; RestOS не хранит номера "
@@ -1980,6 +2019,9 @@ msgstr "Svetlá"
 msgid "Свободен"
 msgstr "Voľný"
 
+msgid "Свой тариф"
+msgstr "Vlastný tarif"
+
 msgid "Свой цвет"
 msgstr "Vlastná farba"
 
@@ -2123,6 +2165,12 @@ msgstr "Najprv pridajte ingrediencie"
 
 msgid "Сначала добавьте ингредиенты на складе"
 msgstr "Najprv pridajte ingrediencie na sklade"
+
+msgid "Соберите свой тариф"
+msgstr "Poskladajte si vlastný tarif"
+
+msgid "Собрать"
+msgstr "Poskladať"
 
 msgid "События"
 msgstr "Udalosti"
@@ -2286,6 +2334,9 @@ msgstr "Takáto stránka neexistuje alebo bola presunutá."
 
 msgid "Талон"
 msgstr "Lístok"
+
+msgid "Тариф сохранён. Свяжитесь с поддержкой для активации онлайн-оплаты."
+msgstr "Tarif uložený. Kontaktujte podporu pre aktiváciu online platby."
 
 msgid "Текст сообщения"
 msgstr "Text správy"

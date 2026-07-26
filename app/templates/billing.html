@@ -65,6 +65,21 @@
   {% endif %}
 </div>
 
+<a href="/billing/build" style="display:flex; align-items:center; gap:1rem; max-width:760px; text-decoration:none;
+   background:color-mix(in srgb, var(--gold) 7%, var(--card)); border:1px solid var(--gold); border-radius:12px;
+   padding:1rem 1.25rem; margin-bottom:1.5rem; color:var(--white)">
+  <span style="font-size:1.6rem">🧩</span>
+  <span style="flex:1">
+    <strong style="display:block">{{ _("Соберите свой тариф") }}</strong>
+    <span style="color:var(--muted); font-size:.83rem">{{ _("Платите только за нужные модули — цена считается сразу.") }}</span>
+  </span>
+  <span style="color:var(--gold); font-weight:700; white-space:nowrap">{{ _("Собрать") }} →</span>
+</a>
+
+{% if subscription and subscription.plan == 'custom' %}
+<p style="color:var(--muted); font-size:.85rem; margin-bottom:1rem">{{ _("Или выберите готовый тариф:") }}</p>
+{% endif %}
+
 <div class="plans-grid">
   <div class="plan-card {% if subscription and subscription.plan == 'starter' %}current{% endif %}">
     <div class="plan-name">Starter</div>

@@ -53,6 +53,12 @@ async def network_has_feature(network_id: uuid.UUID, feature: str, db: AsyncSess
     sub = await _get_active_subscription(network_id, db)
     if not sub:
         return True
+    if sub.plan == "custom":
+        from app.services.plan_builder import MODULES
+        # Core features (not sold as add-on modules) are always included.
+        if feature not in MODULES:
+            return True
+        return feature in (sub.features or [])
     return plan_allows(sub.plan, feature)
 
 
@@ -65,11 +71,23 @@ async def _get_active_subscription(network_id: uuid.UUID, db: AsyncSession) -> S
     return sub
 
 
+def _sub_max_venues(sub) -> int | None:
+    if sub.plan == "custom":
+        return 1 + int(sub.extra_venues or 0)  # base includes 1 venue
+    return PLAN_LIMITS.get(sub.plan, PLAN_LIMITS["starter"])["max_venues"]
+
+
+def _sub_max_staff(sub) -> int | None:
+    if sub.plan == "custom":
+        return None if "unlimited_staff" in (sub.features or []) else 3
+    return PLAN_LIMITS.get(sub.plan, PLAN_LIMITS["starter"])["max_staff"]
+
+
 async def check_venue_limit(network_id: uuid.UUID, db: AsyncSession) -> None:
     sub = await _get_active_subscription(network_id, db)
     if not sub:
         return
-    max_venues = PLAN_LIMITS.get(sub.plan, PLAN_LIMITS["starter"])["max_venues"]
+    max_venues = _sub_max_venues(sub)
     if max_venues is None:
         return
     count = (await db.execute(
@@ -87,7 +105,7 @@ async def check_staff_limit(network_id: uuid.UUID, db: AsyncSession) -> None:
     sub = await _get_active_subscription(network_id, db)
     if not sub:
         return
-    max_staff = PLAN_LIMITS.get(sub.plan, PLAN_LIMITS["starter"])["max_staff"]
+    max_staff = _sub_max_staff(sub)
     if max_staff is None:
         return
     count = (await db.execute(

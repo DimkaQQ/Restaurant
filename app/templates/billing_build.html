@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% block title %}{{ _("Свой тариф") }} — RestOS{% endblock %}
+
+{% block head %}
+<style>
+  .bld-wrap { display: grid; grid-template-columns: 1fr 300px; gap: 1.5rem; align-items: start; max-width: 960px; }
+  @media (max-width: 820px) { .bld-wrap { grid-template-columns: 1fr; } }
+  .bld-base { background: var(--card); border: 1px solid var(--gold); border-radius: 12px; padding: 1.1rem 1.25rem; margin-bottom: 1.25rem; }
+  .bld-base h3 { font-size: 1rem; margin-bottom: .3rem; }
+  .bld-base p { color: var(--muted); font-size: .82rem; line-height: 1.5; }
+  .bld-base .price { color: var(--gold); font-weight: 700; float: right; }
+  .bld-mods { display: flex; flex-direction: column; gap: .7rem; }
+  .bld-mod {
+    display: flex; gap: .9rem; align-items: flex-start; cursor: pointer;
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.15rem;
+    transition: border-color .15s;
+  }
+  .bld-mod.on { border-color: var(--gold); background: color-mix(in srgb, var(--gold) 6%, var(--card)); }
+  .bld-check {
+    width: 22px; height: 22px; border-radius: 6px; border: 1.5px solid var(--border);
+    flex-shrink: 0; margin-top: .1rem; display: flex; align-items: center; justify-content: center;
+    color: var(--on-accent); font-size: .8rem; font-weight: 800;
+  }
+  .bld-mod.on .bld-check { background: var(--gold); border-color: var(--gold); }
+  .bld-mod-body { flex: 1; }
+  .bld-mod-title { font-weight: 600; font-size: .92rem; }
+  .bld-mod-title .price { color: var(--gold); font-weight: 700; float: right; }
+  .bld-mod-desc { color: var(--muted); font-size: .8rem; line-height: 1.45; margin-top: .2rem; }
+  .bld-venues { display: flex; align-items: center; gap: .75rem; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.15rem; margin-top: .7rem; }
+  .bld-venues .stepper { display: flex; align-items: center; gap: .6rem; margin-left: auto; }
+  .bld-venues button { width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border); background: none; color: var(--white); font-size: 1.1rem; cursor: pointer; }
+  .bld-venues b { min-width: 1.5rem; text-align: center; }
+  .bld-summary { position: sticky; top: 1rem; background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 1.25rem; }
+  .bld-total { font-size: 2.2rem; font-weight: 800; color: var(--gold); }
+  .bld-total span { font-size: .85rem; color: var(--muted); font-weight: 400; }
+  .bld-lines { margin: 1rem 0; font-size: .82rem; color: var(--muted); display: flex; flex-direction: column; gap: .4rem; }
+  .bld-lines .row { display: flex; justify-content: space-between; gap: 1rem; }
+  .bld-lines .row b { color: var(--white); font-weight: 500; }
+  .bld-cta { width: 100%; padding: .85rem; margin-top: .25rem; }
+  .bld-note { color: var(--muted); font-size: .75rem; text-align: center; margin-top: .6rem; line-height: 1.4; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">{{ _("Соберите свой тариф") }}</h1>
+  <a href="/billing" class="muted" style="font-size:.85rem;text-decoration:none">← {{ _("Готовые тарифы") }}</a>
+</div>
+
+<p style="color:var(--muted);max-width:640px;margin-bottom:1.5rem;line-height:1.6">
+  {{ _("Платите только за то, что нужно. Базовый набор уже включён — добавьте модули, и цена пересчитается сразу.") }}
+</p>
+
+<div class="bld-wrap">
+  <div>
+    <div class="bld-base">
+      <span class="price">{{ currency }}{{ base_price }}<span style="color:var(--muted);font-weight:400;font-size:.8rem"> / {{ _("мес") }}</span></span>
+      <h3>{{ _("Базовый набор") }}</h3>
+      <p>{{ _("Касса, кухня (KDS), официант, меню, столы, склад, смены, QR-меню и гости. Включено 1 заведение и до 3 сотрудников.") }}</p>
+    </div>
+
+    <div class="bld-mods">
+      {% for key in module_order %}
+      {% set m = modules[key] %}
+      <label class="bld-mod {% if key in selected %}on{% endif %}" data-key="{{ key }}" data-price="{{ m.price }}">
+        <input type="checkbox" style="display:none" {% if key in selected %}checked{% endif %}>
+        <span class="bld-check">✓</span>
+        <span class="bld-mod-body">
+          <span class="bld-mod-title">{{ _(m.label) }} <span class="price">+{{ currency }}{{ m.price }}</span></span>
+          <span class="bld-mod-desc">{{ _(m.desc) }}</span>
+        </span>
+      </label>
+      {% endfor %}
+    </div>
+
+    <div class="bld-venues" data-price="{{ extra_venue_price }}">
+      <div>
+        <div style="font-weight:600;font-size:.92rem">{{ _("Дополнительные заведения") }}</div>
+        <div class="bld-mod-desc">{{ _("Первое заведение включено. Каждое следующее — +{c}{p} / мес.").format(c=currency, p=extra_venue_price) }}</div>
+      </div>
+      <div class="stepper">
+        <button type="button" onclick="stepVenues(-1)">−</button>
+        <b id="venue-count">{{ extra_venues }}</b>
+        <button type="button" onclick="stepVenues(1)">+</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="bld-summary">
+    <div class="bld-total"><span>{{ currency }}</span><span id="total">0</span> <span>/ {{ _("мес") }}</span></div>
+    <div class="bld-lines" id="lines"></div>
+    <button type="button" class="btn-primary bld-cta" id="cta" onclick="applyPlan()">{{ _("Оформить") }}</button>
+    <p class="bld-note">{{ _("14 дней бесплатно. Отменить можно в любой момент.") }}</p>
+  </div>
+</div>
+
+<script>
+  const CUR = {{ currency | tojson }};
+  const BASE = {{ base_price }};
+  const VENUE_PRICE = {{ extra_venue_price }};
+  const L = {
+    base: {{ _("Базовый набор") | tojson }},
+    venues: {{ _("Заведения (доп.)") | tojson }},
+    saved: {{ _("Тариф сохранён. Свяжитесь с поддержкой для активации онлайн-оплаты.") | tojson }},
+    err: {{ _("Ошибка сохранения") | tojson }},
+    mes: {{ _("мес") | tojson }},
+  };
+  let extraVenues = {{ extra_venues }};
+
+  function selectedModules() {
+    return [...document.querySelectorAll('.bld-mod.on')].map(el => ({
+      key: el.dataset.key,
+      price: parseInt(el.dataset.price, 10),
+      label: el.querySelector('.bld-mod-title').childNodes[0].textContent.trim(),
+    }));
+  }
+
+  function recalc() {
+    const mods = selectedModules();
+    let total = BASE + VENUE_PRICE * extraVenues;
+    const lines = [`<div class="row"><span>${L.base}</span><b>${CUR}${BASE}</b></div>`];
+    mods.forEach(m => { total += m.price; lines.push(`<div class="row"><span>${m.label}</span><b>${CUR}${m.price}</b></div>`); });
+    if (extraVenues > 0) lines.push(`<div class="row"><span>${L.venues} ×${extraVenues}</span><b>${CUR}${VENUE_PRICE * extraVenues}</b></div>`);
+    document.getElementById('total').textContent = total;
+    document.getElementById('lines').innerHTML = lines.join('');
+  }
+
+  document.querySelectorAll('.bld-mod').forEach(el => {
+    el.addEventListener('click', (e) => {
+      e.preventDefault();
+      el.classList.toggle('on');
+      el.querySelector('input').checked = el.classList.contains('on');
+      recalc();
+    });
+  });
+
+  function stepVenues(d) {
+    extraVenues = Math.max(0, Math.min(50, extraVenues + d));
+    document.getElementById('venue-count').textContent = extraVenues;
+    recalc();
+  }
+
+  async function applyPlan() {
+    const cta = document.getElementById('cta');
+    cta.disabled = true;
+    const features = selectedModules().map(m => m.key);
+    try {
+      const res = await fetch('/billing/build', {
+        method: 'POST', credentials: 'include',
+        headers: {'Content-Type':'application/json','Authorization':'Bearer '+(localStorage.getItem('access_token')||'')},
+        body: JSON.stringify({ features, extra_venues: extraVenues }),
+      });
+      if (!res.ok) throw new Error('bad');
+      const d = await res.json();
+      if (d.checkout_url) { location.href = d.checkout_url; return; }
+      notify.success(L.saved);
+      setTimeout(() => location.href = '/billing', 1200);
+    } catch (e) {
+      notify.error(L.err);
+      cta.disabled = false;
+    }
+  }
+
+  recalc();
+</script>
+{% endblock %}

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-26 19:58+0000\n"
+"POT-Creation-Date: 2026-07-26 20:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -81,6 +81,9 @@ msgstr "14 days free, no card required. Setup takes a couple of minutes."
 
 msgid "14 дней бесплатно, без карты. Начните за 2 минуты."
 msgstr "14 days free, no card required. Get started in 2 minutes."
+
+msgid "14 дней бесплатно. Отменить можно в любой момент."
+msgstr "14 days free. Cancel anytime."
 
 msgid "15 минут, сами"
 msgstr "15 minutes, on your own"
@@ -266,6 +269,9 @@ msgstr "Analyzing…"
 
 msgid "Аналитика"
 msgstr "Analytics"
+
+msgid "Базовый набор"
+msgstr "Base package"
 
 msgid "Баллы"
 msgstr "Points"
@@ -547,6 +553,9 @@ msgstr "Ready!"
 msgid "Готовы попробовать?"
 msgstr "Ready to try it?"
 
+msgid "Готовые тарифы"
+msgstr "Ready-made plans"
+
 msgid ""
 "График смен, роли официант/повар/кассир/менеджер, рейтинг сотрудников по "
 "отзывам гостей."
@@ -676,6 +685,9 @@ msgstr ""
 "Extra sign-in protection: password + a code from an app (Google "
 "Authenticator, 1Password, etc.)."
 
+msgid "Дополнительные заведения"
+msgstr "Additional venues"
+
 msgid ""
 "Доступ к данным для интеграций (только чтение): GET /api/v1/venues, "
 "/api/v1/menu, /api/v1/orders с заголовком X-API-Key."
@@ -730,6 +742,9 @@ msgstr "Venue & floor"
 
 msgid "Заведения"
 msgstr "Venues"
+
+msgid "Заведения (доп.)"
+msgstr "Venues (extra)"
 
 msgid "Заведения сети"
 msgstr "Network venues"
@@ -800,6 +815,9 @@ msgstr "Gold (default)"
 msgid "Изменения сохраняются сразу."
 msgstr "Changes are saved instantly."
 
+msgid "Или выберите готовый тариф:"
+msgstr "Or pick a ready-made plan:"
+
 msgid "Или номер стола вручную"
 msgstr "Or type a table number"
 
@@ -857,6 +875,13 @@ msgstr "Register"
 
 msgid "Касса на планшете, кухонный экран, QR-меню для гостей — работает сразу."
 msgstr "POS on a tablet, kitchen display, QR menu for guests — it just works."
+
+msgid ""
+"Касса, кухня (KDS), официант, меню, столы, склад, смены, QR-меню и гости."
+" Включено 1 заведение и до 3 сотрудников."
+msgstr ""
+"POS, kitchen (KDS), waiter, menu, tables, inventory, shifts, QR menu and "
+"guests. 1 venue and up to 3 staff included."
 
 msgid "Кассир"
 msgstr "Cashier"
@@ -1586,6 +1611,10 @@ msgstr "Password (optional)"
 msgid "Пароль кассы"
 msgstr "Kassa password"
 
+#, python-brace-format
+msgid "Первое заведение включено. Каждое следующее — +{c}{p} / мес."
+msgstr "First venue included. Each additional one — +{c}{p} / mo."
+
 msgid ""
 "Переименование меняет категорию у всех позиций. «Убрать» оставляет "
 "позиции без категории, ничего не удаляя."
@@ -1613,6 +1642,16 @@ msgstr "Print receipt"
 
 msgid "План зала, статусы столов и печать QR-кода меню для гостей."
 msgstr "Floor plan, table statuses and printing the guest QR-menu code."
+
+msgid "Платите только за нужные модули — цена считается сразу."
+msgstr "Pay only for the modules you need — the price updates instantly."
+
+msgid ""
+"Платите только за то, что нужно. Базовый набор уже включён — добавьте "
+"модули, и цена пересчитается сразу."
+msgstr ""
+"Pay only for what you need. The base package is already included — add "
+"modules and the price recalculates instantly."
 
 msgid ""
 "Платёжные данные обрабатываются напрямую Stripe; RestOS не хранит номера "
@@ -1966,6 +2005,9 @@ msgstr "Light"
 msgid "Свободен"
 msgstr "Free"
 
+msgid "Свой тариф"
+msgstr "Custom plan"
+
 msgid "Свой цвет"
 msgstr "Custom color"
 
@@ -2108,6 +2150,12 @@ msgstr "Add ingredients first"
 
 msgid "Сначала добавьте ингредиенты на складе"
 msgstr "Add ingredients to inventory first"
+
+msgid "Соберите свой тариф"
+msgstr "Build your own plan"
+
+msgid "Собрать"
+msgstr "Build"
 
 msgid "События"
 msgstr "Events"
@@ -2271,6 +2319,9 @@ msgstr "This page doesn't exist or has been moved."
 
 msgid "Талон"
 msgstr "Ticket"
+
+msgid "Тариф сохранён. Свяжитесь с поддержкой для активации онлайн-оплаты."
+msgstr "Plan saved. Contact support to activate online payment."
 
 msgid "Текст сообщения"
 msgstr "Message text"
