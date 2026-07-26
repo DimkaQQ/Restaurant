@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-26 19:26+0000\n"
+"POT-Creation-Date: 2026-07-26 19:29+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: sk\n"
@@ -745,6 +745,9 @@ msgstr "Nastavte nové heslo"
 msgid "Заказ"
 msgstr "Objednávka"
 
+msgid "Заказ оплачен"
+msgstr "Objednávka zaplatená"
+
 msgid "Заказ оплачен и отправлен на кухню"
 msgstr "Objednávka je zaplatená a odoslaná do kuchyne"
 
@@ -1202,6 +1205,9 @@ msgstr "Žiadne nové objednávky"
 msgid "Нет отзывов"
 msgstr "Žiadne recenzie"
 
+msgid "Нет открытых заказов"
+msgstr "Žiadne otvorené objednávky"
+
 msgid "Нет позиций на складе"
 msgstr "Žiadne položky na sklade"
 
@@ -1396,6 +1402,12 @@ msgstr "Otvorte zmenu, aby ste mohli prijímať platby"
 msgid "Открыта"
 msgstr "Otvorená"
 
+msgid "Открытые заказы"
+msgstr "Otvorené objednávky"
+
+msgid "Открытые заказы — принять оплату, напечатать чек"
+msgstr "Otvorené objednávky — prijať platbu, vytlačiť účtenku"
+
 msgid "Открыть смену"
 msgstr "Otvoriť zmenu"
 
@@ -1503,6 +1515,9 @@ msgstr "Chyba načítania fotky"
 
 msgid "Ошибка обновления статуса"
 msgstr "Chyba pri aktualizácii stavu"
+
+msgid "Ошибка оплаты"
+msgstr "Chyba platby"
 
 msgid "Ошибка отмены"
 msgstr "Chyba pri zrušení"

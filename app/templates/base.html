@@ -64,10 +64,6 @@
         {{ _("Дашборд") }}
       </a></li>
       {% endif %}
-      <li><a href="/orders" class="nav-link {% if request.url.path == '/orders' %}active{% endif %}">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-        {{ _("Заказы") }}
-      </a></li>
       {% if user.role == "cashier" %}
       <li><a href="/pos" class="nav-link {% if request.url.path == '/pos' %}active{% endif %}">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-9-8.25h19.5A2.25 2.25 0 0122.5 8.25v9A2.25 2.25 0 0120.25 19.5H3.75A2.25 2.25 0 011.5 17.25v-9A2.25 2.25 0 013.75 6z"/></svg>

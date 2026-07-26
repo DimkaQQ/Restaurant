@@ -122,6 +122,7 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
       ⏳ {{ _("В очереди офлайн:") }} <strong id="offline-queue-count">0</strong>
     </div>
     <span class="ipos-spacer"></span>
+    <button type="button" class="btn-secondary ipos-tool" onclick="openOrdersModal()" title="{{ _('Открытые заказы — принять оплату, напечатать чек') }}">{{ _("Открытые заказы") }} <strong id="open-orders-count" style="color:var(--warn)"></strong></button>
     <button type="button" class="btn-secondary ipos-tool" onclick="openPinModal()" title="{{ _('Смена сотрудника по PIN') }}">{{ _("Сотрудник") }}</button>
     <button type="button" id="stoplist-btn" class="btn-secondary ipos-tool" onclick="toggleStopMode()">{{ _("Стоп-лист") }}</button>
     <button type="button" id="bigmode-btn" class="btn-secondary ipos-tool" onclick="toggleBigMode()" title="{{ _('Крупные кнопки для планшета') }}">{{ _("Крупно") }}</button>
@@ -192,6 +193,17 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
       <button type="button" id="shift-modal-ok" class="btn-primary"></button>
       <button type="button" onclick="closeShiftModal()" class="btn-secondary">{{ _("Отмена") }}</button>
     </div>
+  </div>
+</div>
+
+<!-- Open orders: unpaid checks (incl. "pay later" ones sent to the kitchen) —
+     take payment and print a receipt without leaving the register. -->
+<div id="open-orders-modal" class="modal" style="display:none">
+  <div class="modal-overlay" onclick="closeOrdersModal()"></div>
+  <div class="modal-content" style="max-width:520px; max-height:80vh; overflow-y:auto">
+    <h2 class="modal-title">{{ _("Открытые заказы") }}</h2>
+    <div id="open-orders-list" style="margin-top:.75rem"></div>
+    <button type="button" class="btn-secondary" style="width:100%; margin-top:.75rem" onclick="closeOrdersModal()">{{ _("Отмена") }}</button>
   </div>
 </div>
 
@@ -324,6 +336,14 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
     noChange: {{ _("Без сдачи") | tojson }},
     repeatLast: {{ _("Повторить последний заказ") | tojson }},
     repeatMissing: {{ _("Некоторые позиции больше недоступны и не были добавлены") | tojson }},
+    openOrders: {{ _("Открытые заказы") | tojson }},
+    noOpenOrders: {{ _("Нет открытых заказов") | tojson }},
+    printReceipt: {{ _("Печать чека") | tojson }},
+    paidOk: {{ _("Заказ оплачен") | tojson }},
+    payErr: {{ _("Ошибка оплаты") | tojson }},
+    unpaidTag: {{ _("Не оплачен") | tojson }},
+    cash2: {{ _("Наличные") | tojson }},
+    card2: {{ _("Картой") | tojson }},
   };
   let _menuItems = [];
   let _cart = {}; // menu_item_id -> {item, qty}
@@ -1024,8 +1044,69 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
     if (!sel.value && saved && [...sel.options].some(o => o.value === saved)) sel.value = saved;
     if (sel.value) { loadMenu(); lockVenueUI(); }
   })();
+  // ── Open orders: pay + print unpaid checks without leaving the register ──
+  function openOrdersModal() { document.getElementById('open-orders-modal').style.display = 'flex'; loadOpenOrders(); }
+  function closeOrdersModal() { document.getElementById('open-orders-modal').style.display = 'none'; }
+
+  async function _fetchOpenOrders() {
+    const vid = document.getElementById('venue-select').value;
+    if (!vid) return [];
+    try {
+      const res = await fetch('/api/orders/live?venue_id=' + vid, {credentials:'include'});
+      if (!res.ok) return [];
+      return (await res.json()).filter(o => o.payment_status !== 'paid' && o.status !== 'cancelled');
+    } catch (e) { return []; }
+  }
+
+  async function refreshOpenOrdersCount() {
+    const n = (await _fetchOpenOrders()).length;
+    document.getElementById('open-orders-count').textContent = n ? n : '';
+  }
+
+  async function loadOpenOrders() {
+    const el = document.getElementById('open-orders-list');
+    el.innerHTML = '<p class="empty-state" style="padding:1rem 0">…</p>';
+    const orders = await _fetchOpenOrders();
+    document.getElementById('open-orders-count').textContent = orders.length ? orders.length : '';
+    if (!orders.length) { el.innerHTML = '<p class="empty-state" style="padding:1rem 0">' + T.noOpenOrders + '</p>'; return; }
+    el.innerHTML = orders.map(o => {
+      const label = o.table_number ? ('{{ _("Стол") }} ' + esc(o.table_number)) : ('#' + o.id.slice(0,8).toUpperCase());
+      const items = o.items.map(i => esc(i.name) + ' ×' + i.quantity).join(' · ');
+      return `<div style="border:1px solid var(--border);border-radius:10px;padding:.75rem;margin-bottom:.6rem">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:.5rem;margin-bottom:.35rem">
+          <strong>${label}</strong>
+          <span style="color:var(--warn);font-size:.75rem">${T.unpaidTag}</span>
+          <strong style="margin-left:auto">${parseFloat(o.total_amount).toLocaleString(LOCALE)} ₸</strong>
+        </div>
+        <div style="font-size:.8rem;color:var(--muted);margin-bottom:.5rem">${items}</div>
+        <div style="display:flex;gap:.4rem;flex-wrap:wrap">
+          <button type="button" class="btn-primary" style="flex:1;min-width:90px" onclick="payOpenOrder('${o.id}','cash')">${T.cash2}</button>
+          <button type="button" class="btn-secondary" style="flex:1;min-width:90px" onclick="payOpenOrder('${o.id}','card')">${T.card2}</button>
+          <a class="btn-secondary" style="flex:1;min-width:90px;text-align:center;text-decoration:none;display:inline-flex;align-items:center;justify-content:center" href="/orders/${o.id}/receipt" target="_blank" rel="noopener">🧾 ${T.printReceipt}</a>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  async function payOpenOrder(id, method) {
+    if (!_shift) { notify.error(T.needShift); return; }
+    let res;
+    try {
+      res = await fetch('/api/orders/' + id + '/pay', {
+        method: 'POST', credentials: 'include',
+        headers: {'Content-Type':'application/x-www-form-urlencoded','Authorization':'Bearer '+token()},
+        body: 'method=' + method,
+      });
+    } catch (e) { notify.error(T.orderQueued); return; }
+    if (res.status === 401) { location.href = '/auth/login'; return; }
+    if (res.ok) { notify.success(T.paidOk); loadOpenOrders(); }
+    else { const d = await res.json().catch(()=>({})); notify.error(d.detail || T.payErr); }
+  }
+
   renderQueueBadge();
   flushQueue();
   refreshShift();
+  refreshOpenOrdersCount();
+  setInterval(refreshOpenOrdersCount, 20000);
 </script>
 {% endblock %}

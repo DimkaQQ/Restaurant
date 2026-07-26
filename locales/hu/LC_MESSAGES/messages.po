@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-26 19:26+0000\n"
+"POT-Creation-Date: 2026-07-26 19:29+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: hu\n"
@@ -749,6 +749,9 @@ msgstr "Állítson be új jelszót"
 msgid "Заказ"
 msgstr "Rendelés"
 
+msgid "Заказ оплачен"
+msgstr "Rendelés kifizetve"
+
 msgid "Заказ оплачен и отправлен на кухню"
 msgstr "A rendelés kifizetve és elküldve a konyhára"
 
@@ -1209,6 +1212,9 @@ msgstr "Nincs új rendelés"
 msgid "Нет отзывов"
 msgstr "Nincsenek visszajelzések"
 
+msgid "Нет открытых заказов"
+msgstr "Nincsenek nyitott rendelések"
+
 msgid "Нет позиций на складе"
 msgstr "Nincsenek tételek a raktárban"
 
@@ -1406,6 +1412,12 @@ msgstr "Nyisson műszakot a fizetések elfogadásához"
 msgid "Открыта"
 msgstr "Nyitva"
 
+msgid "Открытые заказы"
+msgstr "Nyitott rendelések"
+
+msgid "Открытые заказы — принять оплату, напечатать чек"
+msgstr "Nyitott rendelések — fizetés elfogadása, nyugta nyomtatása"
+
 msgid "Открыть смену"
 msgstr "Műszak nyitása"
 
@@ -1513,6 +1525,9 @@ msgstr "Hiba a fotó betöltésekor"
 
 msgid "Ошибка обновления статуса"
 msgstr "Hiba a státusz frissítésekor"
+
+msgid "Ошибка оплаты"
+msgstr "Fizetési hiba"
 
 msgid "Ошибка отмены"
 msgstr "Hiba a lemondáskor"

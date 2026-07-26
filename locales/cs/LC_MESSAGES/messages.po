@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-26 19:26+0000\n"
+"POT-Creation-Date: 2026-07-26 19:29+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: cs\n"
@@ -745,6 +745,9 @@ msgstr "Nastavte nové heslo"
 msgid "Заказ"
 msgstr "Objednávka"
 
+msgid "Заказ оплачен"
+msgstr "Objednávka zaplacena"
+
 msgid "Заказ оплачен и отправлен на кухню"
 msgstr "Objednávka je zaplacena a odeslána do kuchyně"
 
@@ -1202,6 +1205,9 @@ msgstr "Žádné nové objednávky"
 msgid "Нет отзывов"
 msgstr "Žádné recenze"
 
+msgid "Нет открытых заказов"
+msgstr "Žádné otevřené objednávky"
+
 msgid "Нет позиций на складе"
 msgstr "Žádné položky na skladě"
 
@@ -1396,6 +1402,12 @@ msgstr "Otevřete směnu, abyste mohli přijímat platby"
 msgid "Открыта"
 msgstr "Otevřená"
 
+msgid "Открытые заказы"
+msgstr "Otevřené objednávky"
+
+msgid "Открытые заказы — принять оплату, напечатать чек"
+msgstr "Otevřené objednávky — přijmout platbu, vytisknout účtenku"
+
 msgid "Открыть смену"
 msgstr "Otevřít směnu"
 
@@ -1503,6 +1515,9 @@ msgstr "Chyba načítání fotky"
 
 msgid "Ошибка обновления статуса"
 msgstr "Chyba při aktualizaci stavu"
+
+msgid "Ошибка оплаты"
+msgstr "Chyba platby"
 
 msgid "Ошибка отмены"
 msgstr "Chyba při rušení"
