@@ -286,7 +286,7 @@ function renderMenu() {
     const n = qtyOf(i.id);
     return `<div class="w-item">
       <span class="w-item-name">${esc(i.name)}</span>
-      <span class="w-item-price">${parseFloat(i.price).toLocaleString(LOCALE)} ₸</span>
+      <span class="w-item-price">${parseFloat(i.price).toLocaleString(LOCALE)} {{ currency }}</span>
       ${n ? `<div class="w-item-qty">
           <button onclick="decItem('${i.id}')">−</button><span>${n}</span>
           <button onclick="addItem('${i.id}')">+</button></div>`
@@ -370,7 +370,7 @@ function updateCartBar() {
   const n = cartCount();
   bar.classList.toggle('visible', n > 0);
   document.getElementById('cart-count-label').textContent = T.items + ' ' + n;
-  document.getElementById('cart-total-label').textContent = cartTotal().toLocaleString(LOCALE) + ' ₸';
+  document.getElementById('cart-total-label').textContent = cartTotal().toLocaleString(LOCALE) + ' {{ currency }}';
 }
 function openCart() {
   renderCartSheet();
@@ -393,9 +393,9 @@ function renderCartSheet() {
         <button onclick="chgLine('${esc(k)}', -1)">−</button><span>${l.qty}</span>
         <button onclick="chgLine('${esc(k)}', 1)">+</button>
       </div>
-      <span style="min-width:64px; text-align:right">${(l.unit * l.qty).toLocaleString(LOCALE)} ₸</span>
+      <span style="min-width:64px; text-align:right">${(l.unit * l.qty).toLocaleString(LOCALE)} {{ currency }}</span>
     </div>`).join('') || `<p class="empty">${T.cartEmpty}</p>`;
-  document.getElementById('cart-sheet-total').textContent = cartTotal().toLocaleString(LOCALE) + ' ₸';
+  document.getElementById('cart-sheet-total').textContent = cartTotal().toLocaleString(LOCALE) + ' {{ currency }}';
 }
 function chgLine(k, d) {
   if (!_cart[k]) return;
@@ -477,7 +477,7 @@ async function loadOrders() {
           ${o.waiter_name && _ordersFilter === 'all' ? `<span class="w-badge">${esc(o.waiter_name)}</span>` : ''}
           <span class="w-badge st-${o.status}">${ST_LABEL[o.status] || o.status}</span>
           ${o.payment_status !== 'paid' ? `<span class="w-badge unpaid">${T.unpaid}</span>` : ''}
-          <span style="margin-left:auto; font-weight:700">${parseFloat(o.total_amount).toLocaleString(LOCALE)} ₸</span>
+          <span style="margin-left:auto; font-weight:700">${parseFloat(o.total_amount).toLocaleString(LOCALE)} {{ currency }}</span>
         </div>
         <div class="w-order-items">${o.items.map(i => esc(i.name) + (i.modifiers ? ' (' + esc(i.modifiers) + ')' : '') + ' × ' + i.quantity).join(' · ')}</div>
         <div class="w-order-actions">

@@ -51,7 +51,7 @@
     <div id="split-items" style="display:flex; flex-direction:column; gap:.4rem; max-height:300px; overflow-y:auto"></div>
     <div style="display:flex; justify-content:space-between; margin:.75rem 0 0; font-size:.9rem">
       <span style="color:var(--muted)">{{ _("Новый чек") }}</span>
-      <strong id="split-total">0 ₸</strong>
+      <strong id="split-total">0 {{ currency }}</strong>
     </div>
     <div class="form-row" style="margin-top:.75rem">
       <button type="button" class="btn-primary" id="split-confirm" onclick="confirmSplit()" disabled>{{ _("Разделить") }}</button>
@@ -123,7 +123,7 @@
       <label style="display:flex; align-items:center; gap:.6rem; font-size:.9rem; cursor:pointer">
         <input type="checkbox" value="${escSplit(i.id)}" data-sum="${i.price * i.qty}" onchange="updateSplitTotal()">
         <span style="flex:1">${escSplit(i.name)} × ${i.qty}</span>
-        <span style="color:var(--muted)">${(i.price * i.qty).toLocaleString(LOCALE)} ₸</span>
+        <span style="color:var(--muted)">${(i.price * i.qty).toLocaleString(LOCALE)} {{ currency }}</span>
       </label>`).join('');
     updateSplitTotal();
     document.getElementById('split-modal').style.display = 'flex';
@@ -133,7 +133,7 @@
     const boxes = [...document.querySelectorAll('#split-items input:checked')];
     const all = document.querySelectorAll('#split-items input').length;
     const sum = boxes.reduce((s, b) => s + parseFloat(b.dataset.sum), 0);
-    document.getElementById('split-total').textContent = sum.toLocaleString(LOCALE) + ' ₸';
+    document.getElementById('split-total').textContent = sum.toLocaleString(LOCALE) + ' {{ currency }}';
     // must move at least one line and leave at least one behind
     document.getElementById('split-confirm').disabled = !boxes.length || boxes.length === all;
   }

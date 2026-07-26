@@ -77,7 +77,7 @@ async def plan_builder_page(request: Request, db: AsyncSession = Depends(get_db)
         "subscription": sub,
         "base_price": plan_builder.BASE_PRICE,
         "extra_venue_price": plan_builder.EXTRA_VENUE_PRICE,
-        "currency": plan_builder.CURRENCY,
+        "currency": settings.CURRENCY,
         "modules": plan_builder.MODULES,
         "module_order": plan_builder.MODULE_ORDER,
         "selected": (sub.features if sub and sub.plan == "custom" else []) or [],
@@ -126,7 +126,7 @@ async def apply_custom_plan(request: Request, db: AsyncSession = Depends(get_db)
             payment_method_types=["card"],
             line_items=[{
                 "price_data": {
-                    "currency": "usd",
+                    "currency": settings.CURRENCY_CODE,
                     "product_data": {"name": "RestOS — свой тариф"},
                     "unit_amount": price * 100,
                     "recurring": {"interval": "month"},

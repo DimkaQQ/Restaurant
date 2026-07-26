@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-26 20:05+0000\n"
+"POT-Creation-Date: 2026-07-26 20:31+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: cs\n"
@@ -60,9 +60,6 @@ msgstr "+ varianta"
 
 msgid "+ строка"
 msgstr "+ řádek"
-
-msgid "+₸"
-msgstr "+₸"
 
 msgid "1 заведение"
 msgstr "1 provozovna"
@@ -513,9 +510,6 @@ msgstr "Tržby podle provozoven"
 
 msgid "Выручка сегодня"
 msgstr "Tržby dnes"
-
-msgid "Выручка ₸"
-msgstr "Tržby ₸"
 
 msgid "Генерируем..."
 msgstr "Generujeme..."
@@ -1137,8 +1131,8 @@ msgstr "Faktury (příjem)"
 msgid "Наличные"
 msgstr "Hotovost"
 
-msgid "Наличные в кассе на начало (₸)"
-msgstr "Hotovost v pokladně na začátku (₸)"
+msgid "Наличные в кассе на начало"
+msgstr "Hotovost v pokladně na začátku"
 
 msgid "Написать в поддержку"
 msgstr "Napsat podpoře"
@@ -1414,8 +1408,9 @@ msgstr "Zbývá dní zkušebního období:"
 msgid "Остаток"
 msgstr "Zůstatek"
 
-msgid "От $30/мес, всё включено"
-msgstr "Od $30/měs, vše v ceně"
+#, python-brace-format
+msgid "От {c}30/мес, всё включено"
+msgstr "Od {c}30/měs, vše v ceně"
 
 msgid "Отзывов"
 msgstr "Recenzí"
@@ -1764,8 +1759,8 @@ msgstr "Úplné zobrazení →"
 msgid "Получено меньше суммы заказа"
 msgstr "Přijato méně než částka objednávky"
 
-msgid "Получено от гостя (₸)"
-msgstr "Přijato od hosta (₸)"
+msgid "Получено от гостя"
+msgstr "Přijato od hosta"
 
 msgid "Получить рекомендации"
 msgstr "Získat doporučení"
@@ -2075,9 +2070,6 @@ msgstr "Sleva"
 msgid "Скидка %"
 msgstr "Sleva %"
 
-msgid "Скидка ₸"
-msgstr "Sleva ₸"
-
 msgid "Скидочные коды, которые гости вводят в QR-меню."
 msgstr "Slevové kódy, které hosté zadávají v QR menu."
 
@@ -2319,8 +2311,8 @@ msgstr "Stop-list"
 msgid "Страница не найдена"
 msgstr "Stránka nenalezena"
 
-msgid "Сумма (₸)"
-msgstr "Částka (₸)"
+msgid "Сумма"
+msgstr "Částka"
 
 msgid "ТОО Продукты"
 msgstr "s.r.o. Potraviny"
@@ -2450,8 +2442,8 @@ msgstr "Podmínky používání — RestOS"
 msgid "Факт"
 msgstr "Skutečnost"
 
-msgid "Фактические наличные в кассе (₸)"
-msgstr "Skutečná hotovost v pokladně (₸)"
+msgid "Фактические наличные в кассе"
+msgstr "Skutečná hotovost v pokladně"
 
 msgid "Финансы"
 msgstr "Finance"
@@ -2484,11 +2476,8 @@ msgstr ""
 msgid "Цена"
 msgstr "Cena"
 
-msgid "Цена (₸)"
-msgstr "Cena (₸)"
-
-msgid "Цена за ед. (₸)"
-msgstr "Cena za jedn. (₸)"
+msgid "Цена за ед."
+msgstr "Cena za jedn."
 
 msgid "Цена/ед."
 msgstr "Cena/jedn."

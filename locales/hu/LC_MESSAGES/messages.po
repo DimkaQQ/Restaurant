@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-26 20:05+0000\n"
+"POT-Creation-Date: 2026-07-26 20:31+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: hu\n"
@@ -60,9 +60,6 @@ msgstr "+ változat"
 
 msgid "+ строка"
 msgstr "+ sor"
-
-msgid "+₸"
-msgstr "+₸"
 
 msgid "1 заведение"
 msgstr "1 hely"
@@ -516,9 +513,6 @@ msgstr "Bevétel helyenként"
 
 msgid "Выручка сегодня"
 msgstr "Mai bevétel"
-
-msgid "Выручка ₸"
-msgstr "Bevétel ₸"
 
 msgid "Генерируем..."
 msgstr "Generálás..."
@@ -1143,8 +1137,8 @@ msgstr "Számlák (bevételezés)"
 msgid "Наличные"
 msgstr "Készpénz"
 
-msgid "Наличные в кассе на начало (₸)"
-msgstr "Készpénz a pénztárban induláskor (₸)"
+msgid "Наличные в кассе на начало"
+msgstr "Nyitó készpénz a pénztárban"
 
 msgid "Написать в поддержку"
 msgstr "Írjon a támogatásnak"
@@ -1424,8 +1418,9 @@ msgstr "Hátralévő próbanapok:"
 msgid "Остаток"
 msgstr "Készlet"
 
-msgid "От $30/мес, всё включено"
-msgstr "$30/hó-tól, minden benne"
+#, python-brace-format
+msgid "От {c}30/мес, всё включено"
+msgstr "{c}30/hó-tól, minden benne"
 
 msgid "Отзывов"
 msgstr "Visszajelzés"
@@ -1776,8 +1771,8 @@ msgstr "Teljes nézet →"
 msgid "Получено меньше суммы заказа"
 msgstr "A rendelés összegénél kevesebb érkezett"
 
-msgid "Получено от гостя (₸)"
-msgstr "Vendégtől kapott (₸)"
+msgid "Получено от гостя"
+msgstr "Vendégtől kapott"
 
 msgid "Получить рекомендации"
 msgstr "Ajánlások kérése"
@@ -2088,9 +2083,6 @@ msgstr "Kedvezmény"
 msgid "Скидка %"
 msgstr "Kedvezmény %"
 
-msgid "Скидка ₸"
-msgstr "Kedvezmény ₸"
-
 msgid "Скидочные коды, которые гости вводят в QR-меню."
 msgstr "Kedvezménykódok, amelyeket a vendégek a QR-menüben adnak meg."
 
@@ -2332,8 +2324,8 @@ msgstr "Tiltólista"
 msgid "Страница не найдена"
 msgstr "Az oldal nem található"
 
-msgid "Сумма (₸)"
-msgstr "Összeg (₸)"
+msgid "Сумма"
+msgstr "Összeg"
 
 msgid "ТОО Продукты"
 msgstr "Kft. Élelmiszer"
@@ -2466,8 +2458,8 @@ msgstr "Felhasználási feltételek — RestOS"
 msgid "Факт"
 msgstr "Tényleges"
 
-msgid "Фактические наличные в кассе (₸)"
-msgstr "Tényleges készpénz a pénztárban (₸)"
+msgid "Фактические наличные в кассе"
+msgstr "Tényleges készpénz a pénztárban"
 
 msgid "Финансы"
 msgstr "Pénzügyek"
@@ -2500,11 +2492,8 @@ msgstr ""
 msgid "Цена"
 msgstr "Ár"
 
-msgid "Цена (₸)"
-msgstr "Ár (₸)"
-
-msgid "Цена за ед. (₸)"
-msgstr "Egységár (₸)"
+msgid "Цена за ед."
+msgstr "Egységár"
 
 msgid "Цена/ед."
 msgstr "Ár/egys."

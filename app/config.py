@@ -28,8 +28,12 @@ class Settings(BaseSettings):
     # In-app support contact (surfaced in the sidebar and billing, referenced by
     # the legal docs). A Telegram/WhatsApp/website URL, or a mailto: link.
     SUPPORT_URL: str = "https://t.me/Dimka_Hum"
+    # Display currency: the symbol shown across the app and the ISO code used for
+    # Stripe checkouts. Defaults to Euro for the European market.
+    CURRENCY: str = "€"
+    CURRENCY_CODE: str = "eur"
     # Business-day timezone for reports («сегодня», periods, day charts)
-    LOCAL_TZ: str = "Asia/Almaty"
+    LOCAL_TZ: str = "Europe/Berlin"
     PLATFORM_ADMIN_EMAIL: str = ""
     SENTRY_DSN: str = ""
     SMTP_HOST: str = ""

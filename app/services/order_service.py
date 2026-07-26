@@ -1,4 +1,5 @@
 import logging
+from app.config import settings
 import uuid
 from datetime import datetime, timezone, timedelta
 from decimal import Decimal
@@ -363,7 +364,7 @@ async def split_order(
         id=uuid.uuid4(), order_id=new_order.id, old_status=None,
         new_status=order.status, changed_by=f"split:{changed_by}",
     ))
-    logger.info("Order %s split by %s: %s ₸ moved to %s", order.id, changed_by, new_total, new_order.id)
+    logger.info("Order %s split by %s: %s %s moved to %s", order.id, changed_by, new_total, settings.CURRENCY, new_order.id)
     await db.commit()
 
     async def _reload(oid):

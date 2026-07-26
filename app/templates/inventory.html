@@ -75,7 +75,7 @@
   </div>
   <div class="inv-kpi">
     <div class="inv-kpi-label">{{ _("Стоимость запасов") }}</div>
-    <div class="inv-kpi-value">{{ "{:,.0f}".format(total_value) }} ₸</div>
+    <div class="inv-kpi-value">{{ "{:,.0f}".format(total_value) }} {{ currency }}</div>
   </div>
   <div class="inv-kpi">
     <div class="inv-kpi-label">{{ _("Низкий остаток") }}</div>
@@ -120,7 +120,7 @@
             </div>
           </td>
           <td>{{ item.unit }}</td>
-          <td>{{ "{:,.0f}".format(item.cost_per_unit|float) }} ₸</td>
+          <td>{{ "{:,.0f}".format(item.cost_per_unit|float) }} {{ currency }}</td>
           <td>
             {% if item.stock_status == 'ok' %}<span class="status-badge status-ok">OK</span>
             {% elif item.stock_status == 'warning' %}<span class="status-badge status-warning">{{ _("Мало") }}</span>
@@ -183,7 +183,7 @@
         </div>
       </div>
       <div class="form-group">
-        <label>{{ _("Цена за ед. (₸)") }}</label>
+        <label>{{ _("Цена за ед.") }} ({{ currency }})</label>
         <input type="number" name="cost_per_unit" step="1" min="0" value="0">
       </div>
       <button type="submit" class="btn-primary" style="width:100%">{{ _("Добавить") }}</button>
@@ -216,7 +216,7 @@
     <div id="inv-lines"></div>
     <button type="button" onclick="addInvLine()" class="btn-secondary" style="margin:.5rem 0">{{ _("+ строка") }}</button>
     <div style="display:flex;justify-content:space-between;font-weight:600;margin:.5rem 0">
-      <span>{{ _("Итого") }}</span><span id="inv-total">0 ₸</span>
+      <span>{{ _("Итого") }}</span><span id="inv-total">0 {{ currency }}</span>
     </div>
     <div class="form-row">
       <button type="button" onclick="postInvoice()" class="btn-primary">{{ _("Провести накладную") }}</button>
@@ -359,7 +359,7 @@ async function loadInvoices() {
     el.innerHTML = invoices.length ? invoices.map(i => `
       <div style="display:flex;justify-content:space-between;padding:.35rem 0;border-bottom:1px solid var(--hover)">
         <span style="color:var(--muted)">${i.invoice_date}${i.supplier ? ' · ' + i.supplier : ''}</span>
-        <strong>${i.total.toLocaleString('ru-RU')} ₸</strong>
+        <strong>${i.total.toLocaleString('ru-RU')} {{ currency }}</strong>
       </div>`).join('') : '';
   } catch (e) { /* offline */ }
 }
@@ -388,7 +388,7 @@ function addInvLine() {
       ${INGREDIENTS.map(i => `<option value="${i.id}" data-cost="${i.cost}">${esc(i.name)} (${esc(i.unit)})</option>`).join('')}
     </select>
     <input type="number" class="il-qty" step="0.001" min="0.001" placeholder="${T.invQty}" style="flex:1" oninput="recalcInvoice()">
-    <input type="number" class="il-cost" step="0.01" min="0" placeholder="₸/ед" style="flex:1" value="${INGREDIENTS[0] ? INGREDIENTS[0].cost : ''}" oninput="recalcInvoice()">
+    <input type="number" class="il-cost" step="0.01" min="0" placeholder="{{ currency }}/ед" style="flex:1" value="${INGREDIENTS[0] ? INGREDIENTS[0].cost : ''}" oninput="recalcInvoice()">
     <button type="button" onclick="this.closest('.inv-line').remove();recalcInvoice()" class="btn-icon-danger">✕</button>
   `;
   wrap.appendChild(row);
@@ -408,7 +408,7 @@ function recalcInvoice() {
     const c = parseFloat(r.querySelector('.il-cost').value) || 0;
     total += q * c;
   });
-  document.getElementById('inv-total').textContent = total.toLocaleString('ru-RU') + ' ₸';
+  document.getElementById('inv-total').textContent = total.toLocaleString('ru-RU') + ' {{ currency }}';
 }
 
 async function postInvoice() {

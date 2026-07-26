@@ -241,7 +241,7 @@ async def change_status_html(
         if new_status == "cancelled":
             from app.services.audit import log_action
             log_action(db, current_user.network_id, current_user.email, "order_cancelled",
-                       f"#{str(order_id)[:8].upper()} на {check.total_amount} ₸")
+                       f"#{str(order_id)[:8].upper()} на {check.total_amount} {settings.CURRENCY}")
             await db.commit()
         order = await update_order_status(order_id, new_status, db, changed_by=current_user.email)
 

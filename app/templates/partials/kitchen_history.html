@@ -18,7 +18,7 @@
       {% endfor %}
     </div>
     <div style="display:flex;justify-content:space-between;align-items:center;font-size:.78rem;color:var(--muted);border-top:1px solid var(--hover);padding-top:.5rem;margin-top:.25rem;">
-      <span>{{ "{:,.0f}".format(o.total_amount | float) }} ₸</span>
+      <span>{{ "{:,.0f}".format(o.total_amount | float) }} {{ currency }}</span>
       <span>{{ wait_mins }} {{ _("мин на кухне") }}</span>
     </div>
   </div>

@@ -69,15 +69,15 @@
 <div class="fin-kpis">
   <div class="fin-kpi">
     <div class="fin-kpi-label">{{ _("Выручка") }}</div>
-    <div class="fin-kpi-value">{{ "{:,.0f}".format(revenue) }} ₸</div>
+    <div class="fin-kpi-value">{{ "{:,.0f}".format(revenue) }} {{ currency }}</div>
   </div>
   <div class="fin-kpi">
     <div class="fin-kpi-label">{{ _("Расходы") }}</div>
-    <div class="fin-kpi-value" style="color:var(--bad)">{{ "{:,.0f}".format(expenses_total) }} ₸</div>
+    <div class="fin-kpi-value" style="color:var(--bad)">{{ "{:,.0f}".format(expenses_total) }} {{ currency }}</div>
   </div>
   <div class="fin-kpi profit">
     <div class="fin-kpi-label">{{ _("Прибыль") }}</div>
-    <div class="fin-kpi-value">{{ "{:,.0f}".format(profit) }} ₸</div>
+    <div class="fin-kpi-value">{{ "{:,.0f}".format(profit) }} {{ currency }}</div>
   </div>
   <div class="fin-kpi margin">
     <div class="fin-kpi-label">{{ _("Маржа") }}</div>
@@ -102,7 +102,7 @@
           <div class="category-bar-track">
             <div class="category-bar-fill" style="width:{{ (cat.amount / max_amt * 100)|round }}%"></div>
           </div>
-          <span class="category-bar-amount">{{ "{:,.0f}".format(cat.amount) }} ₸</span>
+          <span class="category-bar-amount">{{ "{:,.0f}".format(cat.amount) }} {{ currency }}</span>
         </div>
         {% endfor %}
       {% else %}
@@ -119,7 +119,7 @@
             <div class="expense-desc">{{ exp.description or expense_categories.get(exp.category, exp.category) }}</div>
             <div class="expense-meta">{{ expense_categories.get(exp.category, exp.category) }} · {{ exp.expense_date.strftime('%d.%m.%Y') }}</div>
           </div>
-          <span class="expense-amount">−{{ "{:,.0f}".format(exp.amount|float) }} ₸</span>
+          <span class="expense-amount">−{{ "{:,.0f}".format(exp.amount|float) }} {{ currency }}</span>
           <button class="btn-del-expense" onclick="deleteExpense('{{ exp.id }}')">✕</button>
         </div>
         {% else %}
@@ -190,7 +190,7 @@
           </select>
         </div>
         <div class="form-group">
-          <label>{{ _("Сумма (₸)") }}</label>
+          <label>{{ _("Сумма") }} ({{ currency }})</label>
           <input type="text" id="amount-display" inputmode="numeric" required placeholder="0" autocomplete="off"
             oninput="formatAmountInput(this)">
           <input type="hidden" name="amount" id="amount-raw">
@@ -266,10 +266,10 @@ new Chart(ctx, {
       legend: { labels: { color: _fin.muted, font: { size: 11 } } },
       tooltip: {
         callbacks: {
-          label: item => `${item.dataset.label}: ${item.parsed.y.toLocaleString(LOCALE)} ₸`,
+          label: item => `${item.dataset.label}: ${item.parsed.y.toLocaleString(LOCALE)} {{ currency }}`,
           footer: items => {
             const total = items.reduce((s, i) => s + i.parsed.y, 0);
-            return `${T.revenue}: ${total.toLocaleString(LOCALE)} ₸`;
+            return `${T.revenue}: ${total.toLocaleString(LOCALE)} {{ currency }}`;
           }
         }
       }

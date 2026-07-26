@@ -56,7 +56,7 @@
     {# One primary status action + «Оплатить» and «⋯» dropdowns — everything
        secondary lives in the menus so the card stays scannable. #}
     <div class="order-footer">
-      <span class="order-total">{{ "{:,.0f}".format(order.total_amount) }} ₸</span>
+      <span class="order-total">{{ "{:,.0f}".format(order.total_amount) }} {{ currency }}</span>
       {% if order.payment_status != 'paid' and order.status != 'cancelled' %}
       <div class="order-menu-wrap">
         <button type="button" class="btn-pay" onclick="toggleOrderMenu(this)">{{ _("Оплатить") }} ▾</button>

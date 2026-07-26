@@ -203,9 +203,9 @@
         </div>
         <div class="lnd-app-main">
           <div class="lnd-app-tiles">
-            <div class="lnd-app-tile"><small>{{ _("Выручка сегодня") }}</small><b class="gold">₸ 486 200</b></div>
+            <div class="lnd-app-tile"><small>{{ _("Выручка сегодня") }}</small><b class="gold">{{ currency }} 486 200</b></div>
             <div class="lnd-app-tile"><small>{{ _("Заказов сегодня") }}</small><b>174</b></div>
-            <div class="lnd-app-tile"><small>{{ _("Средний чек") }}</small><b>₸ 2 794</b></div>
+            <div class="lnd-app-tile"><small>{{ _("Средний чек") }}</small><b>{{ currency }} 2 794</b></div>
           </div>
           <div class="lnd-app-chart">
             <i style="height:38%"></i><i style="height:52%"></i><i style="height:44%"></i><i style="height:70%"></i>
@@ -314,7 +314,7 @@
           </tr>
           <tr>
             <td>{{ _("Цена") }}</td>
-            <td class="us">✓ {{ _("От $30/мес, всё включено") }}</td>
+            <td class="us">✓ {{ _("От {c}30/мес, всё включено").format(c=currency) }}</td>
             <td>✕ {{ _("Лицензии + модули + внедрение") }}</td>
           </tr>
           <tr>
@@ -332,7 +332,7 @@
     <div class="lnd-plans">
       <div class="lnd-plan">
         <div class="plan-name">Starter</div>
-        <div class="plan-price">$30 <span>/ {{ _("мес") }}</span></div>
+        <div class="plan-price">{{ currency }}30 <span>/ {{ _("мес") }}</span></div>
         <ul>
           <li>{{ _("1 заведение") }}</li>
           <li>{{ _("До 3 сотрудников") }}</li>
@@ -342,7 +342,7 @@
       </div>
       <div class="lnd-plan featured">
         <div class="plan-name">Pro</div>
-        <div class="plan-price">$60 <span>/ {{ _("мес") }}</span></div>
+        <div class="plan-price">{{ currency }}60 <span>/ {{ _("мес") }}</span></div>
         <ul>
           <li>{{ _("До 5 заведений") }}</li>
           <li>{{ _("Безлимит сотрудников") }}</li>
@@ -353,7 +353,7 @@
       </div>
       <div class="lnd-plan">
         <div class="plan-name">Enterprise</div>
-        <div class="plan-price">$150 <span>/ {{ _("мес") }}</span></div>
+        <div class="plan-price">{{ currency }}150 <span>/ {{ _("мес") }}</span></div>
         <ul>
           <li>{{ _("Безлимит заведений") }}</li>
           <li>White-label</li>

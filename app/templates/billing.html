@@ -83,7 +83,7 @@
 <div class="plans-grid">
   <div class="plan-card {% if subscription and subscription.plan == 'starter' %}current{% endif %}">
     <div class="plan-name">Starter</div>
-    <div class="plan-price">$30 <span>/ {{ _("мес") }}</span></div>
+    <div class="plan-price">{{ currency }}30 <span>/ {{ _("мес") }}</span></div>
     <ul class="plan-features">
       <li>{{ _("1 заведение") }}</li>
       <li>{{ _("До 3 сотрудников") }}</li>
@@ -99,7 +99,7 @@
   </div>
   <div class="plan-card {% if subscription and subscription.plan == 'pro' %}current{% endif %}">
     <div class="plan-name">Pro</div>
-    <div class="plan-price">$60 <span>/ {{ _("мес") }}</span></div>
+    <div class="plan-price">{{ currency }}60 <span>/ {{ _("мес") }}</span></div>
     <ul class="plan-features">
       <li>{{ _("До 5 заведений") }}</li>
       <li>{{ _("Безлимит сотрудников") }}</li>
@@ -115,7 +115,7 @@
   </div>
   <div class="plan-card {% if subscription and subscription.plan == 'enterprise' %}current{% endif %}">
     <div class="plan-name">Enterprise</div>
-    <div class="plan-price">$150 <span>/ {{ _("мес") }}</span></div>
+    <div class="plan-price">{{ currency }}150 <span>/ {{ _("мес") }}</span></div>
     <ul class="plan-features">
       <li>{{ _("Безлимит заведений") }}</li>
       <li>White-label</li>

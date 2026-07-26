@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-26 20:05+0000\n"
+"POT-Creation-Date: 2026-07-26 20:31+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -60,9 +60,6 @@ msgstr "+ option"
 
 msgid "+ строка"
 msgstr "+ line"
-
-msgid "+₸"
-msgstr "+₸"
 
 msgid "1 заведение"
 msgstr "1 venue"
@@ -512,9 +509,6 @@ msgstr "Revenue by venue"
 
 msgid "Выручка сегодня"
 msgstr "Today's revenue"
-
-msgid "Выручка ₸"
-msgstr "Revenue ₸"
 
 msgid "Генерируем..."
 msgstr "Generating..."
@@ -1130,8 +1124,8 @@ msgstr "Invoices (goods receipt)"
 msgid "Наличные"
 msgstr "Cash"
 
-msgid "Наличные в кассе на начало (₸)"
-msgstr "Opening cash in drawer (₸)"
+msgid "Наличные в кассе на начало"
+msgstr "Opening cash in register"
 
 msgid "Написать в поддержку"
 msgstr "Contact support"
@@ -1402,8 +1396,9 @@ msgstr "Trial days left:"
 msgid "Остаток"
 msgstr "In stock"
 
-msgid "От $30/мес, всё включено"
-msgstr "From $30/mo, all inclusive"
+#, python-brace-format
+msgid "От {c}30/мес, всё включено"
+msgstr "From {c}30/mo, all included"
 
 msgid "Отзывов"
 msgstr "Reviews"
@@ -1752,8 +1747,8 @@ msgstr "Full view →"
 msgid "Получено меньше суммы заказа"
 msgstr "Received less than the total"
 
-msgid "Получено от гостя (₸)"
-msgstr "Received from guest (₸)"
+msgid "Получено от гостя"
+msgstr "Received from guest"
 
 msgid "Получить рекомендации"
 msgstr "Get recommendations"
@@ -2061,9 +2056,6 @@ msgstr "Discount"
 msgid "Скидка %"
 msgstr "Discount %"
 
-msgid "Скидка ₸"
-msgstr "Discount ₸"
-
 msgid "Скидочные коды, которые гости вводят в QR-меню."
 msgstr "Discount codes guests enter in the QR menu."
 
@@ -2305,8 +2297,8 @@ msgstr "Stop-list"
 msgid "Страница не найдена"
 msgstr "Page not found"
 
-msgid "Сумма (₸)"
-msgstr "Amount (₸)"
+msgid "Сумма"
+msgstr "Amount"
 
 msgid "ТОО Продукты"
 msgstr "Foods LLC"
@@ -2436,8 +2428,8 @@ msgstr "Terms of Service — RestOS"
 msgid "Факт"
 msgstr "Actual"
 
-msgid "Фактические наличные в кассе (₸)"
-msgstr "Actual cash in drawer (₸)"
+msgid "Фактические наличные в кассе"
+msgstr "Actual cash in register"
 
 msgid "Финансы"
 msgstr "Finance"
@@ -2470,11 +2462,8 @@ msgstr ""
 msgid "Цена"
 msgstr "Price"
 
-msgid "Цена (₸)"
-msgstr "Price (₸)"
-
-msgid "Цена за ед. (₸)"
-msgstr "Price per unit (₸)"
+msgid "Цена за ед."
+msgstr "Unit price"
 
 msgid "Цена/ед."
 msgstr "Price/unit"

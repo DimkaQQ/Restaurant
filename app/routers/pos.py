@@ -1,4 +1,5 @@
 from app.templates_env import templates
+from app.config import settings
 import logging
 import uuid
 
@@ -123,7 +124,7 @@ async def place_pos_order(
         # Log the discount actually applied (server-side), not the raw request.
         if order.discount_type:
             from app.services.audit import log_action
-            unit = "%" if order.discount_type == "percent" else "₸"
+            unit = "%" if order.discount_type == "percent" else settings.CURRENCY
             what = f"промокод {order.promo_code}" if order.promo_code else "скидка"
             log_action(db, current_user.network_id, current_user.email, "discount_applied",
                        f"#{str(order.id)[:8].upper()}: {what} {order.discount_value}{unit}")

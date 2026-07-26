@@ -35,7 +35,7 @@
 <div class="stats-grid" style="margin-bottom:1.5rem">
   <div class="stat-card">
     <span class="stat-label">{{ _("Выручка за 30 дней") }}</span>
-    <span class="stat-value gold">{{ total_revenue | money }} ₸</span>
+    <span class="stat-value gold">{{ total_revenue | money }} {{ currency }}</span>
   </div>
   <div class="stat-card">
     <span class="stat-label">{{ _("Завершённых заказов") }}</span>
@@ -43,7 +43,7 @@
   </div>
   <div class="stat-card">
     <span class="stat-label">{{ _("Средний чек") }}</span>
-    <span class="stat-value">{{ (total_revenue / total_orders if total_orders else 0) | money }} ₸</span>
+    <span class="stat-value">{{ (total_revenue / total_orders if total_orders else 0) | money }} {{ currency }}</span>
   </div>
 </div>
 
@@ -131,8 +131,8 @@
       {% for f in food_cost %}
       <tr>
         <td>{{ f.name }}</td>
-        <td>{{ "{:,.0f}".format(f.price) }} ₸</td>
-        <td>{% if f.cost is not none %}{{ "{:,.0f}".format(f.cost) }} ₸{% else %}<span class="muted">{{ _("нет техкарты") }}</span>{% endif %}</td>
+        <td>{{ "{:,.0f}".format(f.price) }} {{ currency }}</td>
+        <td>{% if f.cost is not none %}{{ "{:,.0f}".format(f.cost) }} {{ currency }}{% else %}<span class="muted">{{ _("нет техкарты") }}</span>{% endif %}</td>
         <td>
           {% if f.margin_pct is not none %}
           <span style="font-weight:600; color:{% if f.margin_pct >= 60 %}var(--success){% elif f.margin_pct >= 30 %}var(--warn){% else %}var(--bad){% endif %}">{{ f.margin_pct }}%</span>
@@ -198,7 +198,7 @@ new Chart(document.getElementById('revenue-chart'), {
   data: {
     labels: revenueData.map(d => d.day.slice(5)),
     datasets: [{
-      label: {{ _("Выручка ₸") | tojson }},
+      label: {{ (_("Выручка") ~ ' ' ~ currency) | tojson }},
       data: revenueData.map(d => d.revenue),
       borderColor: gold,
       backgroundColor: hexToRgba(gold, 0.12),
@@ -236,7 +236,7 @@ new Chart(document.getElementById('venues-chart'), {
         label: ctx => {
           const v = parseFloat(ctx.raw);
           const pct = venueTotal ? Math.round(v / venueTotal * 100) : 0;
-          return ' ' + v.toLocaleString(LOCALE) + ' ₸ (' + pct + '%)';
+          return ' ' + v.toLocaleString(LOCALE) + ' {{ currency }} (' + pct + '%)';
         }
       } }
     }

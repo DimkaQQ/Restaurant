@@ -148,15 +148,15 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
           <select id="discount-type" onchange="renderCart()" style="background:var(--black);border:1px solid var(--border);color:var(--white);padding:.4rem;border-radius:6px;font-size:.8rem">
             <option value="">{{ _("Без скидки") }}</option>
             <option value="percent">{{ _("Скидка %") }}</option>
-            <option value="amount">{{ _("Скидка ₸") }}</option>
+            <option value="amount">{{ _("Скидка") }} {{ currency }}</option>
           </select>
           <input type="number" id="discount-value" min="0" step="0.01" placeholder="0" oninput="renderCart()"
             style="width:90px;display:none;background:var(--black);border:1px solid var(--border);color:var(--white);padding:.4rem;border-radius:6px;font-size:.8rem">
         </div>
         <div class="pos-total" id="subtotal-row" style="display:none;font-size:.85rem;font-weight:400;color:var(--muted)">
-          <span>{{ _("Подытог") }}</span><span id="cart-subtotal">0 ₸</span>
+          <span>{{ _("Подытог") }}</span><span id="cart-subtotal">0 {{ currency }}</span>
         </div>
-        <div class="pos-total"><span>{{ _("Итого") }}</span><span id="cart-total">0 ₸</span></div>
+        <div class="pos-total"><span>{{ _("Итого") }}</span><span id="cart-total">0 {{ currency }}</span></div>
       </div>
     </aside>
 
@@ -177,7 +177,7 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
   <div class="ipos-actions">
     <button onclick="submitOrder(null)" class="btn-secondary" id="btn-pay-later" disabled>{{ _("В работу — оплата потом") }}</button>
     <button onclick="openPayModal()" class="ipos-paybtn" id="btn-pay-now" disabled>
-      <span>{{ _("К оплате") }}</span><span id="paybtn-total">0 ₸</span>
+      <span>{{ _("К оплате") }}</span><span id="paybtn-total">0 {{ currency }}</span>
     </button>
   </div>
 
@@ -221,7 +221,7 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
     <!-- Cash: the register does the change math, not the cashier's head -->
     <div id="cash-panel" style="display:none">
       <div class="form-group">
-        <label style="font-size:.8rem;color:var(--muted)">{{ _("Получено от гостя (₸)") }}</label>
+        <label style="font-size:.8rem;color:var(--muted)">{{ _("Получено от гостя") }} ({{ currency }})</label>
         <input type="number" id="cash-received" min="0" inputmode="numeric" oninput="updateChange()" style="width:100%; font-size:1.1rem">
       </div>
       <div style="display:flex; gap:.4rem; flex-wrap:wrap; margin-bottom:.75rem" id="cash-quick"></div>
@@ -253,7 +253,7 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
       <input type="text" id="free-name" maxlength="100" placeholder="{{ _('Например: пакет, доставка') }}" style="width:100%">
     </div>
     <div class="form-group">
-      <label style="font-size:.8rem;color:var(--muted)">{{ _("Цена (₸)") }}</label>
+      <label style="font-size:.8rem;color:var(--muted)">{{ _("Цена") }} ({{ currency }})</label>
       <input type="number" id="free-price" min="0" inputmode="numeric" style="width:100%">
     </div>
     <div class="form-row" style="margin-top:1rem">
@@ -316,8 +316,8 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
     shiftNone: {{ _("Смена не открыта") | tojson }},
     shiftOpenBtn: {{ _("Открыть смену") | tojson }},
     shiftClose: {{ _("Закрыть смену") | tojson }},
-    shiftOpeningCash: {{ _("Наличные в кассе на начало (₸)") | tojson }},
-    shiftActualCash: {{ _("Фактические наличные в кассе (₸)") | tojson }},
+    shiftOpeningCash: {{ (_("Наличные в кассе на начало") ~ ' (' ~ currency ~ ')') | tojson }},
+    shiftActualCash: {{ (_("Фактические наличные в кассе") ~ ' (' ~ currency ~ ')') | tojson }},
     shiftOpened: {{ _("Смена открыта") | tojson }},
     shiftError: {{ _("Ошибка смены") | tojson }},
     zCash: {{ _("Продажи наличными") | tojson }},
@@ -476,7 +476,7 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
       <div class="pos-item${i.is_available ? '' : ' pos-item-stopped'}"
            onclick="${_stopMode ? `toggleStop('${esc(i.id)}')` : (i.is_available ? `addToCart('${esc(i.id)}')` : `notify.info(T.inStopList)`)}">
         <div class="pos-item-name">${esc(i.name)}</div>
-        <div class="pos-item-price">${parseFloat(i.price).toLocaleString(LOCALE)} ₸</div>
+        <div class="pos-item-price">${parseFloat(i.price).toLocaleString(LOCALE)} {{ currency }}</div>
         ${i.is_available ? '' : `<div style="font-size:.7rem;color:var(--bad);margin-top:.2rem">${T.stopBadge}</div>`}
       </div>
     `).join('') + freeTile;
@@ -618,7 +618,7 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
       const hasLast = venueId && localStorage.getItem('pos_last_order_' + venueId);
       linesEl.innerHTML = '<p class="empty-state" style="padding:.5rem 0">' + T.cartEmpty + '</p>' +
         (hasLast ? `<button type="button" class="btn-secondary" style="width:100%; font-size:.8rem" onclick="repeatLastOrder()">${T.repeatLast}</button>` : '');
-      setTotals('0 ₸');
+      setTotals('0 {{ currency }}');
       setSubmitEnabled(false);
       return;
     }
@@ -633,7 +633,7 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
             <span>${qty}</span>
             <button type="button" onclick="changeQty('${esc(id)}', 1)">+</button>
           </div>
-          <span class="pos-line-sum">${(unitPrice * qty).toLocaleString(LOCALE)} ₸</span>
+          <span class="pos-line-sum">${(unitPrice * qty).toLocaleString(LOCALE)} {{ currency }}</span>
         </div>
       `;
     }).join('');
@@ -650,12 +650,12 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
     if (dType && dValue > 0) {
       const off = dType === 'percent' ? total * Math.min(dValue, 100) / 100 : Math.min(dValue, total);
       finalTotal = total - off;
-      document.getElementById('cart-subtotal').textContent = total.toLocaleString(LOCALE) + ' ₸';
+      document.getElementById('cart-subtotal').textContent = total.toLocaleString(LOCALE) + ' {{ currency }}';
       subtotalRow.style.display = 'flex';
     } else {
       subtotalRow.style.display = 'none';
     }
-    setTotals(finalTotal.toLocaleString(LOCALE) + ' ₸');
+    setTotals(finalTotal.toLocaleString(LOCALE) + ' {{ currency }}');
     setSubmitEnabled(true);
   }
 
@@ -718,7 +718,7 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
     const btn = document.getElementById('cash-confirm');
     if (!received) { el.textContent = '—'; el.style.color = ''; btn.disabled = true; return; }
     const change = received - total;
-    el.textContent = change.toLocaleString(LOCALE) + ' ₸';
+    el.textContent = change.toLocaleString(LOCALE) + ' {{ currency }}';
     el.style.color = change < 0 ? 'var(--bad)' : 'var(--success)';
     btn.disabled = change < 0;
   }
@@ -859,7 +859,7 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
           document.getElementById('pay-methods').style.display = 'none';
           document.getElementById('cash-panel').style.display = 'none';
           document.getElementById('change-done').style.display = '';
-          document.getElementById('change-done-amount').textContent = _pendingChange.toLocaleString(LOCALE) + ' ₸';
+          document.getElementById('change-done-amount').textContent = _pendingChange.toLocaleString(LOCALE) + ' {{ currency }}';
           document.getElementById('pay-modal').style.display = 'flex';
         } else {
           closePayModal();
@@ -935,7 +935,7 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
       const openedAt = new Date(_shift.opened_at).toLocaleTimeString(LOCALE, {hour:'2-digit', minute:'2-digit'});
       body.innerHTML = `
         <p style="font-size:.82rem;color:var(--muted);margin:0 0 .75rem">
-          ${T.shiftOpen} ${openedAt} · ${T.shiftOpeningCash.replace(' (₸)','')}: ${(_shift.opening_cash || 0).toLocaleString(LOCALE)} ₸
+          ${T.shiftOpen} ${openedAt} · ${T.shiftOpeningCash.replace(' ({{ currency }})','')}: ${(_shift.opening_cash || 0).toLocaleString(LOCALE)} {{ currency }}
         </p>
         <div class="form-group"><label style="font-size:.8rem;color:var(--muted)">${T.shiftActualCash}</label>
         <input type="number" id="shift-cash-input" min="0" step="0.01" style="width:100%"></div>
@@ -955,11 +955,11 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
           const diffColor = Math.abs(diff) < 0.01 ? 'var(--success)' : 'var(--bad)';
           document.getElementById('zreport').innerHTML = `
             <div style="border-top:1px solid var(--border);margin-top:.75rem;padding-top:.75rem;display:grid;gap:.3rem">
-              <div style="display:flex;justify-content:space-between"><span>${T.zCash}</span><strong>${s.cash_sales.toLocaleString(LOCALE)} ₸</strong></div>
-              <div style="display:flex;justify-content:space-between"><span>${T.zCard}</span><strong>${s.card_sales.toLocaleString(LOCALE)} ₸</strong></div>
+              <div style="display:flex;justify-content:space-between"><span>${T.zCash}</span><strong>${s.cash_sales.toLocaleString(LOCALE)} {{ currency }}</strong></div>
+              <div style="display:flex;justify-content:space-between"><span>${T.zCard}</span><strong>${s.card_sales.toLocaleString(LOCALE)} {{ currency }}</strong></div>
               <div style="display:flex;justify-content:space-between"><span>${T.zOrders}</span><strong>${s.orders_count}</strong></div>
-              <div style="display:flex;justify-content:space-between"><span>${T.zExpected}</span><strong>${s.expected_cash.toLocaleString(LOCALE)} ₸</strong></div>
-              <div style="display:flex;justify-content:space-between;color:${diffColor}"><span>${T.zDiff}</span><strong>${diff > 0 ? '+' : ''}${diff.toLocaleString(LOCALE)} ₸</strong></div>
+              <div style="display:flex;justify-content:space-between"><span>${T.zExpected}</span><strong>${s.expected_cash.toLocaleString(LOCALE)} {{ currency }}</strong></div>
+              <div style="display:flex;justify-content:space-between;color:${diffColor}"><span>${T.zDiff}</span><strong>${diff > 0 ? '+' : ''}${diff.toLocaleString(LOCALE)} {{ currency }}</strong></div>
             </div>`;
           ok.style.display = 'none';
           refreshShift();
@@ -1076,7 +1076,7 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
         <div style="display:flex;justify-content:space-between;align-items:center;gap:.5rem;margin-bottom:.35rem">
           <strong>${label}</strong>
           <span style="color:var(--warn);font-size:.75rem">${T.unpaidTag}</span>
-          <strong style="margin-left:auto">${parseFloat(o.total_amount).toLocaleString(LOCALE)} ₸</strong>
+          <strong style="margin-left:auto">${parseFloat(o.total_amount).toLocaleString(LOCALE)} {{ currency }}</strong>
         </div>
         <div style="font-size:.8rem;color:var(--muted);margin-bottom:.5rem">${items}</div>
         <div style="display:flex;gap:.4rem;flex-wrap:wrap">

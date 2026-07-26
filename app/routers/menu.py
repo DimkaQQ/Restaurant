@@ -1,4 +1,5 @@
 import asyncio
+from app.config import settings
 import logging
 import uuid
 import os
@@ -182,7 +183,7 @@ async def delete_item(
             raise HTTPException(status_code=404, detail="Позиция не найдена")
         await _check_venue_owner(item.venue_id, current_user, db)
         from app.services.audit import log_action
-        log_action(db, current_user.network_id, current_user.email, "menu_item_deleted", f"{item.name} ({item.price} ₸)")
+        log_action(db, current_user.network_id, current_user.email, "menu_item_deleted", f"{item.name} ({item.price} {settings.CURRENCY})")
         await db.delete(item)
         await db.commit()
         return {"message": "Удалено"}

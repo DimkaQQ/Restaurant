@@ -260,7 +260,7 @@
         {% if item.description %}
         <div class="item-desc">{{ item.description }}</div>
         {% endif %}
-        <div class="item-price">{{ item.price | int }} ₸</div>
+        <div class="item-price">{{ item.price | int }} {{ currency }}</div>
       </div>
       <div id="ctrl-{{ item.id }}">
         <button class="item-add-btn" onclick="event.stopPropagation(); addItem('{{ item.id }}')">+</button>
@@ -273,7 +273,7 @@
 
 <div class="cart-bar" id="cartBar" onclick="openCart()">
   <div class="cart-bar-left">🛒 <span id="cartCount">0</span> {{ t.positions }}</div>
-  <div class="cart-bar-right"><span id="cartTotal">0</span> ₸ →</div>
+  <div class="cart-bar-right"><span id="cartTotal">0</span> {{ currency }} →</div>
 </div>
 
 <!-- Cart sheet -->
@@ -285,7 +285,7 @@
     <div id="cartItems"></div>
     <div class="total-row">
       <span>{{ t.total }}</span>
-      <span id="cartTotalSheet">0 ₸</span>
+      <span id="cartTotalSheet">0 {{ currency }}</span>
     </div>
     <div style="margin-top:1rem">
       <div class="form-group">
@@ -535,7 +535,7 @@ function updateCartUI() {
 
   document.getElementById('cartCount').textContent = count;
   document.getElementById('cartTotal').textContent = total.toFixed(0);
-  document.getElementById('cartTotalSheet').textContent = total.toFixed(0) + ' ₸';
+  document.getElementById('cartTotalSheet').textContent = total.toFixed(0) + ' {{ currency }}';
 
   const bar = document.getElementById('cartBar');
   if (count > 0) { bar.classList.add('visible'); } else { bar.classList.remove('visible'); }
@@ -580,7 +580,7 @@ function updateCartUI() {
         <span class="qty-num">${i.qty}</span>
         <button class="qty-btn" onclick="addLineSheet('${esc(i.key)}')">+</button>
       </div>
-      <div class="cart-item-price">${(i.price * i.qty).toFixed(0)} ₸</div>
+      <div class="cart-item-price">${(i.price * i.qty).toFixed(0)} {{ currency }}</div>
     </div>
   `).join('');
 }

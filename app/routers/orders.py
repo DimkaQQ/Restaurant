@@ -1,4 +1,5 @@
 import logging
+from app.config import settings
 import uuid
 
 from fastapi import APIRouter, Depends, HTTPException, Query
@@ -223,7 +224,7 @@ async def split_order_endpoint(
         split_off_id, split_total = split_off.id, split_off.total_amount
         from app.services.audit import log_action
         log_action(db, current_user.network_id, current_user.email, "order_split",
-                   f"#{str(order_id)[:8].upper()} → #{str(split_off_id)[:8].upper()} на {split_total} ₸")
+                   f"#{str(order_id)[:8].upper()} → #{str(split_off_id)[:8].upper()} на {split_total} {settings.CURRENCY}")
         await db.commit()
         # commit expires ORM state — reload with eager items/guest for serialization
         rows = (await db.execute(

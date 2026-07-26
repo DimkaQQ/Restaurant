@@ -6,6 +6,7 @@ Set env vars to enable:
   TWILIO_WHATSAPP_FROM=whatsapp:+14155238886  (Twilio sandbox or approved number)
 """
 import logging
+from app.config import settings
 import os
 from base64 import b64encode
 
@@ -62,7 +63,7 @@ async def send_whatsapp(to_phone: str, message: str) -> bool:
 async def send_order_confirmation(guest_phone: str, guest_name: str, order_short_id: str, total: float, venue_name: str) -> bool:
     msg = (
         f"✅ Ваш заказ #{order_short_id} принят в «{venue_name}»!\n"
-        f"Сумма: {total:.0f} ₸\n"
+        f"Сумма: {total:.0f} {settings.CURRENCY}\n"
         f"Мы уведомим вас, когда заказ будет готов."
     )
     return await send_whatsapp(guest_phone, msg)

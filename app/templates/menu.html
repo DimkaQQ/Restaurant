@@ -85,7 +85,7 @@
     <form id="add-form">
       <div class="form-group"><label>{{ _("Название") }}</label><input type="text" name="name" required></div>
       <div class="form-group"><label>{{ _("Описание") }}</label><textarea name="description" rows="2"></textarea></div>
-      <div class="form-group"><label>{{ _("Цена (₸)") }}</label><input type="number" name="price" step="0.01" required></div>
+      <div class="form-group"><label>{{ _("Цена") }} ({{ currency }})</label><input type="number" name="price" step="0.01" required></div>
       <div class="form-group"><label>{{ _("Категория") }}</label><input type="text" name="category" list="cat-datalist" maxlength="100" placeholder="{{ _('Выберите или введите новую') }}"></div>
       <datalist id="cat-datalist"></datalist>
       <div class="form-row">
@@ -103,7 +103,7 @@
     <form id="edit-form">
       <div class="form-group"><label>{{ _("Название") }}</label><input type="text" name="name" required></div>
       <div class="form-group"><label>{{ _("Описание") }}</label><textarea name="description" rows="2"></textarea></div>
-      <div class="form-group"><label>{{ _("Цена (₸)") }}</label><input type="number" name="price" step="0.01" required></div>
+      <div class="form-group"><label>{{ _("Цена") }} ({{ currency }})</label><input type="number" name="price" step="0.01" required></div>
       <div class="form-group"><label>{{ _("Категория") }}</label><input type="text" name="category" list="cat-datalist" maxlength="100"></div>
       <div class="form-row">
         <button type="submit" class="btn-primary">{{ _("Сохранить") }}</button>
@@ -188,7 +188,7 @@
     modifiersLabel: {{ _("Модификаторы") | tojson }},
     modGroupName: {{ _("Название группы") | tojson }},
     modOptionName: {{ _("Вариант") | tojson }},
-    modDelta: {{ _("+₸") | tojson }},
+    modDelta: {{ ('+' ~ currency) | tojson }},
     modRequired: {{ _("обязательный выбор") | tojson }},
     modMulti: {{ _("можно несколько") | tojson }},
     modAddOption: {{ _("+ вариант") | tojson }},
@@ -262,7 +262,7 @@
         <div class="menu-card-body">
           <div class="menu-card-header">
             <span class="menu-item-name">${esc(item.name)}</span>
-            <span class="menu-item-price">${parseFloat(item.price).toLocaleString(LOCALE)} ₸</span>
+            <span class="menu-item-price">${parseFloat(item.price).toLocaleString(LOCALE)} {{ currency }}</span>
           </div>
           ${item.category ? `<span class="menu-category">${esc(item.category)}</span>` : ''}
           ${item.description ? `<p class="menu-desc">${esc(item.description)}</p>` : ''}
