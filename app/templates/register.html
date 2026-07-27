@@ -20,8 +20,12 @@
 <body class="auth-body">
   <div class="auth-container">
     <div class="lang-switch">
-      <a href="?lang=ru" class="{% if locale == 'ru' %}active{% endif %}">RU</a> /
-      <a href="?lang=en" class="{% if locale == 'en' %}active{% endif %}">EN</a>
+      <select onchange="location.href='?lang='+this.value" aria-label="Language"
+        style="font-size:.8rem;background:var(--card);color:var(--muted);border:1px solid var(--border);border-radius:6px;padding:.3rem .5rem;cursor:pointer">
+        {% for code, name in locale_names.items() %}
+        <option value="{{ code }}" {% if code == locale %}selected{% endif %}>{{ name }}</option>
+        {% endfor %}
+      </select>
     </div>
     <div class="auth-card">
       <div class="auth-logo">

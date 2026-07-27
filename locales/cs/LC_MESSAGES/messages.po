@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-26 20:31+0000\n"
+"POT-Creation-Date: 2026-07-27 01:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: cs\n"
@@ -84,6 +84,9 @@ msgstr "14 dní zdarma. Zrušit můžete kdykoli."
 
 msgid "15 минут, сами"
 msgstr "15 minut, sami"
+
+msgid "2 месяца в подарок"
+msgstr "2 měsíce zdarma"
 
 msgid "2. Введите код из приложения для подтверждения:"
 msgstr "2. Zadejte kód z aplikace pro potvrzení:"
@@ -172,6 +175,9 @@ msgstr "PIN zaměstnance (4–6 číslic). Prázdné — odstranit PIN."
 msgid "QR-меню для гостей"
 msgstr "QR menu pro hosty"
 
+msgid "REST API и веб-хуки заказов для интеграций."
+msgstr "REST API a webhooky objednávek pro integrace."
+
 msgid ""
 "RestOS обрабатывает персональные данные владельцев ресторанов, их "
 "сотрудников и гостей (клиентов ресторанов) в объёме, необходимом для "
@@ -212,6 +218,12 @@ msgstr ""
 
 msgid "Telegram ID менеджера"
 msgstr "Telegram ID manažera"
+
+msgid "Telegram-рассылки гостям и промокоды в QR-меню."
+msgstr "Telegram rozesílky hostům a promokódy v QR menu."
+
+msgid "White-label оформление"
+msgstr "White-label vzhled"
 
 #, python-brace-format
 msgid ""
@@ -267,6 +279,9 @@ msgstr "Analyzujeme…"
 
 msgid "Аналитика"
 msgstr "Analytika"
+
+msgid "Аналитика и NPS"
+msgstr "Analytika a NPS"
 
 msgid "Базовый набор"
 msgstr "Základní balíček"
@@ -558,6 +573,9 @@ msgstr ""
 "Rozvrh směn, role číšník/kuchař/pokladní/manažer, hodnocení zaměstnanců "
 "podle recenzí hostů."
 
+msgid "Графики продаж, популярные позиции, оценки гостей (NPS)."
+msgstr "Grafy prodeje, populární položky, hodnocení hostů (NPS)."
+
 msgid ""
 "Группы вариантов для позиции: размер, молоко, сиропы. Цена меняется на "
 "указанную надбавку."
@@ -710,6 +728,12 @@ msgstr "Jídlo:"
 
 msgid "Единица"
 msgstr "Jednotka"
+
+msgid "Ежегодно"
+msgstr "Ročně"
+
+msgid "Ежемесячно"
+msgstr "Měsíčně"
 
 msgid "Если такой email зарегистрирован, мы отправили ссылку для сброса пароля."
 msgstr "Pokud je takový e-mail registrován, poslali jsme odkaz na obnovení hesla."
@@ -1957,6 +1981,9 @@ msgstr "Náklady CSV"
 msgid "Расходы по категориям"
 msgstr "Náklady podle kategorií"
 
+msgid "Расходы, прибыль, P&L и выгрузка для бухгалтерии."
+msgstr "Náklady, zisk, P&L a export pro účetnictví."
+
 msgid "Расхождение"
 msgstr "Rozdíl"
 
@@ -2019,6 +2046,9 @@ msgstr "Vlastní tarif"
 
 msgid "Свой цвет"
 msgstr "Vlastní barva"
+
+msgid "Своя тема и цвет на каждом экране заведения."
+msgstr "Vlastní téma a barva na každé obrazovce provozovny."
 
 #, python-brace-format
 msgid "Связь восстановлена: отправлено заказов — {n}"
@@ -2156,6 +2186,9 @@ msgstr "Nejprve přidejte ingredience"
 
 msgid "Сначала добавьте ингредиенты на складе"
 msgstr "Nejprve přidejte ingredience na sklad"
+
+msgid "Снять лимит в 3 сотрудника — сколько угодно ролей."
+msgstr "Zrušit limit 3 zaměstnanců — libovolný počet rolí."
 
 msgid "Соберите свой тариф"
 msgstr "Sestavte si vlastní tarif"
@@ -2451,6 +2484,9 @@ msgstr "Finance"
 msgid "Финансы P&L, аналитика"
 msgstr "Finance P&L, analytika"
 
+msgid "Финансы и P&L"
+msgstr "Finance a P&L"
+
 msgid "Финансы и аналитика"
 msgstr "Finance a analytika"
 
@@ -2539,6 +2575,9 @@ msgstr "bez stolu"
 
 msgid "в базе"
 msgstr "v databázi"
+
+msgid "в год"
+msgstr "za rok"
 
 msgid "всего"
 msgstr "celkem"

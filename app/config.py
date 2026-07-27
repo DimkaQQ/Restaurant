@@ -32,6 +32,9 @@ class Settings(BaseSettings):
     # Stripe checkouts. Defaults to Euro for the European market.
     CURRENCY: str = "€"
     CURRENCY_CODE: str = "eur"
+    # Default UI language for visitors with no saved preference. English for the
+    # European market; set to "ru" (etc.) for a Russian-first deployment.
+    DEFAULT_LOCALE: str = "en"
     # Business-day timezone for reports («сегодня», periods, day charts)
     LOCAL_TZ: str = "Europe/Berlin"
     PLATFORM_ADMIN_EMAIL: str = ""

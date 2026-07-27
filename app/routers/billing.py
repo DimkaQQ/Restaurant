@@ -104,7 +104,12 @@ async def apply_custom_plan(request: Request, db: AsyncSession = Depends(get_db)
         extra_venues = max(0, min(50, int(body.get("extra_venues") or 0)))
     except (TypeError, ValueError):
         extra_venues = 0
-    price = plan_builder.compute_price(features, extra_venues)
+    annual = body.get("billing_period") == "year"
+    monthly = plan_builder.compute_price(features, extra_venues)
+    # Annual billing = 2 months free (pay for 10). unit_amount is the amount
+    # charged per interval; interval is month or year accordingly.
+    price = monthly * 10 if annual else monthly
+    interval = "year" if annual else "month"
 
     sub = await _get_subscription(current_user.network_id, db)
     if not sub:
@@ -129,7 +134,7 @@ async def apply_custom_plan(request: Request, db: AsyncSession = Depends(get_db)
                     "currency": settings.CURRENCY_CODE,
                     "product_data": {"name": "RestOS — свой тариф"},
                     "unit_amount": price * 100,
-                    "recurring": {"interval": "month"},
+                    "recurring": {"interval": interval},
                 },
                 "quantity": 1,
             }],

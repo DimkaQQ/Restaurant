@@ -31,8 +31,14 @@
   .bld-venues button { width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border); background: none; color: var(--white); font-size: 1.1rem; cursor: pointer; }
   .bld-venues b { min-width: 1.5rem; text-align: center; }
   .bld-summary { position: sticky; top: 1rem; background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 1.25rem; }
+  .bld-period { display: flex; gap: .25rem; background: var(--black); border: 1px solid var(--border); border-radius: 10px; padding: .25rem; margin-bottom: 1rem; }
+  .bld-period button { flex: 1; border: none; background: none; color: var(--muted); font-size: .8rem; padding: .5rem; border-radius: 7px; cursor: pointer; white-space: nowrap; }
+  .bld-period button.on { background: var(--card); color: var(--white); font-weight: 600; }
+  .bld-period .save { color: var(--gold); font-weight: 700; }
   .bld-total { font-size: 2.2rem; font-weight: 800; color: var(--gold); }
   .bld-total span { font-size: .85rem; color: var(--muted); font-weight: 400; }
+  .bld-annual { font-size: .8rem; color: var(--muted); margin-top: .1rem; }
+  .bld-annual b { color: var(--white); font-weight: 500; }
   .bld-lines { margin: 1rem 0; font-size: .82rem; color: var(--muted); display: flex; flex-direction: column; gap: .4rem; }
   .bld-lines .row { display: flex; justify-content: space-between; gap: 1rem; }
   .bld-lines .row b { color: var(--white); font-weight: 500; }
@@ -87,7 +93,12 @@
   </div>
 
   <div class="bld-summary">
+    <div class="bld-period">
+      <button type="button" id="per-month" class="on" onclick="setPeriod('month')">{{ _("Ежемесячно") }}</button>
+      <button type="button" id="per-year" onclick="setPeriod('year')">{{ _("Ежегодно") }} <span class="save">−17%</span></button>
+    </div>
     <div class="bld-total"><span>{{ currency }}</span><span id="total">0</span> <span>/ {{ _("мес") }}</span></div>
+    <div class="bld-annual" id="annual-note" style="display:none"></div>
     <div class="bld-lines" id="lines"></div>
     <button type="button" class="btn-primary bld-cta" id="cta" onclick="applyPlan()">{{ _("Оформить") }}</button>
     <p class="bld-note">{{ _("14 дней бесплатно. Отменить можно в любой момент.") }}</p>
@@ -104,6 +115,8 @@
     saved: {{ _("Тариф сохранён. Свяжитесь с поддержкой для активации онлайн-оплаты.") | tojson }},
     err: {{ _("Ошибка сохранения") | tojson }},
     mes: {{ _("мес") | tojson }},
+    perYear: {{ _("в год") | tojson }},
+    save2mo: {{ _("2 месяца в подарок") | tojson }},
   };
   let extraVenues = {{ extra_venues }};
 
@@ -115,13 +128,32 @@
     }));
   }
 
+  let period = 'month';
+  function setPeriod(p) {
+    period = p;
+    document.getElementById('per-month').classList.toggle('on', p === 'month');
+    document.getElementById('per-year').classList.toggle('on', p === 'year');
+    recalc();
+  }
+
   function recalc() {
     const mods = selectedModules();
-    let total = BASE + VENUE_PRICE * extraVenues;
+    let monthly = BASE + VENUE_PRICE * extraVenues;
     const lines = [`<div class="row"><span>${L.base}</span><b>${CUR}${BASE}</b></div>`];
-    mods.forEach(m => { total += m.price; lines.push(`<div class="row"><span>${m.label}</span><b>${CUR}${m.price}</b></div>`); });
+    mods.forEach(m => { monthly += m.price; lines.push(`<div class="row"><span>${m.label}</span><b>${CUR}${m.price}</b></div>`); });
     if (extraVenues > 0) lines.push(`<div class="row"><span>${L.venues} ×${extraVenues}</span><b>${CUR}${VENUE_PRICE * extraVenues}</b></div>`);
-    document.getElementById('total').textContent = total;
+    const note = document.getElementById('annual-note');
+    if (period === 'year') {
+      // 2 months free — pay for 10, effective monthly = round(monthly*10/12)
+      const annual = monthly * 10;
+      const effMonthly = Math.round(annual / 12);
+      document.getElementById('total').textContent = effMonthly;
+      note.style.display = '';
+      note.innerHTML = `<b>${CUR}${annual}</b> ${L.perYear} · ${L.save2mo}`;
+    } else {
+      document.getElementById('total').textContent = monthly;
+      note.style.display = 'none';
+    }
     document.getElementById('lines').innerHTML = lines.join('');
   }
 
@@ -148,7 +180,7 @@
       const res = await fetch('/billing/build', {
         method: 'POST', credentials: 'include',
         headers: {'Content-Type':'application/json','Authorization':'Bearer '+(localStorage.getItem('access_token')||'')},
-        body: JSON.stringify({ features, extra_venues: extraVenues }),
+        body: JSON.stringify({ features, extra_venues: extraVenues, billing_period: period }),
       });
       if (!res.ok) throw new Error('bad');
       const d = await res.json();

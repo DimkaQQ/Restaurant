@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-26 20:31+0000\n"
+"POT-Creation-Date: 2026-07-27 01:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: hu\n"
@@ -84,6 +84,9 @@ msgstr "14 nap ingyen. Bármikor lemondható."
 
 msgid "15 минут, сами"
 msgstr "15 perc, egyedül"
+
+msgid "2 месяца в подарок"
+msgstr "2 hónap ajándékba"
 
 msgid "2. Введите код из приложения для подтверждения:"
 msgstr "2. Írja be az alkalmazásból származó kódot a megerősítéshez:"
@@ -172,6 +175,9 @@ msgstr "Munkatárs PIN-kódja (4–6 számjegy). Üres — PIN törlése."
 msgid "QR-меню для гостей"
 msgstr "QR-menü a vendégeknek"
 
+msgid "REST API и веб-хуки заказов для интеграций."
+msgstr "REST API és rendelési webhookok integrációkhoz."
+
 msgid ""
 "RestOS обрабатывает персональные данные владельцев ресторанов, их "
 "сотрудников и гостей (клиентов ресторанов) в объёме, необходимом для "
@@ -213,6 +219,12 @@ msgstr ""
 
 msgid "Telegram ID менеджера"
 msgstr "Menedzser Telegram-azonosítója"
+
+msgid "Telegram-рассылки гостям и промокоды в QR-меню."
+msgstr "Telegram körüzenetek vendégeknek és QR-menü promóciós kódok."
+
+msgid "White-label оформление"
+msgstr "White-label megjelenés"
 
 #, python-brace-format
 msgid ""
@@ -268,6 +280,9 @@ msgstr "Elemzés…"
 
 msgid "Аналитика"
 msgstr "Analitika"
+
+msgid "Аналитика и NPS"
+msgstr "Analitika és NPS"
 
 msgid "Базовый набор"
 msgstr "Alapcsomag"
@@ -561,6 +576,9 @@ msgstr ""
 "Műszakbeosztás, pincér/szakács/pénztáros/menedzser szerepkörök, "
 "munkatársak értékelése a vendégek visszajelzései alapján."
 
+msgid "Графики продаж, популярные позиции, оценки гостей (NPS)."
+msgstr "Értékesítési grafikonok, népszerű tételek, vendégértékelések (NPS)."
+
 msgid ""
 "Группы вариантов для позиции: размер, молоко, сиропы. Цена меняется на "
 "указанную надбавку."
@@ -714,6 +732,12 @@ msgstr "Étel:"
 
 msgid "Единица"
 msgstr "Egység"
+
+msgid "Ежегодно"
+msgstr "Évente"
+
+msgid "Ежемесячно"
+msgstr "Havonta"
 
 msgid "Если такой email зарегистрирован, мы отправили ссылку для сброса пароля."
 msgstr "Ha ez az e-mail regisztrálva van, elküldtük a jelszó-visszaállító linket."
@@ -1969,6 +1993,9 @@ msgstr "Költségek CSV"
 msgid "Расходы по категориям"
 msgstr "Költségek kategóriánként"
 
+msgid "Расходы, прибыль, P&L и выгрузка для бухгалтерии."
+msgstr "Költségek, nyereség, P&L és könyvelési export."
+
 msgid "Расхождение"
 msgstr "Eltérés"
 
@@ -2031,6 +2058,9 @@ msgstr "Egyéni csomag"
 
 msgid "Свой цвет"
 msgstr "Saját szín"
+
+msgid "Своя тема и цвет на каждом экране заведения."
+msgstr "Saját téma és szín minden helyszíni képernyőn."
 
 #, python-brace-format
 msgid "Связь восстановлена: отправлено заказов — {n}"
@@ -2169,6 +2199,9 @@ msgstr "Először adjon hozzá hozzávalókat"
 
 msgid "Сначала добавьте ингредиенты на складе"
 msgstr "Először adjon hozzá hozzávalókat a raktárban"
+
+msgid "Снять лимит в 3 сотрудника — сколько угодно ролей."
+msgstr "A 3 munkatárs korlát feloldása — annyi szerepkör, amennyi kell."
 
 msgid "Соберите свой тариф"
 msgstr "Állítsa össze saját csomagját"
@@ -2467,6 +2500,9 @@ msgstr "Pénzügyek"
 msgid "Финансы P&L, аналитика"
 msgstr "Pénzügyek P&L, analitika"
 
+msgid "Финансы и P&L"
+msgstr "Pénzügyek és P&L"
+
 msgid "Финансы и аналитика"
 msgstr "Pénzügyek és analitika"
 
@@ -2555,6 +2591,9 @@ msgstr "asztal nélkül"
 
 msgid "в базе"
 msgstr "az adatbázisban"
+
+msgid "в год"
+msgstr "évente"
 
 msgid "всего"
 msgstr "összesen"

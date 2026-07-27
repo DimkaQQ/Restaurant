@@ -19,6 +19,9 @@ os.environ["RATE_LIMIT_ENABLED"] = "false"
 # simulate that, so it's exercised in its own test module instead (see
 # tests/test_csrf.py) with the flag flipped back on for just that module.
 os.environ["CSRF_ENABLED"] = "false"
+# The suite asserts on Russian UI text; production now defaults to English for
+# the European market, so pin the test locale to Russian to keep assertions valid.
+os.environ["DEFAULT_LOCALE"] = "ru"
 
 import pytest
 import pytest_asyncio

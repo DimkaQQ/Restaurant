@@ -36,6 +36,17 @@ def extract_msgids() -> list[str]:
         text = open(path, encoding="utf-8").read()
         for m in PATTERN.finditer(text):
             strings.append(m.group(1) if m.group(1) is not None else m.group(2))
+    # Plan-builder module labels/descriptions are rendered dynamically via
+    # _(m.label) — not statically visible above — so pull them in explicitly.
+    try:
+        import sys
+        sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        from app.services.plan_builder import MODULES
+        for m in MODULES.values():
+            strings.append(m["label"])
+            strings.append(m["desc"])
+    except Exception:
+        pass
     return sorted(set(strings))
 
 

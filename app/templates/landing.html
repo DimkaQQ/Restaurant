@@ -151,9 +151,8 @@
     }
     .lnd-footer a { color: var(--muted); text-decoration: none; font-size: .82rem; margin-right: 1.25rem; }
     .lnd-footer a:hover { color: var(--white); }
-    .lnd-lang { font-size: .78rem; }
-    .lnd-lang a { color: var(--muted); text-decoration: none; padding: .1rem .25rem; }
-    .lnd-lang a.active { color: var(--gold); font-weight: 600; }
+    .lnd-lang-select { font-size: .82rem; background: var(--card); color: var(--muted); border: 1px solid var(--border); border-radius: 6px; padding: .35rem .5rem; cursor: pointer; }
+    .lnd-lang-select:hover { color: var(--white); border-color: var(--gold); }
   </style>
 </head>
 <body class="landing-body">
@@ -167,10 +166,11 @@
       <a href="#how">{{ _("Как начать") }}</a>
       <a href="#features">{{ _("Возможности") }}</a>
       <a href="#pricing">{{ _("Цены") }}</a>
-      <span class="lnd-lang">
-        <a href="?lang=ru" class="{% if locale == 'ru' %}active{% endif %}">RU</a> /
-        <a href="?lang=en" class="{% if locale == 'en' %}active{% endif %}">EN</a>
-      </span>
+      <select class="lnd-lang-select" onchange="location.href='?lang='+this.value" aria-label="Language">
+        {% for code, name in locale_names.items() %}
+        <option value="{{ code }}" {% if code == locale %}selected{% endif %}>{{ name }}</option>
+        {% endfor %}
+      </select>
       <a href="/auth/login">{{ _("Войти") }}</a>
       <a href="/auth/register" class="btn-primary">{{ _("Начать бесплатно") }}</a>
     </div>

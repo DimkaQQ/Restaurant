@@ -13,9 +13,11 @@ from pathlib import Path
 
 from fastapi import Request
 
+from app.config import settings
+
 LOCALES_DIR = Path(__file__).parent.parent / "locales"
 SUPPORTED_LOCALES = ("ru", "en", "uk", "sk", "hu", "cs")
-DEFAULT_LOCALE = "ru"
+DEFAULT_LOCALE = settings.DEFAULT_LOCALE if settings.DEFAULT_LOCALE in ("ru", "en", "uk", "sk", "hu", "cs") else "en"
 
 # Native names for the Settings language picker (value -> label shown to user).
 LOCALE_NAMES = {

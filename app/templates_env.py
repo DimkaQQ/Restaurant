@@ -1,13 +1,13 @@
 from fastapi.templating import Jinja2Templates
 
 from app.config import settings
-from app.i18n import get_translator
+from app.i18n import get_translator, LOCALE_NAMES
 
 
 def _i18n_context(request):
     gettext_fn, locale = get_translator(request)
     return {"_": gettext_fn, "locale": locale, "support_url": settings.SUPPORT_URL,
-            "currency": settings.CURRENCY}
+            "currency": settings.CURRENCY, "locale_names": LOCALE_NAMES}
 
 
 templates = Jinja2Templates(directory="app/templates", context_processors=[_i18n_context])

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-26 20:31+0000\n"
+"POT-Creation-Date: 2026-07-27 01:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -84,6 +84,9 @@ msgstr "14 days free. Cancel anytime."
 
 msgid "15 минут, сами"
 msgstr "15 minutes, on your own"
+
+msgid "2 месяца в подарок"
+msgstr "2 months free"
 
 msgid "2. Введите код из приложения для подтверждения:"
 msgstr "2. Enter the code from the app to confirm:"
@@ -170,6 +173,9 @@ msgstr "Employee PIN (4–6 digits). Empty — remove the PIN."
 msgid "QR-меню для гостей"
 msgstr "QR menu for guests"
 
+msgid "REST API и веб-хуки заказов для интеграций."
+msgstr "REST API and order webhooks for integrations."
+
 msgid ""
 "RestOS обрабатывает персональные данные владельцев ресторанов, их "
 "сотрудников и гостей (клиентов ресторанов) в объёме, необходимом для "
@@ -211,6 +217,12 @@ msgstr ""
 
 msgid "Telegram ID менеджера"
 msgstr "Manager Telegram ID"
+
+msgid "Telegram-рассылки гостям и промокоды в QR-меню."
+msgstr "Telegram broadcasts to guests and QR-menu promo codes."
+
+msgid "White-label оформление"
+msgstr "White-label branding"
 
 #, python-brace-format
 msgid ""
@@ -266,6 +278,9 @@ msgstr "Analyzing…"
 
 msgid "Аналитика"
 msgstr "Analytics"
+
+msgid "Аналитика и NPS"
+msgstr "Analytics & NPS"
 
 msgid "Базовый набор"
 msgstr "Base package"
@@ -557,6 +572,9 @@ msgstr ""
 "Shift schedules, waiter/cook/cashier/manager roles, staff ratings from "
 "guest reviews."
 
+msgid "Графики продаж, популярные позиции, оценки гостей (NPS)."
+msgstr "Sales charts, top items, guest ratings (NPS)."
+
 msgid ""
 "Группы вариантов для позиции: размер, молоко, сиропы. Цена меняется на "
 "указанную надбавку."
@@ -706,6 +724,12 @@ msgstr "Food:"
 
 msgid "Единица"
 msgstr "Unit"
+
+msgid "Ежегодно"
+msgstr "Yearly"
+
+msgid "Ежемесячно"
+msgstr "Monthly"
 
 msgid "Если такой email зарегистрирован, мы отправили ссылку для сброса пароля."
 msgstr "If that email is registered, we sent a password reset link."
@@ -1945,6 +1969,9 @@ msgstr "Expenses CSV"
 msgid "Расходы по категориям"
 msgstr "Expenses by category"
 
+msgid "Расходы, прибыль, P&L и выгрузка для бухгалтерии."
+msgstr "Expenses, profit, P&L and accounting export."
+
 msgid "Расхождение"
 msgstr "Difference"
 
@@ -2005,6 +2032,9 @@ msgstr "Custom plan"
 
 msgid "Свой цвет"
 msgstr "Custom color"
+
+msgid "Своя тема и цвет на каждом экране заведения."
+msgstr "Your own theme and color on every venue screen."
 
 #, python-brace-format
 msgid "Связь восстановлена: отправлено заказов — {n}"
@@ -2142,6 +2172,9 @@ msgstr "Add ingredients first"
 
 msgid "Сначала добавьте ингредиенты на складе"
 msgstr "Add ingredients to inventory first"
+
+msgid "Снять лимит в 3 сотрудника — сколько угодно ролей."
+msgstr "Remove the 3-staff limit — as many roles as you need."
 
 msgid "Соберите свой тариф"
 msgstr "Build your own plan"
@@ -2437,6 +2470,9 @@ msgstr "Finance"
 msgid "Финансы P&L, аналитика"
 msgstr "P&L finance, analytics"
 
+msgid "Финансы и P&L"
+msgstr "Finance & P&L"
+
 msgid "Финансы и аналитика"
 msgstr "Finance and analytics"
 
@@ -2527,6 +2563,9 @@ msgstr "no table"
 
 msgid "в базе"
 msgstr "in the database"
+
+msgid "в год"
+msgstr "per year"
 
 msgid "всего"
 msgstr "total"
