@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-27 01:48+0000\n"
+"POT-Creation-Date: 2026-07-27 06:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -239,6 +239,9 @@ msgstr "\"{n}\" is back on sale"
 #, python-brace-format
 msgid "«{n}» убрана из продажи"
 msgstr "\"{n}\" removed from sale"
+
+msgid "Авто"
+msgstr "Auto"
 
 msgid "Автоматически, в облаке"
 msgstr "Automatic, in the cloud"
@@ -2488,12 +2491,21 @@ msgstr "Fiscalizing…"
 msgid "Фискальный чек №"
 msgstr "Fiscal receipt No."
 
+msgid "Цвет плитки в кассе"
+msgstr "Tile color in the register"
+
 msgid ""
 "Цвет текста на кнопках подбирается автоматически, чтобы всё оставалось "
 "читаемым. Гостевые страницы (QR-меню) остаются в фирменном стиле."
 msgstr ""
 "Button text color is chosen automatically so everything stays readable. "
 "Guest pages (QR menu) keep the brand style."
+
+msgid "Цвета"
+msgstr "Colors"
+
+msgid "Цветные плитки товаров"
+msgstr "Colored product tiles"
 
 msgid "Цена"
 msgstr "Price"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-27 01:48+0000\n"
+"POT-Creation-Date: 2026-07-27 06:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: hu\n"
@@ -241,6 +241,9 @@ msgstr "„{n}” ismét kapható"
 #, python-brace-format
 msgid "«{n}» убрана из продажи"
 msgstr "„{n}” kivéve az eladásból"
+
+msgid "Авто"
+msgstr "Auto"
 
 msgid "Автоматически, в облаке"
 msgstr "Automatikusan, a felhőben"
@@ -2518,12 +2521,21 @@ msgstr "Fiskalizáció…"
 msgid "Фискальный чек №"
 msgstr "Fiskális nyugta sz."
 
+msgid "Цвет плитки в кассе"
+msgstr "Csempe színe a kasszában"
+
 msgid ""
 "Цвет текста на кнопках подбирается автоматически, чтобы всё оставалось "
 "читаемым. Гостевые страницы (QR-меню) остаются в фирменном стиле."
 msgstr ""
 "A gombokon lévő szöveg színe automatikusan igazodik, hogy minden "
 "olvasható maradjon. A vendégoldalak (QR-menü) megtartják a márkastílust."
+
+msgid "Цвета"
+msgstr "Színek"
+
+msgid "Цветные плитки товаров"
+msgstr "Színes termékcsempék"
 
 msgid "Цена"
 msgstr "Ár"

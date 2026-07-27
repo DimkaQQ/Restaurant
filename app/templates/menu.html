@@ -51,6 +51,18 @@
   color: var(--muted); cursor: pointer; padding: .25rem .55rem; font-size: .8rem;
 }
 .menu-edit-btn:hover { color: var(--gold); border-color: var(--gold); }
+.color-swatches { display: flex; flex-wrap: wrap; gap: .4rem; }
+.color-swatch {
+  width: 30px; height: 30px; border-radius: 8px; cursor: pointer;
+  border: 2px solid transparent; box-sizing: border-box;
+}
+.color-swatch.selected { border-color: var(--text); box-shadow: 0 0 0 2px var(--gold); }
+.color-swatch.swatch-auto {
+  background: var(--card); border: 1px dashed var(--border);
+  color: var(--muted); font-size: .65rem; display: flex;
+  align-items: center; justify-content: center; text-align: center;
+}
+.color-swatch.swatch-auto.selected { border: 2px solid var(--gold); color: var(--gold); }
 </style>
 {% endblock %}
 
@@ -88,6 +100,11 @@
       <div class="form-group"><label>{{ _("Цена") }} ({{ currency }})</label><input type="number" name="price" step="0.01" required></div>
       <div class="form-group"><label>{{ _("Категория") }}</label><input type="text" name="category" list="cat-datalist" maxlength="100" placeholder="{{ _('Выберите или введите новую') }}"></div>
       <datalist id="cat-datalist"></datalist>
+      <div class="form-group">
+        <label>{{ _("Цвет плитки в кассе") }}</label>
+        <input type="hidden" name="color" id="add-color">
+        <div class="color-swatches" id="add-swatches"></div>
+      </div>
       <div class="form-row">
         <button type="submit" class="btn-primary">{{ _("Добавить") }}</button>
         <button type="button" onclick="closeModal()" class="btn-secondary">{{ _("Отмена") }}</button>
@@ -105,6 +122,11 @@
       <div class="form-group"><label>{{ _("Описание") }}</label><textarea name="description" rows="2"></textarea></div>
       <div class="form-group"><label>{{ _("Цена") }} ({{ currency }})</label><input type="number" name="price" step="0.01" required></div>
       <div class="form-group"><label>{{ _("Категория") }}</label><input type="text" name="category" list="cat-datalist" maxlength="100"></div>
+      <div class="form-group">
+        <label>{{ _("Цвет плитки в кассе") }}</label>
+        <input type="hidden" name="color" id="edit-color">
+        <div class="color-swatches" id="edit-swatches"></div>
+      </div>
       <div class="form-row">
         <button type="submit" class="btn-primary">{{ _("Сохранить") }}</button>
         <button type="button" onclick="closeEditModal()" class="btn-secondary">{{ _("Отмена") }}</button>
@@ -207,6 +229,29 @@
   let _items = [];
   let _filterCat = null;          // null = all, '' = no category, string = category
   let _draftCats = [];            // categories created but not yet used by any item
+
+  // ── Tile-color picker (Square-style register colors) ──
+  // Same palette the POS uses; "Авто" = no color, POS auto-assigns one by name.
+  const TILE_PALETTE = ['#2f6fb3','#c0603a','#b23b48','#6d4aa8','#2f8f6b','#b8477e','#3b7d86','#c07a1e','#4a55a8','#5a7d2a'];
+  const AUTO_LABEL = {{ _("Авто") | tojson }};
+  function buildSwatches(containerId, inputId, current) {
+    const box = document.getElementById(containerId);
+    const input = document.getElementById(inputId);
+    input.value = current || '';
+    const pick = (val, el) => {
+      input.value = val || '';
+      box.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
+      el.classList.add('selected');
+    };
+    let html = `<div class="color-swatch swatch-auto" data-val="">${AUTO_LABEL}</div>`;
+    html += TILE_PALETTE.map(c => `<div class="color-swatch" data-val="${c}" style="background:${c}"></div>`).join('');
+    box.innerHTML = html;
+    box.querySelectorAll('.color-swatch').forEach(el => {
+      const val = el.getAttribute('data-val');
+      if ((val || '') === (current || '')) el.classList.add('selected');
+      el.addEventListener('click', () => pick(val, el));
+    });
+  }
 
   async function loadMenu() {
     const venueId = document.getElementById('venue-select').value;
@@ -484,6 +529,7 @@
     // preselect the active tab's category (or an explicitly passed one)
     const cat = typeof presetCategory === 'string' ? presetCategory : (_filterCat || '');
     form.elements.category.value = cat;
+    buildSwatches('add-swatches', 'add-color', '');
     document.getElementById('add-modal').style.display = 'flex';
     form.elements.name.focus();
   }
@@ -500,6 +546,7 @@
     form.elements.description.value = item.description || '';
     form.elements.price.value = parseFloat(item.price);
     form.elements.category.value = item.category || '';
+    buildSwatches('edit-swatches', 'edit-color', item.color || '');
     document.getElementById('edit-modal').style.display = 'flex';
   }
 
@@ -515,6 +562,7 @@
       description: fd.get('description').trim() || null,
       price: parseFloat(fd.get('price')),
       category: fd.get('category').trim() || null,
+      color: fd.get('color') || null,
     };
     const res = await fetch('/api/menu/' + _editItemId, {
       method: 'PATCH',
@@ -629,6 +677,7 @@
     const fd = new FormData(e.target);
     const data = Object.fromEntries(fd.entries());
     data.price = parseFloat(data.price);
+    data.color = data.color || null;
     const res = await fetch('/api/menu/' + venueId, {
       method: 'POST',
       credentials: 'include',

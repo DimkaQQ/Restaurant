@@ -16,6 +16,8 @@ class MenuItem(Base):
     category: Mapped[str | None] = mapped_column(String(100))
     is_available: Mapped[bool] = mapped_column(Boolean, default=True)
     image_url: Mapped[str | None] = mapped_column(String(500))
+    # Optional tile color (hex) for the Square-style colored register view.
+    color: Mapped[str | None] = mapped_column(String(7), nullable=True)
 
     venue: Mapped["Venue"] = relationship("Venue", back_populates="menu_items")
     order_items: Mapped[list["OrderItem"]] = relationship("OrderItem", back_populates="menu_item")

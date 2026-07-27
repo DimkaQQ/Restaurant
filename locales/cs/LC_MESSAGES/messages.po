@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-27 01:48+0000\n"
+"POT-Creation-Date: 2026-07-27 06:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: cs\n"
@@ -240,6 +240,9 @@ msgstr "„{n}“ je opět v prodeji"
 #, python-brace-format
 msgid "«{n}» убрана из продажи"
 msgstr "„{n}“ byla stažena z prodeje"
+
+msgid "Авто"
+msgstr "Auto"
 
 msgid "Автоматически, в облаке"
 msgstr "Automaticky, v cloudu"
@@ -2502,12 +2505,21 @@ msgstr "Fiskalizace…"
 msgid "Фискальный чек №"
 msgstr "Fiskální účtenka č."
 
+msgid "Цвет плитки в кассе"
+msgstr "Barva dlaždice v pokladně"
+
 msgid ""
 "Цвет текста на кнопках подбирается автоматически, чтобы всё оставалось "
 "читаемым. Гостевые страницы (QR-меню) остаются в фирменном стиле."
 msgstr ""
 "Barva textu na tlačítkách se vybírá automaticky, aby vše zůstalo čitelné."
 " Stránky pro hosty (QR menu) zůstávají ve firemním stylu."
+
+msgid "Цвета"
+msgstr "Barvy"
+
+msgid "Цветные плитки товаров"
+msgstr "Barevné dlaždice položek"
 
 msgid "Цена"
 msgstr "Cena"

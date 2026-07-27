@@ -80,6 +80,13 @@ body.pos-big .pos-item-price { font-size:.95rem; }
 body.pos-big .pos-cat-chip { font-size:1.05rem; min-height:52px; padding:.75rem 1.4rem; }
 body.pos-big .ipos-paybtn { min-height:64px; font-size:1.3rem; }
 
+/* Square-style colored tiles (opt-in via the «Цвета» toggle). Item background
+   comes from its own color or an auto-assigned palette; text goes white. */
+body.pos-colors .pos-item { border-color:transparent; }
+body.pos-colors .pos-item .pos-item-name { color:#fff; }
+body.pos-colors .pos-item .pos-item-price { color:rgba(255,255,255,.9); }
+body.pos-colors .pos-item:hover { filter:brightness(1.08); border-color:transparent; }
+
 .pos-opt-chip {
   padding:.5rem .8rem; min-height:38px; border-radius:8px;
   border:1px solid var(--border); background:none; color:var(--white);
@@ -126,6 +133,7 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
     <button type="button" class="btn-secondary ipos-tool" onclick="openPinModal()" title="{{ _('Смена сотрудника по PIN') }}">{{ _("Сотрудник") }}</button>
     <button type="button" id="stoplist-btn" class="btn-secondary ipos-tool" onclick="toggleStopMode()">{{ _("Стоп-лист") }}</button>
     <button type="button" id="bigmode-btn" class="btn-secondary ipos-tool" onclick="toggleBigMode()" title="{{ _('Крупные кнопки для планшета') }}">{{ _("Крупно") }}</button>
+    <button type="button" id="colors-btn" class="btn-secondary ipos-tool" onclick="toggleColorMode()" title="{{ _('Цветные плитки товаров') }}">{{ _("Цвета") }}</button>
   </div>
 
   <div class="ipos-body">
@@ -472,14 +480,25 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
         <div class="pos-item-price" style="color:var(--muted)">${T.freeItemHint}</div>
       </div>` : '';
     if (!items.length && !freeTile) { grid.innerHTML = '<p class="empty-state">' + T.menuEmpty + '</p>'; return; }
+    const colorsOn = document.body.classList.contains('pos-colors');
     grid.innerHTML = items.map(i => `
       <div class="pos-item${i.is_available ? '' : ' pos-item-stopped'}"
+           ${colorsOn ? `style="background:${tileColor(i)}"` : ''}
            onclick="${_stopMode ? `toggleStop('${esc(i.id)}')` : (i.is_available ? `addToCart('${esc(i.id)}')` : `notify.info(T.inStopList)`)}">
         <div class="pos-item-name">${esc(i.name)}</div>
         <div class="pos-item-price">${parseFloat(i.price).toLocaleString(LOCALE)} {{ currency }}</div>
         ${i.is_available ? '' : `<div style="font-size:.7rem;color:var(--bad);margin-top:.2rem">${T.stopBadge}</div>`}
       </div>
     `).join('') + freeTile;
+  }
+
+  // Tile color: the item's own color, or a stable pick from a Square-like
+  // palette (hash of the name → same color every render).
+  const TILE_PALETTE = ['#2f6fb3','#c0603a','#b23b48','#6d4aa8','#2f8f6b','#b8477e','#3b7d86','#c07a1e','#4a55a8','#5a7d2a'];
+  function tileColor(i) {
+    if (i.color) return i.color;
+    let h = 0; for (let k = 0; k < i.name.length; k++) h = (h * 31 + i.name.charCodeAt(k)) >>> 0;
+    return TILE_PALETTE[h % TILE_PALETTE.length];
   }
 
   function addToCart(itemId) {
@@ -1011,6 +1030,23 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
   if (localStorage.getItem('pos_big_mode')) {
     document.body.classList.add('pos-big');
     const b = document.getElementById('bigmode-btn');
+    b.style.borderColor = 'var(--gold)'; b.style.color = 'var(--gold)';
+  }
+
+  // ── Colored tiles (Square-style register) — off by default, opt-in ──
+  // Each item gets its own hue (custom color if set on the item, else a stable
+  // hash of its name) so cashiers recognise products by colour during a rush.
+  function toggleColorMode() {
+    const on = document.body.classList.toggle('pos-colors');
+    localStorage.setItem('pos_colors', on ? '1' : '');
+    const b = document.getElementById('colors-btn');
+    b.style.borderColor = on ? 'var(--gold)' : '';
+    b.style.color = on ? 'var(--gold)' : '';
+    renderGrid();
+  }
+  if (localStorage.getItem('pos_colors')) {
+    document.body.classList.add('pos-colors');
+    const b = document.getElementById('colors-btn');
     b.style.borderColor = 'var(--gold)'; b.style.color = 'var(--gold)';
   }
 

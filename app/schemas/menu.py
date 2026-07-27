@@ -10,6 +10,7 @@ class MenuItemCreate(BaseModel):
     category: str | None = Field(None, max_length=100)  # DB column is String(100)
     is_available: bool = True
     image_url: str | None = None
+    color: str | None = Field(None, max_length=7)
 
 
 class MenuItemUpdate(BaseModel):
@@ -19,6 +20,7 @@ class MenuItemUpdate(BaseModel):
     category: str | None = Field(None, max_length=100)
     is_available: bool | None = None
     image_url: str | None = None
+    color: str | None = Field(None, max_length=7)
 
 
 class CategoryRename(BaseModel):
@@ -65,6 +67,7 @@ class MenuItemOut(BaseModel):
     category: str | None
     is_available: bool
     image_url: str | None
+    color: str | None = None
     modifier_groups: list[ModifierGroupOut] = []
 
     model_config = {"from_attributes": True}
