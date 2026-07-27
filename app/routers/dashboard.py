@@ -2,6 +2,7 @@ from app.templates_env import templates
 import logging
 import uuid
 from datetime import datetime, timedelta, timezone
+from decimal import Decimal
 
 from fastapi import APIRouter, Depends, HTTPException, Request, Query
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -270,21 +271,30 @@ async def pay_order_html(
 ):
     try:
         content_type = request.headers.get("content-type", "")
+        tip_raw = None
         if "application/json" in content_type:
             body = await request.json()
             method = body.get("method")
+            tip_raw = body.get("tip_amount")
         else:
             form = await request.form()
             method = form.get("method")
+            tip_raw = form.get("tip_amount")
         if not method:
             return HTMLResponse("<p class='error-state'>Способ оплаты обязателен</p>", status_code=400)
+        try:
+            tip_amount = Decimal(str(tip_raw)) if tip_raw not in (None, "") else None
+            if tip_amount is not None and tip_amount < 0:
+                tip_amount = None
+        except (ArithmeticError, ValueError):
+            tip_amount = None
         venue_ids = await get_accessible_venue_ids(current_user, db)
         check = (await db.execute(
             select(Order).where(Order.id == order_id, Order.venue_id.in_(venue_ids))
         )).scalar_one_or_none()
         if not check:
             return HTMLResponse("<p class='error-state'>Заказ не найден</p>", status_code=404)
-        order = await pay_order(order_id, method, db, changed_by=current_user.email)
+        order = await pay_order(order_id, method, db, changed_by=current_user.email, tip_amount=tip_amount)
 
         from app.services.webhooks import dispatch_event
         await dispatch_event(db, current_user.network_id, "order.paid", {

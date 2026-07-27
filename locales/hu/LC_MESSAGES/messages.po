@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-27 06:23+0000\n"
+"POT-Creation-Date: 2026-07-27 09:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: hu\n"
@@ -307,6 +307,9 @@ msgstr "Pontos összeg"
 
 msgid "Без скидки"
 msgstr "Kedvezmény nélkül"
+
+msgid "Без чаевых"
+msgstr "Nincs borravaló"
 
 msgid "Безлимит заведений"
 msgstr "Korlátlan hely"
@@ -726,6 +729,9 @@ msgstr "Elérhető"
 
 msgid "Доступно на тарифе"
 msgstr "Elérhető a következő csomagban:"
+
+msgid "Другая сумма"
+msgstr "Egyéb összeg"
 
 msgid "Ед."
 msgstr "Egys."
@@ -2312,6 +2318,9 @@ msgstr ""
 msgid "Списание:"
 msgstr "Leírás:"
 
+msgid "Спрашивать чаевые при оплате"
+msgstr "Borravaló kérése fizetéskor"
+
 msgid "Ср"
 msgstr "Sze"
 
@@ -2548,6 +2557,9 @@ msgstr "Ár/egys."
 
 msgid "Цены"
 msgstr "Árak"
+
+msgid "Чаевые"
+msgstr "Borravaló"
 
 msgid "Чек"
 msgstr "Nyugta"

@@ -130,6 +130,18 @@ async def close_shift(
             )
         )).scalar() or Decimal("0")
 
+    # Cash tips land in the drawer too, so they count toward the expected cash
+    # even though they're not revenue (kept out of cash_sales / reports).
+    cash_tips = (await db.execute(
+        select(func.coalesce(func.sum(Order.tip_amount), 0)).where(
+            Order.venue_id == shift.venue_id,
+            Order.payment_status == "paid",
+            Order.payment_method == "cash",
+            Order.paid_at >= shift.opened_at,
+            Order.paid_at <= now,
+        )
+    )).scalar() or Decimal("0")
+
     cash_sales = await _sales("cash")
     card_sales = (await _sales("card")) + (await _sales("mobile"))
     orders_count = (await db.execute(
@@ -148,7 +160,7 @@ async def close_shift(
     shift.cash_sales = cash_sales
     shift.card_sales = card_sales
     shift.orders_count = orders_count
-    shift.expected_cash = shift.opening_cash + cash_sales
+    shift.expected_cash = shift.opening_cash + cash_sales + cash_tips
     shift.difference = data.closing_cash_actual - shift.expected_cash
     await db.commit()
     await db.refresh(shift)

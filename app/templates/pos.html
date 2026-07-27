@@ -134,6 +134,7 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
     <button type="button" id="stoplist-btn" class="btn-secondary ipos-tool" onclick="toggleStopMode()">{{ _("Стоп-лист") }}</button>
     <button type="button" id="bigmode-btn" class="btn-secondary ipos-tool" onclick="toggleBigMode()" title="{{ _('Крупные кнопки для планшета') }}">{{ _("Крупно") }}</button>
     <button type="button" id="colors-btn" class="btn-secondary ipos-tool" onclick="toggleColorMode()" title="{{ _('Цветные плитки товаров') }}">{{ _("Цвета") }}</button>
+    <button type="button" id="tips-btn" class="btn-secondary ipos-tool" onclick="toggleTipMode()" title="{{ _('Спрашивать чаевые при оплате') }}">{{ _("Чаевые") }}</button>
   </div>
 
   <div class="ipos-body">
@@ -221,6 +222,18 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
   <div class="modal-content" style="max-width:380px">
     <h2 class="modal-title">{{ _("Оплата") }}</h2>
     <p style="color:var(--muted); font-size:.85rem; margin:.25rem 0 1rem">{{ _("Итого") }}: <strong id="pay-modal-total" style="color:var(--white); font-size:1.05rem"></strong></p>
+    <!-- Tip step (Square-style) — only rendered when tipping is switched on -->
+    <div id="tip-block" style="display:none; margin-bottom:1rem">
+      <label style="font-size:.8rem; color:var(--muted); display:block; margin-bottom:.4rem">{{ _("Чаевые") }}</label>
+      <div id="tip-presets" style="display:flex; gap:.4rem; flex-wrap:wrap; margin-bottom:.5rem"></div>
+      <input type="number" id="tip-custom" min="0" step="0.01" inputmode="decimal"
+             placeholder="{{ _('Другая сумма') }} ({{ currency }})" oninput="setTipCustom()"
+             style="width:100%; background:var(--card); border:1px solid var(--border); color:var(--white); padding:.45rem .6rem; border-radius:8px; font-size:.9rem">
+      <div style="display:flex; justify-content:space-between; margin-top:.6rem; font-size:.95rem">
+        <span style="color:var(--muted)" id="tip-grand-label">{{ _("К оплате") }}</span>
+        <strong id="tip-grand-total" style="color:var(--gold)"></strong>
+      </div>
+    </div>
     <div id="pay-methods" style="display:flex; flex-direction:column; gap:.5rem">
       <button type="button" class="btn-primary" style="width:100%" onclick="showCashPanel()">{{ _("Наличные") }}</button>
       <button type="button" class="btn-primary" style="width:100%" onclick="submitOrder('card')">{{ _("Карта") }}</button>
@@ -352,6 +365,10 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
     unpaidTag: {{ _("Не оплачен") | tojson }},
     cash2: {{ _("Наличные") | tojson }},
     card2: {{ _("Картой") | tojson }},
+    tipLabel: {{ _("Чаевые") | tojson }},
+    tipNone: {{ _("Без чаевых") | tojson }},
+    tipCustom: {{ _("Другая сумма") | tojson }},
+    toPay: {{ _("К оплате") | tojson }},
   };
   let _menuItems = [];
   let _cart = {}; // menu_item_id -> {item, qty}
@@ -702,10 +719,53 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
     document.getElementById('pay-methods').style.display = 'flex';
     document.getElementById('cash-panel').style.display = 'none';
     document.getElementById('change-done').style.display = 'none';
+    setupTipStep();
     document.getElementById('pay-modal').style.display = 'flex';
   }
   function closePayModal() {
     document.getElementById('pay-modal').style.display = 'none';
+  }
+
+  // ── Tips ──
+  let _tipAmount = 0;
+  const TIP_PCTS = [5, 10, 15];
+  // Grand total the guest actually pays = goods (after discount) + tip.
+  function _grandTotalNum() { return _cartTotalNum() + _tipAmount; }
+  function setupTipStep() {
+    _tipAmount = 0;
+    const block = document.getElementById('tip-block');
+    if (!_tipsEnabled) { block.style.display = 'none'; return; }
+    block.style.display = '';
+    document.getElementById('tip-custom').value = '';
+    const goods = _cartTotalNum();
+    const presets = [{ label: T.tipNone, val: 0 }].concat(
+      TIP_PCTS.map(p => ({ label: p + '%', val: Math.round(goods * p) / 100 }))
+    );
+    document.getElementById('tip-presets').innerHTML = presets.map((p, i) => `
+      <button type="button" class="btn-secondary tip-preset" data-idx="${i}"
+        style="flex:1; min-width:60px; padding:.5rem .3rem; font-size:.85rem"
+        onclick="pickTip(${p.val}, ${i})">${p.label}</button>`).join('');
+    pickTip(0, 0);
+  }
+  function pickTip(val, idx) {
+    _tipAmount = Math.max(0, val || 0);
+    document.querySelectorAll('.tip-preset').forEach(b => {
+      const on = String(b.getAttribute('data-idx')) === String(idx);
+      b.style.borderColor = on ? 'var(--gold)' : '';
+      b.style.color = on ? 'var(--gold)' : '';
+    });
+    if (idx !== 'custom') document.getElementById('tip-custom').value = '';
+    updateTipGrand();
+  }
+  function setTipCustom() {
+    const v = parseFloat(document.getElementById('tip-custom').value);
+    _tipAmount = (!isNaN(v) && v > 0) ? v : 0;
+    document.querySelectorAll('.tip-preset').forEach(b => { b.style.borderColor = ''; b.style.color = ''; });
+    updateTipGrand();
+  }
+  function updateTipGrand() {
+    document.getElementById('tip-grand-total').textContent =
+      _grandTotalNum().toLocaleString(LOCALE) + ' {{ currency }}';
   }
 
   // ── Cash: received amount → change, computed by the register ──
@@ -713,7 +773,7 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
   function showCashPanel() {
     document.getElementById('pay-methods').style.display = 'none';
     document.getElementById('cash-panel').style.display = '';
-    const total = _cartTotalNum();
+    const total = _grandTotalNum();
     // Quick buttons: exact amount, then the bills a guest would realistically hand over
     const quick = [total, ...BILLS.filter(b => b > total).slice(0, 3)];
     document.getElementById('cash-quick').innerHTML = quick.map((v, i) => `
@@ -731,7 +791,7 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
     document.getElementById('pay-methods').style.display = 'flex';
   }
   function updateChange() {
-    const total = _cartTotalNum();
+    const total = _grandTotalNum();
     const received = parseFloat(document.getElementById('cash-received').value) || 0;
     const el = document.getElementById('change-amount');
     const btn = document.getElementById('cash-confirm');
@@ -743,7 +803,7 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
   }
   let _pendingChange = null;
   function confirmCash() {
-    const total = _cartTotalNum();
+    const total = _grandTotalNum();
     const received = parseFloat(document.getElementById('cash-received').value) || 0;
     if (received < total) { notify.error(T.notEnoughCash); return; }
     _pendingChange = received - total;
@@ -856,10 +916,13 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
       payment_method: method || null,
       discount_type: document.getElementById('discount-type').value || null,
       discount_value: parseFloat(document.getElementById('discount-value').value) || null,
+      // Tip only rides along when money is taken now; pay-later gets no tip here.
+      tip_amount: method ? _tipAmount : 0,
       client_order_id: (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(36).slice(2)),
     };
     const clearCart = () => {
       _cart = {};
+      _tipAmount = 0;
       document.getElementById('table-number').value = '';
       document.getElementById('discount-type').value = '';
       document.getElementById('discount-value').value = '';
@@ -1047,6 +1110,21 @@ html.sb-hidden .ipos-sbbtn .sb-toggle-hide { display: none; }
   if (localStorage.getItem('pos_colors')) {
     document.body.classList.add('pos-colors');
     const b = document.getElementById('colors-btn');
+    b.style.borderColor = 'var(--gold)'; b.style.color = 'var(--gold)';
+  }
+
+  // ── Tips (Square-style gratuity prompt) — off by default, opt-in ──
+  // When on, the payment dialog asks for a tip before taking money.
+  let _tipsEnabled = !!localStorage.getItem('pos_tips');
+  function toggleTipMode() {
+    _tipsEnabled = !_tipsEnabled;
+    localStorage.setItem('pos_tips', _tipsEnabled ? '1' : '');
+    const b = document.getElementById('tips-btn');
+    b.style.borderColor = _tipsEnabled ? 'var(--gold)' : '';
+    b.style.color = _tipsEnabled ? 'var(--gold)' : '';
+  }
+  if (_tipsEnabled) {
+    const b = document.getElementById('tips-btn');
     b.style.borderColor = 'var(--gold)'; b.style.color = 'var(--gold)';
   }
 

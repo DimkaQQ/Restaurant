@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-27 06:23+0000\n"
+"POT-Creation-Date: 2026-07-27 09:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -305,6 +305,9 @@ msgstr "Exact amount"
 
 msgid "Без скидки"
 msgstr "No discount"
+
+msgid "Без чаевых"
+msgstr "No tip"
 
 msgid "Безлимит заведений"
 msgstr "Unlimited venues"
@@ -718,6 +721,9 @@ msgstr "Available"
 
 msgid "Доступно на тарифе"
 msgstr "Available on the"
+
+msgid "Другая сумма"
+msgstr "Other amount"
 
 msgid "Ед."
 msgstr "Unit"
@@ -2285,6 +2291,9 @@ msgstr ""
 msgid "Списание:"
 msgstr "Write-off:"
 
+msgid "Спрашивать чаевые при оплате"
+msgstr "Ask for a tip at checkout"
+
 msgid "Ср"
 msgstr "Wed"
 
@@ -2518,6 +2527,9 @@ msgstr "Price/unit"
 
 msgid "Цены"
 msgstr "Pricing"
+
+msgid "Чаевые"
+msgstr "Tip"
 
 msgid "Чек"
 msgstr "Receipt"

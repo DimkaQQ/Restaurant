@@ -24,6 +24,9 @@ class Order(Base):
     subtotal_amount: Mapped[Decimal | None] = mapped_column(Numeric(10, 2), nullable=True)
     discount_type: Mapped[str | None] = mapped_column(String(10), nullable=True)   # percent | amount
     discount_value: Mapped[Decimal | None] = mapped_column(Numeric(10, 2), nullable=True)
+    # Gratuity (Square-style tip). Separate from total_amount so revenue stays
+    # clean; cash tips are folded into the drawer's expected cash at shift close.
+    tip_amount: Mapped[Decimal] = mapped_column(Numeric(10, 2), default=0, server_default="0")
     promo_code: Mapped[str | None] = mapped_column(String(50), nullable=True)
     points_earned: Mapped[int] = mapped_column(Integer, default=0)
     notes: Mapped[str | None] = mapped_column(Text)

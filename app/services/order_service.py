@@ -200,12 +200,18 @@ async def create_order(
 
     is_walkin = guest.phone == WALKIN_MARKER
     points = 0 if is_walkin else calculate_points_earned(total)
+    # Gratuity rides on top of the goods total — never folded into total_amount,
+    # so revenue reporting stays clean and points are earned on goods only.
+    tip_amount = getattr(data, 'tip_amount', None) or Decimal("0")
+    if tip_amount < 0:
+        tip_amount = Decimal("0")
     order = Order(
         id=uuid.uuid4(),
         venue_id=data.venue_id,
         guest_id=guest.id,
         status="new",
         total_amount=total,
+        tip_amount=tip_amount,
         subtotal_amount=subtotal if discount_type else None,
         discount_type=discount_type,
         discount_value=discount_value,
@@ -547,6 +553,7 @@ async def pay_order(
     method: str,
     db: AsyncSession,
     changed_by: str = "staff",
+    tip_amount: Decimal | None = None,
 ) -> Order:
     """Record payment for an order. Independent of the logistics status: a
     coffee shop takes payment before preparing, a restaurant after the meal.
@@ -567,6 +574,9 @@ async def pay_order(
     if order.payment_status == "paid":
         raise ValueError("Заказ уже оплачен")
 
+    # A tip entered when settling an open order (table service pays at the end).
+    if tip_amount is not None and tip_amount > 0:
+        order.tip_amount = tip_amount
     order.payment_status = "paid"
     order.payment_method = method
     order.paid_at = datetime.now(timezone.utc)

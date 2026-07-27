@@ -35,6 +35,9 @@ class OrderCreate(BaseModel):
     discount_value: Decimal | None = Field(None, gt=0)
     # Guest promo code (validated server-side against the network's codes).
     promo_code: str | None = Field(None, max_length=50)
+    # Gratuity added at checkout (POS only). Kept out of total_amount so it
+    # never inflates revenue reports; it rides on top of the goods total.
+    tip_amount: Decimal = Field(0, ge=0)
 
 
 class OrderItemOut(BaseModel):
@@ -64,6 +67,7 @@ class OrderOut(BaseModel):
     status: str
     total_amount: Decimal
     subtotal_amount: Decimal | None = None
+    tip_amount: Decimal = 0
     discount_type: str | None = None
     discount_value: Decimal | None = None
     promo_code: str | None = None

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-27 06:23+0000\n"
+"POT-Creation-Date: 2026-07-27 09:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: cs\n"
@@ -306,6 +306,9 @@ msgstr "Bez vrácení"
 
 msgid "Без скидки"
 msgstr "Bez slevy"
+
+msgid "Без чаевых"
+msgstr "Bez spropitného"
 
 msgid "Безлимит заведений"
 msgstr "Neomezeně provozoven"
@@ -722,6 +725,9 @@ msgstr "Dostupné"
 
 msgid "Доступно на тарифе"
 msgstr "Dostupné v tarifu"
+
+msgid "Другая сумма"
+msgstr "Jiná částka"
 
 msgid "Ед."
 msgstr "Jedn."
@@ -2299,6 +2305,9 @@ msgstr ""
 msgid "Списание:"
 msgstr "Odpis:"
 
+msgid "Спрашивать чаевые при оплате"
+msgstr "Zeptat se na spropitné při platbě"
+
 msgid "Ср"
 msgstr "St"
 
@@ -2532,6 +2541,9 @@ msgstr "Cena/jedn."
 
 msgid "Цены"
 msgstr "Ceny"
+
+msgid "Чаевые"
+msgstr "Spropitné"
 
 msgid "Чек"
 msgstr "Účtenka"
