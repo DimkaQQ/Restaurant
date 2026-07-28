@@ -217,6 +217,7 @@ const T = {
   profit: {{ _("Прибыль") | tojson }},
   revenue: {{ _("Выручка") | tojson }},
   million: {{ _("млн") | tojson }},
+  thousand: {{ _("тыс") | tojson }},
   deleteConfirm: {{ _("Удалить расход?") | tojson }},
   deleteError: {{ _("Ошибка удаления") | tojson }},
   error: {{ _("Ошибка") | tojson }},
@@ -227,7 +228,7 @@ const chartData = {{ chart_data | tojson }};
 // Adaptive money labels: 850 → 850, 12 400 → 12.4K, 3 200 000 → 3.2 млн
 function fmtMoney(v) {
   if (Math.abs(v) >= 1_000_000) return (v/1_000_000).toFixed(1).replace(/\.0$/,'') + ' ' + T.million;
-  if (Math.abs(v) >= 1_000) return (v/1_000).toFixed(1).replace(/\.0$/,'') + 'K';
+  if (Math.abs(v) >= 1_000) return (v/1_000).toFixed(1).replace(/\.0$/,'') + ' ' + T.thousand;
   return String(Math.round(v));
 }
 

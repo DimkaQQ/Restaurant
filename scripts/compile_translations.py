@@ -47,6 +47,9 @@ def extract_msgids() -> list[str]:
             strings.append(m["desc"])
     except Exception:
         pass
+    # The abbreviated-money filter (app/templates_env.py:_money) localizes these
+    # suffixes at runtime, but they aren't visible to the template scan above.
+    strings.extend(["млн", "тыс"])
     return sorted(set(strings))
 
 
