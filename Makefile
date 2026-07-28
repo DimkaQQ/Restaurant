@@ -1,4 +1,4 @@
-.PHONY: help up down logs setup seed reseed bot reset test test-e2e
+.PHONY: help up down logs setup seed reseed demo bot reset test test-e2e
 
 # Цвета
 GREEN  := \033[0;32m
@@ -12,6 +12,7 @@ help:
 	@echo "  $(GREEN)make setup$(NC)  — первый запуск: создать владельца сети"
 	@echo "  $(GREEN)make seed$(NC)   — залить тестовые данные (заведения, меню, гости)"
 	@echo "  $(GREEN)make reseed$(NC) — удалить и залить данные заново"
+	@echo "  $(GREEN)make demo$(NC)   — демо-аккаунт с готовым дашбордом (demo@restos.app / demo1234)"
 	@echo "  $(GREEN)make down$(NC)   — остановить всё"
 	@echo "  $(GREEN)make logs$(NC)   — смотреть логи API"
 	@echo "  $(GREEN)make reset$(NC)  — удалить БД и начать заново"
@@ -44,6 +45,10 @@ seed:
 ## Удалить и залить данные заново
 reseed:
 	docker compose exec api python scripts/seed_data.py --force
+
+## Демо-аккаунт: заполненный дашборд и все разделы, вход demo@restos.app / demo1234
+demo:
+	docker compose exec api python scripts/seed_demo.py
 
 ## Логи
 logs:
