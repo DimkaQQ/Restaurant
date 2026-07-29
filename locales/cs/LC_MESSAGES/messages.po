@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-29 06:44+0000\n"
+"POT-Creation-Date: 2026-07-29 06:54+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: cs\n"
@@ -851,6 +851,13 @@ msgstr "K úhradě"
 msgid "Казахстан"
 msgstr "Kazachstán"
 
+msgid ""
+"Как выглядит ваше QR-меню и устанавливаемое приложение для гостей. Гость "
+"видит ваш бренд, а не «RestOS»."
+msgstr ""
+"Jak vypadá vaše QR menu a instalovatelná aplikace pro hosty. Host vidí "
+"vaši značku, ne „RestOS“."
+
 msgid "Как на устройстве"
 msgstr "Jako na zařízení"
 
@@ -1006,6 +1013,9 @@ msgstr "Licence + moduly + zavedení"
 msgid "Логин кассы"
 msgstr "Přihlášení pokladny"
 
+msgid "Логотип (URL картинки, необязательно)"
+msgstr "Logo (URL obrázku, volitelné)"
+
 msgid "Любой планшет, iPad или смартфон"
 msgstr "Jakýkoli tablet, iPad nebo smartphone"
 
@@ -1111,6 +1121,9 @@ msgstr "Název skupiny"
 msgid "Название категории"
 msgstr "Název kategorie"
 
+msgid "Название приложения"
+msgstr "Název aplikace"
+
 msgid "Название сети / ресторана"
 msgstr "Název sítě / restaurace"
 
@@ -1137,6 +1150,9 @@ msgstr "Například 5"
 
 msgid "Например, Кофейня на Абая"
 msgstr "Například Kavárna na Abaji"
+
+msgid "Например: Terra Bistro"
+msgstr "Např.: Terra Bistro"
 
 msgid "Например: пакет, доставка"
 msgstr "Například: taška, doručení"
@@ -1793,6 +1809,9 @@ msgstr "Zisk"
 msgid "Пригласите сотрудника"
 msgstr "Pozvěte zaměstnance"
 
+msgid "Приложение для гостей (white-label)"
+msgstr "Aplikace pro hosty (white-label)"
+
 msgid "Применил скидку"
 msgstr "Uplatnil slevu"
 
@@ -2291,6 +2310,9 @@ msgstr "Téma"
 msgid "Тема оформления, акцентный цвет и язык интерфейса."
 msgstr "Téma, zvýrazňující barva a jazyk rozhraní."
 
+msgid "Тема приложения и фон иконки на экране гостя."
+msgstr "Téma aplikace a pozadí ikony na obrazovce hosta."
+
 msgid "Техкарта"
 msgstr "Receptura"
 
@@ -2409,6 +2431,9 @@ msgstr "Fiskalizace…"
 
 msgid "Фискальный чек №"
 msgstr "Fiskální účtenka č."
+
+msgid "Цвет бренда"
+msgstr "Barva značky"
 
 msgid "Цвет плитки в кассе"
 msgstr "Barva dlaždice v pokladně"

@@ -1,10 +1,11 @@
 from app.templates_env import templates
 import logging
+import re
 import uuid
 
 from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import HTMLResponse, JSONResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from sqlalchemy import select, func
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -292,15 +293,50 @@ async def settings_appearance_page(
             for surface, conf in (v.appearance or {}).items():
                 if isinstance(conf, dict):
                     venues_appearance[f"{v.id}|{surface}"] = conf
+    network = (await db.execute(
+        select(Network).where(Network.id == current_user.network_id)
+    )).scalar_one_or_none()
     from app.i18n import LOCALE_NAMES
     return templates.TemplateResponse("settings_appearance.html", {
         "request": request,
         "user": current_user,
         "venues": venues,
         "venues_appearance": venues_appearance,
+        "network": network,
         "locale_names": LOCALE_NAMES,
         "current_language": current_user.language or "ru",
     })
+
+
+class BrandingPatch(BaseModel):
+    brand_name: str | None = Field(None, max_length=60)
+    brand_color: str | None = Field(None, max_length=7)
+    logo_url: str | None = Field(None, max_length=500)
+
+
+@router.patch("/api/branding")
+async def update_branding(
+    data: BrandingPatch,
+    current_user: User = Depends(get_current_user_dep),
+    db: AsyncSession = Depends(get_db),
+):
+    """White-label branding for the guest PWA (owner only). Empty string clears
+    a field back to the RestOS default."""
+    _require_owner(current_user)
+    network = (await db.execute(
+        select(Network).where(Network.id == current_user.network_id)
+    )).scalar_one()
+    if 'brand_name' in data.model_fields_set:
+        network.brand_name = (data.brand_name or "").strip() or None
+    if 'brand_color' in data.model_fields_set:
+        color = (data.brand_color or "").strip() or None
+        if color and not re.fullmatch(r"#[0-9A-Fa-f]{6}", color):
+            raise HTTPException(status_code=400, detail="Цвет должен быть в формате #RRGGBB")
+        network.brand_color = color
+    if 'logo_url' in data.model_fields_set:
+        network.logo_url = (data.logo_url or "").strip() or None
+    await db.commit()
+    return {"ok": True}
 
 
 class LanguagePatch(BaseModel):

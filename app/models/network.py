@@ -11,6 +11,12 @@ class Network(Base):
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
     name: Mapped[str] = mapped_column(String(255))
     slug: Mapped[str] = mapped_column(String(100), unique=True)
+    # White-label branding for the guest PWA (QR menu / install-to-home-screen).
+    # brand_name overrides what the guest sees; brand_color themes the app and
+    # the install icon background; logo_url is an optional custom app icon.
+    brand_name: Mapped[str | None] = mapped_column(String(60), nullable=True)
+    brand_color: Mapped[str | None] = mapped_column(String(7), nullable=True)
+    logo_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     venues: Mapped[list["Venue"]] = relationship("Venue", back_populates="network")

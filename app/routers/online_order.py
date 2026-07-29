@@ -3,15 +3,17 @@ import logging
 import uuid
 
 from fastapi import APIRouter, Depends, HTTPException, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse, Response
 from pydantic import BaseModel, Field
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
 from app.database import get_db
 from app.models.guest import Guest
 from app.ratelimit import limiter
 from app.models.menu import MenuItem
+from app.models.network import Network
 from app.models.venue import Venue
 from app.schemas.order import OrderCreate, OrderItemCreate
 from app.services.online_order_i18n import get_guest_lang, t
@@ -31,7 +33,8 @@ async def online_menu_page(
     db: AsyncSession = Depends(get_db),
 ):
     venue = (await db.execute(
-        select(Venue).where(Venue.id == venue_id, Venue.is_active == True)
+        select(Venue).options(selectinload(Venue.network))
+        .where(Venue.id == venue_id, Venue.is_active == True)
     )).scalar_one_or_none()
     if not venue:
         raise HTTPException(status_code=404, detail="Заведение не найдено")
@@ -39,7 +42,6 @@ async def online_menu_page(
     guest_lang = get_guest_lang(lang, request.cookies.get("guest_lang"), request.headers.get("accept-language"))
     strings = t(guest_lang)
 
-    from sqlalchemy.orm import selectinload
     from app.models.menu import ModifierGroup
     items_result = await db.execute(
         select(MenuItem)
@@ -70,6 +72,9 @@ async def online_menu_page(
             ],
         })
 
+    net = venue.network
+    brand_name = net.brand_name if net and net.brand_name else None
+    brand_color = net.brand_color if net and net.brand_color else None
     response = templates.TemplateResponse("online_order.html", {
         "request": request,
         "venue": venue,
@@ -77,10 +82,106 @@ async def online_menu_page(
         "table": table or "",
         "guest_lang": guest_lang,
         "t": strings,
+        "brand_name": brand_name,
+        "brand_color": brand_color,
+        "brand_logo": (net.logo_url if net and net.logo_url else None),
     })
     if lang:
         response.set_cookie("guest_lang", guest_lang, max_age=60 * 60 * 24 * 365)
     return response
+
+
+_DEFAULT_BRAND_COLOR = "#0A0A0A"
+
+
+@router.get("/order/{venue_id}/manifest.webmanifest")
+async def guest_manifest(venue_id: uuid.UUID, db: AsyncSession = Depends(get_db)):
+    """Per-venue PWA manifest generated on the fly. The guest installs the
+    restaurant's own branded app (name, color, icon) — never "RestOS"."""
+    venue = (await db.execute(
+        select(Venue).options(selectinload(Venue.network))
+        .where(Venue.id == venue_id, Venue.is_active == True)  # noqa: E712
+    )).scalar_one_or_none()
+    if not venue:
+        raise HTTPException(status_code=404, detail="Заведение не найдено")
+    net = venue.network
+    name = (net.brand_name if net and net.brand_name else venue.name)
+    color = (net.brand_color if net and net.brand_color else _DEFAULT_BRAND_COLOR)
+    if net and net.logo_url:
+        icons = [{"src": net.logo_url, "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}]
+    else:
+        icons = [
+            {"src": "/static/favicon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"},
+            {"src": "/static/favicon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"},
+        ]
+    manifest = {
+        "name": name,
+        "short_name": name[:12],
+        "start_url": f"/order/{venue_id}",
+        "scope": "/order/",
+        "display": "standalone",
+        "orientation": "portrait",
+        "background_color": color,
+        "theme_color": color,
+        "icons": icons,
+    }
+    return JSONResponse(manifest, media_type="application/manifest+json",
+                        headers={"Cache-Control": "public, max-age=300"})
+
+
+# Guest service worker. Served from the site root so it can claim the "/order/"
+# scope (a script's default scope is its own directory; a narrower scope like
+# "/order/" needs no Service-Worker-Allowed header). Caches the menu shell and
+# static assets so the QR menu opens instantly and survives flaky venue Wi-Fi.
+_GUEST_SW_JS = """\
+const CACHE = 'restos-guest-v1';
+const ASSETS = ['/static/fonts/fonts.css', '/static/favicon-192.png', '/static/favicon-512.png'];
+
+self.addEventListener('install', (e) => {
+  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS)).then(() => self.skipWaiting()));
+});
+self.addEventListener('activate', (e) => {
+  e.waitUntil(
+    caches.keys().then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))))
+      .then(() => self.clients.claim())
+  );
+});
+self.addEventListener('fetch', (e) => {
+  const req = e.request;
+  if (req.method !== 'GET') return;                 // never cache order submits
+  const url = new URL(req.url);
+  if (url.origin !== location.origin) return;
+  // The menu page itself: network-first so prices/stop-list stay fresh, with a
+  // cached fallback so a dropped connection still shows the last good menu.
+  if (url.pathname.startsWith('/order/')) {
+    e.respondWith(
+      fetch(req).then((res) => {
+        const copy = res.clone();
+        caches.open(CACHE).then((c) => c.put(req, copy));
+        return res;
+      }).catch(() => caches.match(req))
+    );
+    return;
+  }
+  // Static assets: cache-first.
+  if (url.pathname.startsWith('/static/')) {
+    e.respondWith(caches.match(req).then((hit) => hit || fetch(req).then((res) => {
+      const copy = res.clone();
+      caches.open(CACHE).then((c) => c.put(req, copy));
+      return res;
+    })));
+  }
+});
+"""
+
+
+@router.get("/guest-sw.js", include_in_schema=False)
+async def guest_service_worker():
+    return Response(
+        _GUEST_SW_JS,
+        media_type="application/javascript",
+        headers={"Service-Worker-Allowed": "/order/", "Cache-Control": "no-cache"},
+    )
 
 
 class OnlineOrderItem(BaseModel):

@@ -54,6 +54,7 @@ STRINGS = {
         "other_category": "Прочее",
         "guest": "Гость",
         "online_guest": "Онлайн-гость",
+        "install_app": "Установить приложение",
     },
     "kz": {
         "online_menu": "Онлайн мәзір",
@@ -95,6 +96,7 @@ STRINGS = {
         "other_category": "Басқа",
         "guest": "Қонақ",
         "online_guest": "Онлайн-қонақ",
+        "install_app": "Қосымшаны орнату",
     },
     "en": {
         "online_menu": "Online Menu",
@@ -136,6 +138,7 @@ STRINGS = {
         "other_category": "Other",
         "guest": "Guest",
         "online_guest": "Online guest",
+        "install_app": "Install app",
     },
 }
 

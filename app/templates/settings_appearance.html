@@ -138,6 +138,33 @@
 </div>
 {% endif %}
 
+{% if user.role == 'owner' %}
+<div class="ap-section" style="margin-top:2.5rem; border-top:1px solid var(--border); padding-top:1.5rem">
+  <h2 style="font-size:1.05rem; font-weight:600; margin-bottom:.4rem">{{ _("Приложение для гостей (white-label)") }}</h2>
+  <p style="color:var(--muted); font-size:.85rem">{{ _("Как выглядит ваше QR-меню и устанавливаемое приложение для гостей. Гость видит ваш бренд, а не «RestOS».") }}</p>
+
+  <div class="ap-label">{{ _("Название приложения") }}</div>
+  <input type="text" id="brand-name" class="select-input" maxlength="60" style="width:100%; max-width:360px"
+         placeholder="{{ _('Например: Terra Bistro') }}" value="{{ network.brand_name or '' }}">
+
+  <div class="ap-label">{{ _("Цвет бренда") }}</div>
+  <div style="display:flex; align-items:center; gap:.75rem; flex-wrap:wrap">
+    <input type="color" id="brand-color" value="{{ network.brand_color or '#C8A84B' }}" style="width:52px; height:38px; border:1px solid var(--border); border-radius:8px; background:none; cursor:pointer">
+    <button type="button" class="btn-secondary" onclick="clearBrandColor()" style="font-size:.8rem">{{ _("Сбросить") }}</button>
+    <span style="color:var(--muted); font-size:.82rem">{{ _("Тема приложения и фон иконки на экране гостя.") }}</span>
+  </div>
+
+  <div class="ap-label">{{ _("Логотип (URL картинки, необязательно)") }}</div>
+  <input type="url" id="brand-logo" class="select-input" maxlength="500" style="width:100%; max-width:360px"
+         placeholder="https://…/logo.png" value="{{ network.logo_url or '' }}">
+
+  <div style="margin-top:1.25rem; display:flex; gap:.75rem; align-items:center">
+    <button type="button" class="btn-primary" onclick="saveBranding()">{{ _("Сохранить") }}</button>
+    <span class="ap-hint" id="brand-status"></span>
+  </div>
+</div>
+{% endif %}
+
 <script>
   {% if user.role == 'owner' and venues %}
   // Per-venue-per-surface config comes from the DB; the picker writes it back
@@ -236,5 +263,31 @@
     }
   }
   (function(){ const s = document.getElementById('ap-language'); if (s) s.dataset.current = s.value; })();
+
+  {% if user.role == 'owner' %}
+  const T_BR_SAVED = {{ _("Сохранено") | tojson }};
+  const T_BR_ERR = {{ _("Ошибка сохранения") | tojson }};
+  function clearBrandColor() { document.getElementById('brand-color').value = '#C8A84B'; }
+  async function saveBranding() {
+    const st = document.getElementById('brand-status');
+    const name = document.getElementById('brand-name').value.trim();
+    // #C8A84B is the RestOS default — treat "unchanged default" as no custom color.
+    const colorRaw = document.getElementById('brand-color').value;
+    const color = colorRaw.toUpperCase() === '#C8A84B' ? '' : colorRaw;
+    const logo = document.getElementById('brand-logo').value.trim();
+    try {
+      const res = await fetch('/settings/api/branding', {
+        method: 'PATCH', credentials: 'include',
+        headers: {'Content-Type':'application/json','Authorization':'Bearer '+(localStorage.getItem('access_token')||'')},
+        body: JSON.stringify({ brand_name: name, brand_color: color, logo_url: logo }),
+      });
+      if (!res.ok) { const d = await res.json().catch(()=>({})); throw new Error(d.detail || 'err'); }
+      st.textContent = T_BR_SAVED; st.style.color = 'var(--ok)';
+    } catch (e) {
+      st.textContent = (e.message && e.message !== 'err') ? e.message : T_BR_ERR;
+      st.style.color = 'var(--bad)';
+    }
+  }
+  {% endif %}
 </script>
 {% endblock %}

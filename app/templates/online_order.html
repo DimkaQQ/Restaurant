@@ -6,9 +6,18 @@
   <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-192.png">
   <link rel="alternate icon" href="/static/favicon.ico">
-  <link rel="apple-touch-icon" href="/static/apple-touch-icon.png">
-  <title>{{ venue.name }} — {{ t.online_menu }}</title>
+  <link rel="apple-touch-icon" href="{{ brand_logo or '/static/apple-touch-icon.png' }}">
+  <title>{{ brand_name or venue.name }} — {{ t.online_menu }}</title>
+  <!-- Installable white-label PWA: the guest adds the restaurant's own app to
+       their home screen (no App Store, no "RestOS" branding). -->
+  <link rel="manifest" href="/order/{{ venue.id }}/manifest.webmanifest">
+  <meta name="theme-color" content="{{ brand_color or '#0A0A0A' }}">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="{{ brand_name or venue.name }}">
   <link rel="stylesheet" href="/static/fonts/fonts.css">
+  {% if brand_color %}<style>:root { --gold: {{ brand_color }}; }</style>{% endif %}
   <style>
     /* Guest page: self-contained tokens (main.css is NOT loaded here) — the
        QR menu always keeps the brand look regardless of staff themes. */
@@ -37,6 +46,13 @@
     .header-brand { font-family: 'Instrument Serif', serif; font-size: 1.2rem; color: var(--gold); }
     .header-venue { font-size: 0.8rem; color: var(--muted); margin-top: 0.1rem; }
     .header-table { font-size: 0.8rem; color: var(--white); margin-top: 0.1rem; font-weight: 600; }
+    .install-btn {
+      display: inline-flex; align-items: center; gap: .35rem; margin-top: .6rem;
+      background: var(--gold); color: var(--on-accent); border: none;
+      border-radius: 8px; padding: .5rem .9rem; font-size: .82rem; font-weight: 600;
+      font-family: 'Inter', sans-serif; cursor: pointer; -webkit-tap-highlight-color: transparent;
+    }
+    .install-btn:active { opacity: .85; }
     .lang-switch { display: flex; gap: .3rem; flex-shrink: 0; }
     .lang-switch a {
       font-size: .78rem; padding: .25rem .5rem; border-radius: 6px; text-decoration: none;
@@ -224,8 +240,13 @@
 <div class="header">
   <div class="header-top">
     <div>
-      <div class="header-brand">RestOS</div>
-      <div class="header-venue">{{ venue.name }}{% if venue.address %} · {{ venue.address }}{% endif %}</div>
+      <div class="header-brand">
+        {% if brand_logo %}<img src="{{ brand_logo }}" alt="{{ brand_name or venue.name }}" style="height:1.5rem;vertical-align:middle;border-radius:6px">{% else %}{{ brand_name or venue.name }}{% endif %}
+      </div>
+      <div class="header-venue">
+        {%- if brand_name %}{{ venue.name }}{% if venue.address %} · {{ venue.address }}{% endif %}
+        {%- elif venue.address %}{{ venue.address }}{% endif %}
+      </div>
       {% if table %}
       <div class="header-table">{{ t.table }} {{ table }}</div>
       {% endif %}
@@ -236,6 +257,7 @@
       <a href="?lang=en{% if table %}&table={{ table }}{% endif %}" class="{% if guest_lang == 'en' %}active{% endif %}">EN</a>
     </div>
   </div>
+  <button id="installBtn" class="install-btn" style="display:none">⬇ {{ t.install_app }}</button>
 </div>
 
 <div class="cats" id="cats">
@@ -694,6 +716,33 @@ function resetPage() {
 
 // Init
 updateCartUI();
+
+// ── PWA: install to home screen + offline menu cache ──
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/guest-sw.js', { scope: '/order/' }).catch(() => {});
+  });
+}
+let _deferredPrompt = null;
+const _installBtn = document.getElementById('installBtn');
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  _deferredPrompt = e;
+  if (_installBtn) _installBtn.style.display = 'inline-flex';
+});
+if (_installBtn) {
+  _installBtn.addEventListener('click', async () => {
+    if (!_deferredPrompt) return;
+    _deferredPrompt.prompt();
+    await _deferredPrompt.userChoice;
+    _deferredPrompt = null;
+    _installBtn.style.display = 'none';
+  });
+}
+window.addEventListener('appinstalled', () => {
+  _deferredPrompt = null;
+  if (_installBtn) _installBtn.style.display = 'none';
+});
 </script>
 </body>
 </html>

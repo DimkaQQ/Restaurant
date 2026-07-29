@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-29 06:44+0000\n"
+"POT-Creation-Date: 2026-07-29 06:54+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: hu\n"
@@ -855,6 +855,13 @@ msgstr "Fizetendő"
 msgid "Казахстан"
 msgstr "Kazahsztán"
 
+msgid ""
+"Как выглядит ваше QR-меню и устанавливаемое приложение для гостей. Гость "
+"видит ваш бренд, а не «RestOS»."
+msgstr ""
+"Így néz ki a QR-menü és a telepíthető vendégalkalmazás. A vendég az Ön "
+"márkáját látja, nem a „RestOS”-t."
+
 msgid "Как на устройстве"
 msgstr "Mint az eszközön"
 
@@ -1012,6 +1019,9 @@ msgstr "Licencek + modulok + bevezetés"
 msgid "Логин кассы"
 msgstr "Pénztár bejelentkezés"
 
+msgid "Логотип (URL картинки, необязательно)"
+msgstr "Logó (kép URL, opcionális)"
+
 msgid "Любой планшет, iPad или смартфон"
 msgstr "Bármilyen táblagép, iPad vagy okostelefon"
 
@@ -1117,6 +1127,9 @@ msgstr "Csoport neve"
 msgid "Название категории"
 msgstr "Kategória neve"
 
+msgid "Название приложения"
+msgstr "Alkalmazás neve"
+
 msgid "Название сети / ресторана"
 msgstr "Hálózat / étterem neve"
 
@@ -1143,6 +1156,9 @@ msgstr "Például 5"
 
 msgid "Например, Кофейня на Абая"
 msgstr "Például Kávézó az Abaj utcában"
+
+msgid "Например: Terra Bistro"
+msgstr "Pl.: Terra Bistro"
 
 msgid "Например: пакет, доставка"
 msgstr "Például: zacskó, kiszállítás"
@@ -1805,6 +1821,9 @@ msgstr "Nyereség"
 msgid "Пригласите сотрудника"
 msgstr "Hívjon meg munkatársat"
 
+msgid "Приложение для гостей (white-label)"
+msgstr "Vendégalkalmazás (white-label)"
+
 msgid "Применил скидку"
 msgstr "Kedvezményt alkalmazott"
 
@@ -2308,6 +2327,9 @@ msgstr "Téma"
 msgid "Тема оформления, акцентный цвет и язык интерфейса."
 msgstr "Téma, kiemelőszín és a felület nyelve."
 
+msgid "Тема приложения и фон иконки на экране гостя."
+msgstr "Az alkalmazás témája és az ikon háttere a vendég kezdőképernyőjén."
+
 msgid "Техкарта"
 msgstr "Recept"
 
@@ -2427,6 +2449,9 @@ msgstr "Fiskalizáció…"
 
 msgid "Фискальный чек №"
 msgstr "Fiskális nyugta sz."
+
+msgid "Цвет бренда"
+msgstr "Márka színe"
 
 msgid "Цвет плитки в кассе"
 msgstr "Csempe színe a kasszában"
