@@ -11,7 +11,6 @@ from app.models.review import Review
 from app.models.inventory import Ingredient, WriteOff
 from app.models.finance import Expense
 from app.models.shift import Shift
-from app.models.broadcast import Broadcast
 from app.models.subscription import Subscription
 from app.models.recipe import Recipe
 from app.models.audit_log import AdminAuditLog, StaffAuditLog
@@ -19,7 +18,6 @@ from app.models.promo import PromoCode
 from app.models.cash_shift import CashShift
 from app.models.purchasing import Supplier, PurchaseInvoice, PurchaseInvoiceLine
 from app.models.api_key import ApiKey, WebhookSubscription
-from app.models.bot_notification import BotNotification
 
 __all__ = [
     "Network", "Venue", "User", "Guest",
@@ -28,7 +26,6 @@ __all__ = [
     "Ingredient", "WriteOff",
     "Expense",
     "Shift",
-    "Broadcast",
     "Subscription",
     "Recipe",
     "AdminAuditLog", "StaffAuditLog",
@@ -36,5 +33,4 @@ __all__ = [
     "CashShift",
     "Supplier", "PurchaseInvoice", "PurchaseInvoiceLine",
     "ApiKey", "WebhookSubscription",
-    "BotNotification",
 ]

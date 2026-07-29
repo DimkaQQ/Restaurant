@@ -7,7 +7,7 @@ guests are the actual KZ market audience — staff-facing screens are not.
 
 Language is picked per-request (query param > cookie > browser
 Accept-Language > ru) and, once a guest is identified (phone on submit),
-written back to Guest.language so it's remembered for bot broadcasts too.
+written back to Guest.language so it's remembered next time.
 """
 
 SUPPORTED = ("ru", "kz", "en")

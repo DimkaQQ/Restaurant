@@ -14,7 +14,7 @@ from sqlalchemy import text
 from app.config import settings
 from app.database import engine
 from app.models import *  # noqa: F401,F403 — registers all models with Base
-from app.routers import auth, dashboard, venues, menu, orders, guests, analytics, staff, settings as settings_router, inventory, finance, shifts, bot_api, online_order, billing, platform_admin, pos, legal, cash_shifts, purchasing, api_v1
+from app.routers import auth, dashboard, venues, menu, orders, guests, analytics, staff, settings as settings_router, inventory, finance, shifts, online_order, billing, platform_admin, pos, legal, cash_shifts, purchasing, api_v1
 from app.services.cleanup_service import stale_order_cleanup_loop
 from app.templates_env import templates
 
@@ -46,9 +46,9 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 _EXPECTED_ORIGIN = urlsplit(settings.PUBLIC_URL).netloc
 # Server-to-server callbacks never carry our cookies and are authenticated
-# their own way (Stripe signs its webhook body; the bot uses a shared secret) —
-# an Origin/Referer check would just reject legitimate traffic from them.
-_CSRF_EXEMPT_PREFIXES = ("/billing/webhook", "/api/bot", "/health")
+# their own way (Stripe signs its webhook body) — an Origin/Referer check
+# would just reject legitimate traffic from them.
+_CSRF_EXEMPT_PREFIXES = ("/billing/webhook", "/health")
 
 
 @app.middleware("http")
@@ -188,7 +188,6 @@ app.include_router(settings_router.router)
 app.include_router(inventory.router)
 app.include_router(finance.router)
 app.include_router(shifts.router)
-app.include_router(bot_api.router)
 app.include_router(online_order.router)
 app.include_router(billing.router)
 app.include_router(platform_admin.router)

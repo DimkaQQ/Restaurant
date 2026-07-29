@@ -280,7 +280,7 @@ async def main():
             gid = uuid.uuid4()
             guest_rows.append({
                 "id": gid, "network_id": network.id, "name": full_name(),
-                "phone": rand_phone(), "telegram_id": None,
+                "phone": rand_phone(),
                 "total_points": 0, "total_visits": 0,
                 "created_at": now - timedelta(days=random.randint(1, 400)),
             })

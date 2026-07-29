@@ -44,7 +44,6 @@ _TS_COLUMNS = [
     ("points_transactions", "created_at"),
     ("guests", "created_at"),
     ("purchase_invoices", "created_at"),
-    ("bot_notifications", "created_at"),
 ]
 # date-only columns (no tz) shifted by whole days
 _DATE_COLUMNS = [

@@ -1,6 +1,5 @@
 """One tenant must never be able to read or write another tenant's data.
-This is the exact class of bug the security review found (cross-network
-telegram_id lookups) — these tests guard against that regressing."""
+These tests guard against cross-network data access regressing."""
 from httpx import AsyncClient
 
 from tests.conftest import register_network, auth_headers
@@ -54,16 +53,6 @@ async def test_menu_item_creation_scoped_to_own_venue(client: AsyncClient):
         headers=auth_headers(net_a["token"]),
     )
     assert resp.status_code in (403, 404)
-
-
-async def test_guest_history_requires_bot_secret(client: AsyncClient):
-    """Regression test: this endpoint used to have NO auth at all and leaked
-    order history to anyone who supplied a telegram_id."""
-    resp = await client.get(
-        "/api/orders/guest/history",
-        params={"telegram_id": 123456789, "network_id": "00000000-0000-0000-0000-000000000000"},
-    )
-    assert resp.status_code == 403
 
 
 async def test_platform_admin_hidden_without_configured_email(client: AsyncClient):

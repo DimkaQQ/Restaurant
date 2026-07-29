@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-28 14:40+0000\n"
+"POT-Creation-Date: 2026-07-29 06:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: hu\n"
@@ -18,9 +18,6 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
-
-msgid "(скопируйте и передайте сотруднику для ввода /staff)"
-msgstr "(másolja ki és adja át a munkatársnak a /staff beírásához)"
 
 msgid "+ Группа (например, «Размер»)"
 msgstr "+ Csoport (például „Méret”)"
@@ -217,12 +214,6 @@ msgstr ""
 "RestOS — rendelésfelvétel, konyhai kijelző, raktár, személyzeti műszakok,"
 " hűségprogram és nyugták fiskalizációja egy felületen. 14 nap ingyen."
 
-msgid "Telegram ID менеджера"
-msgstr "Menedzser Telegram-azonosítója"
-
-msgid "Telegram-рассылки гостям и промокоды в QR-меню."
-msgstr "Telegram körüzenetek vendégeknek és QR-menü promóciós kódok."
-
 msgid "White-label оформление"
 msgstr "White-label megjelenés"
 
@@ -318,14 +309,9 @@ msgid "Безлимит сотрудников"
 msgstr "Korlátlan munkatárs"
 
 msgid ""
-"Бонусные баллы, история визитов и Telegram-бот для гостей — без сторонних"
-" CRM."
-msgstr ""
-"Bónuszpontok, látogatási előzmények és Telegram-bot a vendégeknek — külső"
-" CRM nélkül."
-
-msgid "Бот отправит сообщение гостям в течение 5 минут"
-msgstr "A bot 5 percen belül elküldi az üzenetet a vendégeknek"
+"Бонусные баллы, история визитов и приложение для гостей — без сторонних "
+"CRM."
+msgstr "Hűségpontok, látogatási előzmények és vendégalkalmazás — külső CRM nélkül."
 
 msgid "Бронь"
 msgstr "Foglalás"
@@ -368,15 +354,6 @@ msgstr "Adja meg a nevet és az árat"
 
 msgid "Введите свой PIN, чтобы начать смену."
 msgstr "Adja meg a PIN-kódját a műszak megkezdéséhez."
-
-msgid "Введите текст выше..."
-msgstr "Írja be a szöveget fent..."
-
-msgid "Введите текст рассылки"
-msgstr "Írja be a körüzenet szövegét"
-
-msgid "Введите текст рассылки..."
-msgstr "Írja be a körüzenet szövegét..."
 
 msgid "Вебхуки"
 msgstr "Webhookok"
@@ -428,12 +405,6 @@ msgstr "Minden rendelés →"
 
 msgid "Все настройки"
 msgstr "Minden beállítás"
-
-msgid "Все языки"
-msgstr "Minden nyelv"
-
-msgid "Все языки (ru + kz + en)"
-msgstr "Minden nyelv (ru + kz + en)"
 
 msgid "Всего выручки"
 msgstr "Összes bevétel"
@@ -535,21 +506,15 @@ msgstr "Bevétel helyenként"
 msgid "Выручка сегодня"
 msgstr "Mai bevétel"
 
-msgid "Генерируем..."
-msgstr "Generálás..."
-
 msgid "Год"
 msgstr "Év"
 
-msgid "Гостей в базе"
-msgstr "Vendégek az adatbázisban"
-
 msgid ""
 "Гостей пока нет. Они появятся автоматически, когда сделают заказ через "
-"QR-меню или Telegram-бот."
+"QR-меню."
 msgstr ""
-"Még nincsenek vendégek. Automatikusan megjelennek, amikor rendelnek a QR-"
-"menün vagy a Telegram-boton keresztül."
+"Még nincsenek vendégek. Automatikusan megjelennek, amikor a QR-menün át "
+"rendelnek."
 
 msgid "Гости"
 msgstr "Vendégek"
@@ -593,11 +558,11 @@ msgstr ""
 "felárral változik."
 
 msgid ""
-"Данные гостей: имя, телефон/Telegram ID, история заказов, баллы "
-"лояльности — используются для программы лояльности и уведомлений."
+"Данные гостей: имя, телефон, история заказов, баллы лояльности — "
+"используются для программы лояльности и уведомлений."
 msgstr ""
-"Vendégadatok: név, telefon/Telegram-azonosító, rendelési előzmények, "
-"hűségpontok — a hűségprogramhoz és értesítésekhez használjuk."
+"Vendégadatok: név, telefon, rendelési előzmények, hűségpontok — a "
+"hűségprogramhoz és értesítésekhez."
 
 msgid ""
 "Данные сотрудников: имя, роль, отработанные смены — вносятся владельцем "
@@ -877,9 +842,6 @@ msgstr "Használat"
 
 msgid "Использование на кухне"
 msgstr "Használat a konyhán"
-
-msgid "История рассылок"
-msgstr "Körüzenetek előzményei"
 
 msgid "История сегодня"
 msgstr "Mai előzmények"
@@ -1325,9 +1287,6 @@ msgstr "Új számla"
 msgid "Новая позиция"
 msgstr "Új tétel"
 
-msgid "Новая рассылка"
-msgstr "Új körüzenet"
-
 msgid "Новые"
 msgstr "Újak"
 
@@ -1395,9 +1354,6 @@ msgstr "Személyzet betanítása"
 
 msgid "Общий NPS"
 msgstr "Teljes NPS"
-
-msgid "Ожидает"
-msgstr "Várakozik"
 
 msgid "Ожидается в кассе"
 msgstr "Várható a pénztárban"
@@ -1522,9 +1478,6 @@ msgstr "E-mail újraküldése"
 msgid "Отправить ссылку для сброса"
 msgstr "Visszaállító link küldése"
 
-msgid "Отправлена"
-msgstr "Elküldve"
-
 msgid "Отправлено ✓"
 msgstr "Elküldve ✓"
 
@@ -1571,9 +1524,6 @@ msgstr "Hiba"
 
 msgid "Ошибка входа"
 msgstr "Bejelentkezési hiba"
-
-msgid "Ошибка генерации токена"
-msgstr "Token-generálási hiba"
 
 msgid "Ошибка добавления позиции"
 msgstr "Hiba a tétel hozzáadásakor"
@@ -1737,9 +1687,6 @@ msgstr "Sérülés"
 msgid "Повторить последний заказ"
 msgstr "Utolsó rendelés megismétlése"
 
-msgid "Подключены в Telegram"
-msgstr "Csatlakozva a Telegramon"
-
 msgid "Подписка"
 msgstr "Előfizetés"
 
@@ -1852,14 +1799,8 @@ msgstr "Beszállító"
 msgid "Почему не тяжёлая ERP?"
 msgstr "Miért nem nehéz ERP?"
 
-msgid "Предпросмотр"
-msgstr "Előnézet"
-
 msgid "Прибыль"
 msgstr "Nyereség"
-
-msgid "Привязать Telegram (для официантов)"
-msgstr "Telegram összekapcsolása (pincéreknek)"
 
 msgid "Пригласите сотрудника"
 msgstr "Hívjon meg munkatársat"
@@ -1950,6 +1891,9 @@ msgstr ""
 msgid "Промокоды"
 msgstr "Promóciós kódok"
 
+msgid "Промокоды и рассылки гостям в QR-меню."
+msgstr "Promóciós kódok és vendégüzenetek a QR-menüben."
+
 msgid "Процент"
 msgstr "Százalék"
 
@@ -1983,15 +1927,6 @@ msgid ""
 msgstr ""
 "Nyomtassa ki ezt a QR-kódot és tegye az asztalokra — a vendégek "
 "beolvassák, megnyitják a menüt és maguk rendelnek."
-
-msgid "Рассылки"
-msgstr "Körüzenetek"
-
-msgid "Рассылок отправлено"
-msgstr "Elküldött körüzenetek"
-
-msgid "Рассылок пока не было"
-msgstr "Még nem voltak körüzenetek"
 
 msgid "Расходы"
 msgstr "Költségek"
@@ -2041,9 +1976,6 @@ msgstr ""
 msgid "Роль"
 msgstr "Szerepkör"
 
-msgid "Русский"
-msgstr "Orosz"
-
 msgid "С нами с"
 msgstr "Velünk ekkortól"
 
@@ -2074,9 +2006,6 @@ msgstr "Saját téma és szín minden helyszíni képernyőn."
 #, python-brace-format
 msgid "Связь восстановлена: отправлено заказов — {n}"
 msgstr "Kapcsolat helyreállt: elküldött rendelések — {n}"
-
-msgid "Сгенерировать ссылку"
-msgstr "Link generálása"
 
 msgid "Сдача"
 msgstr "Visszajáró"
@@ -2245,41 +2174,22 @@ msgstr "Létrehozás"
 msgid "Создать аккаунт"
 msgstr "Fiók létrehozása"
 
-msgid "Создать аккаунты и ссылки для привязки →"
-msgstr "Fiókok és összekapcsoló linkek létrehozása →"
-
 msgid "Создать заведение"
 msgstr "Hely létrehozása"
 
 msgid "Создать ключ"
 msgstr "Kulcs létrehozása"
 
-msgid "Создать рассылку →"
-msgstr "Körüzenet létrehozása →"
-
-msgid "Создаётся..."
-msgstr "Létrehozás..."
-
-msgid "Сообщения гостям через Telegram-бота."
-msgstr "Üzenetek a vendégeknek a Telegram boton keresztül."
-
 msgid "Сотрудник"
 msgstr "Munkatárs"
-
-msgid ""
-"Сотрудник может принимать заказы прямо из Telegram-бота. Сгенерируйте "
-"ссылку и передайте её сотруднику — он перейдёт по ней и его аккаунт "
-"привяжется автоматически."
-msgstr ""
-"A munkatárs közvetlenül a Telegram-botból fogadhat rendeléseket. "
-"Generáljon egy linket, és adja át a munkatársnak — miután megnyitja, a "
-"fiókja automatikusan összekapcsolódik."
 
 msgid "Сотрудники"
 msgstr "Munkatársak"
 
-msgid "Сотрудники появляются здесь после привязки Telegram-аккаунта."
-msgstr "A munkatársak itt jelennek meg a Telegram-fiók összekapcsolása után."
+msgid "Сотрудники появляются здесь, когда получают первые отзывы от гостей."
+msgstr ""
+"A dolgozók akkor jelennek meg itt, amikor megkapják első "
+"vendégértékeléseiket."
 
 msgid "Сотрудники, их роли и PIN-коды для входа на станциях."
 msgstr "Munkatársak, szerepköreik és a munkaállomás PIN-kódjai."
@@ -2329,9 +2239,6 @@ msgstr "Átlagos számla"
 
 msgid "Средняя оценка"
 msgstr "Átlagos értékelés"
-
-msgid "Ссылка для входа (действует 1 раз):"
-msgstr "Bejelentkezési link (1× érvényes):"
 
 msgid "Ссылка недействительна или устарела"
 msgstr "A link érvénytelen vagy lejárt"
@@ -2389,9 +2296,6 @@ msgstr ""
 "Csomag mentve. Vegye fel a kapcsolatot a támogatással az online fizetés "
 "aktiválásához."
 
-msgid "Текст сообщения"
-msgstr "Üzenet szövege"
-
 msgid "Текущий тариф"
 msgstr "Aktuális tarifa"
 
@@ -2422,9 +2326,6 @@ msgstr ""
 msgid "Тип"
 msgstr "Típus"
 
-msgid "Токен:"
-msgstr "Token:"
-
 msgid "Тёмная"
 msgstr "Sötét"
 
@@ -2450,9 +2351,6 @@ msgstr "Törölt egy menütételt"
 msgid "Удалил пользователя"
 msgstr "Törölt egy felhasználót"
 
-msgid "Удалить"
-msgstr "Törlés"
-
 msgid "Удалить вебхук?"
 msgstr "Törli a webhookot?"
 
@@ -2464,9 +2362,6 @@ msgstr "Törli a felhasználót?"
 
 msgid "Удалить промокод?"
 msgstr "Törli a promóciós kódot?"
-
-msgid "Удалить рассылку?"
-msgstr "Törli a körüzenetet?"
 
 msgid "Удалить расход?"
 msgstr "Törli a költséget?"
@@ -2482,6 +2377,9 @@ msgstr "Már van fiókja?"
 
 msgid "Улица, дом"
 msgstr "Utca, házszám"
+
+msgid "Управление командой →"
+msgstr "Csapat kezelése →"
 
 msgid ""
 "Управляйте несколькими заведениями из одного аккаунта с отдельными "
@@ -2601,9 +2499,6 @@ msgstr "Adatexport"
 msgid "Язык интерфейса"
 msgstr "Felület nyelve"
 
-msgid "Язык получателей"
-msgstr "Címzettek nyelve"
-
 msgid "Язык привязан к вашему аккаунту и меняется только здесь."
 msgstr "A nyelv a fiókjához kötődik, és csak itt módosítható."
 
@@ -2618,9 +2513,6 @@ msgstr "az adatbázisban"
 
 msgid "в год"
 msgstr "évente"
-
-msgid "всего"
-msgstr "összesen"
 
 msgid "г"
 msgstr "g"
@@ -2705,9 +2597,6 @@ msgstr "egyelőre üres"
 
 msgid "политикой конфиденциальности"
 msgstr "adatvédelmi szabályzattal"
-
-msgid "получ."
-msgstr "kapott"
 
 msgid "своя цена"
 msgstr "saját ár"

@@ -1,12 +1,12 @@
 # RestOS
 
-SaaS-платформа для сетей ресторанов: Telegram-бот для гостей + веб-панель для управления.
+SaaS-платформа для сетей ресторанов: касса, кухня, склад, финансы и white-label PWA для гостей.
 
 ## Стек
 
 - **Backend**: Python 3.11, FastAPI, SQLAlchemy 2.0 (async), asyncpg
 - **Database**: PostgreSQL 15
-- **Bot**: aiogram 3.x
+- **Guest app**: white-label PWA (QR-меню, установка на экран)
 - **Templates**: Jinja2 + htmx
 - **AI**: Anthropic Claude API
 
@@ -21,12 +21,6 @@ make setup             # создать первого владельца (од�
 ```
 
 Панель управления: **http://localhost:8000**
-
-### С ботом
-
-```bash
-make bot   # поднимает бот вместе с остальным
-```
 
 ### Остальные команды
 
@@ -46,10 +40,7 @@ make help    # список всех команд
 | `DATABASE_URL` | postgresql+asyncpg://user:pass@host/db |
 | `SECRET_KEY` | JWT секрет (длинная случайная строка) |
 | `ANTHROPIC_API_KEY` | Ключ Anthropic для AI-рекомендаций |
-| `BOT_TOKEN_VENUE_1` | Токен Telegram-бота из BotFather |
-| `NETWORK_ID` | UUID сети (получить из create_owner.py) |
-| `VENUE_ID_1` | UUID заведения (создать через API) |
-| `API_URL` | URL API для бота (default: http://localhost:8000) |
+| `PUBLIC_URL` | Публичный URL деплоя (для Stripe и cookie Secure/HSTS) |
 
 ---
 
@@ -62,7 +53,6 @@ make help    # список всех команд
 │   ├── services/     # Бизнес-логика
 │   ├── templates/    # Jinja2 HTML
 │   └── static/       # CSS/JS
-├── bot/              # Telegram бот (aiogram 3)
 ├── migrations/       # Alembic миграции
 └── scripts/          # Утилиты запуска
 ```
@@ -83,7 +73,7 @@ make help    # список всех команд
 | POST | `/auth/login` | Войти (access token + refresh cookie) |
 | GET | `/api/venues/` | Список заведений |
 | GET | `/api/menu/{venue_id}` | Меню заведения |
-| POST | `/api/orders/?telegram_id=` | Создать заказ (из бота) |
+| POST | `/api/pos/order` | Создать заказ (касса) |
 | PATCH | `/api/orders/{id}/status` | Сменить статус заказа |
 | GET | `/api/orders/live` | Активные заказы (для htmx polling) |
 | GET | `/api/guests/` | Список гостей |

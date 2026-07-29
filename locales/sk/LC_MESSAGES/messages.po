@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-28 14:40+0000\n"
+"POT-Creation-Date: 2026-07-29 06:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: sk\n"
@@ -18,9 +18,6 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
-
-msgid "(скопируйте и передайте сотруднику для ввода /staff)"
-msgstr "(skopírujte a odovzdajte zamestnancovi na zadanie /staff)"
 
 msgid "+ Группа (например, «Размер»)"
 msgstr "+ Skupina (napríklad „Veľkosť“)"
@@ -215,12 +212,6 @@ msgstr ""
 "vernostný program a fiškalizácia účteniek v jednom paneli. 14 dní "
 "zadarmo."
 
-msgid "Telegram ID менеджера"
-msgstr "Telegram ID manažéra"
-
-msgid "Telegram-рассылки гостям и промокоды в QR-меню."
-msgstr "Telegram rozosielky hosťom a promokódy v QR menu."
-
 msgid "White-label оформление"
 msgstr "White-label vzhľad"
 
@@ -316,14 +307,11 @@ msgid "Безлимит сотрудников"
 msgstr "Neobmedzene zamestnancov"
 
 msgid ""
-"Бонусные баллы, история визитов и Telegram-бот для гостей — без сторонних"
-" CRM."
-msgstr ""
-"Bonusové body, história návštev a Telegram bot pre hostí — bez externých "
+"Бонусные баллы, история визитов и приложение для гостей — без сторонних "
 "CRM."
-
-msgid "Бот отправит сообщение гостям в течение 5 минут"
-msgstr "Bot odošle správu hosťom do 5 minút"
+msgstr ""
+"Vernostné body, história návštev a aplikácia pre hostí — bez CRM tretích "
+"strán."
 
 msgid "Бронь"
 msgstr "Rezervácia"
@@ -366,15 +354,6 @@ msgstr "Zadajte názov a cenu"
 
 msgid "Введите свой PIN, чтобы начать смену."
 msgstr "Zadajte svoj PIN na začatie zmeny."
-
-msgid "Введите текст выше..."
-msgstr "Zadajte text vyššie..."
-
-msgid "Введите текст рассылки"
-msgstr "Zadajte text rozosielky"
-
-msgid "Введите текст рассылки..."
-msgstr "Zadajte text rozosielky..."
 
 msgid "Вебхуки"
 msgstr "Webhooky"
@@ -426,12 +405,6 @@ msgstr "Všetky objednávky →"
 
 msgid "Все настройки"
 msgstr "Všetky nastavenia"
-
-msgid "Все языки"
-msgstr "Všetky jazyky"
-
-msgid "Все языки (ru + kz + en)"
-msgstr "Všetky jazyky (ru + kz + en)"
 
 msgid "Всего выручки"
 msgstr "Celkové tržby"
@@ -532,21 +505,15 @@ msgstr "Tržby podľa prevádzok"
 msgid "Выручка сегодня"
 msgstr "Tržby dnes"
 
-msgid "Генерируем..."
-msgstr "Generujeme..."
-
 msgid "Год"
 msgstr "Rok"
 
-msgid "Гостей в базе"
-msgstr "Hostí v databáze"
-
 msgid ""
 "Гостей пока нет. Они появятся автоматически, когда сделают заказ через "
-"QR-меню или Telegram-бот."
+"QR-меню."
 msgstr ""
 "Zatiaľ žiadni hostia. Objavia sa automaticky, keď si objednajú cez QR "
-"menu alebo Telegram bota."
+"menu."
 
 msgid "Гости"
 msgstr "Hostia"
@@ -590,11 +557,11 @@ msgstr ""
 "zadaný príplatok."
 
 msgid ""
-"Данные гостей: имя, телефон/Telegram ID, история заказов, баллы "
-"лояльности — используются для программы лояльности и уведомлений."
+"Данные гостей: имя, телефон, история заказов, баллы лояльности — "
+"используются для программы лояльности и уведомлений."
 msgstr ""
-"Údaje hostí: meno, telefón/Telegram ID, história objednávok, vernostné "
-"body — používajú sa pre vernostný program a upozornenia."
+"Údaje hostí: meno, telefón, história objednávok, vernostné body — "
+"používajú sa pre vernostný program a upozornenia."
 
 msgid ""
 "Данные сотрудников: имя, роль, отработанные смены — вносятся владельцем "
@@ -873,9 +840,6 @@ msgstr "Používanie"
 
 msgid "Использование на кухне"
 msgstr "Používanie v kuchyni"
-
-msgid "История рассылок"
-msgstr "História rozosielok"
 
 msgid "История сегодня"
 msgstr "História dnes"
@@ -1316,9 +1280,6 @@ msgstr "Nová faktúra"
 msgid "Новая позиция"
 msgstr "Nová položka"
 
-msgid "Новая рассылка"
-msgstr "Nová rozosielka"
-
 msgid "Новые"
 msgstr "Nové"
 
@@ -1385,9 +1346,6 @@ msgstr "Školenie personálu"
 
 msgid "Общий NPS"
 msgstr "Celkové NPS"
-
-msgid "Ожидает"
-msgstr "Čaká"
 
 msgid "Ожидается в кассе"
 msgstr "Očakáva sa v pokladni"
@@ -1512,9 +1470,6 @@ msgstr "Odoslať e-mail znova"
 msgid "Отправить ссылку для сброса"
 msgstr "Odoslať odkaz na obnovenie"
 
-msgid "Отправлена"
-msgstr "Odoslaná"
-
 msgid "Отправлено ✓"
 msgstr "Odoslané ✓"
 
@@ -1561,9 +1516,6 @@ msgstr "Chyba"
 
 msgid "Ошибка входа"
 msgstr "Chyba prihlásenia"
-
-msgid "Ошибка генерации токена"
-msgstr "Chyba generovania tokenu"
 
 msgid "Ошибка добавления позиции"
 msgstr "Chyba pri pridávaní položky"
@@ -1725,9 +1677,6 @@ msgstr "Poškodenie"
 msgid "Повторить последний заказ"
 msgstr "Zopakovať poslednú objednávku"
 
-msgid "Подключены в Telegram"
-msgstr "Pripojení cez Telegram"
-
 msgid "Подписка"
 msgstr "Predplatné"
 
@@ -1840,14 +1789,8 @@ msgstr "Dodávateľ"
 msgid "Почему не тяжёлая ERP?"
 msgstr "Prečo nie ťažké ERP?"
 
-msgid "Предпросмотр"
-msgstr "Náhľad"
-
 msgid "Прибыль"
 msgstr "Zisk"
-
-msgid "Привязать Telegram (для официантов)"
-msgstr "Prepojiť Telegram (pre čašníkov)"
 
 msgid "Пригласите сотрудника"
 msgstr "Pozvite zamestnanca"
@@ -1938,6 +1881,9 @@ msgstr ""
 msgid "Промокоды"
 msgstr "Promokódy"
 
+msgid "Промокоды и рассылки гостям в QR-меню."
+msgstr "Promo kódy a správy hosťom v QR menu."
+
 msgid "Процент"
 msgstr "Percento"
 
@@ -1971,15 +1917,6 @@ msgid ""
 msgstr ""
 "Vytlačte tento QR kód a umiestnite ho na stoly — hostia ho naskenujú, "
 "otvoria menu a objednajú si sami."
-
-msgid "Рассылки"
-msgstr "Rozosielky"
-
-msgid "Рассылок отправлено"
-msgstr "Odoslaných rozosielok"
-
-msgid "Рассылок пока не было"
-msgstr "Zatiaľ žiadne rozosielky"
 
 msgid "Расходы"
 msgstr "Náklady"
@@ -2029,9 +1966,6 @@ msgstr ""
 msgid "Роль"
 msgstr "Rola"
 
-msgid "Русский"
-msgstr "Ruština"
-
 msgid "С нами с"
 msgstr "S nami od"
 
@@ -2062,9 +1996,6 @@ msgstr "Vlastná téma a farba na každej obrazovke prevádzky."
 #, python-brace-format
 msgid "Связь восстановлена: отправлено заказов — {n}"
 msgstr "Spojenie obnovené: odoslaných objednávok — {n}"
-
-msgid "Сгенерировать ссылку"
-msgstr "Vygenerovať odkaz"
 
 msgid "Сдача"
 msgstr "Výdavok"
@@ -2233,41 +2164,20 @@ msgstr "Vytvoriť"
 msgid "Создать аккаунт"
 msgstr "Vytvoriť účet"
 
-msgid "Создать аккаунты и ссылки для привязки →"
-msgstr "Vytvoriť účty a odkazy na prepojenie →"
-
 msgid "Создать заведение"
 msgstr "Vytvoriť prevádzku"
 
 msgid "Создать ключ"
 msgstr "Vytvoriť kľúč"
 
-msgid "Создать рассылку →"
-msgstr "Vytvoriť rozosielku →"
-
-msgid "Создаётся..."
-msgstr "Vytvára sa..."
-
-msgid "Сообщения гостям через Telegram-бота."
-msgstr "Správy hosťom cez Telegram bota."
-
 msgid "Сотрудник"
 msgstr "Zamestnanec"
-
-msgid ""
-"Сотрудник может принимать заказы прямо из Telegram-бота. Сгенерируйте "
-"ссылку и передайте её сотруднику — он перейдёт по ней и его аккаунт "
-"привяжется автоматически."
-msgstr ""
-"Zamestnanec môže prijímať objednávky priamo z Telegram bota. Vygenerujte "
-"odkaz a odovzdajte ho zamestnancovi — po jeho otvorení sa jeho účet "
-"automaticky prepojí."
 
 msgid "Сотрудники"
 msgstr "Zamestnanci"
 
-msgid "Сотрудники появляются здесь после привязки Telegram-аккаунта."
-msgstr "Zamestnanci sa tu zobrazia po prepojení Telegram účtu."
+msgid "Сотрудники появляются здесь, когда получают первые отзывы от гостей."
+msgstr "Zamestnanci sa tu objavia, keď dostanú prvé hodnotenia od hostí."
 
 msgid "Сотрудники, их роли и PIN-коды для входа на станциях."
 msgstr "Zamestnanci, ich roly a PIN kódy na prihlásenie na staniciach."
@@ -2317,9 +2227,6 @@ msgstr "Priemerný účet"
 
 msgid "Средняя оценка"
 msgstr "Priemerné hodnotenie"
-
-msgid "Ссылка для входа (действует 1 раз):"
-msgstr "Odkaz na prihlásenie (platí 1×):"
 
 msgid "Ссылка недействительна или устарела"
 msgstr "Odkaz je neplatný alebo expiroval"
@@ -2375,9 +2282,6 @@ msgstr "Lístok"
 msgid "Тариф сохранён. Свяжитесь с поддержкой для активации онлайн-оплаты."
 msgstr "Tarif uložený. Kontaktujte podporu pre aktiváciu online platby."
 
-msgid "Текст сообщения"
-msgstr "Text správy"
-
 msgid "Текущий тариф"
 msgstr "Aktuálny tarif"
 
@@ -2408,9 +2312,6 @@ msgstr ""
 msgid "Тип"
 msgstr "Typ"
 
-msgid "Токен:"
-msgstr "Token:"
-
 msgid "Тёмная"
 msgstr "Tmavá"
 
@@ -2436,9 +2337,6 @@ msgstr "Vymazal položku menu"
 msgid "Удалил пользователя"
 msgstr "Vymazal používateľa"
 
-msgid "Удалить"
-msgstr "Vymazať"
-
 msgid "Удалить вебхук?"
 msgstr "Vymazať webhook?"
 
@@ -2450,9 +2348,6 @@ msgstr "Vymazať používateľa?"
 
 msgid "Удалить промокод?"
 msgstr "Vymazať promokód?"
-
-msgid "Удалить рассылку?"
-msgstr "Vymazať rozosielku?"
 
 msgid "Удалить расход?"
 msgstr "Vymazať náklad?"
@@ -2468,6 +2363,9 @@ msgstr "Už máte účet?"
 
 msgid "Улица, дом"
 msgstr "Ulica, číslo"
+
+msgid "Управление командой →"
+msgstr "Správa tímu →"
 
 msgid ""
 "Управляйте несколькими заведениями из одного аккаунта с отдельными "
@@ -2587,9 +2485,6 @@ msgstr "Export údajov"
 msgid "Язык интерфейса"
 msgstr "Jazyk rozhrania"
 
-msgid "Язык получателей"
-msgstr "Jazyk príjemcov"
-
 msgid "Язык привязан к вашему аккаунту и меняется только здесь."
 msgstr "Jazyk je viazaný na váš účet a mení sa iba tu."
 
@@ -2604,9 +2499,6 @@ msgstr "v databáze"
 
 msgid "в год"
 msgstr "za rok"
-
-msgid "всего"
-msgstr "spolu"
 
 msgid "г"
 msgstr "g"
@@ -2691,9 +2583,6 @@ msgstr "zatiaľ prázdne"
 
 msgid "политикой конфиденциальности"
 msgstr "zásadami ochrany súkromia"
-
-msgid "получ."
-msgstr "prij."
 
 msgid "своя цена"
 msgstr "vlastná cena"

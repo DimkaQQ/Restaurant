@@ -173,7 +173,6 @@ _DELETE_NETWORK_STATEMENTS = [
     "DELETE FROM expenses WHERE network_id = :nid",
     "DELETE FROM shifts WHERE staff_id IN (SELECT id FROM staff WHERE network_id = :nid)",
     "DELETE FROM staff WHERE network_id = :nid",
-    "DELETE FROM broadcasts WHERE network_id = :nid",
     "DELETE FROM admin_audit_log WHERE network_id = :nid",
     "DELETE FROM guests WHERE network_id = :nid",
     "DELETE FROM users WHERE network_id = :nid",

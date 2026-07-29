@@ -11,10 +11,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 
-import os as _os
-
 from app.database import get_db
-from app.models.broadcast import Broadcast
 from app.models.guest import Guest
 from app.models.inventory import Ingredient
 from app.models.menu import MenuItem
@@ -28,25 +25,10 @@ from app.routers.deps import get_current_user_dep
 from app.services.auth_service import hash_password
 from app.services.plan_limits import check_staff_limit
 
-_BOT_NAME = _os.getenv("BOT_NAME", "")
-
 router = APIRouter(prefix="/settings", tags=["settings"])
 
 
 logger = logging.getLogger(__name__)
-
-
-class BroadcastCreate(BaseModel):
-    message: str
-    lang_filter: str | None = None
-
-
-
-def _require_admin(current_user: User) -> None:
-    """Administrator or owner — broadcasts and other venue-администратор tasks."""
-    from app.routers.deps import role_at_least
-    if not role_at_least(current_user, "administrator"):
-        raise HTTPException(status_code=403, detail="Недостаточно прав")
 
 
 def _require_owner(current_user: User) -> None:
@@ -104,7 +86,7 @@ async def export_network_data(
         "staff": [{"id": str(s.id), "name": s.name, "role": s.role, "venue_id": str(s.venue_id)} for s in staff],
         "guests": [
             {
-                "id": str(g.id), "name": g.name, "phone": g.phone, "telegram_id": g.telegram_id,
+                "id": str(g.id), "name": g.name, "phone": g.phone,
                 "total_points": g.total_points, "total_visits": g.total_visits, "created_at": str(g.created_at),
             }
             for g in guests
@@ -149,7 +131,6 @@ async def settings_users_page(
             "user": current_user,
             "users": users,
             "venues": venues,
-            "bot_name": _BOT_NAME,
         })
     except HTTPException:
         raise
@@ -279,88 +260,11 @@ async def delete_user(
         raise HTTPException(status_code=500, detail="Ошибка удаления пользователя")
 
 
-@router.get("/broadcasts", response_class=HTMLResponse)
-async def broadcasts_page(
-    request: Request,
-    current_user: User = Depends(get_current_user_dep),
-    db: AsyncSession = Depends(get_db),
-):
-    _require_admin(current_user)
-    broadcasts = (await db.execute(
-        select(Broadcast)
-        .where(Broadcast.network_id == current_user.network_id)
-        .order_by(Broadcast.created_at.desc())
-    )).scalars().all()
-
-    # Exclude POS walk-in placeholder guests so this matches the Гости page count
-    from app.services.order_service import WALKIN_MARKER
-    total_guests = (await db.execute(
-        select(func.count(Guest.id)).where(
-            Guest.network_id == current_user.network_id,
-            Guest.phone.is_distinct_from(WALKIN_MARKER),
-        )
-    )).scalar() or 0
-    tg_guests = (await db.execute(
-        select(func.count(Guest.id)).where(
-            Guest.network_id == current_user.network_id,
-            Guest.telegram_id != None,
-        )
-    )).scalar() or 0
-    total_sent = sum(1 for b in broadcasts if b.sent_at)
-
-    return templates.TemplateResponse("broadcasts.html", {
-        "request": request,
-        "user": current_user,
-        "broadcasts": broadcasts,
-        "total_guests": total_guests,
-        "tg_guests": tg_guests,
-        "total_sent": total_sent,
-    })
-
-
-@router.post("/api/broadcasts")
-async def create_broadcast_api(
-    data: BroadcastCreate,
-    current_user: User = Depends(get_current_user_dep),
-    db: AsyncSession = Depends(get_db),
-):
-    _require_admin(current_user)
-    if not data.message.strip():
-        raise HTTPException(status_code=400, detail="Сообщение не может быть пустым")
-    bc = Broadcast(
-        id=uuid.uuid4(),
-        network_id=current_user.network_id,
-        message=data.message.strip(),
-        lang_filter=data.lang_filter,
-    )
-    db.add(bc)
-    await db.commit()
-    return {"id": str(bc.id)}
-
-
-@router.delete("/api/broadcasts/{bc_id}")
-async def delete_broadcast_api(
-    bc_id: uuid.UUID,
-    current_user: User = Depends(get_current_user_dep),
-    db: AsyncSession = Depends(get_db),
-):
-    _require_owner(current_user)
-    bc = (await db.execute(
-        select(Broadcast).where(Broadcast.id == bc_id, Broadcast.network_id == current_user.network_id)
-    )).scalar_one_or_none()
-    if not bc:
-        raise HTTPException(status_code=404, detail="Не найдено")
-    await db.delete(bc)
-    await db.commit()
-    return {"ok": True}
-
-
 _VALID_FISCAL_PROVIDERS = ("webkassa",)
 
 
 class VenueSettingsPatch(BaseModel):
     gis_url: str | None = None
-    manager_telegram_id: int | None = None
     fiscal_provider: str | None = None
     fiscal_api_key: str | None = None
     fiscal_login: str | None = None
@@ -498,8 +402,6 @@ async def update_venue_settings(
         raise HTTPException(status_code=404, detail="Заведение не найдено")
     if 'gis_url' in data.model_fields_set:
         venue.gis_url = data.gis_url.strip() if data.gis_url else None
-    if 'manager_telegram_id' in data.model_fields_set:
-        venue.manager_telegram_id = data.manager_telegram_id  # None clears the field
     if 'fiscal_provider' in data.model_fields_set:
         provider = data.fiscal_provider.strip() if data.fiscal_provider else None
         if provider and provider not in _VALID_FISCAL_PROVIDERS:
@@ -647,33 +549,6 @@ async def delete_table(
     await db.delete(table)
     await db.commit()
     return {"message": "Удалено"}
-
-
-import secrets as _secrets
-
-
-@router.post("/api/me/bot-token")
-async def generate_bot_link_token(
-    current_user: User = Depends(get_current_user_dep),
-    db: AsyncSession = Depends(get_db),
-):
-    """Generate a one-time token to link staff Telegram account via bot deeplink."""
-    token = _secrets.token_urlsafe(32)
-    current_user.bot_link_token = token
-    await db.commit()
-    return {"token": token}
-
-
-@router.delete("/api/me/bot-token")
-async def unlink_telegram(
-    current_user: User = Depends(get_current_user_dep),
-    db: AsyncSession = Depends(get_db),
-):
-    """Unlink Telegram from staff account."""
-    current_user.telegram_id = None
-    current_user.bot_link_token = None
-    await db.commit()
-    return {"ok": True}
 
 
 # ── Promo codes ──────────────────────────────────────────────────────────

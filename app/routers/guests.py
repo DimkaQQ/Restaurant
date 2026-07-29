@@ -70,14 +70,6 @@ async def create_or_get_guest(
     db: AsyncSession = Depends(get_db),
 ):
     try:
-        if data.telegram_id:
-            result = await db.execute(
-                select(Guest).where(Guest.telegram_id == data.telegram_id, Guest.network_id == current_user.network_id)
-            )
-            existing = result.scalar_one_or_none()
-            if existing:
-                return existing
-
         guest = Guest(id=uuid.uuid4(), **{**data.model_dump(), "network_id": current_user.network_id})
         db.add(guest)
         await db.commit()

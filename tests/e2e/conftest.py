@@ -72,7 +72,6 @@ def live_server():
         **os.environ,
         "SECRET_KEY": "e2e-test-secret",
         "DATABASE_URL": TEST_DATABASE_URL,
-        "BOT_API_SECRET": "test-bot-secret",
         "PUBLIC_URL": base_url,
     }
     proc = subprocess.Popen(

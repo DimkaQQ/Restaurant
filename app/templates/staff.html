@@ -226,9 +226,9 @@
   </svg>
   <p>{{ _("Сотрудников пока нет.") }}</p>
   <p style="font-size:.85rem; max-width:420px; margin:0.5rem auto 0; line-height:1.5">
-    {{ _("Сотрудники появляются здесь после привязки Telegram-аккаунта.") }}
+    {{ _("Сотрудники появляются здесь, когда получают первые отзывы от гостей.") }}
     {% if user.role == "owner" %}
-    <a href="/settings/users" style="color:var(--gold); text-decoration:none">{{ _("Создать аккаунты и ссылки для привязки →") }}</a>
+    <a href="/settings/users" style="color:var(--gold); text-decoration:none">{{ _("Управление командой →") }}</a>
     {% endif %}
   </p>
 </div>

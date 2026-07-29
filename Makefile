@@ -1,4 +1,4 @@
-.PHONY: help up down logs setup seed reseed demo bot reset test test-e2e
+.PHONY: help up down logs setup seed reseed demo reset test test-e2e
 
 # Цвета
 GREEN  := \033[0;32m
@@ -8,7 +8,6 @@ NC     := \033[0m
 help:
 	@echo ""
 	@echo "  $(GREEN)make up$(NC)     — запустить API + БД (миграции автоматом)"
-	@echo "  $(GREEN)make bot$(NC)    — запустить бот + всё остальное"
 	@echo "  $(GREEN)make setup$(NC)  — первый запуск: создать владельца сети"
 	@echo "  $(GREEN)make seed$(NC)   — залить тестовые данные (заведения, меню, гости)"
 	@echo "  $(GREEN)make reseed$(NC) — удалить и залить данные заново"
@@ -27,12 +26,6 @@ up:
 	@echo ""
 	@echo "$(GREEN)✓ Готово!$(NC)  Панель управления: http://restos.dimkaprojects.xyz"
 	@echo "           Если первый раз — запусти: $(YELLOW)make setup$(NC)"
-
-## Запуск вместе с ботом
-bot:
-	@echo "$(GREEN)▶ Запускаем RestOS + бот...$(NC)"
-	docker compose --profile bot up --build -d
-	@echo "$(GREEN)✓ Готово!$(NC)"
 
 ## Создать первого владельца (запускать после make up)
 setup:
@@ -54,16 +47,13 @@ demo:
 logs:
 	docker compose logs -f api
 
-logs-bot:
-	docker compose logs -f bot
-
 ## Остановить
 down:
-	docker compose --profile bot down
+	docker compose down
 
 ## Сбросить БД полностью
 reset:
-	docker compose --profile bot down -v
+	docker compose down -v
 	@echo "$(YELLOW)БД удалена.$(NC) Запусти: make up && make setup"
 
 ## Прогнать backend-тесты против локального Postgres (см. tests/README.md)

@@ -9,16 +9,8 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     REFRESH_TOKEN_EXPIRE_DAYS: int = 30
     ANTHROPIC_API_KEY: str = ""
-    BOT_TOKEN_VENUE_1: str = ""
-    BOT_TOKEN_VENUE_2: str = ""
-    NETWORK_ID: str = ""
-    VENUE_ID_1: str = ""
-    VENUE_ID_2: str = ""
     HTTPS_PROXY: str = ""
-    TELEGRAM_API_SERVER: str = ""
     API_URL: str = ""
-    BOT_NAME: str = ""
-    BOT_API_SECRET: str = ""
     STRIPE_SECRET_KEY: str = ""
     STRIPE_WEBHOOK_SECRET: str = ""
     STRIPE_PRICE_STARTER: str = ""

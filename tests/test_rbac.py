@@ -74,9 +74,6 @@ async def test_manager_gets_analytics_but_not_finance(client: AsyncClient):
     # finance is administrator+
     resp = await client.get("/finance/export/sales.csv?period=month", headers=h)
     assert resp.status_code == 403
-    # broadcasts are administrator+
-    resp = await client.post("/settings/api/broadcasts", headers=h, json={"message": "hi"})
-    assert resp.status_code == 403
 
 
 async def test_administrator_gets_finance_not_settings(client: AsyncClient):
@@ -290,18 +287,3 @@ async def test_totp_login_flow(client: AsyncClient):
         "email": reg["email"], "password": "supersecret123", "totp_code": code,
     })
     assert resp.status_code == 200, resp.text
-
-
-async def test_lockout_queues_telegram_alert_for_owner(client: AsyncClient, db):
-    reg = await register_network(client)
-    from sqlalchemy import text as sql
-    await db.execute(sql("UPDATE users SET telegram_id = 555001 WHERE email = :e"), {"e": reg["email"]})
-    await db.commit()
-    for _ in range(5):
-        await client.post("/auth/login", json={"email": reg["email"], "password": "wrong"})
-    network_id = (await db.execute(sql("SELECT network_id FROM users WHERE email = :e"),
-                                   {"e": reg["email"]})).scalar()
-    resp = await client.get(f"/api/bot/notifications?network_id={network_id}",
-                            headers={"X-Bot-Secret": "test-bot-secret"})
-    msgs = resp.json()
-    assert any("заблокирован" in m["text"] and m["telegram_id"] == 555001 for m in msgs), msgs

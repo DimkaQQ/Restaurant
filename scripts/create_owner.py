@@ -66,7 +66,6 @@ async def main():
             print(f"   Пользователь: {email}")
             print(f"   User ID: {user.id}")
             print(f"   Network ID: {user.network_id}")
-            print(f"\n   Сохрани Network ID — он нужен для бота (NETWORK_ID в .env)")
         except Exception as e:
             print(f"\n❌ Ошибка: {e}")
 

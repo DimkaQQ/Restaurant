@@ -78,19 +78,6 @@
     <div class="venue-settings-addr">{{ venue.address }}</div>
     {% endif %}
 
-    <div class="form-row">
-      <label>{{ _("Telegram ID менеджера") }}</label>
-      <input
-        type="number"
-        id="mgr_{{ venue.id }}"
-        class="input-field"
-        placeholder="123456789"
-        value="{{ venue.manager_telegram_id or '' }}"
-      >
-    </div>
-    <button class="btn-primary save-btn" onclick="saveVenue('{{ venue.id }}')">{{ _("Сохранить") }}</button>
-    <div class="save-result" id="res_{{ venue.id }}"></div>
-
     <hr style="border-color:var(--border); margin:1.25rem 0">
     <div class="venue-settings-name" style="font-size:0.95rem">
       {{ _("Фискализация (ОФД)") }}
@@ -169,36 +156,6 @@ async function createVenue() {
   }
 }
 
-async function saveVenue(venueId) {
-  const mgrRaw = document.getElementById('mgr_' + venueId).value.trim();
-  const mgrId = mgrRaw ? parseInt(mgrRaw, 10) : null;
-  const resEl = document.getElementById('res_' + venueId);
-
-  try {
-    const token = document.cookie.split(';').find(c => c.trim().startsWith('access_token='));
-    const headers = { 'Content-Type': 'application/json' };
-    if (token) headers['Authorization'] = 'Bearer ' + token.split('=')[1];
-
-    const resp = await fetch('/settings/api/venues/' + venueId, {
-      method: 'PATCH',
-      headers,
-      credentials: 'include',
-      body: JSON.stringify({ manager_telegram_id: mgrId }),
-    });
-    if (resp.ok) {
-      resEl.textContent = T.saved;
-      resEl.className = 'save-result ok';
-    } else {
-      const err = await resp.json().catch(() => ({}));
-      resEl.textContent = (err.detail || T.error);
-      resEl.className = 'save-result err';
-    }
-  } catch (e) {
-    resEl.textContent = T.connectionError;
-    resEl.className = 'save-result err';
-  }
-  setTimeout(() => { resEl.textContent = ''; }, 4000);
-}
 
 async function saveFiscal(venueId) {
   const provider = document.getElementById('fp_' + venueId).value;

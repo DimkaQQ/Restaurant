@@ -367,7 +367,6 @@ async def main():
                 "network_id": network.id,
                 "name": (lambda g: f"{random.choice(GUEST_FEMALE_FIRST)} {random.choice(GUEST_FEMALE_LAST)}" if g == "f" else f"{random.choice(GUEST_MALE_FIRST)} {random.choice(GUEST_MALE_LAST)}")(random.choice(["f","f","m","m","m"])),
                 "phone": rand_phone(),
-                "telegram_id": None,
                 "total_points": 0,
                 "total_visits": 0,
                 "created_at": datetime.now(timezone.utc) - timedelta(days=random.randint(1, 500)),

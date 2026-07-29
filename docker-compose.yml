@@ -39,7 +39,6 @@ services:
       DATABASE_URL: postgresql+asyncpg://restos:restos_secret@db/restos
       SECRET_KEY: ${SECRET_KEY:-dev-secret-change-in-prod}
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
-      BOT_TOKEN_VENUE_1: ${BOT_TOKEN_VENUE_1:-}
       PUBLIC_URL: ${PUBLIC_URL:-http://localhost:8001}
       PLATFORM_ADMIN_EMAIL: ${PLATFORM_ADMIN_EMAIL:-}
       STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
@@ -98,24 +97,6 @@ services:
         sleep 21600;
       done
       "
-
-  bot:
-    build: .
-    command: python -m bot.main
-    environment:
-      DATABASE_URL: postgresql+asyncpg://restos:restos_secret@db/restos
-      API_URL: http://api:8001
-      BOT_TOKEN_VENUE_1: ${BOT_TOKEN_VENUE_1:-}
-      NETWORK_ID: ${NETWORK_ID:-}
-      VENUE_ID_1: ${VENUE_ID_1:-}
-      HTTPS_PROXY: ${HTTPS_PROXY:-}
-      TELEGRAM_API_SERVER: ${TELEGRAM_API_SERVER:-}
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    depends_on:
-      api:
-        condition: service_started
-    restart: unless-stopped
 
 volumes:
   pgdata:

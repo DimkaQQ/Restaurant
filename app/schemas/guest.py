@@ -6,7 +6,6 @@ import uuid
 class GuestOut(BaseModel):
     id: uuid.UUID
     network_id: uuid.UUID
-    telegram_id: int | None
     name: str | None
     phone: str | None
     total_points: int
@@ -20,7 +19,6 @@ class GuestOut(BaseModel):
 
 class GuestCreate(BaseModel):
     network_id: uuid.UUID
-    telegram_id: int | None = None
     name: str | None = None
     phone: str | None = None
     language: str = 'ru'

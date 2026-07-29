@@ -36,7 +36,6 @@
       <tr>
         <td>
           <span class="guest-name">{{ g.name or '—' }}</span>
-          {% if g.telegram_id %}<span class="tg-badge">TG</span>{% endif %}
         </td>
         <td>{{ g.phone or '—' }}</td>
         <td><span class="points-badge">{{ g.total_points }}</span></td>
@@ -45,7 +44,7 @@
       </tr>
       {% else %}
       <tr><td colspan="5" class="empty-state" style="padding:2rem 1rem">
-        {{ _("Гостей пока нет. Они появятся автоматически, когда сделают заказ через QR-меню или Telegram-бот.") }}
+        {{ _("Гостей пока нет. Они появятся автоматически, когда сделают заказ через QR-меню.") }}
       </td></tr>
       {% endfor %}
     </tbody>

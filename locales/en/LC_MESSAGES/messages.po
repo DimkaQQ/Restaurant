@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-28 14:40+0000\n"
+"POT-Creation-Date: 2026-07-29 06:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -18,9 +18,6 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
-
-msgid "(скопируйте и передайте сотруднику для ввода /staff)"
-msgstr "(copy and give it to the staff member to enter with /staff)"
 
 msgid "+ Группа (например, «Размер»)"
 msgstr "+ Group (e.g. \"Size\")"
@@ -215,12 +212,6 @@ msgstr ""
 "RestOS — order taking, kitchen display, inventory, staff shifts, loyalty "
 "program, and receipt fiscalization in one dashboard. 14 days free."
 
-msgid "Telegram ID менеджера"
-msgstr "Manager Telegram ID"
-
-msgid "Telegram-рассылки гостям и промокоды в QR-меню."
-msgstr "Telegram broadcasts to guests and QR-menu promo codes."
-
 msgid "White-label оформление"
 msgstr "White-label branding"
 
@@ -316,14 +307,9 @@ msgid "Безлимит сотрудников"
 msgstr "Unlimited staff"
 
 msgid ""
-"Бонусные баллы, история визитов и Telegram-бот для гостей — без сторонних"
-" CRM."
-msgstr ""
-"Bonus points, visit history, and a Telegram bot for guests — no third-"
-"party CRM needed."
-
-msgid "Бот отправит сообщение гостям в течение 5 минут"
-msgstr "The bot will send the message to guests within 5 minutes"
+"Бонусные баллы, история визитов и приложение для гостей — без сторонних "
+"CRM."
+msgstr "Loyalty points, visit history and a guest app — no third-party CRM."
 
 msgid "Бронь"
 msgstr "Reserved"
@@ -366,15 +352,6 @@ msgstr "Enter a name and a price"
 
 msgid "Введите свой PIN, чтобы начать смену."
 msgstr "Enter your PIN to start your shift."
-
-msgid "Введите текст выше..."
-msgstr "Type the text above..."
-
-msgid "Введите текст рассылки"
-msgstr "Enter the broadcast text"
-
-msgid "Введите текст рассылки..."
-msgstr "Enter the broadcast text..."
 
 msgid "Вебхуки"
 msgstr "Webhooks"
@@ -426,12 +403,6 @@ msgstr "All orders →"
 
 msgid "Все настройки"
 msgstr "All settings"
-
-msgid "Все языки"
-msgstr "All languages"
-
-msgid "Все языки (ru + kz + en)"
-msgstr "All languages (ru + kz + en)"
 
 msgid "Всего выручки"
 msgstr "Total revenue"
@@ -531,21 +502,15 @@ msgstr "Revenue by venue"
 msgid "Выручка сегодня"
 msgstr "Today's revenue"
 
-msgid "Генерируем..."
-msgstr "Generating..."
-
 msgid "Год"
 msgstr "Year"
 
-msgid "Гостей в базе"
-msgstr "Guests in database"
-
 msgid ""
 "Гостей пока нет. Они появятся автоматически, когда сделают заказ через "
-"QR-меню или Telegram-бот."
+"QR-меню."
 msgstr ""
-"No guests yet. They will appear automatically once they order via the QR "
-"menu or the Telegram bot."
+"No guests yet. They'll appear automatically when they order via the QR "
+"menu."
 
 msgid "Гости"
 msgstr "Guests"
@@ -589,11 +554,11 @@ msgstr ""
 " given surcharge."
 
 msgid ""
-"Данные гостей: имя, телефон/Telegram ID, история заказов, баллы "
-"лояльности — используются для программы лояльности и уведомлений."
+"Данные гостей: имя, телефон, история заказов, баллы лояльности — "
+"используются для программы лояльности и уведомлений."
 msgstr ""
-"Guest data: name, phone/Telegram ID, order history, loyalty points — used"
-" for the loyalty program and notifications."
+"Guest data: name, phone, order history, loyalty points — used for the "
+"loyalty program and notifications."
 
 msgid ""
 "Данные сотрудников: имя, роль, отработанные смены — вносятся владельцем "
@@ -869,9 +834,6 @@ msgstr "Usage"
 
 msgid "Использование на кухне"
 msgstr "Kitchen usage"
-
-msgid "История рассылок"
-msgstr "Broadcast history"
 
 msgid "История сегодня"
 msgstr "Today's history"
@@ -1306,9 +1268,6 @@ msgstr "New invoice"
 msgid "Новая позиция"
 msgstr "New item"
 
-msgid "Новая рассылка"
-msgstr "New broadcast"
-
 msgid "Новые"
 msgstr "New"
 
@@ -1375,9 +1334,6 @@ msgstr "Staff training"
 
 msgid "Общий NPS"
 msgstr "Overall NPS"
-
-msgid "Ожидает"
-msgstr "Pending"
 
 msgid "Ожидается в кассе"
 msgstr "Expected in drawer"
@@ -1498,9 +1454,6 @@ msgstr "Resend email"
 msgid "Отправить ссылку для сброса"
 msgstr "Send reset link"
 
-msgid "Отправлена"
-msgstr "Sent"
-
 msgid "Отправлено ✓"
 msgstr "Sent ✓"
 
@@ -1547,9 +1500,6 @@ msgstr "Error"
 
 msgid "Ошибка входа"
 msgstr "Sign-in error"
-
-msgid "Ошибка генерации токена"
-msgstr "Failed to generate token"
 
 msgid "Ошибка добавления позиции"
 msgstr "Failed to add item"
@@ -1713,9 +1663,6 @@ msgstr "Damage"
 msgid "Повторить последний заказ"
 msgstr "Repeat last order"
 
-msgid "Подключены в Telegram"
-msgstr "Connected via Telegram"
-
 msgid "Подписка"
 msgstr "Subscription"
 
@@ -1828,14 +1775,8 @@ msgstr "Supplier"
 msgid "Почему не тяжёлая ERP?"
 msgstr "Why not a heavyweight ERP?"
 
-msgid "Предпросмотр"
-msgstr "Preview"
-
 msgid "Прибыль"
 msgstr "Profit"
-
-msgid "Привязать Telegram (для официантов)"
-msgstr "Link Telegram (for waitstaff)"
 
 msgid "Пригласите сотрудника"
 msgstr "Invite a staff member"
@@ -1926,6 +1867,9 @@ msgstr ""
 msgid "Промокоды"
 msgstr "Promo codes"
 
+msgid "Промокоды и рассылки гостям в QR-меню."
+msgstr "Promo codes and guest messaging in the QR menu."
+
 msgid "Процент"
 msgstr "Percent"
 
@@ -1959,15 +1903,6 @@ msgid ""
 msgstr ""
 "Print this QR code and place it on the tables — guests scan it, open the "
 "menu, and order themselves."
-
-msgid "Рассылки"
-msgstr "Broadcasts"
-
-msgid "Рассылок отправлено"
-msgstr "Broadcasts sent"
-
-msgid "Рассылок пока не было"
-msgstr "No broadcasts yet"
 
 msgid "Расходы"
 msgstr "Expenses"
@@ -2015,9 +1950,6 @@ msgstr "Stop-list mode: tap an item to pull it from sale or bring it back."
 msgid "Роль"
 msgstr "Role"
 
-msgid "Русский"
-msgstr "Russian"
-
 msgid "С нами с"
 msgstr "Customer since"
 
@@ -2048,9 +1980,6 @@ msgstr "Your own theme and color on every venue screen."
 #, python-brace-format
 msgid "Связь восстановлена: отправлено заказов — {n}"
 msgstr "Back online: orders sent — {n}"
-
-msgid "Сгенерировать ссылку"
-msgstr "Generate link"
 
 msgid "Сдача"
 msgstr "Change"
@@ -2218,41 +2147,20 @@ msgstr "Sign up"
 msgid "Создать аккаунт"
 msgstr "Create account"
 
-msgid "Создать аккаунты и ссылки для привязки →"
-msgstr "Create accounts and linking links →"
-
 msgid "Создать заведение"
 msgstr "Create venue"
 
 msgid "Создать ключ"
 msgstr "Create key"
 
-msgid "Создать рассылку →"
-msgstr "Create broadcast →"
-
-msgid "Создаётся..."
-msgstr "Creating..."
-
-msgid "Сообщения гостям через Telegram-бота."
-msgstr "Messages to guests via the Telegram bot."
-
 msgid "Сотрудник"
 msgstr "Staff member"
-
-msgid ""
-"Сотрудник может принимать заказы прямо из Telegram-бота. Сгенерируйте "
-"ссылку и передайте её сотруднику — он перейдёт по ней и его аккаунт "
-"привяжется автоматически."
-msgstr ""
-"Staff can take orders directly from the Telegram bot. Generate a link and"
-" give it to the staff member — opening it links their account "
-"automatically."
 
 msgid "Сотрудники"
 msgstr "Staff"
 
-msgid "Сотрудники появляются здесь после привязки Telegram-аккаунта."
-msgstr "Staff members appear here once they link their Telegram account."
+msgid "Сотрудники появляются здесь, когда получают первые отзывы от гостей."
+msgstr "Staff appear here once they receive their first guest reviews."
 
 msgid "Сотрудники, их роли и PIN-коды для входа на станциях."
 msgstr "Staff, their roles and station login PIN codes."
@@ -2302,9 +2210,6 @@ msgstr "Average check"
 
 msgid "Средняя оценка"
 msgstr "Average rating"
-
-msgid "Ссылка для входа (действует 1 раз):"
-msgstr "Sign-in link (one-time use):"
 
 msgid "Ссылка недействительна или устарела"
 msgstr "The link is invalid or has expired"
@@ -2360,9 +2265,6 @@ msgstr "Ticket"
 msgid "Тариф сохранён. Свяжитесь с поддержкой для активации онлайн-оплаты."
 msgstr "Plan saved. Contact support to activate online payment."
 
-msgid "Текст сообщения"
-msgstr "Message text"
-
 msgid "Текущий тариф"
 msgstr "Current plan"
 
@@ -2392,9 +2294,6 @@ msgstr ""
 msgid "Тип"
 msgstr "Type"
 
-msgid "Токен:"
-msgstr "Token:"
-
 msgid "Тёмная"
 msgstr "Dark"
 
@@ -2420,9 +2319,6 @@ msgstr "Deleted a menu item"
 msgid "Удалил пользователя"
 msgstr "Deleted a user"
 
-msgid "Удалить"
-msgstr "Delete"
-
 msgid "Удалить вебхук?"
 msgstr "Delete this webhook?"
 
@@ -2434,9 +2330,6 @@ msgstr "Delete this user?"
 
 msgid "Удалить промокод?"
 msgstr "Delete this promo code?"
-
-msgid "Удалить рассылку?"
-msgstr "Delete this broadcast?"
 
 msgid "Удалить расход?"
 msgstr "Delete this expense?"
@@ -2452,6 +2345,9 @@ msgstr "Already have an account?"
 
 msgid "Улица, дом"
 msgstr "Street, building"
+
+msgid "Управление командой →"
+msgstr "Manage team →"
 
 msgid ""
 "Управляйте несколькими заведениями из одного аккаунта с отдельными "
@@ -2573,9 +2469,6 @@ msgstr "Export data"
 msgid "Язык интерфейса"
 msgstr "Interface language"
 
-msgid "Язык получателей"
-msgstr "Recipient language"
-
 msgid "Язык привязан к вашему аккаунту и меняется только здесь."
 msgstr "The language is tied to your account and can only be changed here."
 
@@ -2590,9 +2483,6 @@ msgstr "in the database"
 
 msgid "в год"
 msgstr "per year"
-
-msgid "всего"
-msgstr "total"
 
 msgid "г"
 msgstr "g"
@@ -2677,9 +2567,6 @@ msgstr "empty"
 
 msgid "политикой конфиденциальности"
 msgstr "Privacy Policy"
-
-msgid "получ."
-msgstr "recip."
 
 msgid "своя цена"
 msgstr "custom price"

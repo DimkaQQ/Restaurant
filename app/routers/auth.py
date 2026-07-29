@@ -121,22 +121,6 @@ async def login(request: Request, data: LoginRequest, response: Response, db: As
                 log_action(db, account.network_id, account.email, "login_locked",
                            "5 неверных паролей подряд — вход заблокирован на 15 минут")
                 logger.warning("Account %s locked after repeated failed logins", account.email)
-                # Wake the owner up in Telegram — repeated wrong passwords on
-                # a staff account is worth a human look.
-                owner = (await db.execute(_select(_User).where(
-                    _User.network_id == account.network_id,
-                    _User.role == "owner",
-                    _User.telegram_id != None,  # noqa: E711
-                ))).scalars().first()
-                if owner:
-                    from app.models.bot_notification import BotNotification
-                    import uuid as _uuid
-                    db.add(BotNotification(
-                        id=_uuid.uuid4(), network_id=account.network_id,
-                        telegram_id=owner.telegram_id,
-                        text=(f"⚠️ Аккаунт {account.email} заблокирован на 15 минут: "
-                              "5 неверных паролей подряд. Если это не ваш сотрудник — смените ему пароль."),
-                    ))
             await db.commit()
         raise HTTPException(status_code=401, detail="Неверный email или пароль")
 

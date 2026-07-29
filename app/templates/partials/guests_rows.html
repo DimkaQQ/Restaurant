@@ -3,7 +3,6 @@
   <tr>
     <td>
       <span class="guest-name">{{ g.name or '—' }}</span>
-      {% if g.telegram_id %}<span class="tg-badge">TG</span>{% endif %}
     </td>
     <td>{{ g.phone or '—' }}</td>
     <td><span class="points-badge">{{ g.total_points }}</span></td>
