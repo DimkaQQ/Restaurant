@@ -41,6 +41,9 @@ class Settings(BaseSettings):
 
     class Config:
         env_file = ".env"
+        # Ignore unknown env vars instead of raising: a stale .env (e.g. old
+        # bot tokens left after a feature is removed) must never brick startup.
+        extra = "ignore"
 
 
 @lru_cache()
